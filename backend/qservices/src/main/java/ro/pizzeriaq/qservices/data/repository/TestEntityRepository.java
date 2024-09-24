@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ro.pizzeriaq.qservices.data.model.TestEntity;
 
 @Repository
-public interface TestRepository extends JpaRepository<TestEntity, Integer> {
+public interface TestEntityRepository extends JpaRepository<TestEntity, Integer> {
 }

@@ -26,8 +26,13 @@ public class OrderItem_OptionList_Option {
 
 
     @ManyToOne
-    @JoinColumn(name = "id_optionlist_option", nullable = false)
-    private OptionList_Option optionListOption;
+    @JoinColumn(name = "id_optionlist", nullable = false)
+    private OptionList optionList;
+
+
+    @ManyToOne
+    @JoinColumn(name = "id_option", nullable = false)
+    private Option option;
 
 
     @Column(nullable = false)

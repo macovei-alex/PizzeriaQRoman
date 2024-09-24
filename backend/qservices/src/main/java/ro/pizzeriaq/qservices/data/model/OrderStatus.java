@@ -21,7 +21,7 @@ public class OrderStatus {
     private Integer id;
 
 
-    @Column(nullable = false, length = 40)
+    @Column(nullable = false, unique = true, length = 40)
     private String name;
 
 

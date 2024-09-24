@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -39,14 +40,16 @@ public class Coupon {
     private List<Order> orders;
 
 
-    @Column(precision = 8, scale = 2, nullable = false)
+    @Column(nullable = false, precision = 8, scale = 2)
     private BigDecimal discount;
 
 
     @Column(nullable = false, columnDefinition = "DATETIME")
-    private LocalDateTime startDate;
+    @ColumnDefault("NOW()")
+    private LocalDateTime startDate = LocalDateTime.now();
 
 
     @Column(nullable = false, columnDefinition = "DATETIME")
-    private LocalDateTime endDate;
+    @ColumnDefault("(DATE_ADD(NOW(), INTERVAL 1 MONTH))")
+    private LocalDateTime endDate = LocalDateTime.now().plusMonths(1);
 }

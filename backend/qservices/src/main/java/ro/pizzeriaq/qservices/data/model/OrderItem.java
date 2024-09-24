@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -35,12 +37,12 @@ public class OrderItem {
     private List<OrderItem_OptionList_Option> options;
 
 
-    @Column(nullable = false)
-    private int totalPrice;
+    @Column(nullable = false, precision = 8, scale = 2)
+    private BigDecimal totalPrice;
 
 
-    @Column(nullable = false)
-    private int totalPriceWithDiscount;
+    @Column(nullable = false, precision = 8, scale = 2)
+    private BigDecimal totalPriceWithDiscount;
 
 
     @Column(nullable = false)

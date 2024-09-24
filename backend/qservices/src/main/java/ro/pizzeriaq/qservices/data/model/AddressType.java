@@ -24,6 +24,6 @@ public class AddressType {
     private List<Address> addresses;
 
 
-    @Column(nullable = false, unique = true, length = 40)
+    @Column(nullable = false, unique = true, length = 30)
     private String name;
 }

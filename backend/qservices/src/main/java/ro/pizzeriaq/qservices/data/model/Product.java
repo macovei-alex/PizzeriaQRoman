@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,7 +24,7 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "id_category", nullable = false)
-    private Category category;
+    private ProductCategory category;
 
 
     @ManyToMany(mappedBy = "products")
@@ -38,11 +39,11 @@ public class Product {
     private List<OrderItem> orderItems;
 
 
-    @Column(nullable = false, length = 40)
+    @Column(nullable = false, length = 60)
     private String name;
 
 
-    @Column(precision = 8, scale = 2, nullable = false)
+    @Column(nullable = false, precision = 8, scale = 2)
     private BigDecimal price;
 
 
@@ -51,4 +52,8 @@ public class Product {
 
 
     private String image;
+
+    @Column(nullable = false)
+    @ColumnDefault("1")
+    private boolean isActive = true;
 }

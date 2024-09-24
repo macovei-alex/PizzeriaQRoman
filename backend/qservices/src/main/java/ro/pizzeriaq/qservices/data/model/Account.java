@@ -5,8 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.ColumnDefault;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -36,4 +37,18 @@ public class Account {
 
     @OneToMany(mappedBy = "account")
     private List<Address> addresses;
+
+
+    @Column(nullable = false, columnDefinition = "DATETIME")
+    @ColumnDefault("NOW()")
+    private LocalDateTime createdTimestamp = LocalDateTime.now();
+
+
+    @Column(nullable = false, length = 20)
+    private String phoneNumber;
+
+
+    @Column(nullable = false)
+    @ColumnDefault("1")
+    private boolean isActive = true;
 }

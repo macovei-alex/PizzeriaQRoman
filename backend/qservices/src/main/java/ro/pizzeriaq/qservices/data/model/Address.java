@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Data
 @AllArgsConstructor
@@ -36,8 +37,8 @@ public class Address {
     private String street;
 
 
-    @Column(nullable = false, length = 10)
-    private String number;
+    @Column(nullable = false, length = 20)
+    private String streetNumber;
 
 
     @Column(length = 30)
@@ -47,6 +48,10 @@ public class Address {
     private int floor;
 
 
-    @Column(length = 10)
+    @Column(length = 20)
     private String apartment;
+
+
+    @Column
+    private boolean isPrimary;
 }

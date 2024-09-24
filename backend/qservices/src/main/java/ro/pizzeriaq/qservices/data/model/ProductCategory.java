@@ -13,7 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
-public class Category {
+@Table(name = "productcategory")
+public class ProductCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

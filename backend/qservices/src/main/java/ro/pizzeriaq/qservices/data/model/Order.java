@@ -6,10 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Type;
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -46,7 +44,8 @@ public class Order {
 
 
     @Column(nullable = false, columnDefinition = "DATETIME")
-    private LocalDateTime orderTimestamp;
+    @ColumnDefault("NOW()")
+    private LocalDateTime orderTimestamp = LocalDateTime.now();
 
 
     @Column(columnDefinition = "DATETIME")

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -22,22 +23,28 @@ public class Option {
     private Integer id;
 
 
-    @OneToMany(mappedBy = "option")
-    private List<OptionList_Option> optionListOptions;
+    @ManyToMany(mappedBy = "options")
+    private List<OptionList> optionLists;
 
 
-    @Column(nullable = false, length = 60)
+    @Column(nullable = false, length = 50)
     private String name;
 
 
-    @Column(precision = 8, scale = 2, nullable = false)
-    private BigDecimal description;
+    @Column(length = 100)
+    private String additionalDescription = null;
+
+
+    @Column(nullable = false, precision = 8, scale = 2)
+    private BigDecimal price;
 
 
     @Column(nullable = false)
-    private int minCount;
+    @ColumnDefault("0")
+    private int minCount = 0;
 
 
     @Column(nullable = false)
-    private int maxCount;
+    @ColumnDefault("2147483647")
+    private int maxCount = Integer.MAX_VALUE;
 }

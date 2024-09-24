@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Functionalitati client</title>
+    <style>
+      body {
+        font-size: 1.2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Functionalitatile clientului</h1>
+    <h3>Cont</h3>
+    <ul>
+      <li>
+        creearea unui cont cu
+        <ul>
+          <li>cont google + numar telefon</li>
+          <li>adresa email + parola + numar telefon</li>
+        </ul>
+      </li>
+      <li>fiecare cont are <strong>exact 1</strong> numar de telefon</li>
+      <li>asocierea contului cu adrese de livrare</li>
+      <li>optional: crearea unei adrese de livrare odata cu contul</li>
+      <li>adaugarea si stergerea unei adrese de livrare</li>
+    </ul>
+    <h3>Profil</h3>
+    <ul>
+      <li>schimbarea parolei contului</li>
+      <li>vizualizarea si schimbare adresei de email asociate</li>
+      <li>modificare adrese asociate</li>
+      <li>istoric de comenzi</li>
+    </ul>
+    <h3>Meniu</h3>
+    <ul>
+      <li>nume produse</li>
+      <li>preturile intregi si preturile cu discount global aplicat</li>
+      <li>imagini produse</li>
+      <li>descrieri produs (trunchiate)</li>
+    </ul>
+    <h3>Produs</h3>
+    <ul>
+      <li>
+        descrierea produsului (gramaje, valori nutritionale, alergeni, etc.)
+      </li>
+      <li>
+        listele de optiuni (text, numar minim de optiuni, numar maxim de
+        optiuni)
+        <ul>
+          <li>
+            daca lista are numar minim 0 atunci alegerea unei optiuni nu este
+            obligatorie
+          </li>
+        </ul>
+      </li>
+      <li>optiunile din fiecare lista (nume, descriere optionala, pret)</li>
+      <li>
+        optiunile au un numar minim si maxim de bucati
+        <ul>
+          <li>daca optiunea are numar minim 0 atunci ea nu este obligatorie</li>
+          <li>
+            daca optiunea are numar maxim 1 atunci ea este de tip
+            <strong>checkbox</strong>
+          </li>
+          <li>
+            altfel, interfata arata butoane de <strong>+</strong> si
+            <strong>-</strong> la optiune
+          </li>
+          <!--
+      <li - optiunile cu numar maxim
+        <strong>&gt; 1</strong> se vor considera ca <strong>0 sau 1</strong> la
+        numararea acestora in lista astfel:
+      </li>
+      <li>
+        daca optiunea are numar <strong>0</strong> atunci ea se numara ca
+        <strong>0</strong>
+      </li>
+      <li>
+        daca optiunea are numar <strong>&gt; 0</strong> atunci ea se numara ca
+        <strong>1</strong>
+      </li>
+      -->
+        </ul>
+      </li>
+      <li>
+        introducerea in cos a unuia sau mai multor produse cu optiunile alese
+      </li>
+      <li>
+        pretul total al produselor introduse dupa alegerea optiunilor si a
+        numarului de bucati dorite
+      </li>
+    </ul>
+    <h3>Cos</h3>
+    <ul>
+      <li>adaugarea de produse la o comanda</li>
+      <li>vizualizarea cosului de produse</li>
+      <li>
+        marirea sau scaderea numarului de bucati pentru un produs
+        <ul>
+          <li>
+            daca dupa scaderea numarului de bucati produsul are 0 bucati ramase,
+            atunci se va sterge din cos
+          </li>
+        </ul>
+      </li>
+      <li>
+        afisarea pretului per produs (<code>nr. bucati * pret</code>) si al
+        cosului
+      </li>
+      <li>alegerea adresei de livrare (implicit ultima adresa folosita)</li>
+      <li>adaugarea de mentiuni speciale la o comanda</li>
+    </ul>
+    <h1>Nelamuriri</h1>
+    <ul>
+      <li>
+        la fiecare comanda, pe langa discountul global al fiecarui produs:
+        <ul>
+          <li>cupon cu 1 discount la valoarea totala a comenzii</li>
+          sau
+          <li>cupon cu aceeasi reducere la unele produse din comanda?</li>
+        </ul>
+      </li>
+      <li>reduceri de 2 tipuri (procent sau valoare absoluta) pentru cupoane?</li>
+      <li>reduceri de 2 tipuri (procent sau valoare absoluta) pentru reducerile globale?</li>
+    </ul>
+  </body>
+</html>
