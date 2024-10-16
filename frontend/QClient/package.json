@@ -1,7 +1,7 @@
 {
   "name": "qclient",
   "version": "1.0.0",
-  "main": "expo-router/entry",
+  "main": "expo-router/entry.js",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
