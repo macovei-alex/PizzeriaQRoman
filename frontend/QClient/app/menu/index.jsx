@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MenuOption from "../../components/menu/MenuOption";
 import MenuCategory from "../../components/menu/MenuCategory";
 import { images } from "../../constants";
 import { Image, ImageBackground, ScrollView, Text, View } from "react-native";
 
-const MENU_OPTIONS = [
+const MENU_PRODUCTS = [
   {
     id: 1,
     name: "Pizza Taraneasca",
@@ -13,6 +13,7 @@ const MENU_OPTIONS = [
     description: "500g",
     price: 30,
     image: images.pizzaDemo,
+    categoryId: 1,
   },
   {
     id: 2,
@@ -21,6 +22,7 @@ const MENU_OPTIONS = [
     description: "500g",
     price: 40,
     image: images.pizzaDemo,
+    categoryId: 1,
   },
   {
     id: 3,
@@ -29,6 +31,7 @@ const MENU_OPTIONS = [
     description: "500g",
     price: 50,
     image: images.pizzaDemo,
+    categoryId: 2,
   },
   {
     id: 4,
@@ -37,6 +40,7 @@ const MENU_OPTIONS = [
     description: "500g",
     price: 60,
     image: images.pizzaDemo,
+    categoryId: 2,
   },
   {
     id: 5,
@@ -45,28 +49,54 @@ const MENU_OPTIONS = [
     description: "500g",
     price: 70,
     image: images.pizzaDemo,
+    categoryId: 3,
   },
 ];
 
-const CATEGORIES = [
+const MENU_CATEGORIES = [
   {
+    id: 1,
     name: "Cele mai vândute",
   },
   {
+    id: 2,
     name: "Pizza 1+1 combo",
   },
   {
+    id: 3,
     name: "Pizza 30cm",
   },
   {
+    id: 4,
     name: "Fă-ți singur pizza",
   },
   {
+    id: 5,
     name: "Băuturi non-alcoolice",
   },
 ];
 
 const Menu = () => {
+  const [productsPerCategroy, setProductsPerCategory] = useState([
+    { category: "", products: [] },
+  ]);
+
+  useEffect(() => {
+    const productsSplit = [];
+    for (let i = 0; i < MENU_CATEGORIES.length; i++) {
+      productsSplit.push({
+        category: MENU_CATEGORIES[i],
+        products: [],
+      });
+      for (let j = 0; j < MENU_PRODUCTS.length; j++) {
+        if (MENU_PRODUCTS[j].categoryId === MENU_CATEGORIES[i].id) {
+          productsSplit[i].products.push(MENU_PRODUCTS[j]);
+        }
+      }
+    }
+    setProductsPerCategory(productsSplit);
+  }, []);
+
   return (
     <SafeAreaView>
       <ScrollView>
@@ -92,14 +122,23 @@ const Menu = () => {
         </View>
 
         <ScrollView horizontal className="flex-row mt-2">
-          {CATEGORIES.map((category) => (
+          {MENU_CATEGORIES.map((category) => (
             <MenuCategory key={category.name} name={category.name} />
           ))}
         </ScrollView>
 
-        {MENU_OPTIONS.map((option) => (
-          <MenuOption key={option.id} product={option} />
-        ))}
+        <View className="mb-3">
+          {productsPerCategroy.map(({ category, products }) => (
+            <View className="pt-4">
+              <View className="ml-6">
+                <Text className="text-xl font-extrabold">{category.name}</Text>
+              </View>
+              {products.map((product) => (
+                <MenuOption key={product.id} product={product} />
+              ))}
+            </View>
+          ))}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
