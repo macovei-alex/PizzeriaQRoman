@@ -112,7 +112,7 @@ const Menu = () => {
                 className="w-64"
                 resizeMode="contain"
               />
-              <View className="rounded-lg opacity-80 bg-bg-300">
+              <View className="rounded-lg opacity-80 bg-bg-300 mb-2">
                 <Text className="px-4 py-1 font-bold">
                   Comanda minimă este de 40 RON
                 </Text>
@@ -121,15 +121,15 @@ const Menu = () => {
           </ImageBackground>
         </View>
 
-        <ScrollView horizontal className="flex-row mt-2">
+        <ScrollView horizontal className="flex-row py-2">
           {MENU_CATEGORIES.map((category) => (
-            <MenuCategory key={category.name} name={category.name} />
+            <MenuCategory key={category.id} category={category} />
           ))}
         </ScrollView>
 
-        <View className="mb-3">
+        <View>
           {productsPerCategroy.map(({ category, products }) => (
-            <View className="pt-4">
+            <View key={category.id} className="my-2">
               <View className="ml-6">
                 <Text className="text-xl font-extrabold">{category.name}</Text>
               </View>
