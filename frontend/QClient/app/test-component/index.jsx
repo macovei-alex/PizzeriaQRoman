@@ -1,21 +1,16 @@
 import { View, Text, StyleSheet, Platform } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useGlobalContext } from "../../context/useGlobalContext";
+import GoBackButton from "../../components/svg/GoBackButton";
 
 export default function TestComponent() {
-  const { gProduct: product } = useGlobalContext();
   return (
     <SafeAreaView className="flex flex-col items-center justify-center h-full">
       <View
         style={styles.shadowContainer}
         className="px-4 py-2 bg-bg-600 rounded-xl"
       >
-        <Text>
-          {product === null
-            ? "product null"
-            : product.name ?? "product.name undefined"}
-        </Text>
+        <GoBackButton width={100} height={100} />
       </View>
     </SafeAreaView>
   );
