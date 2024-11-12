@@ -3,16 +3,16 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useGlobalContext } from "../../context/useGlobalContext";
 import { useRouter } from "expo-router";
-import GoBackButton from "../../components/svg/GoBackButton";
+import GoBackButtonSVG from "../../components/svg/GoBackButtonSVG";
 
-export default function Option() {
+export default function Product() {
   const router = useRouter();
   const { gProduct: product } = useGlobalContext();
 
   return (
     <SafeAreaView>
       <TouchableOpacity onPress={() => router.back()}>
-        <GoBackButton width={100} height={100} />
+        <GoBackButtonSVG width={100} height={100} />
       </TouchableOpacity>
       <Text>{product.name}</Text>
     </SafeAreaView>

@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Platform } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import GoBackButton from "../../components/svg/GoBackButton";
+import GoBackButtonSVG from "../../components/svg/GoBackButtonSVG";
 
 export default function TestComponent() {
   return (
@@ -10,7 +10,7 @@ export default function TestComponent() {
         style={styles.shadowContainer}
         className="px-4 py-2 bg-bg-600 rounded-xl"
       >
-        <GoBackButton width={100} height={100} />
+        <GoBackButtonSVG width={100} height={100} />
       </View>
     </SafeAreaView>
   );
