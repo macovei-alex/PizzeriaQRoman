@@ -2,10 +2,18 @@ import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MenuCategory from "../../components/menu/MenuCategory";
 import { images } from "../../constants";
-import { Image, ImageBackground, ScrollView, Text, View } from "react-native";
+import {
+  Image,
+  ImageBackground,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useRouter } from "expo-router";
 import { useGlobalContext } from "../../context/useGlobalContext";
 import MenuProduct from "../../components/menu/MenuProduct";
+import GoBackButtonSVG from "../../components/svg/GoBackButtonSVG";
 
 const MENU_PRODUCTS = [
   {
@@ -109,6 +117,14 @@ export default function Menu() {
             source={images.menuBackground}
             className="w-full h-44"
           >
+            <View className="absolute">
+              <TouchableOpacity
+                onPress={() => router.back()}
+                className="mt-4 ml-1"
+              >
+                <GoBackButtonSVG width={38} height={38} />
+              </TouchableOpacity>
+            </View>
             <View className="flex items-center justify-center h-full">
               {/* TODO: rounded image corners */}
               <Image
