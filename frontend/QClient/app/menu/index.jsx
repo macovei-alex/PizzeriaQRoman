@@ -98,13 +98,7 @@ const Menu = () => {
         </ScrollView>
 
         {MENU_OPTIONS.map((option) => (
-          <MenuOption
-            key={option.id}
-            name={option.name}
-            subtitle={option.subtitle}
-            price={option.price}
-            image={option.image}
-          />
+          <MenuOption key={option.id} product={option} />
         ))}
       </ScrollView>
     </SafeAreaView>
