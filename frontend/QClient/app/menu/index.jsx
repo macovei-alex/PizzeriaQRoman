@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import MenuOption from "../../components/menu/MenuOption";
 import MenuCategory from "../../components/menu/MenuCategory";
 import { images } from "../../constants";
 import { Image, ImageBackground, ScrollView, Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import { useGlobalContext } from "../../context/useGlobalContext";
+import MenuProduct from "../../components/menu/MenuProduct";
 
 const MENU_PRODUCTS = [
   {
@@ -76,7 +78,9 @@ const MENU_CATEGORIES = [
   },
 ];
 
-const Menu = () => {
+export default function Menu() {
+  const router = useRouter();
+  const { gSetProduct } = useGlobalContext();
   const [productsPerCategroy, setProductsPerCategory] = useState([
     { category: "", products: [] },
   ]);
@@ -134,7 +138,14 @@ const Menu = () => {
                 <Text className="text-xl font-extrabold">{category.name}</Text>
               </View>
               {products.map((product) => (
-                <MenuOption key={product.id} product={product} />
+                <MenuProduct
+                  key={product.id}
+                  product={product}
+                  onClick={() => {
+                    gSetProduct(product);
+                    router.push("/menu/product");
+                  }}
+                />
               ))}
             </View>
           ))}
@@ -142,6 +153,4 @@ const Menu = () => {
       </ScrollView>
     </SafeAreaView>
   );
-};
-
-export default Menu;
+}

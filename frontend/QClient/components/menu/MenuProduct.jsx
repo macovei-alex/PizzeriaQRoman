@@ -1,7 +1,7 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 
-const MenuOption = ({ product }) => {
+function MenuProduct({ product, onClick }) {
   return (
     <View className="flex-row mx-3 my-5 rounded-xl bg-bg-400">
       <Image
@@ -19,13 +19,13 @@ const MenuOption = ({ product }) => {
           <Text className="text-lg">{`${product.price.toFixed(2)} RON`}</Text>
         </View>
         <View className="items-center justify-center px-6 py-3 mt-8 ml-2 -mb-8 -mr-4 rounded-l bg-bg-500">
-          <TouchableOpacity>
+          <TouchableOpacity onPress={onClick}>
             <Text className="text-txt-300">Informatii produs</Text>
           </TouchableOpacity>
         </View>
       </View>
     </View>
   );
-};
+}
 
-export default MenuOption;
+export default MenuProduct;

@@ -1,19 +1,25 @@
 import { View, Text, StyleSheet, Platform } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useGlobalContext } from "../../context/useGlobalContext";
 
-const TestComponent = () => {
+export default function TestComponent() {
+  const { gProduct: product } = useGlobalContext();
   return (
     <SafeAreaView className="flex flex-col items-center justify-center h-full">
       <View
         style={styles.shadowContainer}
         className="px-4 py-2 bg-bg-600 rounded-xl"
       >
-        <Text>TestComponent</Text>
+        <Text>
+          {product === null
+            ? "product null"
+            : product.name ?? "product.name undefined"}
+        </Text>
       </View>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   shadowContainer: {
@@ -30,5 +36,3 @@ const styles = StyleSheet.create({
     }),
   },
 });
-
-export default TestComponent;

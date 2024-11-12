@@ -5,7 +5,7 @@ function MenuCategory({ category }) {
   return (
     <View className="py-2">
       <View
-        className="px-4 py-3 mx-1 rounded-xl bg-bg-600"
+        className="px-4 py-3 mx-2 rounded-xl bg-bg-600"
         style={styles.shadowContainer}
       >
         <Text className="font-bold">{category.name}</Text>
