@@ -94,11 +94,11 @@ export default function Menu() {
     { category: { id: 1 }, products: [] },
   ]);
   const { scrollRef, scrollToPos } = useScrollRef();
-  const [categoryPositions, setItemPositions] = useState({});
+  const [categoryPositions, setCategoryPositions] = useState({});
 
   const updateCategoryLayoutPositions = (categoryId, event) => {
     const { y } = event.nativeEvent.layout;
-    setItemPositions((prevPositions) => ({
+    setCategoryPositions((prevPositions) => ({
       ...prevPositions,
       [categoryId]: y,
     }));
@@ -133,14 +133,13 @@ export default function Menu() {
                 <GoBackButtonSVG width={38} height={38} />
               </TouchableOpacity>
             </View>
-            <View className="flex items-center justify-center h-full">
-              {/* TODO: rounded image corners */}
+            <View className="flex items-center justify-around h-full py-2">
               <Image
                 source={images.logo}
-                className="w-64"
-                resizeMode="contain"
+                className="h-20 w-44 rounded-xl"
+                resizeMode="stretch"
               />
-              <View className="rounded-lg opacity-80 bg-bg-300 mb-2">
+              <View className="rounded-lg opacity-80 bg-bg-300">
                 <Text className="px-4 py-1 font-bold">
                   Comanda minimă este de 40 RON
                 </Text>
