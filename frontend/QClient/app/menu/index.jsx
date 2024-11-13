@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MenuCategory from "../../components/menu/MenuCategory";
 import { images } from "../../constants";
@@ -14,6 +14,7 @@ import { useRouter } from "expo-router";
 import { useGlobalContext } from "../../context/useGlobalContext";
 import MenuProduct from "../../components/menu/MenuProduct";
 import GoBackButtonSVG from "../../components/svg/GoBackButtonSVG";
+import { useScrollRef } from "../../hooks/useScrollRef";
 
 const MENU_PRODUCTS = [
   {
@@ -90,8 +91,18 @@ export default function Menu() {
   const router = useRouter();
   const { gSetProduct } = useGlobalContext();
   const [productsPerCategroy, setProductsPerCategory] = useState([
-    { category: "", products: [] },
+    { category: { id: 1 }, products: [] },
   ]);
+  const { scrollRef, scrollToPos } = useScrollRef();
+  const [categoryPositions, setItemPositions] = useState({});
+
+  const updateCategoryLayoutPositions = (categoryId, event) => {
+    const { y } = event.nativeEvent.layout;
+    setItemPositions((prevPositions) => ({
+      ...prevPositions,
+      [categoryId]: y,
+    }));
+  };
 
   useEffect(() => {
     const productsSplit = [];
@@ -111,17 +122,14 @@ export default function Menu() {
 
   return (
     <SafeAreaView>
-      <ScrollView>
+      <ScrollView ref={scrollRef}>
         <View>
           <ImageBackground
             source={images.menuBackground}
             className="w-full h-44"
           >
             <View className="absolute">
-              <TouchableOpacity
-                onPress={() => router.back()}
-                className="mt-4 ml-1"
-              >
+              <TouchableOpacity onPress={router.back} className="mt-4 ml-1">
                 <GoBackButtonSVG width={38} height={38} />
               </TouchableOpacity>
             </View>
@@ -143,13 +151,23 @@ export default function Menu() {
 
         <ScrollView horizontal className="flex-row py-2">
           {MENU_CATEGORIES.map((category) => (
-            <MenuCategory key={category.id} category={category} />
+            <MenuCategory
+              key={category.id}
+              category={category}
+              onPress={() => scrollToPos({ y: categoryPositions[category.id] })}
+            />
           ))}
         </ScrollView>
 
         <View>
           {productsPerCategroy.map(({ category, products }) => (
-            <View key={category.id} className="my-2">
+            <View
+              key={category.id}
+              onLayout={(event) =>
+                updateCategoryLayoutPositions(category.id, event)
+              }
+              className="my-2"
+            >
               <View className="ml-6">
                 <Text className="text-xl font-extrabold">{category.name}</Text>
               </View>

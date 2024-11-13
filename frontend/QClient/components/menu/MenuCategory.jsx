@@ -1,15 +1,22 @@
 import React from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-function MenuCategory({ category }) {
+function MenuCategory({ category, onPress }) {
   return (
     <View className="py-2">
-      <View
+      <TouchableOpacity
         className="px-4 py-3 mx-2 rounded-xl bg-bg-600"
         style={styles.shadowContainer}
+        onPress={onPress}
       >
         <Text className="font-bold">{category.name}</Text>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 }
