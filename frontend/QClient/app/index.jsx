@@ -1,6 +1,5 @@
 import { Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useGlobalContext } from "../context/useGlobalContext";
 
 export default function App() {
   return (

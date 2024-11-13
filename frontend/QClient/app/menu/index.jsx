@@ -96,14 +96,15 @@ export default function Menu() {
   const { scrollRef, scrollToPos } = useScrollRef();
   const [categoryPositions, setCategoryPositions] = useState({});
 
+  // Save the position of each category for the scroll to position from the horizontal menu
   const updateCategoryLayoutPositions = (categoryId, event) => {
-    const { y } = event.nativeEvent.layout;
     setCategoryPositions((prevPositions) => ({
       ...prevPositions,
-      [categoryId]: y,
+      [categoryId]: event.nativeEvent.layout.y,
     }));
   };
 
+  // Split products by category
   useEffect(() => {
     const productsSplit = [];
     for (let i = 0; i < MENU_CATEGORIES.length; i++) {
@@ -123,6 +124,7 @@ export default function Menu() {
   return (
     <SafeAreaView>
       <ScrollView ref={scrollRef}>
+        {/* Logo section */}
         <View>
           <ImageBackground
             source={images.menuBackground}
@@ -148,6 +150,7 @@ export default function Menu() {
           </ImageBackground>
         </View>
 
+        {/* Horizontal menu categories */}
         <ScrollView horizontal className="flex-row py-2">
           {MENU_CATEGORIES.map((category) => (
             <MenuCategory
@@ -158,13 +161,15 @@ export default function Menu() {
           ))}
         </ScrollView>
 
+        {/* Product list */}
         <View>
           {productsPerCategroy.map(({ category, products }) => (
             <View
               key={category.id}
-              onLayout={(event) =>
-                updateCategoryLayoutPositions(category.id, event)
-              }
+              onLayout={(event) => {
+                // Save the position of each category for the scroll to position from the horizontal menu
+                updateCategoryLayoutPositions(category.id, event);
+              }}
               className="my-2"
             >
               <View className="ml-6">
