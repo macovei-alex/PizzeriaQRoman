@@ -96,11 +96,15 @@ export default function Menu() {
   const { scrollRef, scrollToPos } = useScrollRef();
   const [categoryPositions, setCategoryPositions] = useState({});
 
+  let logged = false;
   // Save the position of each category for the scroll to position from the horizontal menu
   const updateCategoryLayoutPositions = (categoryId, event) => {
+    // Extracting data in layout is a MUST because the event is a synthetic event (event pooling)
+    // and event.nativeEvent will be set to null afterwards.
+    const { layout } = event.nativeEvent;
     setCategoryPositions((prevPositions) => ({
       ...prevPositions,
-      [categoryId]: event.nativeEvent.layout.y,
+      [categoryId]: layout.y,
     }));
   };
 
