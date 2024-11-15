@@ -15,6 +15,7 @@ import { useGlobalContext } from "../../context/useGlobalContext";
 import MenuProduct from "../../components/menu/MenuProduct";
 import GoBackButtonSVG from "../../components/svg/GoBackButtonSVG";
 import { useScrollRef } from "../../hooks/useScrollRef";
+import SearchBar from "../../components/menu/SerachBar";
 
 const MENU_PRODUCTS = [
   {
@@ -145,7 +146,7 @@ export default function Menu() {
                 className="h-20 w-44 rounded-xl"
                 resizeMode="stretch"
               />
-              <View className="rounded-lg opacity-80 bg-bg-300">
+              <View className="rounded-lg opacity-75 bg-bg-300">
                 <Text className="px-4 py-1 font-bold">
                   Comanda minimă este de 40 RON
                 </Text>
@@ -164,6 +165,8 @@ export default function Menu() {
             />
           ))}
         </ScrollView>
+
+        <SearchBar placeholder={"Caută ce îți dorești"} />
 
         {/* Product list */}
         <View>
