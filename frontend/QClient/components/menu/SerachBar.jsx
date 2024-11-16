@@ -14,6 +14,9 @@ export default function SearchBar({ placeholder, onSearch }) {
           value={text}
           onChangeText={(newText) => setText((_) => newText)}
           textAlign="center"
+          onEndEditing={() => {
+            onSearch(text);
+          }}
           className="flex-1"
         />
       </View>

@@ -166,7 +166,12 @@ export default function Menu() {
           ))}
         </ScrollView>
 
-        <SearchBar placeholder={"Caută ce îți dorești"} />
+        <SearchBar
+          placeholder={"Caută ce îți dorești"}
+          onSearch={(text) => {
+            console.log(`"${text}"`);
+          }}
+        />
 
         {/* Product list */}
         <View>
