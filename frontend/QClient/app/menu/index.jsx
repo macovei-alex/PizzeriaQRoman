@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MenuCategory from "../../components/menu/MenuCategory";
-import { images } from "../../constants";
+import { images, BASE_API_URL } from "../../constants";
 import {
   Image,
   ImageBackground,
@@ -16,79 +16,7 @@ import MenuProduct from "../../components/menu/MenuProduct";
 import GoBackButtonSVG from "../../components/svg/GoBackButtonSVG";
 import { useScrollRef } from "../../hooks/useScrollRef";
 import SearchBar from "../../components/menu/SerachBar";
-
-const MENU_PRODUCTS = [
-  {
-    id: 1,
-    name: "Pizza Taraneasca",
-    subtitle: "1+1 Gratis la alegere",
-    description: "500g",
-    price: 30,
-    image: images.pizzaDemo,
-    categoryId: 1,
-  },
-  {
-    id: 2,
-    name: "Pizza Margherita",
-    subtitle: "1+1 Gratis la alegere",
-    description: "500g",
-    price: 40,
-    image: images.pizzaDemo,
-    categoryId: 1,
-  },
-  {
-    id: 3,
-    name: "Pizza Quattro Stagioni",
-    subtitle: "1+1 Gratis la alegere",
-    description: "500g",
-    price: 50,
-    image: images.pizzaDemo,
-    categoryId: 2,
-  },
-  {
-    id: 4,
-    name: "Pizza Capriciosa",
-    subtitle: "1+1 Gratis la alegere",
-    description: "500g",
-    price: 60,
-    image: images.pizzaDemo,
-    categoryId: 2,
-  },
-  {
-    id: 5,
-    name: "Pizza Quattro Formaggi",
-    subtitle: "1+1 Gratis la alegere",
-    description: "500g",
-    price: 70,
-    image: images.pizzaDemo,
-    categoryId: 3,
-  },
-];
-
-const MENU_CATEGORIES = [
-  {
-    id: 1,
-    name: "Cele mai vândute",
-  },
-  {
-    id: 2,
-    name: "Pizza 1+1 combo",
-  },
-  {
-    id: 3,
-    name: "Pizza 30cm",
-  },
-  {
-    id: 4,
-    name: "Fă-ți singur pizza",
-  },
-  {
-    id: 5,
-    name: "Băuturi non-alcoolice",
-  },
-];
-
-const PRODUCT_OPTIONS = [{}];
+import { useQuery } from "react-query";
 
 export default function Menu() {
   const router = useRouter();
@@ -99,7 +27,21 @@ export default function Menu() {
   const { scrollRef, scrollToPos } = useScrollRef();
   const [categoryPositions, setCategoryPositions] = useState({});
 
-  let logged = false;
+  const products = useQuery({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const response = await fetch(`${BASE_API_URL}/mock/product/all`);
+      return response.json();
+    },
+  });
+  const categories = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const response = await fetch(`${BASE_API_URL}/mock/category/all`);
+      return response.json();
+    },
+  });
+
   // Save the position of each category for the scroll to position from the horizontal menu
   const updateCategoryLayoutPositions = (categoryId, event) => {
     // Extracting data in layout is a MUST because the event is a synthetic event (event pooling)
@@ -113,20 +55,35 @@ export default function Menu() {
 
   // Split products by category
   useEffect(() => {
+    if (
+      products.isLoading ||
+      products.isError ||
+      !products.data ||
+      categories.isLoading ||
+      categories.isError ||
+      !categories.data
+    )
+      return;
+
     const productsSplit = [];
-    for (let i = 0; i < MENU_CATEGORIES.length; i++) {
+    for (let i = 0; i < categories.data.length; i++) {
       productsSplit.push({
-        category: MENU_CATEGORIES[i],
+        category: categories.data[i],
         products: [],
       });
-      for (let j = 0; j < MENU_PRODUCTS.length; j++) {
-        if (MENU_PRODUCTS[j].categoryId === MENU_CATEGORIES[i].id) {
-          productsSplit[i].products.push(MENU_PRODUCTS[j]);
+      for (let j = 0; j < products.data.length; j++) {
+        if (products.data[j].categoryId === categories.data[i].id) {
+          productsSplit[i].products.push(products.data[j]);
         }
       }
     }
     setProductsPerCategory(productsSplit);
-  }, []);
+  }, [products.data, categories.data]);
+
+  if (products.isLoading || categories.isLoading)
+    return <Text>Loading...</Text>;
+  if (products.isError) return <Text>Error: {products.error.message}</Text>;
+  if (categories.isError) return <Text>Error: {categories.error.message}</Text>;
 
   return (
     <SafeAreaView>
@@ -159,7 +116,7 @@ export default function Menu() {
 
         {/* Horizontal menu categories */}
         <ScrollView horizontal className="flex-row py-2">
-          {MENU_CATEGORIES.map((category) => (
+          {categories.data.map((category) => (
             <MenuCategory
               key={category.id}
               category={category}

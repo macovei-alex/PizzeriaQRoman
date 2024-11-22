@@ -1,7 +1,9 @@
-package ro.pizzeriaq.qservices.mock.controllers;
+package ro.pizzeriaq.qservices.mock;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 
+@Data
 @AllArgsConstructor
 public class MockProductDTO {
     private long id;

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TestEntityService implements UtilsService {
+public class TestEntityService {
 
     private final TestEntityRepository testEntityRepository;
 
@@ -25,7 +25,7 @@ public class TestEntityService implements UtilsService {
             return test;
         }
          for(var test2 : test.get().getTestEntity2s()) {
-            fakeConsumer(test2);
+             ServiceUtils.fakeConsumer(test2);
         }
         return test;
     }
@@ -36,7 +36,7 @@ public class TestEntityService implements UtilsService {
         var tests = testEntityRepository.findAll();
         for (var test : tests) {
             for (var test2 : test.getTestEntity2s()) {
-                fakeConsumer(test2);
+                ServiceUtils.fakeConsumer(test2);
             }
         }
         return tests;

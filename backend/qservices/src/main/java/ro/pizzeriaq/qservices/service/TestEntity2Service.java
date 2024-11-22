@@ -5,7 +5,7 @@ import ro.pizzeriaq.qservices.data.model.TestEntity2;
 import ro.pizzeriaq.qservices.data.repository.TestEntity2Repository;
 
 @Service
-public class TestEntity2Service implements UtilsService {
+public class TestEntity2Service {
 
     private final TestEntity2Repository testEntity2Repository;
 

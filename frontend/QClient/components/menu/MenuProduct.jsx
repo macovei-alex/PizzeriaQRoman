@@ -1,11 +1,12 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
+import { images } from "../../constants";
 
 function MenuProduct({ product, onClick }) {
   return (
     <View className="flex-row mx-3 my-5 rounded-xl bg-bg-400">
       <Image
-        source={product.image}
+        source={product.image ?? "" === "" ? images.pizzaDemo : product.image}
         className="w-[45%] m-1 aspect-square rounded-full"
       />
       <View className="flex-col p-3">

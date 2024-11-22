@@ -3,14 +3,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GoBackButtonSVG from "../../components/svg/GoBackButtonSVG";
 import { useQuery } from "react-query";
+import { BASE_API_URL } from "../../constants";
 
 export default function TestComponent() {
-  const { data, isError, error, isLoading } = useQuery({
-    queryKey: ["test", { data }],
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["categories", { data }],
     queryFn: async () => {
-      const response = await fetch(
-        "https://jsonplaceholder.typicode.com/posts"
-      );
+      const response = await fetch(`${BASE_API_URL}/mock/product/all`);
       return response.json();
     },
   });
@@ -22,7 +21,7 @@ export default function TestComponent() {
 
   return (
     <SafeAreaView>
-      <Text>{data[0].body}</Text>
+      <Text>{data ? JSON.stringify(data) : ""}</Text>
     </SafeAreaView>
   );
 }
