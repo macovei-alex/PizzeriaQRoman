@@ -1,33 +1,28 @@
-import { View, StyleSheet, Platform } from "react-native";
-import React from "react";
+import { View, StyleSheet, Platform, ScrollView, Text } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GoBackButtonSVG from "../../components/svg/GoBackButtonSVG";
+import { useQuery } from "react-query";
 
 export default function TestComponent() {
+  const { data, isError, error, isLoading } = useQuery({
+    queryKey: ["test", { data }],
+    queryFn: async () => {
+      const response = await fetch(
+        "https://jsonplaceholder.typicode.com/posts"
+      );
+      return response.json();
+    },
+  });
+
+  console.log({ data: data ? true : false, isError, error, isLoading });
+
+  if (isLoading) return <Text>Loading...</Text>;
+  if (isError) return <Text>Error: {error.message}</Text>;
+
   return (
-    <SafeAreaView className="flex flex-col items-center justify-center h-full">
-      <View
-        style={styles.shadowContainer}
-        className="px-4 py-2 bg-bg-600 rounded-xl"
-      >
-        <GoBackButtonSVG width={100} height={100} />
-      </View>
+    <SafeAreaView>
+      <Text>{data[0].body}</Text>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  shadowContainer: {
-    ...Platform.select({
-      ios: {
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
-});

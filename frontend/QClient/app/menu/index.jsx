@@ -88,6 +88,8 @@ const MENU_CATEGORIES = [
   },
 ];
 
+const PRODUCT_OPTIONS = [{}];
+
 export default function Menu() {
   const router = useRouter();
   const { gSetProduct } = useGlobalContext();
