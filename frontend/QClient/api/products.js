@@ -1,4 +1,5 @@
 import config from "../api/config";
+import axios from "axios";
 
 const baseProductRoute = `${config.baseApiUrl}${
   config.useMockApi ? "/mock" : ""
@@ -8,18 +9,15 @@ const baseCategoryRoute = `${config.baseApiUrl}${
 }/category`;
 
 async function fetchProductsMock() {
-  const response = await fetch(`${baseProductRoute}/all`);
-  return await response.json();
+  return (await axios.get(`${baseProductRoute}/all`)).data;
 }
 
 async function fetchCategoriesMock() {
-  const response = await fetch(`${baseCategoryRoute}/all`);
-  return await response.json();
+  return (await axios.get(`${baseCategoryRoute}/all`)).data;
 }
 
 async function fetchProductExtendedMock(productId) {
-  const response = await fetch(`${baseProductRoute}/${productId}`);
-  return await response.json();
+  return (await axios.get(`${baseProductRoute}/${productId}`)).data;
 }
 
 export { fetchProductsMock, fetchCategoriesMock };
