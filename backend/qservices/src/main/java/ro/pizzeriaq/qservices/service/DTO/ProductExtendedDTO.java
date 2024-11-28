@@ -1,2 +1,4 @@
-package ro.pizzeriaq.qservices.service.DTO;public class ProductExtendedDTO {
+package ro.pizzeriaq.qservices.service.DTO;
+
+public class ProductExtendedDTO {
 }

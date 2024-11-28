@@ -43,12 +43,16 @@ public class Product {
 	private String name;
 
 
-	@Column(nullable = false, precision = 8, scale = 2)
-	private BigDecimal price;
+	@Column(length = 100)
+	private String subtitle;
 
 
 	@Column(length = 1000)
 	private String description;
+
+
+	@Column(nullable = false, precision = 8, scale = 2)
+	private BigDecimal price;
 
 
 	private String image;

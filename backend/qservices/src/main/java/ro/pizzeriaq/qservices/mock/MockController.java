@@ -15,7 +15,6 @@ public class MockController {
 
 	private final AtomicInteger counter = new AtomicInteger(0);
 
-	@CrossOrigin(origins = "*")
 	@GetMapping("/test")
 	public String test() {
 		System.out.println(counter.incrementAndGet() + "/mock/test");
