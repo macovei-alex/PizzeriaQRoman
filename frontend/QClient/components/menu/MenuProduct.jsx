@@ -6,7 +6,7 @@ function MenuProduct({ product, onClick }) {
   return (
     <View className="flex-row mx-3 my-5 rounded-xl bg-bg-400">
       <Image
-        source={product.image ?? "" === "" ? images.pizzaDemo : product.image}
+        source={product.image ? product.image : images.pizzaDemo}
         className="w-[45%] m-1 aspect-square rounded-full"
       />
       <View className="flex-col p-3">

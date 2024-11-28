@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MenuCategory from "../../components/menu/MenuCategory";
-import { images, BASE_API_URL } from "../../constants";
+import { images } from "../../constants";
 import {
   Image,
   ImageBackground,
@@ -17,6 +17,7 @@ import GoBackButtonSVG from "../../components/svg/GoBackButtonSVG";
 import { useScrollRef } from "../../hooks/useScrollRef";
 import SearchBar from "../../components/menu/SerachBar";
 import { useQuery } from "react-query";
+import api from "../../api";
 
 export default function Menu() {
   const router = useRouter();
@@ -27,19 +28,13 @@ export default function Menu() {
   const { scrollRef, scrollToPos } = useScrollRef();
   const [categoryPositions, setCategoryPositions] = useState({});
 
-  const products = useQuery({
+  const productQuery = useQuery({
     queryKey: ["products"],
-    queryFn: async () => {
-      const response = await fetch(`${BASE_API_URL}/mock/product/all`);
-      return response.json();
-    },
+    queryFn: api.fetchProductsMock,
   });
-  const categories = useQuery({
+  const categoryQuery = useQuery({
     queryKey: ["categories"],
-    queryFn: async () => {
-      const response = await fetch(`${BASE_API_URL}/mock/category/all`);
-      return response.json();
-    },
+    queryFn: api.fetchCategoriesMock,
   });
 
   // Save the position of each category for the scroll to position from the horizontal menu
@@ -56,34 +51,36 @@ export default function Menu() {
   // Split products by category
   useEffect(() => {
     if (
-      products.isLoading ||
-      products.isError ||
-      !products.data ||
-      categories.isLoading ||
-      categories.isError ||
-      !categories.data
+      productQuery.isLoading ||
+      productQuery.isError ||
+      !productQuery.data ||
+      categoryQuery.isLoading ||
+      categoryQuery.isError ||
+      !categoryQuery.data
     )
       return;
 
     const productsSplit = [];
-    for (let i = 0; i < categories.data.length; i++) {
+    for (let i = 0; i < categoryQuery.data.length; i++) {
       productsSplit.push({
-        category: categories.data[i],
+        category: categoryQuery.data[i],
         products: [],
       });
-      for (let j = 0; j < products.data.length; j++) {
-        if (products.data[j].categoryId === categories.data[i].id) {
-          productsSplit[i].products.push(products.data[j]);
+      for (let j = 0; j < productQuery.data.length; j++) {
+        if (productQuery.data[j].categoryId === categoryQuery.data[i].id) {
+          productsSplit[i].products.push(productQuery.data[j]);
         }
       }
     }
     setProductsPerCategory(productsSplit);
-  }, [products.data, categories.data]);
+  }, [productQuery.data, categoryQuery.data]);
 
-  if (products.isLoading || categories.isLoading)
+  if (productQuery.isLoading || categoryQuery.isLoading)
     return <Text>Loading...</Text>;
-  if (products.isError) return <Text>Error: {products.error.message}</Text>;
-  if (categories.isError) return <Text>Error: {categories.error.message}</Text>;
+  if (productQuery.isError)
+    return <Text>Error: {productQuery.error.message}</Text>;
+  if (categoryQuery.isError)
+    return <Text>Error: {categoryQuery.error.message}</Text>;
 
   return (
     <SafeAreaView>
@@ -116,7 +113,7 @@ export default function Menu() {
 
         {/* Horizontal menu categories */}
         <ScrollView horizontal className="flex-row py-2">
-          {categories.data.map((category) => (
+          {categoryQuery.data.map((category) => (
             <MenuCategory
               key={category.id}
               category={category}

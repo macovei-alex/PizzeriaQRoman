@@ -2,7 +2,15 @@ import { Stack } from "expo-router";
 import { GlobalContextProvider } from "../context/useGlobalContext";
 import { QueryClientProvider, QueryClient } from "react-query";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      staleTime: 3600 * 1000,
+      cache: 3600 * 1000,
+    },
+  },
+});
 
 export default function RootLayout() {
   return (
