@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class MockCategoryDTO {
-    private long id;
-    private String name;
+	private long id;
+	private String name;
 }

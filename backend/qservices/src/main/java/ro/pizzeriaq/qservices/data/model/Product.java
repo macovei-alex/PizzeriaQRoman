@@ -17,43 +17,43 @@ import java.util.List;
 @Entity
 public class Product {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
 
-    @ManyToOne
-    @JoinColumn(name = "id_category", nullable = false)
-    private ProductCategory category;
+	@ManyToOne
+	@JoinColumn(name = "id_category", nullable = false)
+	private ProductCategory category;
 
 
-    @ManyToMany(mappedBy = "products")
-    private List<OptionList> optionLists;
+	@ManyToMany(mappedBy = "products")
+	private List<OptionList> optionLists;
 
 
-    @ManyToMany(mappedBy = "products")
-    private List<Coupon> coupons;
+	@ManyToMany(mappedBy = "products")
+	private List<Coupon> coupons;
 
 
-    @OneToMany(mappedBy = "product")
-    private List<OrderItem> orderItems;
+	@OneToMany(mappedBy = "product")
+	private List<OrderItem> orderItems;
 
 
-    @Column(nullable = false, length = 60)
-    private String name;
+	@Column(nullable = false, length = 60)
+	private String name;
 
 
-    @Column(nullable = false, precision = 8, scale = 2)
-    private BigDecimal price;
+	@Column(nullable = false, precision = 8, scale = 2)
+	private BigDecimal price;
 
 
-    @Column(length = 1000)
-    private String description;
+	@Column(length = 1000)
+	private String description;
 
 
-    private String image;
+	private String image;
 
-    @Column(nullable = false)
-    @ColumnDefault("1")
-    private boolean isActive = true;
+	@Column(nullable = false)
+	@ColumnDefault("1")
+	private boolean isActive = true;
 }

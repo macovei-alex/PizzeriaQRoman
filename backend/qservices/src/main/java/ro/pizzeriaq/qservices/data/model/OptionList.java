@@ -18,48 +18,48 @@ import java.util.List;
 @Table(name = "optionlist")
 public class OptionList {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
 
-    @ManyToMany
-    @JoinTable(
-            name = "product_optionlist",
-            joinColumns = @JoinColumn(name = "id_optionlist"),
-            inverseJoinColumns = @JoinColumn(name = "id_product")
-    )
-    private List<Product> products;
+	@ManyToMany
+	@JoinTable(
+			name = "product_optionlist",
+			joinColumns = @JoinColumn(name = "id_optionlist"),
+			inverseJoinColumns = @JoinColumn(name = "id_product")
+	)
+	private List<Product> products;
 
 
-    @ManyToMany
-    @JoinTable(
-            name = "optionlist_option",
-            joinColumns = @JoinColumn(name = "id_optionlist"),
-            inverseJoinColumns = @JoinColumn(name = "id_option")
-    )
-    private List<Option> options;
+	@ManyToMany
+	@JoinTable(
+			name = "optionlist_option",
+			joinColumns = @JoinColumn(name = "id_optionlist"),
+			inverseJoinColumns = @JoinColumn(name = "id_option")
+	)
+	private List<Option> options;
 
 
-    @OneToMany(mappedBy = "optionList")
-    private List<OrderItem_OptionList_Option> orderItemOptionListOptions;
+	@OneToMany(mappedBy = "optionList")
+	private List<OrderItem_OptionList_Option> orderItemOptionListOptions;
 
 
-    @Column(nullable = false, length = 80)
-    private String text = null;
+	@Column(nullable = false, length = 80)
+	private String text = null;
 
 
-    @Column(nullable = false)
-    @ColumnDefault("0")
-    private int minChoices = 0;
+	@Column(nullable = false)
+	@ColumnDefault("0")
+	private int minChoices = 0;
 
 
-    @Column(nullable = false)
-    @ColumnDefault("2147483647")
-    private int maxChoices = Integer.MAX_VALUE;
+	@Column(nullable = false)
+	@ColumnDefault("2147483647")
+	private int maxChoices = Integer.MAX_VALUE;
 
 
-    @Column(nullable = false)
-    @ColumnDefault("1")
-    private boolean isActive = true;
+	@Column(nullable = false)
+	@ColumnDefault("1")
+	private boolean isActive = true;
 }

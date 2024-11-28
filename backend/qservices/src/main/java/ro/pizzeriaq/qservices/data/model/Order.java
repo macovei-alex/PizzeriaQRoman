@@ -19,50 +19,50 @@ import java.util.List;
 @Table(name = "orders")
 public class Order {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
 
-    @ManyToOne
-    @JoinColumn(name = "id_account", nullable = false)
-    private Account account;
+	@ManyToOne
+	@JoinColumn(name = "id_account", nullable = false)
+	private Account account;
 
 
-    @ManyToOne
-    @JoinColumn(name = "id_coupon", nullable = false)
-    private Coupon coupon;
+	@ManyToOne
+	@JoinColumn(name = "id_coupon", nullable = false)
+	private Coupon coupon;
 
 
-    @ManyToOne
-    @JoinColumn(name = "id_orderstatus", nullable = false)
-    private OrderStatus orderStatus;
+	@ManyToOne
+	@JoinColumn(name = "id_orderstatus", nullable = false)
+	private OrderStatus orderStatus;
 
 
-    @OneToMany(mappedBy = "order")
-    private List<OrderItem> orderItems;
+	@OneToMany(mappedBy = "order")
+	private List<OrderItem> orderItems;
 
 
-    @Column(nullable = false, columnDefinition = "DATETIME")
-    @ColumnDefault("NOW()")
-    private LocalDateTime orderTimestamp = LocalDateTime.now();
+	@Column(nullable = false, columnDefinition = "DATETIME")
+	@ColumnDefault("NOW()")
+	private LocalDateTime orderTimestamp = LocalDateTime.now();
 
 
-    @Column(columnDefinition = "DATETIME")
-    private LocalDateTime deliveryTimestamp;
+	@Column(columnDefinition = "DATETIME")
+	private LocalDateTime deliveryTimestamp;
 
 
-    private Integer estimatedPreparationTime;
+	private Integer estimatedPreparationTime;
 
 
-    @Column(length = 1000)
-    private String additionalNotes;
+	@Column(length = 1000)
+	private String additionalNotes;
 
 
-    @Column(precision = 8, scale = 2)
-    private BigDecimal totalPrice;
+	@Column(precision = 8, scale = 2)
+	private BigDecimal totalPrice;
 
 
-    @Column(precision = 8, scale = 2)
-    private BigDecimal totalPriceWithDiscount;
+	@Column(precision = 8, scale = 2)
+	private BigDecimal totalPriceWithDiscount;
 }

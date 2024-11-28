@@ -18,47 +18,47 @@ import java.util.List;
 @SQLRestriction(value = "active = true")
 public class TestEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
 
-    @OneToMany(mappedBy = "testEntity", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<TestEntity2> testEntity2s;
+	@OneToMany(mappedBy = "testEntity", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	private List<TestEntity2> testEntity2s;
 
 
-    private String text;
+	private String text;
 
 
-    private boolean active = true;
+	private boolean active = true;
 
 
-    @PreRemove
-    private void preRemove() {
-        System.out.println("TestEntity::preRemove");
-        this.active = false;
-    }
+	@PreRemove
+	private void preRemove() {
+		System.out.println("TestEntity::preRemove");
+		this.active = false;
+	}
 
 
-    @Override
-    public String toString() {
-        return String.format("TestEntity(id=%d, testEntity2s=%s text='%s', active=%b)",
-                id, testEntity2s, text, active);
-    }
+	@Override
+	public String toString() {
+		return String.format("TestEntity(id=%d, testEntity2s=%s text='%s', active=%b)",
+				id, testEntity2s, text, active);
+	}
 
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TestEntity other = (TestEntity) o;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		TestEntity other = (TestEntity) o;
 
-        boolean result = id.equals(other.id)
-                && text.equals(other.text)
-                && active == other.active;
-        for (int i = 0; i < testEntity2s.size(); i++) {
-            result = result && testEntity2s.get(i).equals(other.testEntity2s.get(i));
-        }
-        return result;
-    }
+		boolean result = id.equals(other.id)
+				&& text.equals(other.text)
+				&& active == other.active;
+		for (int i = 0; i < testEntity2s.size(); i++) {
+			result = result && testEntity2s.get(i).equals(other.testEntity2s.get(i));
+		}
+		return result;
+	}
 }

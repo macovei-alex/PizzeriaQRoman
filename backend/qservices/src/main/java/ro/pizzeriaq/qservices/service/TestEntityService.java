@@ -11,44 +11,44 @@ import java.util.Optional;
 @Service
 public class TestEntityService {
 
-    private final TestEntityRepository testEntityRepository;
+	private final TestEntityRepository testEntityRepository;
 
-    public TestEntityService(TestEntityRepository testEntityRepository) {
-        this.testEntityRepository = testEntityRepository;
-    }
-
-
-    @Transactional(readOnly = true)
-    public Optional<TestEntity> findById(int id) {
-        var test = testEntityRepository.findById(id);
-        if (test.isEmpty()) {
-            return test;
-        }
-         for(var test2 : test.get().getTestEntity2s()) {
-             ServiceUtils.fakeConsumer(test2);
-        }
-        return test;
-    }
+	public TestEntityService(TestEntityRepository testEntityRepository) {
+		this.testEntityRepository = testEntityRepository;
+	}
 
 
-    @Transactional(readOnly = true)
-    public List<TestEntity> findALl() {
-        var tests = testEntityRepository.findAll();
-        for (var test : tests) {
-            for (var test2 : test.getTestEntity2s()) {
-                ServiceUtils.fakeConsumer(test2);
-            }
-        }
-        return tests;
-    }
+	@Transactional(readOnly = true)
+	public Optional<TestEntity> findById(int id) {
+		var test = testEntityRepository.findById(id);
+		if (test.isEmpty()) {
+			return test;
+		}
+		for (var test2 : test.get().getTestEntity2s()) {
+			ServiceUtils.fakeConsumer(test2);
+		}
+		return test;
+	}
 
 
-    public void save(TestEntity entity) {
-        testEntityRepository.save(entity);
-    }
+	@Transactional(readOnly = true)
+	public List<TestEntity> findALl() {
+		var tests = testEntityRepository.findAll();
+		for (var test : tests) {
+			for (var test2 : test.getTestEntity2s()) {
+				ServiceUtils.fakeConsumer(test2);
+			}
+		}
+		return tests;
+	}
 
 
-    public void delete(TestEntity entity) {
-        testEntityRepository.delete(entity);
-    }
+	public void save(TestEntity entity) {
+		testEntityRepository.save(entity);
+	}
+
+
+	public void delete(TestEntity entity) {
+		testEntityRepository.delete(entity);
+	}
 }

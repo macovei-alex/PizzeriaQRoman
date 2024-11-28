@@ -5,8 +5,6 @@ import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
-import java.util.Objects;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,44 +16,44 @@ import java.util.Objects;
 @SQLRestriction(value = "active = true")
 public class TestEntity2 {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_test_entity")
-    private TestEntity testEntity;
-
-
-    private String text;
+	@ManyToOne
+	@JoinColumn(name = "id_test_entity")
+	private TestEntity testEntity;
 
 
-    private boolean active = true;
+	private String text;
 
 
-    @PreRemove
-    private void preRemove() {
-        System.out.println("TestEntity2::preRemove");
-        this.active = false;
-    }
+	private boolean active = true;
 
 
-    @Override
-    public String toString() {
-        return String.format("TestEntity2(id=%d, text='%s', active=%b)", id, text, active);
-    }
+	@PreRemove
+	private void preRemove() {
+		System.out.println("TestEntity2::preRemove");
+		this.active = false;
+	}
 
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TestEntity2 other = (TestEntity2) o;
+	@Override
+	public String toString() {
+		return String.format("TestEntity2(id=%d, text='%s', active=%b)", id, text, active);
+	}
 
-        return id.equals(other.id)
-                && text.equals(other.text)
-                && active == other.active
-                && testEntity.getId().equals(other.testEntity.getId());
-    }
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		TestEntity2 other = (TestEntity2) o;
+
+		return id.equals(other.id)
+				&& text.equals(other.text)
+				&& active == other.active
+				&& testEntity.getId().equals(other.testEntity.getId());
+	}
 
 }

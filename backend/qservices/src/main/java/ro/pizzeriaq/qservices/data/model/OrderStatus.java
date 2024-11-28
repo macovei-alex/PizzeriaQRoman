@@ -16,15 +16,15 @@ import java.util.List;
 @Table(name = "orderstatus")
 public class OrderStatus {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
 
-    @Column(nullable = false, unique = true, length = 40)
-    private String name;
+	@Column(nullable = false, unique = true, length = 40)
+	private String name;
 
 
-    @OneToMany(mappedBy = "orderStatus")
-    private List<Order> orders;
+	@OneToMany(mappedBy = "orderStatus")
+	private List<Order> orders;
 }

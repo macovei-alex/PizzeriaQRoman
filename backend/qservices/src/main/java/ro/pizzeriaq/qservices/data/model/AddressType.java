@@ -15,15 +15,15 @@ import java.util.List;
 @Entity
 public class AddressType {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
 
-    @OneToMany(mappedBy = "addressType")
-    private List<Address> addresses;
+	@OneToMany(mappedBy = "addressType")
+	private List<Address> addresses;
 
 
-    @Column(nullable = false, unique = true, length = 30)
-    private String name;
+	@Column(nullable = false, unique = true, length = 30)
+	private String name;
 }

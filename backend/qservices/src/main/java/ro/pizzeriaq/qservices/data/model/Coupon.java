@@ -18,38 +18,38 @@ import java.util.List;
 @Entity
 public class Coupon {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
 
-    @ManyToMany(mappedBy = "coupons")
-    private List<Account> accounts;
+	@ManyToMany(mappedBy = "coupons")
+	private List<Account> accounts;
 
 
-    @ManyToMany
-    @JoinTable(
-            name = "coupon_product",
-            joinColumns = @JoinColumn(name = "id_coupon"),
-            inverseJoinColumns = @JoinColumn(name = "id_product")
-    )
-    private List<Product> products;
+	@ManyToMany
+	@JoinTable(
+			name = "coupon_product",
+			joinColumns = @JoinColumn(name = "id_coupon"),
+			inverseJoinColumns = @JoinColumn(name = "id_product")
+	)
+	private List<Product> products;
 
 
-    @OneToMany(mappedBy = "coupon")
-    private List<Order> orders;
+	@OneToMany(mappedBy = "coupon")
+	private List<Order> orders;
 
 
-    @Column(nullable = false, precision = 8, scale = 2)
-    private BigDecimal discount;
+	@Column(nullable = false, precision = 8, scale = 2)
+	private BigDecimal discount;
 
 
-    @Column(nullable = false, columnDefinition = "DATETIME")
-    @ColumnDefault("NOW()")
-    private LocalDateTime startDate = LocalDateTime.now();
+	@Column(nullable = false, columnDefinition = "DATETIME")
+	@ColumnDefault("NOW()")
+	private LocalDateTime startDate = LocalDateTime.now();
 
 
-    @Column(nullable = false, columnDefinition = "DATETIME")
-    @ColumnDefault("(DATE_ADD(NOW(), INTERVAL 1 MONTH))")
-    private LocalDateTime endDate = LocalDateTime.now().plusMonths(1);
+	@Column(nullable = false, columnDefinition = "DATETIME")
+	@ColumnDefault("(DATE_ADD(NOW(), INTERVAL 1 MONTH))")
+	private LocalDateTime endDate = LocalDateTime.now().plusMonths(1);
 }
