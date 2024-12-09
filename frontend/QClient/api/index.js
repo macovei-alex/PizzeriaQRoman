@@ -1,4 +1,8 @@
-import { fetchProducts, fetchCategories } from "./products";
+import {
+  fetchProducts,
+  fetchCategories,
+  fetchProductWithOptions,
+} from "./products";
 
-const api = { fetchProducts, fetchCategories };
+const api = { fetchProducts, fetchCategories, fetchProductWithOptions };
 export default api;

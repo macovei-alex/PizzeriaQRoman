@@ -7,7 +7,7 @@ import {
   View,
 } from "react-native";
 
-function MenuCategory({ category, onPress }) {
+function Category({ category, onPress }) {
   return (
     <View className="py-2">
       <TouchableOpacity
@@ -38,4 +38,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MenuCategory;
+export default Category;

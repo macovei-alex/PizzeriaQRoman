@@ -12,8 +12,8 @@ async function fetchCategories() {
   return (await axios.get(`${baseCategoryRoute}/all`)).data;
 }
 
-async function fetchProductExtended(productId) {
+async function fetchProductWithOptions(productId) {
   return (await axios.get(`${baseProductRoute}/${productId}`)).data;
 }
 
-export { fetchProducts, fetchCategories };
+export { fetchProducts, fetchCategories, fetchProductWithOptions };

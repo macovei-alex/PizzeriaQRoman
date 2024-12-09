@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import MenuCategory from "../../components/menu/MenuCategory";
+import MenuCategory from "../../components/menu/Category";
 import { images } from "../../constants";
 import {
   Image,
@@ -30,11 +30,11 @@ export default function Menu() {
 
   const productQuery = useQuery({
     queryKey: ["products"],
-    queryFn: api.fetchProductsMock,
+    queryFn: api.fetchProducts,
   });
   const categoryQuery = useQuery({
     queryKey: ["categories"],
-    queryFn: api.fetchCategoriesMock,
+    queryFn: api.fetchCategories,
   });
 
   // Save the position of each category for the scroll to position from the horizontal menu
@@ -75,12 +75,15 @@ export default function Menu() {
     setProductsPerCategory(productsSplit);
   }, [productQuery.data, categoryQuery.data]);
 
-  if (productQuery.isLoading || categoryQuery.isLoading)
+  if (productQuery.isLoading || categoryQuery.isLoading) {
     return <Text>Loading...</Text>;
-  if (productQuery.isError)
+  }
+  if (productQuery.isError) {
     return <Text>Error: {productQuery.error.message}</Text>;
-  if (categoryQuery.isError)
+  }
+  if (categoryQuery.isError) {
     return <Text>Error: {categoryQuery.error.message}</Text>;
+  }
 
   return (
     <SafeAreaView>
