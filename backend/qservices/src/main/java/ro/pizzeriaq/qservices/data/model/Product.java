@@ -27,7 +27,12 @@ public class Product {
 	private ProductCategory category;
 
 
-	@ManyToMany(mappedBy = "products")
+	@ManyToMany
+	@JoinTable(
+			name = "product_optionlist",
+			joinColumns = @JoinColumn(name = "id_product"),
+			inverseJoinColumns = @JoinColumn(name = "id_optionlist")
+	)
 	private List<OptionList> optionLists;
 
 

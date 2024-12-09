@@ -1,4 +1,4 @@
-import { fetchProductsMock, fetchCategoriesMock } from "./products";
+import { fetchProducts, fetchCategories } from "./products";
 
-const api = { fetchProductsMock, fetchCategoriesMock };
+const api = { fetchProducts, fetchCategories };
 export default api;

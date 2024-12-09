@@ -8,15 +8,20 @@ import java.math.BigDecimal;
 @Data
 public class ProductDTO {
 
-	private long id;
+	private int id;
 	private String name;
 	private String subtitle;
 	private String description;
 	private BigDecimal price;
 	private String imageUrl;
-	private long categoryId;
+	private int categoryId;
+
 
 	public static ProductDTO fromEntity(Product product) {
+		if (product == null) {
+			return null;
+		}
+
 		ProductDTO productDTO = new ProductDTO();
 		productDTO.setId(product.getId());
 		productDTO.setName(product.getName());

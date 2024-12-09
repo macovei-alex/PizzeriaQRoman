@@ -23,12 +23,7 @@ public class OptionList {
 	private Integer id;
 
 
-	@ManyToMany
-	@JoinTable(
-			name = "product_optionlist",
-			joinColumns = @JoinColumn(name = "id_optionlist"),
-			inverseJoinColumns = @JoinColumn(name = "id_product")
-	)
+	@ManyToMany(mappedBy = "optionLists")
 	private List<Product> products;
 
 
@@ -62,4 +57,16 @@ public class OptionList {
 	@Column(nullable = false)
 	@ColumnDefault("1")
 	private boolean isActive = true;
+
+
+	public void addProductSync(Product product) {
+		products.add(product);
+		product.getOptionLists().add(this);
+	}
+
+
+	public void removeProductSync(Product product) {
+		products.remove(product);
+		product.getOptionLists().remove(this);
+	}
 }

@@ -47,4 +47,16 @@ public class Option {
 	@Column(nullable = false)
 	@ColumnDefault("2147483647")
 	private int maxCount = Integer.MAX_VALUE;
+
+
+	public void addOptionListSync(OptionList optionList) {
+		optionLists.add(optionList);
+		optionList.getOptions().add(this);
+	}
+
+
+	public void removeOptionListSync(OptionList optionList) {
+		optionLists.remove(optionList);
+		optionList.getOptions().remove(this);
+	}
 }
