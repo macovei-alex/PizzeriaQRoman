@@ -28,12 +28,12 @@ public class OptionListDTO {
 		optionListDTO.setMinChoices(optionList.getMinChoices());
 		optionListDTO.setMaxChoices(optionList.getMaxChoices());
 
-		List<OptionDTO> optionDTOS = new ArrayList<>();
+		List<OptionDTO> optionDTOs = new ArrayList<>();
 		for (Option option : optionList.getOptions()) {
-			optionDTOS.add(OptionDTO.fromEntity(option));
+			optionDTOs.add(OptionDTO.fromEntity(option));
 		}
 
-		optionListDTO.setOptions(optionDTOS);
+		optionListDTO.setOptions(optionDTOs);
 
 		return optionListDTO;
 	}

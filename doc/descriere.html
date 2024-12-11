@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Descriere</title>
+    <style>
+      body {
+        font-size: 1.2rem;
+        font-family: "JetBrains Mono Medium", "Consolas";
+        padding-left: 10px;
+      }
+      h1,
+      h3 {
+        padding-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Descriere</h1>
+
+    <h3>Aspecte generale</h3>
+
+    Proiectul reprezinta un sistem complet de comandare, receptionare a
+    comenzilor, si administrare a unui meniu de restaurant pizzerie.
+    Restaurantul este amplasat fizic in orasul Roman, judetul Neamt. Site-ul se
+    poate vizita dand clic
+    <a href="https://www.pizzeriaq.ro/" target="_blank">aici</a>. Sistemul este,
+    in mare, alcatuit din 4 aplicatii diferite:
+
+    <ol>
+      <li>Aplicatia server</li>
+      <li>Aplicatia de comanda a clientului</li>
+      <li>Aplicatia de primire a comenzilor pentru casier</li>
+      <li>Aplicatia de administrare a sistemului</li>
+    </ol>
+
+    Sistemul nu va trata livrarea comenzilor, aceasta fiind oferita de catre un
+    tert. In functie de API-ul pus la dispozitie de catre acesta exista
+    posibilitate integrarii unei harti in timp real pentru urmarirea livrarii.
+
+    <h3>Aplicatia server</h3>
+
+    Este o aplicatie Java Spring ce foloseste framework-urile Spring Boot pentru
+    a oferi servicii REST si Spring Data JPA pentru conexiunea la baza de date
+    MySQL. Securitatea utilizatorului va fi oferita de Spring Security.
+    Aplicatia este responsabila cu gestionarea datelor despre utilizatori,
+    meniu, comenzi. Pentru modelul de date am pus accent pe pastrarea unui
+    istoric cat mai complet al comenzilor.
+
+    <h3>Aplicatia de comanda a clientului</h3>
+
+    Este o aplicatie pentru mobil scrisa in React Native. Aceasta aplicatie
+    doreste sa aiba un design cat mai simplu si accesibil, dar fara sa sacrifice
+    din functionalitate. Puncte cheie le reprezinta posibilitatea de creare
+    conturilor folosind conturi Google sau adrese de email, asocierea conturilor
+    cu adrese de livrare, vizualizarea istoricului de comenzi si a meniului
+    restaurantului.
+
+    <h3>Aplicatia de receptie a comenzilor de catre casier</h3>
+
+    Va fi o aplicatie React Native scrisa cu scopul de a fi distribuita doar pe
+    tablete Android. Scopul acesteia este de a vizualiza comenzile active, a
+    oferi un timp estimat de asteptare, si a seta statusurile comenzilor.
+
+    <h3>Aplicatia de administrare a sistemului</h3>
+
+    Va fi o aplicatie web scrisa (cel mai probabil) in React. Aceasta aplicatie
+    va fi folosita de catre administratorii restaurantului pentru a modifica
+    meniul, optiunile fiecarui produs, aranjamentul produselor pe interfata
+    grafica a clientilor si pentru a vizualiza statistici despre clienti si a
+    oferi discounturi.
+
+    <h3>Obiectivul proiectului pana la termenul de predare</h3>
+
+    Pana la termenul de predare, sistemul trebuie sa contina:
+
+    <ul>
+      <li>un server functional, care sa nu crape</li>
+      <li>
+        un model de date aproape complet (cu exceptia datelor legate de
+        utilizator) si o baza de date populata cu date de test
+      </li>
+      <li>
+        o aplicatie client prin care sa se poata efectua si vizualiza comenzi
+      </li>
+      <li>
+        o aplicatie client cu interfata care sa se conforme pe designul propus
+        in prealabil<sup>*</sup>
+      </li>
+    </ul>
+
+    Aspecte care vor fi dezvoltate dupa termenul de predare:
+
+    <ul>
+      <li>securitatea datelor</li>
+      <li>tranzactionarea cu valuta reala</li>
+      <li>aplicatia casierului</li>
+      <li>aplicatia administratorului</li>
+    </ul>
+
+    <sup>*</sup> Designul propus in prealabil este un prototip creat in Figma
+    pentru validare functionala si referinta vizuala pentru aplicatia
+    clientului.
+  </body>
+</html>
