@@ -4,105 +4,161 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Functionalitati client</title>
-    <style>
-      body {
-        font-size: 1.2rem;
-        font-family: "JetBrains Mono Medium", "Consolas";
-        padding-left: 10px;
-      }
-      h1,
-      h3 {
-        padding-top: 20px;
-      }
-    </style>
+    <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <h1>Functionalitatile clientului</h1>
     <h3>Cont</h3>
     <ul>
       <li>
-        creearea unui cont cu
+        Despre crearea unui cont:
         <ul>
-          <li>cont google + numar telefon</li>
-          <li>adresa email + parola + numar telefon</li>
+          <li>
+            Ca utilizator, vreau sa pot crea un cont utilizand contul meu Google si sa adaug numarul meu de
+            telefon, astfel incat sa finalizez rapid procesul de inregistrare.
+          </li>
+          <li>
+            Ca utilizator, vreau sa imi pot crea un cont folosind o adresa de email, o parola si un numar de
+            telefon, astfel incat sa am mai multe optiuni de autentificare.
+          </li>
         </ul>
       </li>
-      <li>fiecare cont are <strong>exact 1</strong> numar de telefon</li>
-      <li>asocierea contului cu adrese de livrare</li>
-      <li>optional: crearea unei adrese de livrare odata cu contul</li>
-      <li>adaugarea si stergerea unei adrese de livrare</li>
+      <li>
+        Ca utilizator, vreau ca fiecare cont sa aiba asociat exact un numar de telefon, astfel incat sa pot
+        primi notificari si apeluri legate de comenzile mele.
+      </li>
+      <li>
+        Ca utilizator, vreau sa pot asocia contului meu una sau mai multe adrese de livrare, astfel incat sa
+        pot selecta rapid locatia dorita pentru fiecare comanda. De asemenea, vreau să pot modifica sau șterge
+        aceste adrese, pentru a păstra lista actualizată.
+      </li>
     </ul>
     <h3>Profil</h3>
     <ul>
-      <li>schimbarea parolei contului</li>
-      <li>vizualizarea si schimbare adresei de email asociate</li>
-      <li>modificare adrese asociate</li>
-      <li>istoric de comenzi</li>
+      <li>
+        Ca utilizator, vreau sa pot schimba parola contului meu, astfel incat sa imi pot proteja informatiile
+        si sa pastrez contul in siguranta, dar si sa fiu asigurat in cazul in care am uitat parola.
+      </li>
+      <li>
+        Ca utilizator, vreau sa pot vizualiza adresa de email asociata contului meu si sa o schimb, astfel
+        incat sa ma asigur ca primesc notificari si informatii relevante.
+      </li>
+      <li>
+        Ca utilizator, vreau sa pot modifica adresele asociate contului meu, astfel incat sa pot actualiza
+        informatiile pentru livrari rapide si corecte.
+      </li>
+      <li>
+        Ca utilizator, vreau sa pot vizualiza istoricul comenzilor mele, astfel incat sa revad ce am comandat
+        anterior si sa plasez rapid comenzi similare.
+      </li>
     </ul>
     <h3>Meniu</h3>
     <ul>
-      <li>nume produse</li>
-      <li>preturile intregi si preturile cu discount global aplicat</li>
-      <li>imagini produse</li>
-      <li>descrieri produs (trunchiate)</li>
+      <li>
+        Ca utilizator, vreau sa pot vedea numele produselor disponibile in meniu, astfel incat sa gasesc rapid
+        ceea ce ma intereseaza.
+      </li>
+      <li>
+        Ca utilizator, vreau sa pot vedea atat pretul intreg al produselor, cat si pretul cu discount global
+        aplicat (daca exista), astfel incat sa inteleg clar costul produselor inainte de a le comanda.
+      </li>
+      <li>
+        Ca utilizator, vreau sa vad imagini reprezentative pentru produsele din meniu, astfel incat sa pot
+        indentifica mai usor asupra produsele pe acre vreau sa le comand.
+      </li>
+      <li>
+        Ca utilizator, vreau sa vad descrieri scurte ale produselor, astfel incat sa inteleg rapid ce contine
+        fiecare produs fara sa parcurg informatii prea detaliate.
+      </li>
     </ul>
     <h3>Produs</h3>
     <ul>
       <li>
-        descrierea produsului (gramaje, valori nutritionale, alergeni, etc.)
+        Ca utilizator, vreau sa pot vedea detalii despre un produs, inclusiv gramaje, valori nutritionale si
+        alergeni, astfel incat sa pot lua decizii informate inainte de a-l comanda.
       </li>
       <li>
-        listele de optiuni (text, numar minim de optiuni, numar maxim de
-        optiuni)
-        <ul>
-          <li>
-            daca lista are numar minim 0 atunci alegerea unei optiuni nu este
-            obligatorie
-          </li>
-        </ul>
+        Ca utilizator, vreau sa vad listele de optiuni asociate fiecarui produs, cu detalii despre numarul
+        minim si maxim de optiuni care pot fi selectate, astfel incat sa inteleg clar ce pot personaliza.
       </li>
-      <li>optiunile din fiecare lista (nume, descriere optionala, pret)</li>
       <li>
-        optiunile au un numar minim si maxim de bucati
+        Ca utilizator, vreau sa vad numele, o descriere optionala si pretul pentru fiecare optiune
+        disponibila, astfel incat sa pot compara si alege cele mai potrivite variante.
+      </li>
+      <li>
+        Despre optiunile dintr-o lista de optiuni:
         <ul>
-          <li>daca optiunea are numar minim 0 atunci ea nu este obligatorie</li>
           <li>
-            daca optiunea are numar maxim 1 atunci ea este de tip
-            <strong>checkbox</strong>
+            Ca utilizator, vreau ca optiunile cu un numar maxim de 1 sa fie afisate sub forma de checkbox,
+            astfel incat sa pot face selectii simple.
           </li>
           <li>
-            altfel, interfata arata butoane de <strong>+</strong> si
-            <strong>-</strong> la optiune
+            Ca utilizator, vreau ca optiunile cu un numar maxim mai mare de 1 sa fie afisate cu butoane "+" si
+            "-", astfel incat sa pot ajusta rapid cantitatile dorite.
           </li>
         </ul>
       </li>
       <li>
-        introducerea in cos a unuia sau mai multor produse cu optiunile alese
+        Ca utilizator, vreau sa pot adauga in cos unul sau mai multe copii de produse cu optiunile
+        personalizate, astfel incat sa pot plasa repede o comanda care sa respecte preferintele mele.
       </li>
       <li>
-        pretul total al produselor introduse dupa alegerea optiunilor si a
-        numarului de bucati dorite
+        Ca utilizator, vreau sa vad pretul final al produselor dupa alegerea optiunilor si a numarului de
+        bucati, astfel incat sa inteleg clar costul final inainte de a adauga in cos mai multe copii
+        personalizate ale produsului.
       </li>
     </ul>
     <h3>Cos</h3>
     <ul>
-      <li>adaugarea de produse la o comanda</li>
-      <li>vizualizarea cosului de produse</li>
       <li>
-        marirea sau scaderea numarului de bucati pentru un produs
-        <ul>
-          <li>
-            daca dupa scaderea numarului de bucati produsul are 0 bucati ramase,
-            atunci se va sterge din cos
-          </li>
-        </ul>
+        Ca utilizator, vreau sa pot adauga produse in cosul de cumparaturi, astfel incat sa creez o comanda
+        personalizata.
       </li>
       <li>
-        afisarea pretului per produs (<code>nr. bucati * pret</code>) si al
-        cosului
+        Ca utilizator, vreau sa pot vizualiza continutul cosului meu, astfel incat sa vad toate produsele
+        selectate si detalii despre comanda.
       </li>
-      <li>alegerea adresei de livrare (implicit ultima adresa folosita)</li>
-      <li>adaugarea de mentiuni speciale la o comanda</li>
+      <li>
+        Ca utilizator, vreau sa pot mari sau reduce numarul de bucati pentru fiecare produs din cos, astfel
+        incat sa ajustez cantitatile in functie de nevoile mele.
+      </li>
+      <li>
+        Ca utilizator, vreau ca un produs sa fie sters automat din cos daca numarul de bucati ajunge la 0,
+        astfel incat sa mentin cosul curat si organizat.
+      </li>
+      <li>
+        Ca utilizator, vreau sa vad pretul total pentru fiecare produs (calculat ca
+        <code>nr. bucati * pret</code>) si pretul total al cosului, astfel incat sa inteleg costul final al
+        comenzii mele.
+      </li>
+      <li>
+        Ca utilizator, vreau sa pot selecta o adresa de livrare pentru comanda mea, iar daca nu selectez una,
+        sa fie folosita implicit ultima adresa utilizata, astfel incat procesul sa fie rapid si comod.
+      </li>
+      <li>
+        Ca utilizator, vreau sa pot adauga mentiuni speciale la comanda mea, astfel incat sa ofer instructiuni
+        suplimentare legate de produse sau livrare.
+      </li>
+    </ul>
+    <h3>Administrare</h3>
+    <ul>
+      <li>
+        Ca administrator, vreau sa am o aplicatie separata pentru a analiza statistici legate de clienti,
+        produse si timpi de livrare.
+      </li>
+      <li>
+        Ca administrator vreau sa pot modifica meniul: sa adaug produse noi, sa sterg produse, sa modific
+        optiunile asociate fiecarui produs.
+      </li>
+      <li>
+        Ca administrator, vreau sa pot oferi reduceri globale, valabile pentru toti utilizatorii, cu un termen
+        de pornire si unul de expirare.
+      </li>
+      <li>
+        Ca administrator, vreau sa pot oferi reduceri personalizate fiecarui utilizator in parte, in urma
+        analizei comenzilor pe care acesta le face.
+      </li>
+      <li>Ca administrator, vreau sa pot trimite notificari cu oferte clientilor.</li>
     </ul>
     <h1>Nelamuriri</h1>
     <ul>
@@ -114,13 +170,13 @@
           <li>cupon cu aceeasi reducere la unele produse din comanda?</li>
         </ul>
       </li>
-      <li>
-        reduceri de 2 tipuri (procent sau valoare absoluta) pentru cupoane?
-      </li>
-      <li>
-        reduceri de 2 tipuri (procent sau valoare absoluta) pentru reducerile
-        globale?
-      </li>
+      <li>reduceri de 2 tipuri (procent sau valoare absoluta) pentru cupoane?</li>
+      <li>reduceri de 2 tipuri (procent sau valoare absoluta) pentru reducerile globale?</li>
     </ul>
+
+    <br />
+    <a href="./descriere.html">Descriere</a>
+    <br />
+    <a href="./specificatii-tehnice.html">Specificatii tehnice</a>
   </body>
 </html>

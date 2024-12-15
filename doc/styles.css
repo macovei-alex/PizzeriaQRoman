@@ -1,0 +1,19 @@
+body {
+  font-size: 1.2rem;
+  font-family: "JetBrains Mono Medium";
+  padding-left: 10px;
+}
+
+h1,
+h3 {
+  padding-top: 20px;
+}
+
+a:visited {
+  color: blue;
+}
+
+code {
+  background-color: #ddd;
+  font-style: italic;
+}

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Specificatii tehnice</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <h1>Specificatii tehnice</h1>
+
+    <h3>Diagrama arhitecturii sistemului</h3>
+
+    <img src="./arhitectura-sistem.svg" alt="Diagrama arhitecturii sistemului" />
+
+    <h3>Aspecte generale</h3>
+
+    Proiectul reprezinta un sistem complet de comandare, receptionare a comenzilor, si administrare a unui
+    meniu de restaurant pizzerie. Componente si tehnologiile folosite:
+
+    <ol>
+      <li>Baza de date - MySQL</li>
+      <li>Servicii REST - Java Spring</li>
+      <li>Aplicatia clientului - React Native</li>
+      <li>Aplicatia de gestionare a comenzilor pentru casier - React Native</li>
+      <li>Aplicatia de administrare a sistemului - React (Vite sau Next.js)</li>
+    </ol>
+
+    Sistemul nu va trata livrarea comenzilor, aceasta fiind oferita de catre un tert. In functie de API-ul pus
+    la dispozitie de catre acesta exista posibilitate integrarii unei harti in timp real pentru urmarirea
+    livrarii. Din punctul de vedere al livrarii, este pus la dispozitie un computer intreg ce poate fi folosit
+    pentru serverul de baza de date, serviciile REST si aplicatia web de administrare a sistemului.
+
+    <h3>Baza si modelul de date</h3>
+
+    <ul>
+      <li>
+        foloseste MySQL
+        <ul>
+          <li>simplitate</li>
+          <li>aderare la standardele SQL</li>
+        </ul>
+      </li>
+
+      <li>pune accent pe pastrarea unui istoric pe cat posibil de complet prin stergerea logica a datelor</li>
+    </ul>
+
+    <h3>Serviciile REST</h3>
+
+    <ul>
+      <li>
+        foloseste Java ca limbaj si Spring ca framework de baza
+        <ul>
+          <li>limbaj OO simplu</li>
+          <li>mecanisme de IoC si DI pentru gestionarea logicii aplicatiei</li>
+          <li>documentatie abundenta</li>
+          <li>securitate dovedita</li>
+          <li>configuratie simpla</li>
+          <li>faciliteaza dezvoltarea pe modelul MVC</li>
+        </ul>
+      </li>
+
+      <li>
+        foloseste Spring Boot pentru a oferi servicii REST
+        <ul>
+          <li>server HTTP integrat</li>
+        </ul>
+      </li>
+
+      <li>
+        foloseste Spring Data JPA pentru maparea tabelelor bazei de date la entitati
+        <ul>
+          <li>contine HikariCP pentru a imbunatati performanta conectarii cu baza de date</li>
+          <li>reduce codul boilerplate pentru operatiile CRUD</li>
+          <li>mecanism de reflexie in baza de date a modificarilor aduse entitatilor</li>
+        </ul>
+      </li>
+
+      <li>foloseste Spring Security pentru autentificare si autorizare</li>
+    </ul>
+
+    <h3>Aplicatia clientului</h3>
+
+    <ul>
+      <li>
+        foloseste JavaScript ca limbaj si React Native, respectiv Expo ca framework
+        <ul>
+          <li>limbaj ce permite atat programare functionala, cat si obiectuala</li>
+          <li>
+            limbaj ce permite creare dinamica a obiectelor, ceea ce ajuta la reducerea codului boilerplate de
+            declarare a tipurilor de date
+          </li>
+          <li>filozofia framework-ului este foarte similara cu cea a aplicatiilor web scrise cu React</li>
+          <li>componente UI similare aplicatiilor web</li>
+          <li>limbaj de markup JSX, limbaj de stilizare CSS</li>
+          <li>cross-platform</li>
+          <li>ecosistem mare si dezvoltat de pachete si biblioteci</li>
+          <li>performanta destul de buna pentru scopul aplicatiei</li>
+        </ul>
+      </li>
+
+      <li>
+        foloseste Axios pentru a face cereri HTTP catre server
+        <ul>
+          <li>API simplu, similar cu Fetch API</li>
+          <li>
+            reduce din numarul de functionalitati ce ar trebui implementate manual in cazul folosirii Fetch
+            API
+          </li>
+          <li>interceptori pentru JWT si altele</li>
+        </ul>
+      </li>
+
+      <li>
+        foloseste TanStack Query in contextul cererilor HTTP
+        <ul>
+          <li>
+            functionalitati de caching si refetching cu timeout, ce reduc numarul de cereri catre server si
+            imbunatatesc performanta
+          </li>
+          <li>implementare a starii (loading, error, etc.) ce reduce codul boilerplatte</li>
+        </ul>
+      </li>
+
+      <li>
+        foloseste NativeWind pentru stilizare
+        <ul>
+          <li>similar cu Tailwind CSS</li>
+          <li>
+            scurteaza limbajul de stilizare prin clase cu denumiri mai scurte pentru feature-uri de baza
+          </li>
+          <li>posibilitatea declararii propriilor stiluri, culori, etc.</li>
+          <li>breakpoints pentru aplicarea conditionala a stilurilor in functiie de dimensiunea ecranului</li>
+          <li>
+            utilizarea inline ajuta la gasirea rapida a contextului si modificarea lui pentru a rezolva
+            probleme de randare sau a schimba comportamentul componentei in UI
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3>Aplicatia de gestionare a comenzilor de catre casier</h3>
+
+    <ul>
+      <li>aplicatie pentru tableta Android</li>
+      <li>scrisa in React Native si Expo pentru un codebase uniform</li>
+      <li>se aplica toate tehnologiile folosite anterior la aplicatia clientului</li>
+      <li>foloseste react-native-bluetooth-escpos-printer pentru tiparirea bonurilor comenzilor</li>
+    </ul>
+
+    <h3>Aplicatia de administrare a sistemului</h3>
+
+    <ul>
+      <li>
+        aplicatie web scrisa in React si (Vite sau Next.js)
+        <ul>
+          <li>aceleasi dependente cu aplicatia clientului</li>
+        </ul>
+      </li>
+
+      <li>
+        foloseste TanStack React Table pentru afisarea datelor
+        <ul>
+          <li>eficienta ridicata</li>
+          <li>suport pentru paginare, filtrare, sortare</li>
+          <li>API bazat pe React Hooks</li>
+        </ul>
+      </li>
+    </ul>
+
+    <br />
+    <a href="./descriere.html">Descriere</a>
+    <br />
+    <a href="./specificatii-functionale.html">Specificatii functionale</a>
+  </body>
+</html>
