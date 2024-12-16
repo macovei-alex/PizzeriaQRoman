@@ -17,3 +17,7 @@ code {
   background-color: #ddd;
   font-style: italic;
 }
+
+td {
+  padding-right: 30px;
+}

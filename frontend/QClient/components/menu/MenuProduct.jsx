@@ -2,7 +2,7 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { images } from "../../constants";
 
-function MenuProduct({ product, onClick }) {
+function MenuProduct({ product, onPress }) {
   return (
     <View className="flex-row mx-3 my-5 rounded-xl bg-bg-400">
       <Image
@@ -20,7 +20,7 @@ function MenuProduct({ product, onClick }) {
           <Text className="text-lg">{`${product.price.toFixed(2)} RON`}</Text>
         </View>
         <View className="items-center justify-center px-6 py-3 mt-8 ml-2 -mb-8 -mr-4 rounded-l bg-bg-500">
-          <TouchableOpacity onPress={onClick}>
+          <TouchableOpacity onPress={onPress}>
             <Text className="text-txt-300">Informatii produs</Text>
           </TouchableOpacity>
         </View>

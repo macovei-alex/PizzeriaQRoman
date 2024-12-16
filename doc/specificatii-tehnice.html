@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <h1>Specificatii tehnice</h1>
+    <h1>Specificatii Tehnice</h1>
 
     <h3>Diagrama arhitecturii sistemului</h3>
 
@@ -23,7 +23,7 @@
       <li>Servicii REST - Java Spring</li>
       <li>Aplicatia clientului - React Native</li>
       <li>Aplicatia de gestionare a comenzilor pentru casier - React Native</li>
-      <li>Aplicatia de administrare a sistemului - React (Vite sau Next.js)</li>
+      <li>Aplicatia de administrare a sistemului - React si Vite</li>
     </ol>
 
     Sistemul nu va trata livrarea comenzilor, aceasta fiind oferita de catre un tert. In functie de API-ul pus
@@ -118,7 +118,7 @@
             functionalitati de caching si refetching cu timeout, ce reduc numarul de cereri catre server si
             imbunatatesc performanta
           </li>
-          <li>implementare a starii (loading, error, etc.) ce reduce codul boilerplatte</li>
+          <li>implementare a starii erorii (loading, error, etc.) ce reduce codul boilerplatte</li>
         </ul>
       </li>
 
@@ -152,7 +152,7 @@
 
     <ul>
       <li>
-        aplicatie web scrisa in React si (Vite sau Next.js)
+        aplicatie web scrisa in React si Vite
         <ul>
           <li>aceleasi dependente cu aplicatia clientului</li>
         </ul>
@@ -167,6 +167,23 @@
         </ul>
       </li>
     </ul>
+
+    <h3>Performanta - limite superioare</h3>
+
+    <table>
+      <tr>
+        <td>throuput</td>
+        <td>100 de clienti simultan</td>
+      </tr>
+      <tr>
+        <td>timp de raspuns pentru o conexiune buna a clientului la internet</td>
+        <td>5s</td>
+      </tr>
+      <tr>
+        <td>dimensiunea bazei de date</td>
+        <td>10 GB</td>
+      </tr>
+    </table>
 
     <br />
     <a href="./descriere.html">Descriere</a>

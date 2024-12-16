@@ -11,14 +11,11 @@ import OptionList from "../../components/menu/OptionList";
 
 export default function Product() {
   const router = useRouter();
-  const { gProduct: product, gSetProduct } = useGlobalContext();
+  const { gProduct } = useGlobalContext();
 
   const productQuery = useQuery({
-    queryFn: () => api.fetchProductWithOptions(product.id),
-    queryKey: ["product", product.id],
-    onSuccess: (data) => {
-      gSetProduct(data);
-    },
+    queryFn: () => api.fetchProductWithOptions(gProduct.id),
+    queryKey: ["product", gProduct.id],
   });
 
   if (productQuery.isLoading) {
@@ -27,6 +24,8 @@ export default function Product() {
   if (productQuery.isError) {
     return <Text>Error: {productQuery.error.message}</Text>;
   }
+
+  const product = productQuery.data;
 
   return (
     <SafeAreaView>
@@ -37,10 +36,7 @@ export default function Product() {
       <Text>{product.subtitle}</Text>
       <Text>{product.description}</Text>
       <Text>{product.price.toFixed(2)} lei</Text>
-      <Image
-        source={product.image ? product.image : images.pizzaDemo}
-        className="w-64 h-64"
-      ></Image>
+      <Image source={product.image ? product.image : images.pizzaDemo} className="w-64 h-64"></Image>
       {product.optionLists?.map((optionList) => (
         <OptionList key={optionList.id.toString()} optionList={optionList} />
       ))}
