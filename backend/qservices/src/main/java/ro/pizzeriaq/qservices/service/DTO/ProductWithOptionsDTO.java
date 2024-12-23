@@ -1,6 +1,6 @@
 package ro.pizzeriaq.qservices.service.DTO;
 
-import lombok.Data;
+import lombok.*;
 import ro.pizzeriaq.qservices.data.model.OptionList;
 import ro.pizzeriaq.qservices.data.model.Product;
 
@@ -8,7 +8,12 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+@Builder
 public class ProductWithOptionsDTO {
 
 	private int id;

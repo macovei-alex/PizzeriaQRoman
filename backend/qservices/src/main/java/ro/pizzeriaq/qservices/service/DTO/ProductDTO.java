@@ -1,11 +1,16 @@
 package ro.pizzeriaq.qservices.service.DTO;
 
-import lombok.Data;
+import lombok.*;
 import ro.pizzeriaq.qservices.data.model.Product;
 
 import java.math.BigDecimal;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+@Builder
 public class ProductDTO {
 
 	private int id;

@@ -8,7 +8,7 @@ import api from "../../api";
 export default function TestComponent() {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["categories"],
-    queryFn: api.fetchCategoriesMock,
+    queryFn: api.fetchCategories,
   });
 
   console.log({ data: data ? true : false, isError, error, isLoading });

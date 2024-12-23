@@ -1,9 +1,14 @@
 package ro.pizzeriaq.qservices.service.DTO;
 
-import lombok.Data;
+import lombok.*;
 import ro.pizzeriaq.qservices.data.model.ProductCategory;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+@Builder
 public class ProductCategoryDTO {
 
 	private int id;

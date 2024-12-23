@@ -1,13 +1,18 @@
 package ro.pizzeriaq.qservices.service.DTO;
 
-import lombok.Data;
+import lombok.*;
 import ro.pizzeriaq.qservices.data.model.Option;
 import ro.pizzeriaq.qservices.data.model.OptionList;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+@Builder
 public class OptionListDTO {
 
 	private int id;

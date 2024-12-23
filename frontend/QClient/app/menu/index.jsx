@@ -3,7 +3,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useGlobalContext } from "../../context/useGlobalContext";
-import MenuProduct from "../../components/menu/MenuProduct";
 import { useScrollRef } from "../../hooks/useScrollRef";
 import { useQuery } from "react-query";
 import api from "../../api";
@@ -11,7 +10,7 @@ import LogoSection from "../../components/menu/LogoSection";
 import HorizontalCategorySection from "../../components/menu/HorizontalCategorySection";
 import VerticalCategorySection from "../../components/menu/VerticalCategorySection";
 
-function Menu() {
+export default function Menu() {
   const router = useRouter();
   const { gSetProduct } = useGlobalContext();
   const [productsPerCategroy, setProductsPerCategory] = useState([{ category: { id: 1 }, products: [] }]);
@@ -107,5 +106,3 @@ function Menu() {
     </SafeAreaView>
   );
 }
-
-export default Menu;

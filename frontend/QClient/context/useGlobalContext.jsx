@@ -9,9 +9,5 @@ export function useGlobalContext() {
 export function GlobalContextProvider({ children }) {
   const [gProduct, gSetProduct] = useState(null);
 
-  return (
-    <GlobalContext.Provider value={{ gProduct, gSetProduct }}>
-      {children}
-    </GlobalContext.Provider>
-  );
+  return <GlobalContext.Provider value={{ gProduct, gSetProduct }}>{children}</GlobalContext.Provider>;
 }

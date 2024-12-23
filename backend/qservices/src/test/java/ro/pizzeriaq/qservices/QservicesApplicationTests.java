@@ -9,5 +9,4 @@ class QservicesApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
