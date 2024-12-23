@@ -27,7 +27,6 @@ public class ProductController {
 	@GetMapping("/all")
 	public List<ProductDTO> getProducts() {
 		var products = service.getProducts();
-		System.out.println(products);
 		return products;
 	}
 
