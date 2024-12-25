@@ -1,22 +1,23 @@
 import React from "react";
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-function Category({ category, onPress }) {
+export default function Category({ category, onPress, style }) {
   return (
-    <View className="py-2">
-      <TouchableOpacity
-        className="px-4 py-3 mx-2 rounded-xl bg-bg-600"
-        style={styles.shadowContainer}
-        onPress={onPress}
-      >
-        <Text className="font-bold">{category.name}</Text>
+    <View style={style}>
+      <TouchableOpacity style={styles.button} onPress={onPress}>
+        <Text style={styles.text}>{category.name}</Text>
       </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  shadowContainer: {
+  button: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: "#f6f6f6",
+    borderRadius: 12,
+    marginHorizontal: 4,
     ...Platform.select({
       // TODO: Test if this works
       ios: {
@@ -30,6 +31,7 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  text: {
+    fontWeight: "bold",
+  },
 });
-
-export default Category;

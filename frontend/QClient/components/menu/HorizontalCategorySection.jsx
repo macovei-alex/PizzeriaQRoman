@@ -1,14 +1,19 @@
-import { ScrollView } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import React from "react";
 import Category from "./Category";
 import SearchBar from "./SerachBar";
 
-function HorizontalCategorySection({ categories, onCategoryPress }) {
+export default function HorizontalCategorySection({ categories, onCategoryPress }) {
   return (
     <>
-      <ScrollView horizontal className="flex-row py-2">
+      <ScrollView horizontal style={styles.scrollContainer}>
         {categories.map((category) => (
-          <Category key={category.id} category={category} onPress={() => onCategoryPress(category.id)} />
+          <Category
+            style={styles.category}
+            key={category.id}
+            category={category}
+            onPress={() => onCategoryPress(category.id)}
+          />
         ))}
       </ScrollView>
 
@@ -22,4 +27,11 @@ function HorizontalCategorySection({ categories, onCategoryPress }) {
   );
 }
 
-export default HorizontalCategorySection;
+const styles = StyleSheet.create({
+  scrollContainer: {
+    paddingVertical: 12,
+  },
+  category: {
+    marginHorizontal: 4,
+  },
+});

@@ -1,4 +1,4 @@
-import { Image, Text, TouchableOpacity } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useGlobalContext } from "../../context/useGlobalContext";
@@ -30,16 +30,27 @@ export default function Product() {
   return (
     <SafeAreaView>
       <TouchableOpacity onPress={() => router.back()}>
-        <GoBackButtonSVG width={38} height={38} />
+        <GoBackButtonSVG style={styles.goBackSvg} />
       </TouchableOpacity>
       <Text>{product.name}</Text>
       <Text>{product.subtitle}</Text>
       <Text>{product.description}</Text>
       <Text>{product.price.toFixed(2)} lei</Text>
-      <Image source={product.image ? product.image : images.pizzaDemo} className="w-64 h-64"></Image>
+      <Image source={product.image ? product.image : images.pizzaDemo} style={styles.image}></Image>
       {product.optionLists?.map((optionList) => (
         <OptionList key={optionList.id.toString()} optionList={optionList} />
       ))}
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  image: {
+    width: 256,
+    height: 256,
+  },
+  goBackSvg: {
+    width: 38,
+    height: 38,
+  },
+});

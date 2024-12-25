@@ -1,21 +1,19 @@
-import { View, Text, ImageBackground, TouchableOpacity, Image } from "react-native";
+import { View, Text, ImageBackground, TouchableOpacity, Image, StyleSheet } from "react-native";
 import React from "react";
 import GoBackButtonSVG from "../svg/GoBackButtonSVG";
 import { images } from "../../constants";
 
-function LogoSection({ onBackButtonPress }) {
+export default function LogoSection({ onBackButtonPress }) {
   return (
     <View>
-      <ImageBackground source={images.menuBackground} className="w-full h-44">
-        <View className="absolute">
-          <TouchableOpacity onPress={onBackButtonPress} className="mt-4 ml-1">
-            <GoBackButtonSVG width={38} height={38} />
-          </TouchableOpacity>
-        </View>
-        <View className="flex items-center justify-around h-full py-2">
-          <Image source={images.logo} className="h-20 w-44 rounded-xl" resizeMode="stretch" />
-          <View className="rounded-lg opacity-75 bg-bg-300">
-            <Text className="px-4 py-1 font-bold">Comanda minimă este de 40 RON</Text>
+      <ImageBackground source={images.menuBackground} style={styles.imageBackground}>
+        <TouchableOpacity onPress={onBackButtonPress} style={styles.goBackButton}>
+          <GoBackButtonSVG style={styles.goBackButtonSvg} />
+        </TouchableOpacity>
+        <View style={styles.centerSection}>
+          <Image source={images.logo} style={styles.logoImage} />
+          <View style={styles.subtextContainer}>
+            <Text style={styles.subtext}>Comanda minimă este de 40 RON</Text>
           </View>
         </View>
       </ImageBackground>
@@ -23,4 +21,40 @@ function LogoSection({ onBackButtonPress }) {
   );
 }
 
-export default LogoSection;
+const styles = StyleSheet.create({
+  imageBackground: {
+    width: "100%",
+    height: 176,
+  },
+  goBackButton: {
+    position: "absolute",
+    marginTop: 16,
+    marginLeft: 8,
+  },
+  goBackButtonSvg: {
+    width: 38,
+    height: 38,
+  },
+  centerSection: {
+    alignItems: "center",
+    justifyContent: "space-around",
+    height: "100%",
+    paddingVertical: 8,
+  },
+  logoImage: {
+    height: 80,
+    width: 180,
+    borderRadius: 12,
+    resizeMode: "stretch",
+  },
+  subtextContainer: {
+    borderRadius: 8,
+    opacity: 0.8,
+    backgroundColor: "#5d0",
+  },
+  subtext: {
+    paddingHorizontal: 16,
+    paddingVertical: 4,
+    fontWeight: "800",
+  },
+});
