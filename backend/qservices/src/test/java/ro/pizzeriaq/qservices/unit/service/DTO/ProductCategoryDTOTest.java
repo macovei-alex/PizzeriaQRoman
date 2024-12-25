@@ -4,14 +4,13 @@ import org.junit.jupiter.api.Test;
 import ro.pizzeriaq.qservices.data.model.ProductCategory;
 import ro.pizzeriaq.qservices.service.DTO.ProductCategoryDTO;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ProductCategoryDTOTest {
 
 	@Test
 	void entityNull() {
-		assert (ProductCategoryDTO.fromEntity(null) == null);
+		assertNull(ProductCategoryDTO.fromEntity(null));
 	}
 
 	@Test

@@ -26,11 +26,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ProductControllerTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(ProductControllerTest.class);
-
-
-	@Value("${application.environment}")
-	private String environment;
+	@Value("${server.servlet.context-path}")
+	private String contextPath;
 
 
 	@Autowired
@@ -40,26 +37,30 @@ public class ProductControllerTest {
 	private ProductService productService;
 
 
-	@BeforeAll
-	void beforeAll() {
-		logger.info("Environment: {}", environment);
-	}
-
-
 	@Test
 	void getAllProductsTest() throws Exception {
-		when(productService.getProducts()).thenReturn(List.of());
-		mockMvc.perform(get("/product/all")).andExpect(status().isOk());
+		when(productService.getProducts())
+				.thenReturn(List.of());
+
+		mockMvc.perform(get(contextPath + "/product/all")
+						.contextPath(contextPath))
+				.andExpect(status().isOk());
 	}
 
 	@Test
 	void getSingleNonexistentProductTest() throws Exception {
-		when(productService.getProduct(0)).thenReturn(Optional.empty());
-		mockMvc.perform(get("/product/0")).andExpect(status().isNoContent());
+		when(productService.getProduct(0))
+				.thenReturn(Optional.empty());
+
+		mockMvc.perform(get(contextPath + "/product/0")
+						.contextPath(contextPath))
+				.andExpect(status().isNoContent());
 	}
 
 	@Test
 	void getSingleProductWithInvalidIdTest() throws Exception {
-		mockMvc.perform(get("/product/invalid")).andExpect(status().isBadRequest());
+		mockMvc.perform(get(contextPath + "/product/invalid")
+						.contextPath(contextPath))
+				.andExpect(status().isBadRequest());
 	}
 }

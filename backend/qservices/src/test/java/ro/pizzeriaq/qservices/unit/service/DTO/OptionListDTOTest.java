@@ -7,14 +7,13 @@ import ro.pizzeriaq.qservices.service.DTO.OptionListDTO;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class OptionListDTOTest {
 
 	@Test
 	void entityNull() {
-		assert (OptionListDTO.fromEntity(null) == null);
+		assertNull(OptionListDTO.fromEntity(null));
 	}
 
 	@Test

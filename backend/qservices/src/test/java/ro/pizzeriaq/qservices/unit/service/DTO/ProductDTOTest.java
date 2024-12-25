@@ -7,14 +7,13 @@ import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ProductDTOTest {
 
 	@Test
 	void entityNull() {
-		assert (ProductDTO.fromEntity(null) == null);
+		assertNull(ProductDTO.fromEntity(null));
 	}
 
 	@Test

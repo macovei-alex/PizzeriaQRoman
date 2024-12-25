@@ -6,14 +6,13 @@ import ro.pizzeriaq.qservices.service.DTO.OptionDTO;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class OptionDTOTest {
 
 	@Test
 	void entityNull() {
-		assert (OptionDTO.fromEntity(null) == null);
+		assertNull(OptionDTO.fromEntity(null));
 	}
 
 	@Test
