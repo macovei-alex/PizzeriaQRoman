@@ -8,8 +8,8 @@ export default function App() {
       <Link style={styles.link} href="/menu">
         /menu
       </Link>
-      <Link style={styles.link} href="/test-component">
-        /test-component
+      <Link style={styles.link} href="/test">
+        /test
       </Link>
     </SafeAreaView>
   );
