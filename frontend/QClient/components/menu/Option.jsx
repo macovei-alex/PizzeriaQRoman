@@ -5,8 +5,7 @@ function Option({ option }) {
   return (
     <>
       <Text>
-        {option.name} {option.additionalDescription} {option.price}{" "}
-        {option.minCount} {option.maxCount}
+        {option.name} {option.additionalDescription} {option.price} {option.minCount} {option.maxCount}
       </Text>
     </>
   );

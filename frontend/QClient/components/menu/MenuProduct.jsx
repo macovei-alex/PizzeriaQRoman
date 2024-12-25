@@ -1,32 +1,81 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { images } from "../../constants";
+import { StyleSheet } from "react-native";
+import { useColorTheme } from "../../hooks/useTheme";
 
-function MenuProduct({ product, onPress }) {
+export default function MenuProduct({ product, onPress }) {
+  const colorTheme = useColorTheme();
+
   return (
-    <View className="flex-row mx-3 my-5 rounded-xl bg-bg-400">
-      <Image
-        source={product.image ? product.image : images.pizzaDemo}
-        className="w-[45%] m-1 aspect-square rounded-full"
-      />
-      <View className="flex-col p-3">
-        <View className="items-center">
-          <Text className="font-extrabold">{product.name}</Text>
+    <View style={styles.container} backgroundColor={colorTheme.background[400]}>
+      <Image source={product.image ? product.image : images.pizzaDemo} style={styles.image} />
+      <View style={styles.infoSection}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.titleText}>{product.name}</Text>
         </View>
-        <View className="items-center">
-          <Text>{product.subtitle}</Text>
+        <View style={styles.subtitleContainer}>
+          <Text style={styles.subtitleText}>{product.subtitle}</Text>
         </View>
-        <View className="items-end mt-8">
-          <Text className="text-lg">{`${product.price.toFixed(2)} RON`}</Text>
+        <View style={styles.priceContainer}>
+          <Text style={styles.priceText}>{`${product.price.toFixed(2)} RON`}</Text>
         </View>
-        <View className="items-center justify-center px-6 py-3 mt-8 ml-2 -mb-8 -mr-4 rounded-l bg-bg-500">
-          <TouchableOpacity onPress={onPress}>
-            <Text className="text-txt-300">Informatii produs</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          style={[styles.infoButtonContainer, { backgroundColor: colorTheme.background[500] }]}
+          onPress={onPress}
+        >
+          <Text style={[styles.infoButtonText, { color: colorTheme.text[300] }]}>Informatii produs</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
 }
 
-export default MenuProduct;
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    marginHorizontal: 12,
+    marginVertical: 20,
+    borderRadius: 12,
+  },
+  image: {
+    aspectRatio: 1,
+    width: "40%",
+    marginHorizontal: "2%",
+    marginVertical: "5%",
+    borderRadius: 9999,
+  },
+  infoSection: {
+    padding: 12,
+    flexGrow: 1,
+  },
+  titleContainer: {
+    alignItems: "center",
+    marginBottom: 4,
+  },
+  titleText: {
+    fontWeight: "900",
+  },
+  subtitleContainer: {
+    alignItems: "center",
+  },
+  subtitleText: {},
+  priceContainer: {
+    alignItems: "flex-end",
+    justifyContent: "flex-end",
+    flexGrow: 1,
+  },
+  priceText: {
+    fontSize: 18,
+  },
+  infoButtonContainer: {
+    alignItems: "center",
+    borderRadius: 10,
+    paddingVertical: 12,
+    marginTop: 14,
+    marginBottom: -20,
+    marginLeft: 16,
+    marginRight: -16,
+  },
+  infoButtonText: {},
+});

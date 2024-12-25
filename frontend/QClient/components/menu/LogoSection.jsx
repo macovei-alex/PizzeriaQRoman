@@ -2,8 +2,11 @@ import { View, Text, ImageBackground, TouchableOpacity, Image, StyleSheet } from
 import React from "react";
 import GoBackButtonSVG from "../svg/GoBackButtonSVG";
 import { images } from "../../constants";
+import { useColorTheme } from "../../hooks/useTheme";
 
 export default function LogoSection({ onBackButtonPress }) {
+  const colorTheme = useColorTheme();
+
   return (
     <View>
       <ImageBackground source={images.menuBackground} style={styles.imageBackground}>
@@ -12,7 +15,7 @@ export default function LogoSection({ onBackButtonPress }) {
         </TouchableOpacity>
         <View style={styles.centerSection}>
           <Image source={images.logo} style={styles.logoImage} />
-          <View style={styles.subtextContainer}>
+          <View style={styles.subtextContainer} backgroundColor={colorTheme.background[300]}>
             <Text style={styles.subtext}>Comanda minimă este de 40 RON</Text>
           </View>
         </View>
@@ -43,14 +46,13 @@ const styles = StyleSheet.create({
   },
   logoImage: {
     height: 80,
-    width: 180,
+    width: 200,
     borderRadius: 12,
     resizeMode: "stretch",
   },
   subtextContainer: {
     borderRadius: 8,
     opacity: 0.8,
-    backgroundColor: "#5d0",
   },
   subtext: {
     paddingHorizontal: 16,

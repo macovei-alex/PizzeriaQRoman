@@ -1,10 +1,16 @@
 import React from "react";
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useColorTheme } from "../../hooks/useTheme";
 
 export default function Category({ category, onPress, style }) {
+  const colorTheme = useColorTheme();
+
   return (
     <View style={style}>
-      <TouchableOpacity style={styles.button} onPress={onPress}>
+      <TouchableOpacity
+        style={[styles.button, { backgroundColor: colorTheme.background[700] }]}
+        onPress={onPress}
+      >
         <Text style={styles.text}>{category.name}</Text>
       </TouchableOpacity>
     </View>
@@ -15,7 +21,6 @@ const styles = StyleSheet.create({
   button: {
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: "#f6f6f6",
     borderRadius: 12,
     marginHorizontal: 4,
     ...Platform.select({

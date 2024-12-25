@@ -1,12 +1,14 @@
 import { StyleSheet, TextInput, View } from "react-native";
 import React, { useState } from "react";
 import SearchIconSVG from "../svg/SearchIconSVG";
+import { useColorTheme } from "../../hooks/useTheme";
 
 export default function SearchBar({ placeholder, onSearch }) {
+  const colorTheme = useColorTheme();
   const [text, setText] = useState("");
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} backgroundColor={colorTheme.background[700]}>
       <SearchIconSVG style={styles.searchIcon} />
       <TextInput
         style={styles.textInput}
@@ -24,7 +26,6 @@ export default function SearchBar({ placeholder, onSearch }) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    backgroundColor: "#f6f6f6",
     left: "5%",
     width: "90%",
     borderRadius: 9999,
