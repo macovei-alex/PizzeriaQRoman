@@ -41,13 +41,15 @@ public class QservicesApplication {
 		};
 	}
 
+
 	@Bean
 	public CommandLineRunner logEnvironment() {
 		return (_) -> logger.info("Environment: {}", environment);
 	}
 
-	@Profile("default")
+
 	@Bean
+	@Profile("default")
 	public CommandLineRunner initializeEntities(EntityInitializerService entityInitializerService) {
 		return (_) -> {
 			// reInitEntities(entityInitializerService);

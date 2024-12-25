@@ -1,4 +1,4 @@
-package ro.pizzeriaq.qservices.controllers;
+package ro.pizzeriaq.qservices.unit.controllers;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

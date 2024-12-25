@@ -1,20 +1,21 @@
-package ro.pizzeriaq.qservices.service.DTO;
+package ro.pizzeriaq.qservices.unit.service.DTO;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ro.pizzeriaq.qservices.data.model.Product;
 import ro.pizzeriaq.qservices.data.model.ProductCategory;
+import ro.pizzeriaq.qservices.service.DTO.ProductWithOptionsDTO;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ProductWithOptionsDTOTest {
 
 	@Test
 	void entityNull() {
-		assertEquals(ProductWithOptionsDTO.fromEntity(null), null);
+		assertNull(ProductWithOptionsDTO.fromEntity(null));
 	}
 
 	@Test

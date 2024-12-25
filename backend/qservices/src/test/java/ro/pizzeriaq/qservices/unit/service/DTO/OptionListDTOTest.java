@@ -1,8 +1,9 @@
-package ro.pizzeriaq.qservices.service.DTO;
+package ro.pizzeriaq.qservices.unit.service.DTO;
 
 import org.junit.jupiter.api.Test;
 import ro.pizzeriaq.qservices.data.model.Option;
 import ro.pizzeriaq.qservices.data.model.OptionList;
+import ro.pizzeriaq.qservices.service.DTO.OptionListDTO;
 
 import java.util.List;
 

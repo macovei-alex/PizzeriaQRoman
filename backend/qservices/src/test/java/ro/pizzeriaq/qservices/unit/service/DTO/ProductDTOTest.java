@@ -1,8 +1,9 @@
-package ro.pizzeriaq.qservices.service.DTO;
+package ro.pizzeriaq.qservices.unit.service.DTO;
 
 import org.junit.jupiter.api.Test;
 import ro.pizzeriaq.qservices.data.model.Product;
 import ro.pizzeriaq.qservices.data.model.ProductCategory;
+import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
 
 import java.math.BigDecimal;
 

@@ -1,11 +1,10 @@
-package ro.pizzeriaq.qservices.service.DTO;
+package ro.pizzeriaq.qservices.unit.service.DTO;
 
 import org.junit.jupiter.api.Test;
 import ro.pizzeriaq.qservices.data.model.Option;
-import ro.pizzeriaq.qservices.data.model.OptionList;
+import ro.pizzeriaq.qservices.service.DTO.OptionDTO;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
