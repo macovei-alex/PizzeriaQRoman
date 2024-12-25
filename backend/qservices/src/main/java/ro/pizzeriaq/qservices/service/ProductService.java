@@ -8,6 +8,7 @@ import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
 import ro.pizzeriaq.qservices.service.DTO.ProductWithOptionsDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -28,8 +29,8 @@ public class ProductService {
 
 
 	@Transactional
-	public ProductWithOptionsDTO getProduct(int id) {
-		Product product = productRepository.findById(id).orElse(null);
-		return ProductWithOptionsDTO.fromEntity(product);
+	public Optional<ProductWithOptionsDTO> getProduct(int id) {
+		var productOptional = productRepository.findById(id);
+		return productOptional.map(ProductWithOptionsDTO::fromEntity);
 	}
 }

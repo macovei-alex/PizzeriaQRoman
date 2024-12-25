@@ -11,6 +11,7 @@ import ro.pizzeriaq.qservices.service.DTO.ProductWithOptionsDTO;
 import ro.pizzeriaq.qservices.service.ProductService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/product")
@@ -42,13 +43,13 @@ public class ProductController {
 					.body("Invalid ID format: " + id);
 		}
 
-		ProductWithOptionsDTO product = service.getProduct(idInt);
-		if (product == null) {
+		Optional<ProductWithOptionsDTO> product = service.getProduct(idInt);
+		if (product.isEmpty()) {
 			return ResponseEntity
-					.status(HttpStatus.NOT_FOUND)
+					.status(HttpStatus.NO_CONTENT)
 					.body("Product not found for ID: " + idInt);
 		}
 
-		return ResponseEntity.ok(product);
+		return ResponseEntity.ok(product.get());
 	}
 }
