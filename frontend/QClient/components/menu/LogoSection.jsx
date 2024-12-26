@@ -4,15 +4,12 @@ import GoBackButtonSVG from "../svg/GoBackButtonSVG";
 import { images } from "../../constants";
 import { useColorTheme } from "../../hooks/useTheme";
 
-export default function LogoSection({ onBackButtonPress }) {
+export default function LogoSection() {
   const colorTheme = useColorTheme();
 
   return (
     <View>
       <ImageBackground source={images.menuBackground} style={styles.imageBackground}>
-        <TouchableOpacity onPress={onBackButtonPress} style={styles.goBackButton}>
-          <GoBackButtonSVG style={styles.goBackButtonSvg} />
-        </TouchableOpacity>
         <View style={styles.centerSection}>
           <Image source={images.logo} style={styles.logoImage} />
           <View style={styles.subtextContainer} backgroundColor={colorTheme.background[300]}>

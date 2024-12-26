@@ -1,6 +1,8 @@
-import { Stack } from "expo-router";
+import { Tabs, usePathname, useRouter } from "expo-router";
 import { GlobalContextProvider } from "../context/useGlobalContext";
 import { QueryClientProvider, QueryClient } from "react-query";
+import { useEffect } from "react";
+import { Alert, BackHandler } from "react-native";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -13,15 +15,44 @@ const queryClient = new QueryClient({
 });
 
 export default function RootLayout() {
+  const pathname = usePathname();
+
+  useEffect(() => {
+    function handleBackPress() {
+      if (pathname === "/menu") {
+        Alert.alert("Parasire aplicatie", "Sunteti sigur ca doriti sa parasiti aplicatia?", [
+          { text: "Anulare", style: "cancel" },
+          { text: "OK", onPress: () => BackHandler.exitApp() },
+        ]);
+        // Prevent default action
+        return true;
+      }
+      // Allow default back action
+      return false;
+    }
+
+    BackHandler.addEventListener("hardwareBackPress", handleBackPress);
+
+    return () => {
+      BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
+    };
+  }, [pathname]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <GlobalContextProvider>
-        <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }}></Stack.Screen>
-          <Stack.Screen name="menu/index" options={{ headerShown: false }}></Stack.Screen>
-          <Stack.Screen name="menu/product" options={{ headerShown: false }}></Stack.Screen>
-          <Stack.Screen name="test/index" options={{ headerShown: false }}></Stack.Screen>
-        </Stack>
+        <Tabs
+          screenOptions={{
+            popToTopOnBlur: true,
+          }}
+        >
+          <Tabs.Screen name="index" options={{ href: null }}></Tabs.Screen>
+          <Tabs.Screen name="menu" options={{ title: "Menu", headerShown: false }}></Tabs.Screen>
+          <Tabs.Screen
+            name="test/index"
+            options={{ title: "Test", headerShown: false, lazy: true }}
+          ></Tabs.Screen>
+        </Tabs>
       </GlobalContextProvider>
     </QueryClientProvider>
   );

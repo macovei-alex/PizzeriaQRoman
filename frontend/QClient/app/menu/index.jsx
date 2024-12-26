@@ -84,7 +84,7 @@ export default function Menu() {
   return (
     <SafeAreaView>
       <ScrollView ref={scrollRef}>
-        <LogoSection onBackButtonPress={router.back} />
+        <LogoSection />
 
         <HorizontalCategorySection categories={categoryQuery.data} onCategoryPress={scrollToCategoryId} />
 
