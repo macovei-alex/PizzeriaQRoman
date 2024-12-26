@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, Text, View } from "react-native";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import { useGlobalContext } from "../../context/useGlobalContext";
 import { useScrollRef } from "../../hooks/useScrollRef";
 import { useQuery } from "react-query";
@@ -11,7 +11,6 @@ import HorizontalCategorySection from "../../components/menu/HorizontalCategoryS
 import VerticalCategorySection from "../../components/menu/VerticalCategorySection";
 
 export default function Menu() {
-  const router = useRouter();
   const { gSetProduct } = useGlobalContext();
   const [productsPerCategroy, setProductsPerCategory] = useState([{ category: { id: 1 }, products: [] }]);
   const { scrollRef, scrollToPos } = useScrollRef();

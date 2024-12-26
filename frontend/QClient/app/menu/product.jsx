@@ -1,8 +1,7 @@
 import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
-import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useGlobalContext } from "../../context/useGlobalContext";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import GoBackButtonSVG from "../../components/svg/GoBackButtonSVG";
 import { images } from "../../constants";
 import api from "../../api";
@@ -10,7 +9,6 @@ import { useQuery } from "react-query";
 import OptionList from "../../components/menu/OptionList";
 
 export default function Product() {
-  const router = useRouter();
   const { gProduct } = useGlobalContext();
 
   const productQuery = useQuery({

@@ -1,7 +1,7 @@
-import { Tabs, usePathname, useRouter } from "expo-router";
+import { router, Tabs, usePathname } from "expo-router";
 import { GlobalContextProvider } from "../context/useGlobalContext";
 import { QueryClientProvider, QueryClient } from "react-query";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Alert, BackHandler, StyleSheet } from "react-native";
 import HomeIconSvg from "../components/svg/HomeIconSvg";
 import { useColorTheme } from "../hooks/useTheme";
@@ -20,6 +20,11 @@ const queryClient = new QueryClient({
 export default function RootLayout() {
   const pathname = usePathname();
   const colorTheme = useColorTheme();
+  const svgColors = {
+    _stroke: colorTheme.text[100],
+    _fillPrimary: colorTheme.background[700],
+    _fillSecondary: colorTheme.background[700],
+  };
 
   useEffect(() => {
     function handleBackPress() {
@@ -47,18 +52,25 @@ export default function RootLayout() {
       <GlobalContextProvider>
         <Tabs
           screenOptions={{
-            popToTopOnBlur: true,
+            headerShown: false,
             tabBarStyle: [styles.tabBar, { backgroundColor: colorTheme.background[100] }],
           }}
         >
           <Tabs.Screen name="index" options={{ href: null }}></Tabs.Screen>
           <Tabs.Screen
             name="menu"
-            options={{ title: "Menu", headerShown: false, tabBarIcon: () => <HomeIconSvg /> }}
+            options={{
+              title: "Menu",
+              tabBarIcon: () => <HomeIconSvg style={svgColors} />,
+            }}
           ></Tabs.Screen>
           <Tabs.Screen
             name="test/index"
-            options={{ title: "Test", headerShown: false, lazy: true, tabBarIcon: () => <CartIconSvg /> }}
+            options={{
+              title: "Test",
+              lazy: true,
+              tabBarIcon: () => <CartIconSvg style={svgColors} />,
+            }}
           ></Tabs.Screen>
         </Tabs>
       </GlobalContextProvider>

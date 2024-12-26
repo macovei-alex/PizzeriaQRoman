@@ -4,7 +4,7 @@ import Svg, { Path } from "react-native-svg";
 
 const CartIconSvg = ({ style }) => {
   const stroke = style?._stroke ?? "black";
-  const fillPrimary = style?._fillPrimary ?? "black";
+  const fillPrimary = style?._fillPrimary ?? "white";
   const fillSecondary = style?._fillSecondary ?? "white";
 
   return (
@@ -27,7 +27,7 @@ const CartIconSvg = ({ style }) => {
       <Path
         d="M10.0772 19H9.97329L8 7L28 8.41V16.225C28.0025 17.0087 27.4077 17.6623 26.635 17.725L10.0772 19Z"
         stroke={stroke}
-        fill={fillSecondary}
+        fill={fillPrimary}
       />
     </Svg>
   );
