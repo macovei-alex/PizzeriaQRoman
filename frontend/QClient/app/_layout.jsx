@@ -2,7 +2,10 @@ import { Tabs, usePathname, useRouter } from "expo-router";
 import { GlobalContextProvider } from "../context/useGlobalContext";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { useEffect } from "react";
-import { Alert, BackHandler } from "react-native";
+import { Alert, BackHandler, StyleSheet } from "react-native";
+import HomeIconSvg from "../components/svg/HomeIconSvg";
+import { useColorTheme } from "../hooks/useTheme";
+import CartIconSvg from "../components/svg/CartIconSvg";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -16,6 +19,7 @@ const queryClient = new QueryClient({
 
 export default function RootLayout() {
   const pathname = usePathname();
+  const colorTheme = useColorTheme();
 
   useEffect(() => {
     function handleBackPress() {
@@ -44,16 +48,27 @@ export default function RootLayout() {
         <Tabs
           screenOptions={{
             popToTopOnBlur: true,
+            tabBarStyle: [styles.tabBar, { backgroundColor: colorTheme.background[100] }],
           }}
         >
           <Tabs.Screen name="index" options={{ href: null }}></Tabs.Screen>
-          <Tabs.Screen name="menu" options={{ title: "Menu", headerShown: false }}></Tabs.Screen>
+          <Tabs.Screen
+            name="menu"
+            options={{ title: "Menu", headerShown: false, tabBarIcon: () => <HomeIconSvg /> }}
+          ></Tabs.Screen>
           <Tabs.Screen
             name="test/index"
-            options={{ title: "Test", headerShown: false, lazy: true }}
+            options={{ title: "Test", headerShown: false, lazy: true, tabBarIcon: () => <CartIconSvg /> }}
           ></Tabs.Screen>
         </Tabs>
       </GlobalContextProvider>
     </QueryClientProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  tabBar: {
+    borderTopRightRadius: 16,
+    borderTopLeftRadius: 16,
+  },
+});

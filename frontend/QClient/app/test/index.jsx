@@ -4,21 +4,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import GoBackButtonSVG from "../../components/svg/GoBackButtonSVG";
 import { useQuery } from "react-query";
 import api from "../../api";
+import HomeIconSvg from "../../components/svg/HomeIconSvg";
 
 export default function TestComponent() {
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["categories"],
-    queryFn: api.fetchCategories,
-  });
-
-  console.log({ data: data ? true : false, isError, error, isLoading });
-
-  if (isLoading) return <Text>Loading...</Text>;
-  if (isError) return <Text>Error: {error.message}</Text>;
-
-  return (
-    <SafeAreaView>
-      <Text>{data ? JSON.stringify(data) : ""}</Text>
-    </SafeAreaView>
-  );
+  return <HomeIconSvg style={{ width: 32, height: 32 }}></HomeIconSvg>;
 }
