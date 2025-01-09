@@ -38,8 +38,6 @@ public class EntityInitializerService {
 
 	@Transactional
 	public void deleteAll() {
-		System.out.println("EntityInitializerService.deleteAll()");
-
 		productRepository.deleteAll();
 		categoryRepository.deleteAll();
 		optionListRepository.deleteAll();
@@ -56,11 +54,9 @@ public class EntityInitializerService {
 	public void addProducts() {
 		List<ProductCategory> categories = new ArrayList<>();
 
-		categories.add(ProductCategory.builder().name("Cele mai vandute mai vandute").build());
-		categories.add(ProductCategory.builder().name("Pizza 1+1 combo").build());
-		categories.add(ProductCategory.builder().name("Pizza 30 cm").build());
-		categories.add(ProductCategory.builder().name("Fa-ti singur pizza").build());
-		categories.add(ProductCategory.builder().name("Bauturi non-alcoolice").build());
+		categories.add(ProductCategory.builder().name("Cele mai vandute mai vandute").sortId(1).build());
+		categories.add(ProductCategory.builder().name("Pizza 1+1 combo").sortId(2).build());
+		categories.add(ProductCategory.builder().name("Bauturi non-alcoolice").sortId(10).build());
 
 		categories = categoryRepository.saveAll(categories);
 
@@ -80,7 +76,7 @@ public class EntityInitializerService {
 				.subtitle("1+1 Gratis la alegere")
 				.description("500g")
 				.price(BigDecimal.valueOf(35.0))
-						.isActive(true)
+				.isActive(true)
 				.build());
 
 		products.add(Product.builder()
@@ -107,6 +103,33 @@ public class EntityInitializerService {
 				.subtitle("1+1 Gratis la alegere")
 				.description("500g")
 				.price(BigDecimal.valueOf(30.0))
+				.isActive(true)
+				.build());
+
+		products.add(Product.builder()
+				.category(categories.get(2))
+				.name("Pepsi")
+				.subtitle("0.33L")
+				.description("")
+				.price(BigDecimal.valueOf(5.0))
+				.isActive(true)
+				.build());
+
+		products.add(Product.builder()
+				.category(categories.get(2))
+				.name("Fanta Portocale")
+				.subtitle("0.33L")
+				.description("")
+				.price(BigDecimal.valueOf(5.0))
+				.isActive(true)
+				.build());
+
+		products.add(Product.builder()
+				.category(categories.get(2))
+				.name("Sprite")
+				.subtitle("0.33L")
+				.description("")
+				.price(BigDecimal.valueOf(5.0))
 				.isActive(true)
 				.build());
 
@@ -244,11 +267,11 @@ public class EntityInitializerService {
 		List<Product> products = productRepository.findAll(Sort.by(Sort.Order.asc("name")));
 		List<OptionList> optionLists = optionListRepository.findAll();
 
-		products.get(0).getOptionLists().add(optionLists.get(0));
-		products.get(0).getOptionLists().add(optionLists.get(1));
-		products.get(0).getOptionLists().add(optionLists.get(3));
+		products.get(2).getOptionLists().add(optionLists.get(0));
+		products.get(2).getOptionLists().add(optionLists.get(1));
+		products.get(2).getOptionLists().add(optionLists.get(3));
 
-		products.get(1).getOptionLists().add(optionLists.get(1));
-		products.get(1).getOptionLists().add(optionLists.get(2));
+		products.get(3).getOptionLists().add(optionLists.get(1));
+		products.get(3).getOptionLists().add(optionLists.get(2));
 	}
 }

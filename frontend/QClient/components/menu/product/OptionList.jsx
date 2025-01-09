@@ -9,7 +9,6 @@ export default function OptionList({ optionList }) {
       {optionList.options.map((option) => (
         <Option key={option.id} option={option} />
       ))}
-      <Text></Text>
     </View>
   );
 }

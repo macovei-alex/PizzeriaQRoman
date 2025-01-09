@@ -19,7 +19,7 @@ public class ProductCategoryService {
 
 	@Transactional
 	public List<ProductCategoryDTO> getCategories() {
-		List<ProductCategory> productEntities = productRepository.findAll();
+		List<ProductCategory> productEntities = productRepository.findAllOrderBySortIdAsc();
 		return productEntities.stream().map(ProductCategoryDTO::fromEntity).toList();
 	}
 }
