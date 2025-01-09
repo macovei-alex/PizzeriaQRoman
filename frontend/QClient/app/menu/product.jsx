@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useGlobalContext } from "../../context/useGlobalContext";
 import { router } from "expo-router";
@@ -7,9 +7,14 @@ import { images } from "../../constants";
 import api from "../../api";
 import { useQuery } from "react-query";
 import OptionList from "../../components/menu/product/OptionList";
+import { useColorTheme } from "../../hooks/useColorTheme";
+import HorizontalLine from "../../components/menu/product/HorizontalLine";
+import { Fragment } from "react";
+import TitleSection from "../../components/menu/product/TitleSection";
 
 export default function Product() {
   const { gProduct } = useGlobalContext();
+  const colorTheme = useColorTheme();
 
   const productQuery = useQuery({
     queryFn: () => api.fetchProductWithOptions(gProduct.id),
@@ -27,28 +32,25 @@ export default function Product() {
 
   return (
     <SafeAreaView>
-      <TouchableOpacity onPress={() => router.back()}>
-        <GoBackButtonSVG style={styles.goBackSvg} />
-      </TouchableOpacity>
-      <Text>{product.name}</Text>
-      <Text>{product.subtitle}</Text>
-      <Text>{product.description}</Text>
-      <Text>{product.price.toFixed(2)} lei</Text>
-      <Image source={product.image ? product.image : images.pizzaDemo} style={styles.image}></Image>
-      {product.optionLists?.map((optionList) => (
-        <OptionList key={optionList.id.toString()} optionList={optionList} />
-      ))}
+      <ScrollView>
+        <TitleSection product={product} />
+
+        {product.optionLists?.map((optionList) => (
+          <Fragment key={optionList.id}>
+            <HorizontalLine
+              style={[styles.horizontalLine, { backgroundColor: colorTheme.background[200] }]}
+            />
+            <OptionList optionList={optionList} />
+          </Fragment>
+        ))}
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  image: {
-    width: 256,
-    height: 256,
-  },
-  goBackSvg: {
-    width: 38,
-    height: 38,
+  horizontalLine: {
+    marginVertical: 24,
+    width: "95%",
   },
 });

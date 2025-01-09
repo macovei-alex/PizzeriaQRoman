@@ -70,7 +70,7 @@ public class EntityInitializerService {
 				.category(categories.get(0))
 				.name("Pizza Capriciosa")
 				.subtitle("1+1 Gratis la alegere")
-				.description("500g")
+				.description("Ingrediente: sos, salam, cabanos, ciuperci, măsline, mozzarella, roșii, ardei - 550g")
 				.price(BigDecimal.valueOf(30.0))
 				.build());
 
