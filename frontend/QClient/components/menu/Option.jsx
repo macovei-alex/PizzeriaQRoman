@@ -1,7 +1,7 @@
-import { View, Text } from "react-native";
+import { Text } from "react-native";
 import React from "react";
 
-function Option({ option }) {
+export default function Option({ option }) {
   return (
     <>
       <Text>
@@ -10,5 +10,3 @@ function Option({ option }) {
     </>
   );
 }
-
-export default Option;

@@ -1,7 +1,7 @@
 import React from "react";
 import Svg, { Path } from "react-native-svg";
 
-function HomeIconSvg({ style }) {
+export default function HomeIconSvg({ style }) {
   const stroke = style?._stroke ?? "black";
   const fillPrimary = style?._fillPrimary ?? "white";
   const fillSecondary = style?._fillSecondary ?? "white";
@@ -21,5 +21,3 @@ function HomeIconSvg({ style }) {
     </Svg>
   );
 }
-
-export default HomeIconSvg;

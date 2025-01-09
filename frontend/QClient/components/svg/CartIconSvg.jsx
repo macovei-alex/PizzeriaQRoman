@@ -1,8 +1,7 @@
-import { View, Text } from "react-native";
 import React from "react";
 import Svg, { Path } from "react-native-svg";
 
-const CartIconSvg = ({ style }) => {
+export default function CartIconSvg({ style }) {
   const stroke = style?._stroke ?? "black";
   const fillPrimary = style?._fillPrimary ?? "white";
   const fillSecondary = style?._fillSecondary ?? "white";
@@ -31,6 +30,4 @@ const CartIconSvg = ({ style }) => {
       />
     </Svg>
   );
-};
-
-export default CartIconSvg;
+}

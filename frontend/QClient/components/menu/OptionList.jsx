@@ -2,7 +2,7 @@ import { Text } from "react-native";
 import React from "react";
 import Option from "./Option";
 
-function OptionList({ optionList }) {
+export default function OptionList({ optionList }) {
   return (
     <>
       <Text>optionList: {optionList.id}</Text>
@@ -13,5 +13,3 @@ function OptionList({ optionList }) {
     </>
   );
 }
-
-export default OptionList;

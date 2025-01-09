@@ -1,6 +1,5 @@
-import { View, Text, ImageBackground, TouchableOpacity, Image, StyleSheet } from "react-native";
+import { View, Text, ImageBackground, Image, StyleSheet } from "react-native";
 import React from "react";
-import GoBackButtonSVG from "../svg/GoBackButtonSVG";
 import { images } from "../../constants";
 import { useColorTheme } from "../../hooks/useTheme";
 

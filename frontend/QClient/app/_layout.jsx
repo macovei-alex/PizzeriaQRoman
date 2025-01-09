@@ -1,7 +1,7 @@
-import { router, Tabs, usePathname } from "expo-router";
+import { Tabs, usePathname } from "expo-router";
 import { GlobalContextProvider } from "../context/useGlobalContext";
 import { QueryClientProvider, QueryClient } from "react-query";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { Alert, BackHandler, StyleSheet } from "react-native";
 import HomeIconSvg from "../components/svg/HomeIconSvg";
 import { useColorTheme } from "../hooks/useTheme";
