@@ -1,8 +1,8 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
-import { images } from "../../constants";
+import { images } from "../../../constants";
 import { StyleSheet } from "react-native";
-import { useColorTheme } from "../../hooks/useTheme";
+import { useColorTheme } from "../../../hooks/useColorTheme";
 
 export default function MenuProduct({ product, onPress }) {
   const colorTheme = useColorTheme();

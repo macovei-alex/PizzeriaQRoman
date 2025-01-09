@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet } from "react-native";
 import React from "react";
 import Category from "./Category";
-import SearchBar from "./SerachBar";
+import SearchBar from "./SearchBar";
 
 export default function HorizontalCategorySection({ categories, onCategoryPress }) {
   return (

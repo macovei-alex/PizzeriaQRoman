@@ -4,7 +4,7 @@ import { QueryClientProvider, QueryClient } from "react-query";
 import { useEffect } from "react";
 import { Alert, BackHandler, StyleSheet } from "react-native";
 import HomeIconSvg from "../components/svg/HomeIconSvg";
-import { useColorTheme } from "../hooks/useTheme";
+import { useColorTheme } from "../hooks/useColorTheme";
 import CartIconSvg from "../components/svg/CartIconSvg";
 
 const queryClient = new QueryClient({

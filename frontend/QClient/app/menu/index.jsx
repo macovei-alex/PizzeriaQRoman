@@ -6,9 +6,9 @@ import { useGlobalContext } from "../../context/useGlobalContext";
 import { useScrollRef } from "../../hooks/useScrollRef";
 import { useQuery } from "react-query";
 import api from "../../api";
-import LogoSection from "../../components/menu/LogoSection";
-import HorizontalCategorySection from "../../components/menu/HorizontalCategorySection";
-import VerticalCategorySection from "../../components/menu/VerticalCategorySection";
+import LogoSection from "../../components/menu/index/LogoSection";
+import HorizontalCategorySection from "../../components/menu/index/HorizontalCategorySection";
+import VerticalCategorySection from "../../components/menu/index/VerticalCategorySection";
 
 export default function Menu() {
   const { gSetProduct } = useGlobalContext();

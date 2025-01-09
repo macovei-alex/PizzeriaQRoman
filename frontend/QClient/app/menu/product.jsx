@@ -6,7 +6,7 @@ import GoBackButtonSVG from "../../components/svg/GoBackButtonSVG";
 import { images } from "../../constants";
 import api from "../../api";
 import { useQuery } from "react-query";
-import OptionList from "../../components/menu/OptionList";
+import OptionList from "../../components/menu/product/OptionList";
 
 export default function Product() {
   const { gProduct } = useGlobalContext();

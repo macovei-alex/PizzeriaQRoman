@@ -1,6 +1,6 @@
 import React from "react";
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useColorTheme } from "../../hooks/useTheme";
+import { useColorTheme } from "../../../hooks/useColorTheme";
 
 export default function Category({ category, onPress, style }) {
   const colorTheme = useColorTheme();
