@@ -75,7 +75,7 @@ class ProductTests {
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(jsonPath("$").isArray())
-				.andExpect(jsonPath("$.length()").value(5));
+				.andExpect(jsonPath("$.length()").value(8));
 	}
 
 	@Test
@@ -101,9 +101,11 @@ class ProductTests {
 								.stream()
 								.sorted(Comparator.comparing(ProductDTO::getName))
 								.toList()
-								.getFirst()
+								.get(2)
 								.getId())
-				.get();
+				.orElse(null);
+
+		assertThat(product).isNotNull();
 
 		mockMvc.perform(get(contextPath + "/product/{id}", product.getId())
 						.contextPath(contextPath)
