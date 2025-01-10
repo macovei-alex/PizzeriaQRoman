@@ -33,15 +33,13 @@ public class ImageController {
 	@GetMapping("/all")
 	public List<Image> getImages() {
 		List<ProductDTO> products = productService.getProducts();
-		var images = products.stream()
+		return products.stream()
 				.filter((product) -> imageManagementService.imageExists(product.getImageName()))
 				.map(product -> new Image(
 						product.getImageName(),
 						imageManagementService.readImageBase64(product.getImageName())
 				))
 				.toList();
-		System.out.println(images.size());
-		return images;
 	}
 
 

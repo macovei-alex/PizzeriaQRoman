@@ -3,8 +3,10 @@ import config from "./config";
 
 const baseImageRoute = `${config.baseApiUrl}/image`;
 
-async function fetchImages() {
-  return (await axios.get(`${baseImageRoute}/all`)).data;
+export async function fetchImageRefetchCheck() {
+  return (await axios.get(`${baseImageRoute}/changes/0`)).data;
 }
 
-export { fetchImages };
+export async function fetchImages() {
+  return (await axios.get(`${baseImageRoute}/all`)).data;
+}

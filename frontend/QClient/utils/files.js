@@ -1,0 +1,59 @@
+import * as FileSystem from "expo-file-system";
+
+/**
+ * @param {string} imageName
+ * @param {string} imageData
+ * @returns {Promise<void>}
+ */
+async function saveImage(imageName, imageData) {
+  const fileUri = FileSystem.documentDirectory + imageName;
+  console.log(`saving ${fileUri}`);
+  try {
+    await FileSystem.writeAsStringAsync(fileUri, imageData, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+  } catch (error) {
+    console.log("error saving image", error);
+  }
+}
+
+/**
+ * @param { { name: string, data: string }[] } imagesArray
+ * @returns {Promise<void>}
+ */
+export async function saveImages(imagesArray) {
+  const files = await FileSystem.readDirectoryAsync(FileSystem.documentDirectory);
+  for (const image of imagesArray) {
+    if (!files.includes(image.name)) {
+      saveImage(image.name, image.data.split(",")[1]);
+    }
+  }
+}
+
+/**
+ * @param {string} imageName
+ * @returns {Promise<string>}
+ */
+export async function loadImage(imageName) {
+  const fileUri = FileSystem.documentDirectory + imageName;
+  const header = `data:image/${imageName.split(".").pop()};base64,`;
+  const contents = await FileSystem.readAsStringAsync(fileUri, {
+    encoding: FileSystem.EncodingType.Base64,
+  });
+  return header + contents;
+}
+
+/**
+ * @param {string[]} imageNames
+ * @returns {Promise<{ name: string, data: string }[]>}
+ */
+export async function loadImages(imageNames) {
+  const images = [];
+  for (const imageName of imageNames) {
+    images.push({
+      name: imageName,
+      data: await loadImage(imageName),
+    });
+  }
+  return images;
+}

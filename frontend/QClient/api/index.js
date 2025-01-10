@@ -1,10 +1,8 @@
-import { fetchProducts, fetchCategories, fetchProductWithOptions } from "./products";
-import { fetchImages } from "./images";
+import * as productFetches from "./products";
+import * as imageFetches from "./images";
 
 const api = {
-  fetchProducts,
-  fetchCategories,
-  fetchProductWithOptions,
-  fetchImages,
+  ...productFetches,
+  ...imageFetches,
 };
 export default api;

@@ -5,27 +5,68 @@ import GoBackButtonSVG from "../../components/svg/GoBackButtonSVG";
 import { useQuery } from "react-query";
 import api from "../../api";
 import HomeIconSvg from "../../components/svg/HomeIconSvg";
+import { saveImages, loadImages } from "../../utils/files";
 
 export default function TestComponent() {
-  const imagesQuery = useQuery({
-    queryFn: api.fetchImages,
+  const newImagesQuery = useQuery({
+    queryFn: async () => {
+      if (await api.fetchImageRefetchCheck()) {
+        return api.fetchImages();
+      }
+      return [];
+    },
     queryKey: "images",
   });
 
-  if (imagesQuery.isLoading) {
-    return <Text>Loading...</Text>;
+  const productsQuery = useQuery({
+    queryFn: api.fetchProducts,
+    queryKey: "products",
+  });
+
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    if (!newImagesQuery.data || !productsQuery.data) {
+      return;
+    }
+
+    let imagesToLoad = newImagesQuery.data.map((image) => image.name);
+    let imagesToSave = newImagesQuery.data;
+    if (newImagesQuery.data.length === 0) {
+      imagesToLoad = productsQuery.data.map((product) => product.imageName);
+    }
+
+    const processImages = async () => {
+      try {
+        await saveImages(imagesToSave);
+        const loaded = await loadImages(imagesToLoad);
+        setImages(loaded);
+      } catch (error) {
+        console.error("Error processing images:", error);
+      }
+    };
+
+    processImages();
+  }, [newImagesQuery.data, productsQuery.data]);
+
+  if (newImagesQuery.isLoading) {
+    return <Text>Loading new images from server...</Text>;
   }
 
-  if (imagesQuery.isError) {
-    return <Text>Error: {imagesQuery.error.message}</Text>;
+  if (newImagesQuery.isError) {
+    return <Text>Error: {newImagesQuery.error.message}</Text>;
+  }
+
+  if (images.length == 0) {
+    return <Text>Loading images from disk...</Text>;
   }
 
   return (
     <SafeAreaView>
       <ScrollView>
         <View style={styles.container}>
-          {imagesQuery.data.map((image, index) => (
-            <Fragment key={index}>
+          {images.map((image) => (
+            <Fragment key={image.name}>
               <Text>{image.name}</Text>
               <Image source={{ uri: image.data }} style={styles.image} />
             </Fragment>

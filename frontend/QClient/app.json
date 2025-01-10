@@ -20,14 +20,12 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.pizzeriaq"
+      "package": "com.pizzeriaq"
     },
     "web": {
       "favicon": "./assets/images/logo.png"
     },
-    "plugins": [
-      "expo-router"
-    ],
+    "plugins": ["expo-router"],
     "newArchEnabled": true
   }
 }
