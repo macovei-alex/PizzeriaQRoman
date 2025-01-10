@@ -60,7 +60,9 @@ public class Product {
 	private BigDecimal price;
 
 
-	private String image;
+	@Column(nullable = false, unique = true, length = 256)
+	private String imageName;
+
 
 	@Column(nullable = false)
 	@ColumnDefault("1")

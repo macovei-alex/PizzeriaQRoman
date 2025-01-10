@@ -14,9 +14,11 @@ public class ProductCategoryController {
 
 	private final ProductCategoryService service;
 
+
 	public ProductCategoryController(ProductCategoryService service) {
 		this.service = service;
 	}
+
 
 	@GetMapping("/all")
 	public List<ProductCategoryDTO> getProducts() {

@@ -9,7 +9,8 @@ export default function MenuProduct({ product, onPress }) {
 
   return (
     <View style={styles.container} backgroundColor={colorTheme.background[400]}>
-      <Image source={product.image ? product.image : images.pizzaDemo} style={styles.image} />
+      {/* TODO: Uncomment this after implementing image caching */}
+      <Image source={/* product.imageName ?? */ images.pizzaDemo} style={styles.image} />
       <View style={styles.infoSection}>
         <View style={styles.titleContainer}>
           <Text style={styles.titleText}>{product.name}</Text>

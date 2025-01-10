@@ -14,7 +14,6 @@ public class ProductCategoryDTO {
 	private int id;
 	private String name;
 
-
 	public static ProductCategoryDTO fromEntity(ProductCategory productCategory) {
 		if (productCategory == null) {
 			return null;

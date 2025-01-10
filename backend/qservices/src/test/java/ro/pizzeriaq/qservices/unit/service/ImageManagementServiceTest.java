@@ -6,7 +6,7 @@ import ro.pizzeriaq.qservices.service.ImageManagementService;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ImageManagerTest {
+public class ImageManagementServiceTest {
 
 	private final ImageManagementService imageManagementService = new ImageManagementService();
 

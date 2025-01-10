@@ -63,15 +63,14 @@ export default function RootLayout() {
               title: "Menu",
               tabBarIcon: () => <HomeIconSvg style={svgColors} />,
             }}
-          ></Tabs.Screen>
+          />
           <Tabs.Screen
             name="test/index"
             options={{
               title: "Test",
-              lazy: true,
               tabBarIcon: () => <CartIconSvg style={svgColors} />,
             }}
-          ></Tabs.Screen>
+          />
         </Tabs>
       </GlobalContextProvider>
     </QueryClientProvider>

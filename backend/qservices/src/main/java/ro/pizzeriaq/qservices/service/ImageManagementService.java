@@ -8,13 +8,23 @@ import java.nio.file.Files;
 import java.util.Base64;
 
 @Service
-public class ImageManager {
+public class ImageManagementService {
 
 	private final String folderPath = "static/images/";
 
 
 	private byte[] readImage(String imageName) throws IOException {
 		return Files.readAllBytes(new ClassPathResource(folderPath + imageName).getFile().toPath());
+	}
+
+
+	private String getImageFileFormat(String imageName) {
+		return imageName.substring(imageName.lastIndexOf(".") + 1);
+	}
+
+
+	private String getBase64Prefix(String imageName) {
+		return "data:image/" + getImageFileFormat(imageName) + ";base64,";
 	}
 
 
@@ -26,9 +36,17 @@ public class ImageManager {
 	public String readImageBase64(String imageName) {
 		try {
 			byte[] image = readImage(imageName);
-			return encodeImageData(image);
+			return getBase64Prefix(imageName) + encodeImageData(image);
 		} catch (IOException e) {
-			return "";
+			return null;
+		}
+	}
+
+	public boolean imageExists(String imageName) {
+		try {
+			return Files.exists(new ClassPathResource(folderPath + imageName).getFile().toPath());
+		} catch (IOException e) {
+			return false;
 		}
 	}
 }

@@ -10,20 +10,18 @@ export default function TitleSection({ product }) {
 
   return (
     <>
-      <ImageBackground source={product.image ?? images.pizzaDemo} style={styles.image}>
+      {/* TODO: Uncomment this after implementing image caching */}
+      <ImageBackground source={/* product.image ?? */ images.pizzaDemo} style={styles.image}>
         <TouchableOpacity onPress={() => router.back()}>
           <GoBackButtonSVG style={styles.goBackSvg} />
         </TouchableOpacity>
       </ImageBackground>
-
       <Text style={styles.titleText}>{product.name}</Text>
-
       <View style={styles.subtitleContainer}>
         <Text style={styles.subtitleText}>
           {product.subtitle} - {product.price.toFixed(2)} lei
         </Text>
       </View>
-
       <Text style={[styles.descriptionText, { color: colorTheme.text[200] }]}>{product.description}</Text>
     </>
   );

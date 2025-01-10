@@ -68,6 +68,8 @@ public class EntityInitializerService {
 				.subtitle("1+1 Gratis la alegere")
 				.description("Ingrediente: sos, salam, cabanos, ciuperci, măsline, mozzarella, roșii, ardei - 550g")
 				.price(BigDecimal.valueOf(30.0))
+				.imageName("pizza-capriciosa.jpg")
+				.isActive(true)
 				.build());
 
 		products.add(Product.builder()
@@ -76,6 +78,7 @@ public class EntityInitializerService {
 				.subtitle("1+1 Gratis la alegere")
 				.description("500g")
 				.price(BigDecimal.valueOf(35.0))
+				.imageName("pizza-quattro-formaggi.jpg")
 				.isActive(true)
 				.build());
 
@@ -85,6 +88,7 @@ public class EntityInitializerService {
 				.subtitle("1+1 Gratis la alegere")
 				.description("500g")
 				.price(BigDecimal.valueOf(40.0))
+				.imageName("pizza-quattro-stagioni.jpg")
 				.isActive(true)
 				.build());
 
@@ -94,6 +98,7 @@ public class EntityInitializerService {
 				.subtitle("1+1 Gratis la alegere")
 				.description("500g")
 				.price(BigDecimal.valueOf(30.0))
+				.imageName("pizza-margherita.jpg")
 				.isActive(true)
 				.build());
 
@@ -103,6 +108,7 @@ public class EntityInitializerService {
 				.subtitle("1+1 Gratis la alegere")
 				.description("500g")
 				.price(BigDecimal.valueOf(30.0))
+				.imageName("pizza-taraneasca.jpg")
 				.isActive(true)
 				.build());
 
@@ -112,6 +118,7 @@ public class EntityInitializerService {
 				.subtitle("0.33L")
 				.description("")
 				.price(BigDecimal.valueOf(5.0))
+				.imageName("pepsi.jpg")
 				.isActive(true)
 				.build());
 
@@ -121,6 +128,7 @@ public class EntityInitializerService {
 				.subtitle("0.33L")
 				.description("")
 				.price(BigDecimal.valueOf(5.0))
+				.imageName("fanta-portocale.jpg")
 				.isActive(true)
 				.build());
 
@@ -130,6 +138,7 @@ public class EntityInitializerService {
 				.subtitle("0.33L")
 				.description("")
 				.price(BigDecimal.valueOf(5.0))
+				.imageName("sprite.jpg")
 				.isActive(true)
 				.build());
 
