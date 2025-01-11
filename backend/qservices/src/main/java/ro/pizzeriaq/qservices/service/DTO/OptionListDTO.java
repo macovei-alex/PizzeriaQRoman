@@ -21,7 +21,6 @@ public class OptionListDTO {
 	private int maxChoices;
 	private List<OptionDTO> options;
 
-
 	public static OptionListDTO fromEntity(OptionList optionList) {
 		if (optionList == null) {
 			return null;

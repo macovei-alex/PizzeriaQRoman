@@ -41,32 +41,19 @@ public class OptionList {
 
 
 	@Column(nullable = false, length = 80)
-	private String text = null;
+	private String text;
 
 
 	@Column(nullable = false)
-	@ColumnDefault("0")
-	private int minChoices = 0;
+	private int minChoices;
 
 
 	@Column(nullable = false)
-	@ColumnDefault("2147483647")
-	private int maxChoices = Integer.MAX_VALUE;
+	private int maxChoices;
 
 
 	@Column(nullable = false)
 	@ColumnDefault("1")
+	@Builder.Default
 	private boolean isActive = true;
-
-
-	public void addProductSync(Product product) {
-		products.add(product);
-		product.getOptionLists().add(this);
-	}
-
-
-	public void removeProductSync(Product product) {
-		products.remove(product);
-		product.getOptionLists().remove(this);
-	}
 }

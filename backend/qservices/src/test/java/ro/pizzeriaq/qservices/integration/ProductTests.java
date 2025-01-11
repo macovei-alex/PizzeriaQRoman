@@ -32,6 +32,12 @@ class ProductTests {
 	@Value("${server.servlet.context-path}")
 	private String contextPath;
 
+	@Value("${application.environment}")
+	private String environment;
+
+
+	private static final Logger logger = LoggerFactory.getLogger(ProductTests.class);
+
 
 	@Autowired
 	private EntityInitializerService entityInitializerService;
@@ -45,6 +51,8 @@ class ProductTests {
 
 	@BeforeAll
 	void setUp() {
+		logger.info("Environment: {}", environment);
+
 		entityInitializerService.deleteAll();
 		entityInitializerService.addProducts();
 		entityInitializerService.addOptionLists();

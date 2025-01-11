@@ -40,8 +40,7 @@ public class Account {
 
 
 	@Column(nullable = false, columnDefinition = "DATETIME")
-	@ColumnDefault("NOW()")
-	private LocalDateTime createdTimestamp = LocalDateTime.now();
+	private LocalDateTime createdTimestamp;
 
 
 	@Column(nullable = false, length = 20)
@@ -50,5 +49,6 @@ public class Account {
 
 	@Column(nullable = false)
 	@ColumnDefault("1")
+	@Builder.Default
 	private boolean isActive = true;
 }

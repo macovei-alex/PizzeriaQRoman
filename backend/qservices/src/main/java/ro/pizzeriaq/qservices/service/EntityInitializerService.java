@@ -69,7 +69,6 @@ public class EntityInitializerService {
 				.description("Ingrediente: sos, salam, cabanos, ciuperci, măsline, mozzarella, roșii, ardei - 550g")
 				.price(BigDecimal.valueOf(30.0))
 				.imageName("pizza-capriciosa.jpg")
-				.isActive(true)
 				.build());
 
 		products.add(Product.builder()
@@ -79,7 +78,6 @@ public class EntityInitializerService {
 				.description("500g")
 				.price(BigDecimal.valueOf(35.0))
 				.imageName("pizza-quattro-formaggi.jpg")
-				.isActive(true)
 				.build());
 
 		products.add(Product.builder()
@@ -89,7 +87,6 @@ public class EntityInitializerService {
 				.description("500g")
 				.price(BigDecimal.valueOf(40.0))
 				.imageName("pizza-quattro-stagioni.jpg")
-				.isActive(true)
 				.build());
 
 		products.add(Product.builder()
@@ -99,7 +96,6 @@ public class EntityInitializerService {
 				.description("500g")
 				.price(BigDecimal.valueOf(30.0))
 				.imageName("pizza-margherita.jpg")
-				.isActive(true)
 				.build());
 
 		products.add(Product.builder()
@@ -109,7 +105,6 @@ public class EntityInitializerService {
 				.description("500g")
 				.price(BigDecimal.valueOf(30.0))
 				.imageName("pizza-taraneasca.jpg")
-				.isActive(true)
 				.build());
 
 		products.add(Product.builder()
@@ -119,7 +114,6 @@ public class EntityInitializerService {
 				.description("")
 				.price(BigDecimal.valueOf(5.0))
 				.imageName("pepsi.jpg")
-				.isActive(true)
 				.build());
 
 		products.add(Product.builder()
@@ -129,7 +123,6 @@ public class EntityInitializerService {
 				.description("")
 				.price(BigDecimal.valueOf(5.0))
 				.imageName("fanta-portocale.jpg")
-				.isActive(true)
 				.build());
 
 		products.add(Product.builder()
@@ -139,7 +132,6 @@ public class EntityInitializerService {
 				.description("")
 				.price(BigDecimal.valueOf(5.0))
 				.imageName("sprite.jpg")
-				.isActive(true)
 				.build());
 
 		productRepository.saveAll(products);
@@ -155,7 +147,6 @@ public class EntityInitializerService {
 				.text("Prima Pizza cu Margine Umpluta cu Branza Ricotta?")
 				.minChoices(1)
 				.maxChoices(1)
-				.isActive(true)
 				.build());
 
 		optionLists.add(OptionList.builder()
@@ -163,7 +154,6 @@ public class EntityInitializerService {
 				.text("Alege a Doua Pizza")
 				.minChoices(1)
 				.maxChoices(1)
-				.isActive(true)
 				.build());
 
 		optionLists.add(OptionList.builder()
@@ -171,7 +161,6 @@ public class EntityInitializerService {
 				.text("A Doua Pizza cu Margine Umpluta cu Branza Ricotta")
 				.minChoices(1)
 				.maxChoices(1)
-				.isActive(true)
 				.build());
 
 		optionLists.add(OptionList.builder()
@@ -179,7 +168,6 @@ public class EntityInitializerService {
 				.text("Doresti sos?")
 				.minChoices(0)
 				.maxChoices(4)
-				.isActive(true)
 				.build());
 
 		optionLists = optionListRepository.saveAll(optionLists);

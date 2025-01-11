@@ -29,7 +29,7 @@ public class Address {
 
 
 	@Column(nullable = false, length = 40)
-	private String city = "Roman";
+	private String city;
 
 
 	@Column(nullable = false, length = 60)

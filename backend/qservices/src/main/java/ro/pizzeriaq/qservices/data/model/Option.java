@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -32,7 +31,7 @@ public class Option {
 
 
 	@Column(length = 100)
-	private String additionalDescription = null;
+	private String additionalDescription;
 
 
 	@Column(nullable = false, precision = 8, scale = 2)
@@ -40,23 +39,9 @@ public class Option {
 
 
 	@Column(nullable = false)
-	@ColumnDefault("0")
-	private int minCount = 0;
+	private int minCount;
 
 
 	@Column(nullable = false)
-	@ColumnDefault("2147483647")
-	private int maxCount = Integer.MAX_VALUE;
-
-
-	public void addOptionListSync(OptionList optionList) {
-		optionLists.add(optionList);
-		optionList.getOptions().add(this);
-	}
-
-
-	public void removeOptionListSync(OptionList optionList) {
-		optionLists.remove(optionList);
-		optionList.getOptions().remove(this);
-	}
+	private int maxCount;
 }

@@ -66,5 +66,6 @@ public class Product {
 
 	@Column(nullable = false)
 	@ColumnDefault("1")
+	@Builder.Default
 	private boolean isActive = true;
 }
