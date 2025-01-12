@@ -12,7 +12,6 @@ import VerticalCategorySection from "../../components/menu/index/VerticalCategor
 import useDiskImages from "../../hooks/useDiskImages";
 
 export default function Menu() {
-  const { gSetProduct } = useGlobalContext();
   const [productsPerCategroy, setProductsPerCategory] = useState([{ category: { id: 1 }, products: [] }]);
   const { scrollRef, scrollToPos } = useScrollRef();
   const [categoryPositions, setCategoryPositions] = useState({});
@@ -101,8 +100,10 @@ export default function Menu() {
               productImages={imagesQuery.data}
               customOnLayout={updateCategoryLayoutPosition}
               onMenuProductClick={(product) => {
-                gSetProduct(product);
-                router.push("/menu/product");
+                router.push({
+                  pathname: "/menu/product",
+                  params: { productId: product.id, imageName: product.imageName },
+                });
               }}
             />
           ))}

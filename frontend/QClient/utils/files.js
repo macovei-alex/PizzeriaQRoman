@@ -12,7 +12,7 @@ async function saveSingleImage(imageName, imageData) {
       encoding: FileSystem.EncodingType.Base64,
     });
   } catch (error) {
-    console.log("error saving image", error);
+    console.error("error saving image", error);
   }
 }
 

@@ -9,15 +9,16 @@ import HorizontalLine from "../../components/menu/product/HorizontalLine";
 import { Fragment } from "react";
 import TitleSection from "../../components/menu/product/TitleSection";
 import useSingleDiskImage from "../../hooks/useSingleDiskImage";
+import { useLocalSearchParams } from "expo-router/build/hooks";
 
 export default function Product() {
-  const { gProduct } = useGlobalContext();
+  const { productId, imageName } = useLocalSearchParams();
   const colorTheme = useColorTheme();
-  const imageQuery = useSingleDiskImage(gProduct.imageName);
+  const imageQuery = useSingleDiskImage(imageName);
 
   const productQuery = useQuery({
-    queryFn: () => api.fetchProductWithOptions(gProduct.id),
-    queryKey: ["product", gProduct.id],
+    queryFn: () => api.fetchProductWithOptions(productId),
+    queryKey: ["product", productId],
   });
 
   if (productQuery.isLoading || imageQuery.isLoading) {
@@ -32,8 +33,6 @@ export default function Product() {
 
   const product = productQuery.data;
   const image = imageQuery.data;
-
-  console.log(image);
 
   return (
     <SafeAreaView>

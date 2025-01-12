@@ -11,8 +11,7 @@ import { router } from "expo-router";
 export default function TestComponent() {
   const newImagesQuery = useQuery({
     queryFn: async () => {
-      if (await api.fetchImageRefetchCheck("no")) {
-        console.log("Refetching images...");
+      if (await api.fetchImageRefetchCheck("yes")) {
         return api.fetchImages();
       }
       return Promise.resolve([]);

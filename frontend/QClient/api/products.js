@@ -49,9 +49,12 @@ async function fetchCategories() {
  *      maxCount: number
  *    }[]
  *  }[],
- * }[] }>}
+ * } }>}
  */
 async function fetchProductWithOptions(productId) {
+  if (!productId) {
+    return await Promise.resolve({});
+  }
   return (await axios.get(`${baseProductRoute}/${productId}`)).data;
 }
 
