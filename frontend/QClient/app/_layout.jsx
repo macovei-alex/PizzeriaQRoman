@@ -65,7 +65,7 @@ export default function RootLayout() {
             }}
           />
           <Tabs.Screen
-            name="test/index"
+            name="test"
             options={{
               title: "Test",
               tabBarIcon: () => <CartIconSvg style={svgColors} />,

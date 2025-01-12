@@ -9,6 +9,7 @@ import api from "../../api";
 import LogoSection from "../../components/menu/index/LogoSection";
 import HorizontalCategorySection from "../../components/menu/index/HorizontalCategorySection";
 import VerticalCategorySection from "../../components/menu/index/VerticalCategorySection";
+import useDiskImages from "../../hooks/useDiskImages";
 
 export default function Menu() {
   const { gSetProduct } = useGlobalContext();
@@ -24,6 +25,7 @@ export default function Menu() {
     queryKey: ["categories"],
     queryFn: api.fetchCategories,
   });
+  const imagesQuery = useDiskImages(productQuery.data?.map((product) => product.imageName));
 
   // Save the position of each category for the scroll to position from the horizontal menu
   const updateCategoryLayoutPosition = (categoryId, event) => {
@@ -70,7 +72,7 @@ export default function Menu() {
     setProductsPerCategory(productsSplit);
   }, [productQuery.data, categoryQuery.data]);
 
-  if (productQuery.isLoading || categoryQuery.isLoading) {
+  if (productQuery.isLoading || categoryQuery.isLoading || imagesQuery.isLoading) {
     return <Text>Loading...</Text>;
   }
   if (productQuery.isError) {
@@ -78,6 +80,9 @@ export default function Menu() {
   }
   if (categoryQuery.isError) {
     return <Text>Error: {categoryQuery.error.message}</Text>;
+  }
+  if (imagesQuery.isError) {
+    return <Text>Error: {imagesQuery.error.message}</Text>;
   }
 
   return (
@@ -93,6 +98,7 @@ export default function Menu() {
               key={category.id}
               category={category}
               products={products}
+              productImages={imagesQuery.data}
               customOnLayout={updateCategoryLayoutPosition}
               onMenuProductClick={(product) => {
                 gSetProduct(product);

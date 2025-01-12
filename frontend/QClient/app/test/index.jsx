@@ -1,4 +1,4 @@
-import { View, StyleSheet, Platform, ScrollView, Text, Image } from "react-native";
+import { View, StyleSheet, Platform, ScrollView, Text, Image, TouchableOpacity } from "react-native";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GoBackButtonSVG from "../../components/svg/GoBackButtonSVG";
@@ -6,21 +6,23 @@ import { useQuery } from "react-query";
 import api from "../../api";
 import HomeIconSvg from "../../components/svg/HomeIconSvg";
 import { saveImages, loadImages } from "../../utils/files";
+import { router } from "expo-router";
 
 export default function TestComponent() {
   const newImagesQuery = useQuery({
     queryFn: async () => {
-      if (await api.fetchImageRefetchCheck()) {
+      if (await api.fetchImageRefetchCheck("no")) {
+        console.log("Refetching images...");
         return api.fetchImages();
       }
-      return [];
+      return Promise.resolve([]);
     },
-    queryKey: "images",
+    queryKey: "test-images",
   });
 
   const productsQuery = useQuery({
     queryFn: api.fetchProducts,
-    queryKey: "products",
+    queryKey: "test-products",
   });
 
   const [images, setImages] = useState([]);
@@ -36,7 +38,7 @@ export default function TestComponent() {
       imagesToLoad = productsQuery.data.map((product) => product.imageName);
     }
 
-    const processImages = async () => {
+    async function processImages() {
       try {
         await saveImages(imagesToSave);
         const loaded = await loadImages(imagesToLoad);
@@ -44,7 +46,7 @@ export default function TestComponent() {
       } catch (error) {
         console.error("Error processing images:", error);
       }
-    };
+    }
 
     processImages();
   }, [newImagesQuery.data, productsQuery.data]);
@@ -52,7 +54,6 @@ export default function TestComponent() {
   if (newImagesQuery.isLoading) {
     return <Text>Loading new images from server...</Text>;
   }
-
   if (newImagesQuery.isError) {
     return <Text>Error: {newImagesQuery.error.message}</Text>;
   }
@@ -64,6 +65,9 @@ export default function TestComponent() {
   return (
     <SafeAreaView>
       <ScrollView>
+        <TouchableOpacity onPress={() => router.push("test2")}>
+          <GoBackButtonSVG style={{ width: 38, height: 38 }} />
+        </TouchableOpacity>
         <View style={styles.container}>
           {images.map((image) => (
             <Fragment key={image.name}>

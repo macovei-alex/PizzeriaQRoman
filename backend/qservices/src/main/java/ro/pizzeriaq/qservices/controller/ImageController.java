@@ -51,6 +51,6 @@ public class ImageController {
 	@GetMapping("/changes/{timestamp}")
 	public boolean checkForChanges(@PathVariable String timestamp) {
 		// TODO: Implement this method
-		return false;
+		return timestamp.equals("yes");
 	}
 }

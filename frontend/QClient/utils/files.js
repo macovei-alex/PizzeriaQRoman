@@ -5,9 +5,8 @@ import * as FileSystem from "expo-file-system";
  * @param {string} imageData
  * @returns {Promise<void>}
  */
-async function saveImage(imageName, imageData) {
+async function saveSingleImage(imageName, imageData) {
   const fileUri = FileSystem.documentDirectory + imageName;
-  console.log(`saving ${fileUri}`);
   try {
     await FileSystem.writeAsStringAsync(fileUri, imageData, {
       encoding: FileSystem.EncodingType.Base64,
@@ -22,25 +21,25 @@ async function saveImage(imageName, imageData) {
  * @returns {Promise<void>}
  */
 export async function saveImages(imagesArray) {
-  const files = await FileSystem.readDirectoryAsync(FileSystem.documentDirectory);
   for (const image of imagesArray) {
-    if (!files.includes(image.name)) {
-      saveImage(image.name, image.data.split(",")[1]);
-    }
+    await saveSingleImage(image.name, image.data.split(",")[1]);
   }
 }
 
 /**
  * @param {string} imageName
- * @returns {Promise<string>}
+ * @returns {Promise<{ name: string, data: string }>}
  */
-export async function loadImage(imageName) {
+export async function loadSingleImage(imageName) {
   const fileUri = FileSystem.documentDirectory + imageName;
-  const header = `data:image/${imageName.split(".").pop()};base64,`;
+  const header = `data:image/${imageName.split(",").pop()};base64,`;
   const contents = await FileSystem.readAsStringAsync(fileUri, {
     encoding: FileSystem.EncodingType.Base64,
   });
-  return header + contents;
+  return {
+    name: imageName,
+    data: header + contents,
+  };
 }
 
 /**
@@ -50,10 +49,7 @@ export async function loadImage(imageName) {
 export async function loadImages(imageNames) {
   const images = [];
   for (const imageName of imageNames) {
-    images.push({
-      name: imageName,
-      data: await loadImage(imageName),
-    });
+    images.push(await loadSingleImage(imageName));
   }
   return images;
 }

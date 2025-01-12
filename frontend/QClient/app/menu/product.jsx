@@ -8,29 +8,37 @@ import { useColorTheme } from "../../hooks/useColorTheme";
 import HorizontalLine from "../../components/menu/product/HorizontalLine";
 import { Fragment } from "react";
 import TitleSection from "../../components/menu/product/TitleSection";
+import useSingleDiskImage from "../../hooks/useSingleDiskImage";
 
 export default function Product() {
   const { gProduct } = useGlobalContext();
   const colorTheme = useColorTheme();
+  const imageQuery = useSingleDiskImage(gProduct.imageName);
 
   const productQuery = useQuery({
     queryFn: () => api.fetchProductWithOptions(gProduct.id),
     queryKey: ["product", gProduct.id],
   });
 
-  if (productQuery.isLoading) {
+  if (productQuery.isLoading || imageQuery.isLoading) {
     return <Text>Loading...</Text>;
   }
   if (productQuery.isError) {
     return <Text>Error: {productQuery.error.message}</Text>;
   }
+  if (imageQuery.isError) {
+    return <Text>Error: {imageQuery.error.message}</Text>;
+  }
 
   const product = productQuery.data;
+  const image = imageQuery.data;
+
+  console.log(image);
 
   return (
     <SafeAreaView>
       <ScrollView>
-        <TitleSection product={product} />
+        <TitleSection product={product} productImage={image} />
 
         {product.optionLists?.map((optionList) => (
           <Fragment key={optionList.id}>

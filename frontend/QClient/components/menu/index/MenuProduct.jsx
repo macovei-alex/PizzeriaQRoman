@@ -4,13 +4,21 @@ import { images } from "../../../constants";
 import { StyleSheet } from "react-native";
 import { useColorTheme } from "../../../hooks/useColorTheme";
 
-export default function MenuProduct({ product, onPress }) {
+/**
+ * @param {Object} props
+ * @param {Object} props.product
+ * @param {{name: string, data: string}} props.productImage
+ * @param {() => void} props.onPress
+ */
+export default function MenuProduct({ product, productImage, onPress }) {
   const colorTheme = useColorTheme();
 
   return (
     <View style={styles.container} backgroundColor={colorTheme.background[400]}>
-      {/* TODO: Uncomment this after implementing image caching */}
-      <Image source={/* product.imageName ?? */ images.pizzaDemo} style={styles.image} />
+      <Image
+        source={!!productImage?.data ? { uri: productImage.data } : images.pizzaDemo}
+        style={styles.image}
+      />
       <View style={styles.infoSection}>
         <View style={styles.titleContainer}>
           <Text style={styles.titleText}>{product.name}</Text>

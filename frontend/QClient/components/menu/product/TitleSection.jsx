@@ -4,14 +4,21 @@ import { images } from "../../../constants";
 import { useColorTheme } from "../../../hooks/useColorTheme";
 import { useRouter } from "expo-router";
 
-export default function TitleSection({ product }) {
+/**
+ * @param {Object} props
+ * @param {Object} props.product
+ * @param {{ name: string, data: string }} props.productImage
+ */
+export default function TitleSection({ product, productImage }) {
   const colorTheme = useColorTheme();
   const router = useRouter();
 
   return (
     <>
-      {/* TODO: Uncomment this after implementing image caching */}
-      <ImageBackground source={/* product.image ?? */ images.pizzaDemo} style={styles.image}>
+      <ImageBackground
+        source={!!productImage?.data ? { uri: productImage.data } : images.pizzaDemo}
+        style={styles.image}
+      >
         <TouchableOpacity onPress={() => router.back()}>
           <GoBackButtonSVG style={styles.goBackSvg} />
         </TouchableOpacity>
