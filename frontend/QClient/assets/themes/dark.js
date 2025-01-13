@@ -12,6 +12,7 @@ const text = {
   100: "#000000",
   200: "#898080",
   300: "#ffffff",
+  400: "#cf4949",
 };
 
 export const darkTheme = { background, text, name: "dark" };

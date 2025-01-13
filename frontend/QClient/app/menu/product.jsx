@@ -41,12 +41,19 @@ export default function Product() {
 
         {product.optionLists?.map((optionList) => (
           <Fragment key={optionList.id}>
-            <HorizontalLine
-              style={[styles.horizontalLine, { backgroundColor: colorTheme.background[200] }]}
-            />
+            <HorizontalLine style={[styles.horizontalLine, { backgroundColor: colorTheme.text[200] }]} />
             <OptionList optionList={optionList} />
           </Fragment>
         ))}
+
+        <View style={styles.addToCartButtonContainer}>
+          <TouchableOpacity
+            style={[styles.addToCartButton, { backgroundColor: colorTheme.background[500] }]}
+            onPress={() => {}}
+          >
+            <Text style={[styles.addToCartButtonText, { color: colorTheme.text[300] }]}>Adaugă în coș</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -56,5 +63,19 @@ const styles = StyleSheet.create({
   horizontalLine: {
     marginVertical: 24,
     width: "95%",
+  },
+  addToCartButtonContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 32,
+    marginBottom: 24,
+  },
+  addToCartButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 24,
+  },
+  addToCartButtonText: {
+    fontSize: 22,
   },
 });
