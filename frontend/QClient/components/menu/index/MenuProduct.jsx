@@ -3,6 +3,7 @@ import React from "react";
 import { images } from "../../../constants";
 import { StyleSheet } from "react-native";
 import { useColorTheme } from "../../../hooks/useColorTheme";
+import { imageOrDefault } from "../../../utils/files";
 
 /**
  * @param {Object} props
@@ -15,10 +16,7 @@ export default function MenuProduct({ product, productImage, onPress }) {
 
   return (
     <View style={styles.container} backgroundColor={colorTheme.background[400]}>
-      <Image
-        source={!!productImage?.data ? { uri: productImage.data } : images.pizzaDemo}
-        style={styles.image}
-      />
+      <Image source={imageOrDefault(productImage)} style={styles.image} />
       <View style={styles.infoSection}>
         <View style={styles.titleContainer}>
           <Text style={styles.titleText}>{product.name}</Text>

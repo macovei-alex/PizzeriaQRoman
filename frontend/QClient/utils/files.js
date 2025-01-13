@@ -1,4 +1,5 @@
 import * as FileSystem from "expo-file-system";
+import { images } from "../constants";
 
 /**
  * @param {string} imageName
@@ -52,4 +53,12 @@ export async function loadImages(imageNames) {
     images.push(await loadSingleImage(imageName));
   }
   return images;
+}
+
+/**
+ * @param {{ name: string, data: string }} image
+ * @returns {{ uri: string } | any}
+ */
+export function imageOrDefault(image) {
+  return image?.data ? { uri: image.data } : images.pizzaDemo;
 }

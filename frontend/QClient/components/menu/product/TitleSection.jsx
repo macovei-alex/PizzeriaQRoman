@@ -3,6 +3,7 @@ import GoBackButtonSVG from "../../svg/GoBackButtonSVG";
 import { images } from "../../../constants";
 import { useColorTheme } from "../../../hooks/useColorTheme";
 import { useRouter } from "expo-router";
+import { imageOrDefault } from "../../../utils/files";
 
 /**
  * @param {Object} props
@@ -15,10 +16,7 @@ export default function TitleSection({ product, productImage }) {
 
   return (
     <>
-      <ImageBackground
-        source={!!productImage?.data ? { uri: productImage.data } : images.pizzaDemo}
-        style={styles.image}
-      >
+      <ImageBackground source={imageOrDefault(productImage)} style={styles.image}>
         <TouchableOpacity onPress={() => router.back()}>
           <GoBackButtonSVG style={styles.goBackSvg} />
         </TouchableOpacity>
