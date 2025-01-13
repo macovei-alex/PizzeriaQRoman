@@ -1,7 +1,6 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useCartContext } from "../../context/useCartContext";
-import { ScrollView, Text } from "react-native";
-import { Fragment } from "react";
+import { ScrollView } from "react-native";
 import CartItem from "./CartItem";
 
 export default function Cart() {

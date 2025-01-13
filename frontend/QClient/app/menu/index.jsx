@@ -8,7 +8,7 @@ import api from "../../api";
 import LogoSection from "../../components/menu/index/LogoSection";
 import HorizontalCategorySection from "../../components/menu/index/HorizontalCategorySection";
 import VerticalCategorySection from "../../components/menu/index/VerticalCategorySection";
-import useDiskImages from "../../hooks/useDiskImages";
+import useImages from "../../hooks/useImages";
 
 export default function Menu() {
   const [productsPerCategroy, setProductsPerCategory] = useState([{ category: { id: 1 }, products: [] }]);
@@ -23,7 +23,8 @@ export default function Menu() {
     queryKey: ["categories"],
     queryFn: api.fetchCategories,
   });
-  const imagesQuery = useDiskImages(productQuery.data?.map((product) => product.imageName));
+
+  const images = useImages(productQuery.data?.map((product) => product.imageName));
 
   // Save the position of each category for the scroll to position from the horizontal menu
   function updateCategoryLayoutPosition(categoryId, event) {
@@ -65,7 +66,7 @@ export default function Menu() {
     setProductsPerCategory(productsSplit);
   }, [productQuery.data, categoryQuery.data]);
 
-  if (productQuery.isLoading || categoryQuery.isLoading || imagesQuery.isLoading) {
+  if (productQuery.isLoading || categoryQuery.isLoading || !images) {
     return <Text>Loading...</Text>;
   }
   if (productQuery.isError) {
@@ -73,9 +74,6 @@ export default function Menu() {
   }
   if (categoryQuery.isError) {
     return <Text>Error: {categoryQuery.error.message}</Text>;
-  }
-  if (imagesQuery.isError) {
-    return <Text>Error: {imagesQuery.error.message}</Text>;
   }
 
   return (
@@ -91,7 +89,7 @@ export default function Menu() {
               key={category.id}
               category={category}
               products={products}
-              productImages={imagesQuery.data}
+              productImages={images}
               customOnLayout={updateCategoryLayoutPosition}
               onMenuProductClick={(product) => {
                 router.push({

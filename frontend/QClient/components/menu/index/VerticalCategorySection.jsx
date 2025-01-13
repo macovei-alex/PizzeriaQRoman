@@ -6,7 +6,7 @@ import MenuProduct from "./MenuProduct";
  * @param {Object} props
  * @param {Object} props.category
  * @param {Object[]} props.products
- * @param {{ name: string, data: string }[]} props.productImages
+ * @param {{ name: string, data: string | null } }[]} props.productImages
  * @param {(categoryId: number, event: LayoutChangeEvent) => void} [props.customOnLayout]
  * @param {(product: Object) => void} [props.onMenuProductClick]
  */

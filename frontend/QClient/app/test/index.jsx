@@ -5,10 +5,12 @@ import GoBackButtonSVG from "../../components/svg/GoBackButtonSVG";
 import { useQuery } from "react-query";
 import api from "../../api";
 import HomeIconSvg from "../../components/svg/HomeIconSvg";
-import { saveImages, loadImages } from "../../utils/files";
 import { router } from "expo-router";
+import { useImageContext } from "../../context/useImageContext";
 
 export default function TestComponent() {
+  const imageContext = useImageContext();
+
   const newImagesQuery = useQuery({
     queryFn: async () => {
       if (await api.fetchImageRefetchCheck("yes")) {
@@ -39,8 +41,8 @@ export default function TestComponent() {
 
     async function processImages() {
       try {
-        await saveImages(imagesToSave);
-        const loaded = await loadImages(imagesToLoad);
+        await imageContext.saveImages(imagesToSave);
+        const loaded = await imageContext.getImages(imagesToLoad);
         setImages(loaded);
       } catch (error) {
         console.error("Error processing images:", error);

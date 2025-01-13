@@ -1,4 +1,4 @@
-import { Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import api from "../../api";
 import { useQuery } from "react-query";
@@ -7,33 +7,30 @@ import { useColorTheme } from "../../hooks/useColorTheme";
 import HorizontalLine from "../../components/menu/product/HorizontalLine";
 import { Fragment } from "react";
 import TitleSection from "../../components/menu/product/TitleSection";
-import useSingleDiskImage from "../../hooks/useSingleDiskImage";
 import { useLocalSearchParams } from "expo-router/build/hooks";
 import { useCartContext } from "../../context/useCartContext";
+import useSingleImage from "../../hooks/useSingleImage";
 
 export default function Product() {
   const { productId, imageName } = useLocalSearchParams();
   const { cart } = useCartContext();
   const colorTheme = useColorTheme();
-  const imageQuery = useSingleDiskImage(imageName);
 
   const productQuery = useQuery({
     queryFn: () => api.fetchProductWithOptions(productId),
     queryKey: ["product", productId],
   });
 
-  if (productQuery.isLoading || imageQuery.isLoading) {
+  const image = useSingleImage(imageName);
+
+  if (productQuery.isLoading || !image) {
     return <Text>Loading...</Text>;
   }
   if (productQuery.isError) {
     return <Text>Error: {productQuery.error.message}</Text>;
   }
-  if (imageQuery.isError) {
-    return <Text>Error: {imageQuery.error.message}</Text>;
-  }
 
   const product = productQuery.data;
-  const image = imageQuery.data;
 
   return (
     <SafeAreaView>

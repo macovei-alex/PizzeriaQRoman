@@ -1,19 +1,9 @@
 import { Image, StyleSheet, Text, View } from "react-native";
-import useSingleDiskImage from "../../hooks/useSingleDiskImage";
-import { images } from "../../constants";
 import { imageOrDefault } from "../../utils/files";
+import useSingleImage from "../../hooks/useSingleImage";
 
 export default function CartItem({ cartItem }) {
-  const imageQuery = useSingleDiskImage(cartItem.product.imageName);
-
-  if (imageQuery.isLoading) {
-    return <Text>Loading...</Text>;
-  }
-  if (imageQuery.isError) {
-    return <Text>Error: {imageQuery.error.message}</Text>;
-  }
-
-  const image = imageQuery.data;
+  const image = useSingleImage(cartItem.product.imageName);
 
   return (
     <View style={styles.container}>
