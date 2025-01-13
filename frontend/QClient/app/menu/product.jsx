@@ -1,6 +1,5 @@
 import { Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useGlobalContext } from "../../context/useGlobalContext";
 import api from "../../api";
 import { useQuery } from "react-query";
 import OptionList from "../../components/menu/product/OptionList";
@@ -10,9 +9,11 @@ import { Fragment } from "react";
 import TitleSection from "../../components/menu/product/TitleSection";
 import useSingleDiskImage from "../../hooks/useSingleDiskImage";
 import { useLocalSearchParams } from "expo-router/build/hooks";
+import { useCartContext } from "../../context/useCartContext";
 
 export default function Product() {
   const { productId, imageName } = useLocalSearchParams();
+  const { cart } = useCartContext();
   const colorTheme = useColorTheme();
   const imageQuery = useSingleDiskImage(imageName);
 
@@ -49,7 +50,12 @@ export default function Product() {
         <View style={styles.addToCartButtonContainer}>
           <TouchableOpacity
             style={[styles.addToCartButton, { backgroundColor: colorTheme.background[500] }]}
-            onPress={() => {}}
+            onPress={() => {
+              if (!!cart.find((item) => item.product.id === product.id)) {
+                return;
+              }
+              cart.push({ product: product, count: 1 });
+            }}
           >
             <Text style={[styles.addToCartButtonText, { color: colorTheme.text[300] }]}>Adaugă în coș</Text>
           </TouchableOpacity>
@@ -72,7 +78,7 @@ const styles = StyleSheet.create({
   },
   addToCartButton: {
     paddingVertical: 12,
-    paddingHorizontal: 32,
+    paddingHorizontal: 36,
     borderRadius: 24,
   },
   addToCartButtonText: {

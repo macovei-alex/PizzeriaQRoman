@@ -6,6 +6,7 @@ import { Alert, BackHandler, StyleSheet } from "react-native";
 import HomeIconSvg from "../components/svg/HomeIconSvg";
 import { useColorTheme } from "../hooks/useColorTheme";
 import CartIconSvg from "../components/svg/CartIconSvg";
+import { CartContextProvider } from "../context/useCartContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -50,28 +51,37 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <GlobalContextProvider>
-        <Tabs
-          screenOptions={{
-            headerShown: false,
-            tabBarStyle: [styles.tabBar, { backgroundColor: colorTheme.background[100] }],
-          }}
-        >
-          <Tabs.Screen name="index" options={{ href: null }}></Tabs.Screen>
-          <Tabs.Screen
-            name="menu"
-            options={{
-              title: "Menu",
-              tabBarIcon: () => <HomeIconSvg style={svgColors} />,
+        <CartContextProvider>
+          <Tabs
+            screenOptions={{
+              headerShown: false,
+              tabBarStyle: [styles.tabBar, { backgroundColor: colorTheme.background[100] }],
             }}
-          />
-          <Tabs.Screen
-            name="test"
-            options={{
-              title: "Test",
-              tabBarIcon: () => <CartIconSvg style={svgColors} />,
-            }}
-          />
-        </Tabs>
+          >
+            <Tabs.Screen name="index" options={{ href: null }}></Tabs.Screen>
+            <Tabs.Screen
+              name="menu"
+              options={{
+                title: "Menu",
+                tabBarIcon: () => <HomeIconSvg style={svgColors} />,
+              }}
+            />
+            <Tabs.Screen
+              name="cart"
+              options={{
+                title: "Cart",
+                tabBarIcon: () => <CartIconSvg style={svgColors} />,
+              }}
+            />
+            <Tabs.Screen
+              name="test"
+              options={{
+                title: "Test",
+                tabBarIcon: () => <CartIconSvg style={svgColors} />,
+              }}
+            />
+          </Tabs>
+        </CartContextProvider>
       </GlobalContextProvider>
     </QueryClientProvider>
   );

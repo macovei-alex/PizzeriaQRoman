@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, Text, View } from "react-native";
 import { router } from "expo-router";
-import { useGlobalContext } from "../../context/useGlobalContext";
 import { useScrollRef } from "../../hooks/useScrollRef";
 import { useQuery } from "react-query";
 import api from "../../api";
@@ -27,7 +26,7 @@ export default function Menu() {
   const imagesQuery = useDiskImages(productQuery.data?.map((product) => product.imageName));
 
   // Save the position of each category for the scroll to position from the horizontal menu
-  const updateCategoryLayoutPosition = (categoryId, event) => {
+  function updateCategoryLayoutPosition(categoryId, event) {
     // Extracting data in layout is a MUST because the event is a synthetic event (event pooling)
     // and event.nativeEvent will be set to null afterwards.
     const { layout } = event.nativeEvent;
@@ -35,38 +34,33 @@ export default function Menu() {
       ...prevPositions,
       [categoryId]: layout.y,
     }));
-  };
+  }
 
-  const scrollToCategoryId = (categoryId) => {
+  function scrollToCategoryId(categoryId) {
     const pos = categoryPositions[categoryId];
     if (pos) {
       scrollToPos({ y: pos });
     }
-  };
+  }
 
   // Split products by category
   useEffect(() => {
-    if (
-      productQuery.isLoading ||
-      productQuery.isError ||
-      !productQuery.data ||
-      categoryQuery.isLoading ||
-      categoryQuery.isError ||
-      !categoryQuery.data
-    )
+    if (!productQuery.data || !categoryQuery.data) {
       return;
+    }
 
     const productsSplit = [];
-    for (let i = 0; i < categoryQuery.data.length; i++) {
-      productsSplit.push({
-        category: categoryQuery.data[i],
+    for (const category of categoryQuery.data) {
+      const newProductSplit = {
+        category: category,
         products: [],
-      });
-      for (let j = 0; j < productQuery.data.length; j++) {
-        if (productQuery.data[j].categoryId === categoryQuery.data[i].id) {
-          productsSplit[i].products.push(productQuery.data[j]);
+      };
+      for (const product of productQuery.data) {
+        if (product.categoryId === category.id) {
+          newProductSplit.products.push(product);
         }
       }
+      productsSplit.push(newProductSplit);
     }
     setProductsPerCategory(productsSplit);
   }, [productQuery.data, categoryQuery.data]);
