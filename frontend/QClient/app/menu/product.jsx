@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import api from "../../api";
 import { useQuery } from "react-query";
@@ -10,10 +10,12 @@ import TitleSection from "../../components/menu/product/TitleSection";
 import { useLocalSearchParams } from "expo-router/build/hooks";
 import { useCartContext } from "../../context/useCartContext";
 import useSingleImage from "../../hooks/useSingleImage";
+import Toast from "react-native-toast-message";
+import { ToastAndroid } from "react-native";
 
 export default function Product() {
   const { productId, imageName } = useLocalSearchParams();
-  const { cart } = useCartContext();
+  const { cart, setCart } = useCartContext();
   const colorTheme = useColorTheme();
 
   const productQuery = useQuery({
@@ -33,6 +35,16 @@ export default function Product() {
   const product = productQuery.data;
 
   function addToCart() {
+    if (Platform.OS === "android") {
+      ToastAndroid.show("Produs adăugat in coș", ToastAndroid.SHORT);
+    } else if (Platform.OS === "ios") {
+      // TODO: see if this works on iOS
+      Toast.show({
+        type: "info",
+        text1: "Produs adăugat in coș",
+      });
+    }
+
     if (cart.find((item) => item.product.id === product.id)) {
       setCart([
         ...cart.map((item) =>

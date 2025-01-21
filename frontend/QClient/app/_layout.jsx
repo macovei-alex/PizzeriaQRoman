@@ -2,12 +2,13 @@ import { Tabs, usePathname } from "expo-router";
 import { GlobalContextProvider } from "../context/useGlobalContext";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { useEffect } from "react";
-import { Alert, BackHandler, StyleSheet } from "react-native";
+import { Alert, BackHandler, Platform, StyleSheet } from "react-native";
 import HomeIconSvg from "../components/svg/HomeIconSvg";
 import { useColorTheme } from "../hooks/useColorTheme";
 import CartIconSvg from "../components/svg/CartIconSvg";
 import { CartContextProvider } from "../context/useCartContext";
 import { ImageContextProvider } from "../context/useImageContext";
+import Toast from "react-native-toast-message";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -83,6 +84,7 @@ export default function RootLayout() {
                 }}
               />
             </Tabs>
+            {Platform.OS === "ios" && <Toast />}
           </CartContextProvider>
         </ImageContextProvider>
       </GlobalContextProvider>
