@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { useColorTheme } from "../../../hooks/useColorTheme";
+import TickCheckboxSvg from "../../svg/TickCheckboxSvg";
 
 export default function Option({ option, checked, customOnPress }) {
   const colorTheme = useColorTheme();
@@ -8,21 +9,17 @@ export default function Option({ option, checked, customOnPress }) {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        style={[
-          styles.checkbox,
-          {
-            borderColor: colorTheme.text[100],
-            backgroundColor: checked ? colorTheme.background[300] : colorTheme.background[600],
-          },
-        ]}
+        style={[styles.checkboxContainer, { borderColor: colorTheme.text[100] }]}
         onPress={() => customOnPress(option.id)}
-      />
+      >
+        <TickCheckboxSvg checked={checked} style={styles.checkbox} />
+      </TouchableOpacity>
       <Text style={[styles.optionNameText, { color: colorTheme.text[100] }]}>{option.name}</Text>
-      {option.price > 0 ? (
+      {option.price > 0 && (
         <Text style={[styles.priceText, { color: colorTheme.text[400] }]}>
           +{option.price.toFixed(2)} lei
         </Text>
-      ) : null}
+      )}
     </View>
   );
 }
@@ -33,12 +30,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginVertical: 6,
   },
-  checkbox: {
-    width: 32,
-    height: 32,
-    borderRadius: 9999,
-    borderWidth: 2,
+  checkboxContainer: {
     marginRight: 12,
+  },
+  checkbox: {
+    width: 30,
+    height: 30,
   },
   optionNameText: {
     fontSize: 16,

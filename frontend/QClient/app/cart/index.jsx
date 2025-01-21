@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: 28,
-    fontWeight: "bold",
+    fontWeight: "500",
   },
   hr: {
     height: 3,
