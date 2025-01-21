@@ -32,6 +32,18 @@ export default function Product() {
 
   const product = productQuery.data;
 
+  function addToCart() {
+    if (cart.find((item) => item.product.id === product.id)) {
+      setCart([
+        ...cart.map((item) =>
+          item.product.id === product.id ? { product: item.product, count: item.count + 1 } : item
+        ),
+      ]);
+    } else {
+      setCart([...cart, { product: product, count: 1 }]);
+    }
+  }
+
   return (
     <SafeAreaView>
       <ScrollView>
@@ -47,12 +59,7 @@ export default function Product() {
         <View style={styles.addToCartButtonContainer}>
           <TouchableOpacity
             style={[styles.addToCartButton, { backgroundColor: colorTheme.background[500] }]}
-            onPress={() => {
-              if (!!cart.find((item) => item.product.id === product.id)) {
-                return;
-              }
-              cart.push({ product: product, count: 1 });
-            }}
+            onPress={addToCart}
           >
             <Text style={[styles.addToCartButtonText, { color: colorTheme.text[300] }]}>Adaugă în coș</Text>
           </TouchableOpacity>

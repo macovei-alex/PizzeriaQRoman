@@ -66,7 +66,7 @@ export default function TestComponent() {
   return (
     <SafeAreaView>
       <ScrollView>
-        <TouchableOpacity onPress={() => router.push("test2")}>
+        <TouchableOpacity>
           <GoBackButtonSVG style={{ width: 38, height: 38 }} />
         </TouchableOpacity>
         <View style={styles.container}>
