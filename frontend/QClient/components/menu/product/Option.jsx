@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import { useColorTheme } from "../../../hooks/useColorTheme";
 
 export default function Option({ option, checked, customOnPress }) {
@@ -17,7 +17,7 @@ export default function Option({ option, checked, customOnPress }) {
         ]}
         onPress={() => customOnPress(option.id)}
       />
-      <Text style={styles.optionNameText}>{option.name}</Text>
+      <Text style={[styles.optionNameText, { color: colorTheme.text[100] }]}>{option.name}</Text>
       {option.price > 0 ? (
         <Text style={[styles.priceText, { color: colorTheme.text[400] }]}>
           +{option.price.toFixed(2)} lei

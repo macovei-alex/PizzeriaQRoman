@@ -1,8 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import Option from "./Option";
+import { useColorTheme } from "../../../hooks/useColorTheme";
 
 export default function OptionList({ optionList }) {
+  const colorTheme = useColorTheme();
   const [selectedOptions, setSelectedOptions] = useState([]);
 
   function handleOptionPress(optionId) {
@@ -19,7 +21,7 @@ export default function OptionList({ optionList }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titleText}>{optionList.text}</Text>
+      <Text style={[styles.titleText, { color: colorTheme.text[100] }]}>{optionList.text}</Text>
       {optionList.options.map((option) => (
         <Option
           key={option.id}

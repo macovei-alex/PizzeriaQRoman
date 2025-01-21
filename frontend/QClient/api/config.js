@@ -1,4 +1,4 @@
 const baseApiUrl = "http://192.168.1.4:10100/api";
 
-const config = { baseApiUrl };
+const config = Object.freeze({ baseApiUrl });
 export default config;

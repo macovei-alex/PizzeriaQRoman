@@ -21,9 +21,9 @@ export default function TitleSection({ product, productImage }) {
           <GoBackButtonSVG style={styles.goBackSvg} />
         </TouchableOpacity>
       </ImageBackground>
-      <Text style={styles.titleText}>{product.name}</Text>
+      <Text style={[styles.titleText, { color: colorTheme.text[100] }]}>{product.name}</Text>
       <View style={styles.subtitleContainer}>
-        <Text style={styles.subtitleText}>
+        <Text style={[styles.subtitleText, { color: colorTheme.text[100] }]}>
           {product.subtitle} - {product.price.toFixed(2)} lei
         </Text>
       </View>

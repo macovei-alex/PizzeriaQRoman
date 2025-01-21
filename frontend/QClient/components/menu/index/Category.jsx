@@ -11,7 +11,7 @@ export default function Category({ category, onPress, style }) {
         style={[styles.button, { backgroundColor: colorTheme.background[700] }]}
         onPress={onPress}
       >
-        <Text style={styles.text}>{category.name}</Text>
+        <Text style={[styles.text, { color: colorTheme.text[100] }]}>{category.name}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginHorizontal: 4,
     ...Platform.select({
-      // TODO: Test if this works
+      // TODO: Test if this works on iOS
       ios: {
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 4 },

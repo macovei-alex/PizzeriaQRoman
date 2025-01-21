@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import MenuProduct from "./MenuProduct";
+import { useColorTheme } from "../../../hooks/useColorTheme";
 
 /**
  * @param {Object} props
@@ -17,6 +18,8 @@ export default function VerticalCategorySection({
   customOnLayout,
   onMenuProductClick,
 }) {
+  const colorTheme = useColorTheme();
+
   return (
     <View
       key={category.id}
@@ -26,7 +29,7 @@ export default function VerticalCategorySection({
       }}
     >
       <View style={styles.categoryTextContainer}>
-        <Text style={styles.categoryText}>{category.name}</Text>
+        <Text style={[styles.categoryText, { color: colorTheme.text[100] }]}>{category.name}</Text>
       </View>
       {products.map((product) => (
         <MenuProduct

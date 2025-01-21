@@ -19,13 +19,15 @@ export default function MenuProduct({ product, productImage, onPress }) {
       <Image source={imageOrDefault(productImage)} style={styles.image} />
       <View style={styles.infoSection}>
         <View style={styles.titleContainer}>
-          <Text style={styles.titleText}>{product.name}</Text>
+          <Text style={[styles.titleText, { color: colorTheme.text[100] }]}>{product.name}</Text>
         </View>
         <View style={styles.subtitleContainer}>
-          <Text style={styles.subtitleText}>{product.subtitle}</Text>
+          <Text style={[styles.subtitleText, { color: colorTheme.text[100] }]}>{product.subtitle}</Text>
         </View>
         <View style={styles.priceContainer}>
-          <Text style={styles.priceText}>{`${product.price.toFixed(2)} RON`}</Text>
+          <Text style={[styles.priceText, { color: colorTheme.text[100] }]}>
+            {`${product.price.toFixed(2)} RON`}
+          </Text>
         </View>
         <TouchableOpacity
           style={[styles.infoButtonContainer, { backgroundColor: colorTheme.background[500] }]}
@@ -61,6 +63,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   titleText: {
+    fontSize: 14,
     fontWeight: "900",
   },
   subtitleContainer: {
