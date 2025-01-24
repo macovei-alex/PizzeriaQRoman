@@ -32,7 +32,7 @@ export default function MenuProduct({ product, productImage, onPress }) {
           style={[styles.infoButtonContainer, { backgroundColor: colorTheme.background[500] }]}
           onPress={onPress}
         >
-          <Text style={[styles.infoButtonText, { color: colorTheme.text[300] }]}>Informatii produs</Text>
+          <Text style={[styles.infoButtonText, { color: colorTheme.text[300] }]}>Informații</Text>
         </TouchableOpacity>
       </View>
     </View>

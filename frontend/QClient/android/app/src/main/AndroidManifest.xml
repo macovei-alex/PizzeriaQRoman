@@ -26,6 +26,7 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="pizzeriaq"/>
         <data android:scheme="com.anonymous.pizzeriaq"/>
+        <data android:scheme="com.pizzeriaq"/>
       </intent-filter>
     </activity>
   </application>

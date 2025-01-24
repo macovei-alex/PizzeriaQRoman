@@ -54,9 +54,9 @@ public class EntityInitializerService {
 	public void addProducts() {
 		List<ProductCategory> categories = new ArrayList<>();
 
-		categories.add(ProductCategory.builder().name("Cele mai vandute mai vandute").sortId(1).build());
+		categories.add(ProductCategory.builder().name("Cele mai vândute").sortId(1).build());
 		categories.add(ProductCategory.builder().name("Pizza 1+1 combo").sortId(2).build());
-		categories.add(ProductCategory.builder().name("Bauturi non-alcoolice").sortId(10).build());
+		categories.add(ProductCategory.builder().name("Băuturi non-alcoolice").sortId(10).build());
 
 		categories = categoryRepository.saveAll(categories);
 
@@ -100,11 +100,11 @@ public class EntityInitializerService {
 
 		products.add(Product.builder()
 				.category(categories.get(1))
-				.name("Pizza Taraneasca")
+				.name("Pizza Țărănească")
 				.subtitle("1+1 Gratis la alegere")
 				.description("500g")
 				.price(BigDecimal.valueOf(30.0))
-				.imageName("pizza-taraneasca.jpg")
+				.imageName("pizza-tărănească.jpg")
 				.build());
 
 		products.add(Product.builder()
@@ -144,7 +144,7 @@ public class EntityInitializerService {
 
 		optionLists.add(OptionList.builder()
 				.options(new ArrayList<>())
-				.text("Prima Pizza cu Margine Umpluta cu Branza Ricotta?")
+				.text("Prima Pizza cu Margine Umplută cu Brânză Ricotta?")
 				.minChoices(1)
 				.maxChoices(1)
 				.build());
@@ -158,14 +158,14 @@ public class EntityInitializerService {
 
 		optionLists.add(OptionList.builder()
 				.options(new ArrayList<>())
-				.text("A Doua Pizza cu Margine Umpluta cu Branza Ricotta")
+				.text("A Doua Pizza cu Margine Umplută cu Brânză Ricotta")
 				.minChoices(1)
 				.maxChoices(1)
 				.build());
 
 		optionLists.add(OptionList.builder()
 				.options(new ArrayList<>())
-				.text("Doresti sos?")
+				.text("Dorești sos?")
 				.minChoices(0)
 				.maxChoices(4)
 				.build());
@@ -174,14 +174,14 @@ public class EntityInitializerService {
 
 		List<Option> options1 = new ArrayList<>();
 		options1.add(Option.builder()
-				.name("cu branza Ricotta")
+				.name("cu brânză Ricotta")
 				.price(BigDecimal.valueOf(8.0))
 				.minCount(1)
 				.maxCount(1)
 				.build());
 
 		options1.add(Option.builder()
-				.name("fara branza Ricotta")
+				.name("fără brânză Ricotta")
 				.price(BigDecimal.valueOf(0.0))
 				.minCount(1)
 				.maxCount(1)
@@ -241,14 +241,14 @@ public class EntityInitializerService {
 				.build());
 
 		options3.add(Option.builder()
-				.name("Maioneza")
+				.name("Maioneză")
 				.price(BigDecimal.valueOf(0.0))
 				.minCount(0)
 				.maxCount(4)
 				.build());
 
 		options3.add(Option.builder()
-				.name("Maioneza cu usturoi")
+				.name("Maioneză cu usturoi")
 				.price(BigDecimal.valueOf(0.0))
 				.minCount(0)
 				.maxCount(4)

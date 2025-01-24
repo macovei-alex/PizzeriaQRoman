@@ -6,19 +6,6 @@ import * as FileSystem from "expo-file-system";
  * @returns {Promise<boolean>}
  */
 async function saveSingleImageToFile(image) {
-  if (!image) {
-    console.error("invalid image: image is", image);
-    return false;
-  }
-  if (!image.name) {
-    console.error("invalid image: image.name is", image.name);
-    return false;
-  }
-  if (!image.data) {
-    console.error("invalid image: image.data is", image.data);
-    return false;
-  }
-
   const fileUri = FileSystem.documentDirectory + image.name;
   try {
     await FileSystem.writeAsStringAsync(fileUri, image.data, {
@@ -26,31 +13,22 @@ async function saveSingleImageToFile(image) {
     });
     return true;
   } catch (error) {
-    console.error(`error saving image ${image.name}:`, error);
+    console.error(`error saving image ${image.name}: ${error}`);
     return false;
   }
 }
 
 /**
- * @param {{ name: string, data: string }[]} imagesArray
+ * @param {{ name: string, data: string }[]} images
  * @returns {Promise<boolean>}
  */
-async function saveImagesToFiles(imagesArray) {
-  if (!imagesArray) {
-    console.error("invalid imagesArray: imagesArray is", imagesArray);
-    return false;
-  }
-  if (!Array.isArray(imagesArray)) {
-    console.error("invalid imagesArray: imagesArray is not an array");
-    return false;
-  }
-
+async function saveImagesToFiles(images) {
   const imagePromises = [];
-  for (const image of imagesArray) {
+  for (const img of images) {
     imagePromises.push(
       saveSingleImageToFile({
-        name: image.name,
-        data: image.data.includes(",") ? image.data.split(",")[1] : image.data,
+        name: img.name,
+        data: img.data.includes(",") ? img.data.split(",")[1] : img.data,
       })
     );
   }
@@ -63,11 +41,6 @@ async function saveImagesToFiles(imagesArray) {
  * @returns {Promise<{ name: string, data: string | null }>}
  */
 async function loadSingleImageFromFile(imageName) {
-  if (!imageName) {
-    console.error("invalid imageName: imageName is", imageName);
-    return { name: imageName, data: null };
-  }
-
   const fileUri = FileSystem.documentDirectory + imageName;
   const header = `data:image/${imageName.split(",").pop()};base64,`;
   try {
@@ -76,7 +49,7 @@ async function loadSingleImageFromFile(imageName) {
     });
     return { name: imageName, data: header + contents };
   } catch (error) {
-    console.error("error loading image:", error);
+    console.error(`error loading image: ${error}`);
     return { name: imageName, data: null };
   }
 }
@@ -87,7 +60,8 @@ const ImageContext = createContext();
  * @returns {{
  *  getSingleImage: (imageName: string) => Promise<{ name: string, data: string | null }>,
  *  getImages: (imageNames: string[]) => Promise<{ name: string, data: string | null }[]>,
- *  saveImages: (imageNames: string[]) => Promise<boolean>
+ *  saveImages: (images: {name: string, data: string}[]) => Promise<boolean>
+ *  invalidateImageCache: () => void
  * }}
  */
 export function useImageContext() {
@@ -95,53 +69,86 @@ export function useImageContext() {
 }
 
 export function ImageContextProvider({ children }) {
-  const [images, setImages] = useState([]);
+  const [contextImages, setContextImages] = useState([]);
 
+  /** @param {string} imageName */
   async function getSingleImage(imageName) {
     if (!imageName) {
+      console.warn(`invalid ( imageName ) in getSingleImage: imageName is ${imageName}`);
       return { name: imageName, data: null };
     }
-    const found = images.find((img) => img.name === imageName);
+    if (typeof imageName !== "string") {
+      console.error(
+        `invalid ( imageName ) in getSingleImage: imageName is not a string, it is ${typeof imageName}`
+      );
+      return { name: imageName, data: null };
+    }
+
+    const found = contextImages.find((img) => img.name === imageName);
     if (found) {
       return found;
     }
     const newImage = await loadSingleImageFromFile(imageName);
-    setImages((prev) => [...prev, newImage]);
+    setContextImages((prev) => {
+      const found = prev.find((img) => img.name === newImage.name);
+      if (found) {
+        found.data = newImage.data;
+        return [...prev];
+      } else {
+        return [...prev, newImage];
+      }
+    });
     return newImage;
   }
 
+  /** @param {string[]} imageNames */
   async function getImages(imageNames) {
     if (!imageNames) {
-      console.warn("invalid imageNames in getImages: imageNames is", imageNames);
-      return Promise.resolve([]);
+      console.warn(`invalid ( imageNames ) in getImages: imageNames is ${imageNames}`);
+      return [];
     }
     if (!Array.isArray(imageNames)) {
-      console.error("invalid imageNames in getImages: imageNames is not an array");
-      return Promise.resolve([]);
+      console.error(
+        `invalid ( imageNames ) in getImages: imageNames is not an array, it is ${typeof imageNames}`
+      );
+      return [];
     }
 
     const imagePromises = [];
     for (const imageName of imageNames) {
       imagePromises.push(getSingleImage(imageName));
     }
-    return Promise.all(imagePromises);
+    return await Promise.all(imagePromises);
   }
 
-  async function saveImages(imageNames) {
-    if (!imageNames) {
-      console.warn("invalid imageNames in saveImages: imageNames is", imageNames);
+  /** @param {{name: string, data: string}[]} images */
+  async function saveImages(images) {
+    if (!Array.isArray(images)) {
+      console.error(`invalid ( images ) in saveImages: images is not an array, it is ${typeof images}`);
       return false;
     }
-    if (!Array.isArray(imageNames)) {
-      console.error("invalid imageNames in saveImages: imageNames is not an array");
+    if (!images.every((img) => img ?? false)) {
+      console.error(`invalid ( images ) in saveImages: one or more images is null/undefined`);
+      return false;
+    }
+    if (
+      !images.every(
+        (img) => img.name && img.data && typeof img.name === "string" && typeof img.data === "string"
+      )
+    ) {
+      console.error(`invalid ( images ) in saveImages: one or more images is missing name or data`);
       return false;
     }
 
-    return await saveImagesToFiles(imageNames);
+    return await saveImagesToFiles(images);
+  }
+
+  function invalidateImageCache() {
+    setContextImages(() => []);
   }
 
   return (
-    <ImageContext.Provider value={{ getSingleImage, getImages, saveImages }}>
+    <ImageContext.Provider value={{ getSingleImage, getImages, saveImages, invalidateImageCache }}>
       {children}
     </ImageContext.Provider>
   );

@@ -66,14 +66,14 @@ export default function RootLayout() {
               <Tabs.Screen
                 name="menu"
                 options={{
-                  title: "Menu",
+                  title: "Meniu",
                   tabBarIcon: () => <HomeIconSvg style={svgColors} />,
                 }}
               />
               <Tabs.Screen
                 name="cart"
                 options={{
-                  title: "Cart",
+                  title: "Coș",
                   tabBarIcon: () => <CartIconSvg style={svgColors} />,
                 }}
               />

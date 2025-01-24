@@ -1,0 +1,17 @@
+appId: "com.pizzeriaq"
+# appId: host.exp.Exponent
+---
+- launchApp
+- assertVisible: "Meniu"
+- assertVisible: "Coș"
+- assertVisible: "Caută ce îți dorești"
+- assertVisible: "Pizza Capriciosa"
+- assertVisible: "Informații"
+- tapOn: "Coș"
+- assertVisible: "Comanda mea"
+- tapOn: "Meniu"
+- tapOn: "Informații"
+- assertVisible: "Pizza Capriciosa"
+- assertVisible: "Prima Pizza cu Margine Umplută cu Brânză Ricotta?"
+- back
+- assertVisible: "Cele mai vândute"

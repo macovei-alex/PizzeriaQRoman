@@ -1,4 +1,4 @@
-package com.anonymous.pizzeriaq
+package com.pizzeriaq
 
 import android.os.Build
 import android.os.Bundle

@@ -86,9 +86,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.anonymous.pizzeriaq'
+    namespace 'com.pizzeriaq'
     defaultConfig {
-        applicationId 'com.anonymous.pizzeriaq'
+        applicationId 'com.pizzeriaq'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

@@ -25,7 +25,18 @@
     "web": {
       "favicon": "./assets/images/logo.png"
     },
-    "plugins": ["expo-router"],
-    "newArchEnabled": true
+    "plugins": [
+      "expo-router"
+    ],
+    "newArchEnabled": true,
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "eed8e08d-d2de-457f-a2ad-3b9e362d4684"
+      }
+    },
+    "owner": "mac02"
   }
 }

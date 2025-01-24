@@ -1,4 +1,4 @@
-package com.anonymous.pizzeriaq
+package com.pizzeriaq
 
 import android.app.Application
 import android.content.res.Configuration
