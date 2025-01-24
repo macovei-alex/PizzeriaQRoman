@@ -1,6 +1,10 @@
 package ro.pizzeriaq.qservices.unit.service.DTO;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import ro.pizzeriaq.qservices.data.model.Product;
 import ro.pizzeriaq.qservices.data.model.ProductCategory;
 import ro.pizzeriaq.qservices.service.DTO.ProductWithOptionsDTO;
@@ -11,12 +15,22 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
-public class ProductWithOptionsDTOTest {
+@ExtendWith(MockitoExtension.class)
+public class ProductWithOptionsDTOMapperTest {
 
-	private final ImageManagementService imageManagementService = new ImageManagementService();
+	@Mock
+	private ImageManagementService imageManagementService;
 
-	private final ProductWithOptionsDTOMapper productWithOptionsDTOMapper = new ProductWithOptionsDTOMapper(imageManagementService);
+	private ProductWithOptionsDTOMapper productWithOptionsDTOMapper;
+
+
+	@BeforeEach
+	void setup() {
+		assertNotNull(imageManagementService);
+		productWithOptionsDTOMapper = new ProductWithOptionsDTOMapper(imageManagementService);
+	}
 
 
 	@Test
@@ -40,6 +54,9 @@ public class ProductWithOptionsDTOTest {
 
 	@Test
 	void entityValid() {
+		when(imageManagementService.imageExists("generic-pizza.jpg"))
+				.thenReturn(true);
+
 		Product product = Product.builder()
 				.id(10)
 				.name("Pizza")
@@ -67,6 +84,9 @@ public class ProductWithOptionsDTOTest {
 
 	@Test
 	void entityWithMissingImage() {
+		when(imageManagementService.imageExists("non-existent-file.jpg"))
+				.thenReturn(false);
+
 		Product product = Product.builder()
 				.id(10)
 				.name("Pizza")
