@@ -104,7 +104,7 @@ public class EntityInitializerService {
 				.subtitle("1+1 Gratis la alegere")
 				.description("500g")
 				.price(BigDecimal.valueOf(30.0))
-				.imageName("pizza-tărănească.jpg")
+				.imageName("pizza-țărănească.jpg")
 				.build());
 
 		products.add(Product.builder()

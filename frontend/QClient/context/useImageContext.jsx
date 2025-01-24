@@ -43,6 +43,11 @@ async function saveImagesToFiles(images) {
 async function loadSingleImageFromFile(imageName) {
   const fileUri = FileSystem.documentDirectory + imageName;
   const header = `data:image/${imageName.split(",").pop()};base64,`;
+  const fileInfo = await FileSystem.getInfoAsync(fileUri);
+  if (fileInfo.exists === false) {
+    console.error(`file ${fileUri} does not exist`);
+    return { name: imageName, data: null };
+  }
   try {
     const contents = await FileSystem.readAsStringAsync(fileUri, {
       encoding: FileSystem.EncodingType.Base64,

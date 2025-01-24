@@ -32,16 +32,13 @@ export default function TestComponent() {
       return;
     }
 
-    let imagesToLoad = newImagesQuery.data.map((image) => image.name);
+    let imageNames = newImagesQuery.data.map((image) => image.name);
     let imagesToSave = newImagesQuery.data;
-    if (newImagesQuery.data.length === 0) {
-      imagesToLoad = productsQuery.data.map((product) => product.imageName);
-    }
 
     async function processImages() {
       try {
         await imageContext.saveImages(imagesToSave);
-        const loaded = await imageContext.getImages(imagesToLoad);
+        const loaded = await imageContext.getImages(imageNames);
         setImages(() => loaded);
       } catch (error) {
         console.error("Error processing images:", error);
