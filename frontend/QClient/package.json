@@ -6,7 +6,8 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "lint": "eslint ."
   },
   "dependencies": {
     "axios": "^1.7.8",
@@ -27,7 +28,12 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "tailwindcss": "^3.3.2"
+    "@eslint/js": "^9.18.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.37.4",
+    "globals": "^15.14.0",
+    "tailwindcss": "^3.3.2",
+    "eslint-config-expo": "~8.0.1"
   },
   "private": true
 }

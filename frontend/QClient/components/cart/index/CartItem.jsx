@@ -3,7 +3,11 @@ import { imageOrDefault } from "../../../utils/files";
 import useSingleImage from "../../../hooks/useSingleImage";
 import { useColorTheme } from "../../../hooks/useColorTheme";
 import HorizontalLine from "../../menu/product/HorizontalLine";
+import React from "react";
 
+/**
+ * @param {Object} props
+ */
 export default function CartItem({ cartItem }) {
   const image = useSingleImage(cartItem.product.imageName);
   const colorTheme = useColorTheme();

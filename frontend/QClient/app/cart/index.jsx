@@ -4,6 +4,7 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import CartItem from "../../components/cart/index/CartItem";
 import { useColorTheme } from "../../hooks/useColorTheme";
 import HorizontalLine from "../../components/menu/product/HorizontalLine";
+import React from "react";
 
 export default function Cart() {
   const { cart } = useCartContext();

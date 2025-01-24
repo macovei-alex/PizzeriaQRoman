@@ -1,5 +1,7 @@
 import Svg, { Circle, Path } from "react-native-svg";
+import React from "react";
 
+// eslint-disable-next-line react/prop-types
 export default function TickCheckboxSvg({ style, checked }) {
   const checkStroke = style?._checkStroke ?? "white";
   const checkedFill = style?._checkedFill ?? "#428820";

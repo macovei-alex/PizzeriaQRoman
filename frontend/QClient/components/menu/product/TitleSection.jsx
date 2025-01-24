@@ -1,9 +1,9 @@
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import GoBackButtonSVG from "../../svg/GoBackButtonSVG";
-import { images } from "../../../constants";
 import { useColorTheme } from "../../../hooks/useColorTheme";
 import { useRouter } from "expo-router";
 import { imageOrDefault } from "../../../utils/files";
+import React from "react";
 
 /**
  * @param {Object} props

@@ -1,11 +1,9 @@
-import { View, StyleSheet, Platform, ScrollView, Text, Image, TouchableOpacity } from "react-native";
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import { View, StyleSheet, ScrollView, Text, Image, TouchableOpacity } from "react-native";
+import React, { Fragment, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GoBackButtonSVG from "../../components/svg/GoBackButtonSVG";
 import { useQuery } from "react-query";
 import api from "../../api";
-import HomeIconSvg from "../../components/svg/HomeIconSvg";
-import { router } from "expo-router";
 import { useImageContext } from "../../context/useImageContext";
 
 export default function TestComponent() {
@@ -50,7 +48,7 @@ export default function TestComponent() {
     }
 
     processImages();
-  }, [newImagesQuery.data, productsQuery.data]);
+  }, [newImagesQuery.data, productsQuery.data, imageContext]);
 
   if (newImagesQuery.isLoading) {
     return <Text>Loading new images from server...</Text>;
@@ -59,7 +57,7 @@ export default function TestComponent() {
     return <Text>Error: {newImagesQuery.error.message}</Text>;
   }
 
-  if (images.length == 0) {
+  if (images.length === 0) {
     return <Text>Loading images from disk...</Text>;
   }
 

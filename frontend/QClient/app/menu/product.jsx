@@ -12,6 +12,7 @@ import { useCartContext } from "../../context/useCartContext";
 import useSingleImage from "../../hooks/useSingleImage";
 import Toast from "react-native-toast-message";
 import { ToastAndroid } from "react-native";
+import React from "react";
 
 export default function Product() {
   const { productId, imageName } = useLocalSearchParams();

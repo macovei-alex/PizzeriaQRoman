@@ -1,6 +1,5 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
-import { images } from "../../../constants";
 import { StyleSheet } from "react-native";
 import { useColorTheme } from "../../../hooks/useColorTheme";
 import { imageOrDefault } from "../../../utils/files";

@@ -9,6 +9,7 @@ import CartIconSvg from "../components/svg/CartIconSvg";
 import { CartContextProvider } from "../context/useCartContext";
 import { ImageContextProvider } from "../context/useImageContext";
 import Toast from "react-native-toast-message";
+import React from "react";
 
 const queryClient = new QueryClient({
   defaultOptions: {
