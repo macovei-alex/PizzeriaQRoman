@@ -44,7 +44,6 @@ export default function VerticalCategorySection({
 }
 
 const styles = StyleSheet.create({
-  container: {},
   categoryTextContainer: {
     marginVertical: 12,
     marginHorizontal: 22,

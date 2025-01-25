@@ -10,6 +10,8 @@ export default function Cart() {
   const { cart } = useCartContext();
   const colorTheme = useColorTheme();
 
+  const totalPrice = cart.reduce((total, cartItem) => total + cartItem.product.price * cartItem.count, 0);
+
   return (
     <SafeAreaView>
       <ScrollView>
@@ -20,6 +22,13 @@ export default function Cart() {
         {cart.map((cartItem) => (
           <CartItem key={cartItem.product.id} cartItem={cartItem} />
         ))}
+        <View style={styles.totalPriceContainerContainer}>
+          <View style={[styles.totalPriceContainer, { backgroundColor: colorTheme.background[500] }]}>
+            <Text style={[styles.totalPriceText, { color: colorTheme.text[300] }]}>
+              Total de plată: {totalPrice.toFixed(2)} RON
+            </Text>
+          </View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -39,5 +48,18 @@ const styles = StyleSheet.create({
   hr: {
     height: 3,
     marginBottom: 20,
+  },
+  totalPriceContainerContainer: {
+    alignItems: "center",
+  },
+  totalPriceContainer: {
+    alignItems: "center",
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+    borderRadius: 18,
+  },
+  totalPriceText: {
+    fontSize: 17,
+    fontWeight: "bold",
   },
 });
