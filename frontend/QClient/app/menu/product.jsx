@@ -49,11 +49,13 @@ export default function Product() {
     if (cart.find((item) => item.product.id === product.id)) {
       setCart([
         ...cart.map((item) =>
-          item.product.id === product.id ? { product: item.product, count: item.count + 1 } : item
+          item.product.id === product.id
+            ? { id: item.id, product: item.product, count: item.count + 1 }
+            : item
         ),
       ]);
     } else {
-      setCart([...cart, { product: product, count: 1 }]);
+      setCart([...cart, { id: product.id, product: product, count: 1 }]);
     }
   }
 
