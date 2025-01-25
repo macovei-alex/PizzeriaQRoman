@@ -39,7 +39,7 @@ export default function Product() {
     if (Platform.OS === "android") {
       ToastAndroid.show("Produs adăugat in coș", ToastAndroid.SHORT);
     } else if (Platform.OS === "ios") {
-      // TODO: see if this works on iOS
+      // TODO: See if this works on iOS
       Toast.show({
         type: "info",
         text1: "Produs adăugat in coș",

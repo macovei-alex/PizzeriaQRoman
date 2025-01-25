@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     textAlign: "center",
+    marginVertical: 8,
     flexGrow: 1,
   },
 });
