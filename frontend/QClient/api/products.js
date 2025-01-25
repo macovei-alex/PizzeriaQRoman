@@ -53,7 +53,8 @@ async function fetchCategories() {
  */
 async function fetchProductWithOptions(productId) {
   if (!productId) {
-    return await Promise.resolve({});
+    console.error("error in fetchProductWithOptions: ( productId ) is required");
+    return {};
   }
   return (await axios.get(`${baseProductRoute}/${productId}`)).data;
 }

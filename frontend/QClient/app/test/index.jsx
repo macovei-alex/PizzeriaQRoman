@@ -15,7 +15,7 @@ export default function TestComponent() {
       if (await api.fetchImageRefetchCheck("yes")) {
         return api.fetchImages();
       }
-      return Promise.resolve([]);
+      return [];
     },
     queryKey: "test-images",
   });

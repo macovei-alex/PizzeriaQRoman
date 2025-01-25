@@ -1,7 +1,8 @@
-appId: "com.pizzeriaq"
-# appId: host.exp.Exponent
+# appId: "com.pizzeriaq"
+appId: host.exp.exponent
 ---
 - launchApp
+- assertVisible: "Comanda minimă este de 40 RON"
 - assertVisible: "Meniu"
 - assertVisible: "Coș"
 - assertVisible: "Caută ce îți dorești"
@@ -10,7 +11,7 @@ appId: "com.pizzeriaq"
 - tapOn: "Coș"
 - assertVisible: "Comanda mea"
 - tapOn: "Meniu"
-- tapOn: "Informații"
+- tapOn: { id: "info-button-capriciosa" }
 - assertVisible: "Pizza Capriciosa"
 - assertVisible: "Prima Pizza cu Margine Umplută cu Brânză Ricotta?"
 - back

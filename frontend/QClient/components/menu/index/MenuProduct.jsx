@@ -29,6 +29,7 @@ export default function MenuProduct({ product, productImage, onPress }) {
           </Text>
         </View>
         <TouchableOpacity
+          testID={product.name === "Pizza Capriciosa" ? "info-button-capriciosa" : null}
           style={[styles.infoButtonContainer, { backgroundColor: colorTheme.background[500] }]}
           onPress={onPress}
         >
