@@ -22,7 +22,6 @@ public class ProductCategoryController {
 
 	@GetMapping("/all")
 	public List<ProductCategoryDTO> getProducts() {
-		var categories = service.getCategories();
-		return categories;
+		return service.getCategories();
 	}
 }
