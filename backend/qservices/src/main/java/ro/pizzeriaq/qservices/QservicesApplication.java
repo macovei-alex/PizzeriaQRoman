@@ -63,5 +63,7 @@ public class QservicesApplication {
 		entityInitializerService.addProducts();
 		entityInitializerService.addOptionLists();
 		entityInitializerService.bindOptionsToProducts();
+		entityInitializerService.addAccounts();
+		entityInitializerService.addOrders();
 	}
 }

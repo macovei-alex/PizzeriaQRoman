@@ -29,17 +29,16 @@ public class Order {
 
 
 	@ManyToOne
-	@JoinColumn(name = "id_coupon", nullable = false)
+	@JoinColumn(name = "id_coupon", nullable = true)
 	private Coupon coupon;
-
-
-	@ManyToOne
-	@JoinColumn(name = "id_orderstatus", nullable = false)
-	private OrderStatus orderStatus;
 
 
 	@OneToMany(mappedBy = "order")
 	private List<OrderItem> orderItems;
+
+
+	@Enumerated(EnumType.STRING)
+	private OrderStatus orderStatus;
 
 
 	@Column(nullable = false, columnDefinition = "DATETIME")
@@ -57,10 +56,10 @@ public class Order {
 	private String additionalNotes;
 
 
-	@Column(precision = 8, scale = 2)
+	@Column(nullable = false, precision= 8, scale = 2)
 	private BigDecimal totalPrice;
 
 
-	@Column(precision = 8, scale = 2)
+	@Column(nullable = false, precision = 8, scale = 2)
 	private BigDecimal totalPriceWithDiscount;
 }
