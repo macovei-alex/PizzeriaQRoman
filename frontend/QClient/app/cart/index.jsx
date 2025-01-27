@@ -6,6 +6,8 @@ import ProductSection from "../../components/cart/index/ProductSection";
 import TitleSection from "../../components/cart/index/TitleSection";
 import api from "../../api";
 import { useCartContext } from "../../context/useCartContext";
+import { showToast } from "../../utils/toast";
+import { router } from "expo-router";
 
 export default function Cart() {
   const colorTheme = useColorTheme();
@@ -15,6 +17,8 @@ export default function Cart() {
 
   function sendOrder() {
     if (cart.length === 0) {
+      showToast("Coșul este gol");
+      router.push("/cart/confirmation");
       return;
     }
 
@@ -35,7 +39,10 @@ export default function Cart() {
       .catch((error) => {
         console.error("Error sending order:", error.response.data);
       })
-      .finally(() => setSendingOrder(() => false));
+      .finally(() => {
+        setSendingOrder(() => false);
+        router.push("/cart/confirmation");
+      });
   }
 
   return (
