@@ -7,8 +7,10 @@ import ro.pizzeriaq.qservices.data.repository.AccountRepository;
 import ro.pizzeriaq.qservices.data.repository.OrderItemRepository;
 import ro.pizzeriaq.qservices.data.repository.OrderRepository;
 import ro.pizzeriaq.qservices.data.repository.ProductRepository;
-import ro.pizzeriaq.qservices.service.DTO.OrderDTO;
-import ro.pizzeriaq.qservices.service.DTO.OrderItemDTO;
+import ro.pizzeriaq.qservices.service.DTO.HistoryOrderMinimalDTO;
+import ro.pizzeriaq.qservices.service.DTO.PlacedOrderDTO;
+import ro.pizzeriaq.qservices.service.DTO.PlacedOrderItemDTO;
+import ro.pizzeriaq.qservices.service.DTO.mapper.HistoryOrderMinimalMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -18,6 +20,7 @@ import java.util.List;
 @Service
 public class OrderService {
 
+	private final HistoryOrderMinimalMapper historyOrderMinimalMapper;
 	private final OrderRepository orderRepository;
 	private final OrderItemRepository orderItemRepository;
 	private final ProductRepository productRepository;
@@ -25,10 +28,12 @@ public class OrderService {
 
 
 	public OrderService(
+			HistoryOrderMinimalMapper historyOrderMinimalMapper,
 			OrderRepository orderRepository,
 			OrderItemRepository orderItemRepository,
 			ProductRepository productRepository,
 			AccountRepository accountRepository) {
+		this.historyOrderMinimalMapper = historyOrderMinimalMapper;
 		this.orderRepository = orderRepository;
 		this.orderItemRepository = orderItemRepository;
 		this.productRepository = productRepository;
@@ -37,40 +42,40 @@ public class OrderService {
 
 
 	@Transactional
-	public void placeOrder(OrderDTO orderDTO) throws IllegalArgumentException {
+	public void placeOrder(PlacedOrderDTO placedOrderDTO) throws IllegalArgumentException {
 		List<Product> products = productRepository.findAll();
 		Account account = accountRepository.findAll().getFirst();
 
-		validateOrder(orderDTO, products);
+		validateOrder(placedOrderDTO, products);
 
-		Order order = generateOrder(orderDTO, products, account);
+		Order order = generateOrder(placedOrderDTO, products, account);
 
 		orderRepository.save(order);
 		orderItemRepository.saveAll(order.getOrderItems());
 	}
 
 
-	private void validateOrder(OrderDTO orderDTO, List<Product> products) throws IllegalArgumentException {
-		if (orderDTO == null) {
+	private void validateOrder(PlacedOrderDTO placedOrderDTO, List<Product> products) throws IllegalArgumentException {
+		if (placedOrderDTO == null) {
 			throw new IllegalArgumentException("Order cannot be null");
 		}
 
-		if (orderDTO.getItems() == null || orderDTO.getItems().isEmpty()) {
+		if (placedOrderDTO.getItems() == null || placedOrderDTO.getItems().isEmpty()) {
 			throw new IllegalArgumentException("Order must contain at least one item");
 		}
 
-		for (OrderItemDTO orderItemDTO : orderDTO.getItems()) {
-			if (products.stream().noneMatch(p -> p.getId() == orderItemDTO.getProductId())) {
-				throw new IllegalArgumentException("Product not found for ID: " + orderItemDTO.getProductId());
+		for (PlacedOrderItemDTO placedOrderItemDTO : placedOrderDTO.getItems()) {
+			if (products.stream().noneMatch(p -> p.getId() == placedOrderItemDTO.getProductId())) {
+				throw new IllegalArgumentException("Product not found for ID: " + placedOrderItemDTO.getProductId());
 			}
-			if (orderItemDTO.getCount() <= 0) {
-				throw new IllegalArgumentException("Invalid count for product ID: " + orderItemDTO.getProductId());
+			if (placedOrderItemDTO.getCount() <= 0) {
+				throw new IllegalArgumentException("Invalid count for product ID: " + placedOrderItemDTO.getProductId());
 			}
 		}
 	}
 
 
-	private Order generateOrder(OrderDTO orderDTO, List<Product> products, Account account) {
+	private Order generateOrder(PlacedOrderDTO placedOrderDTO, List<Product> products, Account account) {
 		Order order = Order.builder()
 				.account(account)
 				.orderItems(new ArrayList<>())
@@ -78,20 +83,22 @@ public class OrderService {
 				.estimatedPreparationTime(null)
 				.orderTimestamp(LocalDateTime.now())
 				.deliveryTimestamp(null)
-				.additionalNotes(orderDTO.getAdditionalNotes())
+				.additionalNotes(placedOrderDTO.getAdditionalNotes())
 				.totalPrice(null)
 				.totalPriceWithDiscount(null)
 				.build();
 
-		for (OrderItemDTO orderItemDTO : orderDTO.getItems()) {
-			Product product = products.stream().filter(p -> p.getId() == orderItemDTO.getProductId()).findFirst().get();
-			BigDecimal totalPrice = product.getPrice().multiply(BigDecimal.valueOf(orderItemDTO.getCount()));
+		for (PlacedOrderItemDTO placedOrderItemDTO : placedOrderDTO.getItems()) {
+			Product product = products.stream()
+					.filter(p -> p.getId() == placedOrderItemDTO.getProductId())
+					.findFirst().get();
+			BigDecimal totalPrice = product.getPrice().multiply(BigDecimal.valueOf(placedOrderItemDTO.getCount()));
 			OrderItem orderItem = OrderItem.builder()
 					.order(order)
 					.product(product)
 					.totalPrice(totalPrice)
 					.totalPriceWithDiscount(totalPrice)
-					.count(orderItemDTO.getCount())
+					.count(placedOrderItemDTO.getCount())
 					.build();
 			order.getOrderItems().add(orderItem);
 		}
@@ -104,5 +111,17 @@ public class OrderService {
 		order.setTotalPriceWithDiscount(order.getTotalPrice());
 
 		return order;
+	}
+
+
+	@Transactional(readOnly = true)
+	public List<HistoryOrderMinimalDTO> getOrdersHistory() {
+		List<Order> orders = orderRepository.findAll();
+
+		List<HistoryOrderMinimalDTO> orderHistory = orders.stream()
+				.map(historyOrderMinimalMapper::fromEntity)
+				.toList();
+
+		return orderHistory;
 	}
 }

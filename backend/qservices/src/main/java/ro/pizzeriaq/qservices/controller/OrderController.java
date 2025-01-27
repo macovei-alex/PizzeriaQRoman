@@ -1,10 +1,11 @@
 package ro.pizzeriaq.qservices.controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ro.pizzeriaq.qservices.service.DTO.OrderDTO;
+import ro.pizzeriaq.qservices.service.DTO.HistoryOrderMinimalDTO;
+import ro.pizzeriaq.qservices.service.DTO.PlacedOrderDTO;
 import ro.pizzeriaq.qservices.service.OrderService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/order")
@@ -19,15 +20,13 @@ public class OrderController {
 
 
 	@PostMapping("/place")
-	public ResponseEntity<?> placeOrder(@RequestBody OrderDTO orderDTO) {
-		try {
-			orderService.placeOrder(orderDTO);
-			return ResponseEntity.ok().build();
+	public void placeOrder(@RequestBody PlacedOrderDTO placedOrderDTO) {
+		orderService.placeOrder(placedOrderDTO);
+	}
 
-		} catch (IllegalArgumentException e) {
-			return ResponseEntity
-					.status(HttpStatus.BAD_REQUEST)
-					.body(e.getMessage());
-		}
+
+	@GetMapping("/history")
+	public List<HistoryOrderMinimalDTO> getOrdersHistory() {
+		return orderService.getOrdersHistory();
 	}
 }

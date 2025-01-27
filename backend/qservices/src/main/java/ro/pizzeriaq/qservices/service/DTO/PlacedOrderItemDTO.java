@@ -8,9 +8,9 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Builder
-public class OrderItemDTO {
+public class PlacedOrderItemDTO {
 
-	private int productId;
-	private int count;
+	private Integer productId;
+	private Integer count;
 
 }

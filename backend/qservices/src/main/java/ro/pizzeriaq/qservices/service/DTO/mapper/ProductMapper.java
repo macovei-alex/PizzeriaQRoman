@@ -8,13 +8,13 @@ import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
 import ro.pizzeriaq.qservices.service.ImageManagementService;
 
 @Service
-public class ProductDTOMapper {
+public class ProductMapper {
 
-	private static final Logger logger = LoggerFactory.getLogger(ProductDTOMapper.class);
+	private static final Logger logger = LoggerFactory.getLogger(ProductMapper.class);
 
 	private final ImageManagementService imageManagementService;
 
-	public ProductDTOMapper(ImageManagementService imageManagementService) {
+	public ProductMapper(ImageManagementService imageManagementService) {
 		this.imageManagementService = imageManagementService;
 	}
 
@@ -23,16 +23,17 @@ public class ProductDTOMapper {
 			return null;
 		}
 
-		ProductDTO productDto = new ProductDTO();
-		productDto.setId(product.getId());
-		productDto.setName(product.getName());
-		productDto.setSubtitle(product.getSubtitle());
-		productDto.setDescription(product.getDescription());
-		productDto.setPrice(product.getPrice());
-		productDto.setImageName(imageManagementService.imageExists(product.getImageName())
+		ProductDTO productDto = ProductDTO.builder()
+				.id(product.getId())
+				.name(product.getName())
+				.subtitle(product.getSubtitle())
+				.description(product.getDescription())
+				.price(product.getPrice())
+				.imageName(imageManagementService.imageExists(product.getImageName())
 						? product.getImageName()
-						: null);
-		productDto.setCategoryId(product.getCategory().getId());
+						: null)
+				.categoryId(product.getCategory().getId())
+				.build();
 
 		if (productDto.getImageName() == null) {
 			logger.warn("Image not found: {}. ProductDTO will have null for image name", product.getImageName());

@@ -10,9 +10,9 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Builder
-public class OrderDTO {
+public class PlacedOrderDTO {
 
-	private List<OrderItemDTO> items;
+	private List<PlacedOrderItemDTO> items;
 	private String additionalNotes;
 
 }

@@ -6,8 +6,8 @@ import ro.pizzeriaq.qservices.data.model.Product;
 import ro.pizzeriaq.qservices.data.repository.ProductRepository;
 import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
 import ro.pizzeriaq.qservices.service.DTO.ProductWithOptionsDTO;
-import ro.pizzeriaq.qservices.service.DTO.mapper.ProductDTOMapper;
-import ro.pizzeriaq.qservices.service.DTO.mapper.ProductWithOptionsDTOMapper;
+import ro.pizzeriaq.qservices.service.DTO.mapper.ProductMapper;
+import ro.pizzeriaq.qservices.service.DTO.mapper.ProductWithOptionsMapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,30 +17,30 @@ public class ProductService {
 
 	private final ProductRepository productRepository;
 
-	private final ProductDTOMapper productDTOMapper;
+	private final ProductMapper productMapper;
 
-	private final ProductWithOptionsDTOMapper productWithOptionsDTOMapper;
+	private final ProductWithOptionsMapper productWithOptionsMapper;
 
 
 	public ProductService(ProductRepository productRepository,
-						  ProductDTOMapper productDTOMapper,
-						  ProductWithOptionsDTOMapper productWithOptionsDTOMapper) {
+						  ProductMapper productMapper,
+						  ProductWithOptionsMapper productWithOptionsMapper) {
 		this.productRepository = productRepository;
-		this.productDTOMapper = productDTOMapper;
-		this.productWithOptionsDTOMapper = productWithOptionsDTOMapper;
+		this.productMapper = productMapper;
+		this.productWithOptionsMapper = productWithOptionsMapper;
 	}
 
 
 	@Transactional
 	public List<ProductDTO> getProducts() {
 		List<Product> productEntities = productRepository.findAll();
-		return productEntities.stream().map(productDTOMapper::fromEntity).toList();
+		return productEntities.stream().map(productMapper::fromEntity).toList();
 	}
 
 
 	@Transactional
 	public Optional<ProductWithOptionsDTO> getProduct(int id) {
 		var productOptional = productRepository.findById(id);
-		return productOptional.map(productWithOptionsDTOMapper::fromEntity);
+		return productOptional.map(productWithOptionsMapper::fromEntity);
 	}
 }
