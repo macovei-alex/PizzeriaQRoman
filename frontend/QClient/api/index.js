@@ -1,10 +1,10 @@
-import * as productFetches from "./products";
-import * as imageFetches from "./images";
-import * as orderApi from "./order";
+import * as productsApi from "./products";
+import * as imagesApi from "./images";
+import * as ordersApi from "./orders";
 
 const api = {
-  ...productFetches,
-  ...imageFetches,
-  ...orderApi,
+  ...productsApi,
+  ...imagesApi,
+  ...ordersApi,
 };
 export default api;

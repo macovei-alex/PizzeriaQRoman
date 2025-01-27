@@ -22,6 +22,7 @@ public class OptionListDTO {
 	private List<OptionDTO> options;
 
 
+	// TODO: Write a mapper for OptionListDTO
 	public static OptionListDTO fromEntity(OptionList optionList) {
 		if (optionList == null) {
 			return null;

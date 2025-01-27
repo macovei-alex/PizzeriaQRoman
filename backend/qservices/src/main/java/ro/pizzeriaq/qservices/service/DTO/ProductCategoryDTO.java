@@ -14,6 +14,8 @@ public class ProductCategoryDTO {
 	private int id;
 	private String name;
 
+
+	// TODO: Write a mapper for ProductCategoryDTO
 	public static ProductCategoryDTO fromEntity(ProductCategory productCategory) {
 		if (productCategory == null) {
 			return null;

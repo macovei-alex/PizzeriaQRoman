@@ -48,8 +48,8 @@ async function fetchCategories() {
  *      minCount: number,
  *      maxCount: number
  *    }[]
- *  }[],
- * } }>}
+ *  }[]
+ * }>}
  */
 async function fetchProductWithOptions(productId) {
   if (!productId) {

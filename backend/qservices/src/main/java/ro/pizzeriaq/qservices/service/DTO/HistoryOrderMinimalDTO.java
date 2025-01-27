@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,5 +21,6 @@ public class HistoryOrderMinimalDTO {
 	private String additionalNotes;
 	private BigDecimal totalPrice;
 	private BigDecimal totalPriceWithDiscount;
+	private List<HistoryOrderItemMinimalDTO> items;
 
 }

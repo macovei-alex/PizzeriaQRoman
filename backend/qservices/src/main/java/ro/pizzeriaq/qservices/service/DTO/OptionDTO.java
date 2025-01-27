@@ -21,6 +21,7 @@ public class OptionDTO {
 	private int maxCount;
 
 
+	// TODO: Write a mapper for OptionDTO
 	public static OptionDTO fromEntity(Option option) {
 		if (option == null) {
 			return null;
