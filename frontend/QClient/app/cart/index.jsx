@@ -1,33 +1,25 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useCartContext } from "../../context/useCartContext";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import CartItem from "../../components/cart/index/CartItem";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import useColorTheme from "../../hooks/useColorTheme";
 import HorizontalLine from "../../components/menu/product/HorizontalLine";
 import React from "react";
+import ProductSection from "../../components/cart/index/ProductSection";
+import TitleSection from "../../components/cart/index/TitleSection";
 
 export default function Cart() {
-  const { cart } = useCartContext();
   const colorTheme = useColorTheme();
-
-  const totalPrice = cart.reduce((total, cartItem) => total + cartItem.product.price * cartItem.count, 0);
 
   return (
     <SafeAreaView>
       <ScrollView>
-        <View style={styles.titleContainer}>
-          <Text style={[styles.titleText, { color: colorTheme.text[100] }]}>Comanda mea</Text>
-        </View>
-        <HorizontalLine style={styles.hr} />
-        {cart.map((cartItem) => (
-          <CartItem key={cartItem.product.id} cartItem={cartItem} />
-        ))}
-        <View style={styles.totalPriceContainerContainer}>
-          <View style={[styles.totalPriceContainer, { backgroundColor: colorTheme.background[500] }]}>
-            <Text style={[styles.totalPriceText, { color: colorTheme.text[300] }]}>
-              Total de plată: {totalPrice.toFixed(2)} RON
-            </Text>
-          </View>
+        <TitleSection />
+
+        <ProductSection />
+
+        <View style={styles.sendOrderContainer}>
+          <TouchableOpacity style={[styles.sendOrderButton, { backgroundColor: colorTheme.background[500] }]}>
+            <Text style={[styles.sendOrderText, { color: colorTheme.text[300] }]}>Trimite comanda</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -35,31 +27,17 @@ export default function Cart() {
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    backgroundColor: "white",
-    width: "100%",
+  sendOrderContainer: {
     alignItems: "center",
-    paddingVertical: 16,
+    marginTop: 40,
   },
-  titleText: {
-    fontSize: 28,
-    fontWeight: "500",
-  },
-  hr: {
-    height: 3,
-    marginBottom: 20,
-  },
-  totalPriceContainerContainer: {
-    alignItems: "center",
-  },
-  totalPriceContainer: {
-    alignItems: "center",
-    paddingHorizontal: 32,
-    paddingVertical: 16,
+  sendOrderButton: {
+    paddingHorizontal: 40,
+    paddingVertical: 12,
     borderRadius: 18,
   },
-  totalPriceText: {
-    fontSize: 17,
+  sendOrderText: {
+    fontSize: 22,
     fontWeight: "bold",
   },
 });

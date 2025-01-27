@@ -15,13 +15,19 @@ export default function CartItem({ cartItem }) {
 
   /** @param {number} difference */
   function changeItemCount(difference) {
-    setCart((prev) =>
-      prev.map((item) =>
-        item.product.id === cartItem.product.id
-          ? { id: item.id, product: item.product, count: item.count + difference }
-          : item
-      )
-    );
+    if (cartItem.count + difference <= 0) {
+      // remove whole item from cart
+      setCart((prev) => prev.filter((item) => item.product.id !== cartItem.product.id));
+    } else {
+      // increase or decrease item count
+      setCart((prev) =>
+        prev.map((item) =>
+          item.product.id === cartItem.product.id
+            ? { id: item.id, product: item.product, count: item.count + difference }
+            : item
+        )
+      );
+    }
   }
 
   const totalPrice = cartItem.product.price * cartItem.count;
