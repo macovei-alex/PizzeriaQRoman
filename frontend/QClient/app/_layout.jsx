@@ -10,6 +10,7 @@ import { CartContextProvider } from "../context/useCartContext";
 import { ImageContextProvider } from "../context/useImageContext";
 import Toast from "react-native-toast-message";
 import React from "react";
+import ProfileIcon from "../components/svg/ProfileIcon";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -75,6 +76,13 @@ export default function RootLayout() {
                 options={{
                   title: "Coș",
                   tabBarIcon: () => <CartIconSvg style={svgColors} />,
+                }}
+              />
+              <Tabs.Screen
+                name="profile"
+                options={{
+                  title: "Profil",
+                  tabBarIcon: () => <ProfileIcon style={svgColors} />,
                 }}
               />
               <Tabs.Screen
