@@ -45,12 +45,20 @@ public class OrderService {
 
 		Order order = generateOrder(orderDTO, products, account);
 
-		orderItemRepository.saveAll(order.getOrderItems());
 		orderRepository.save(order);
+		orderItemRepository.saveAll(order.getOrderItems());
 	}
 
 
 	private void validateOrder(OrderDTO orderDTO, List<Product> products) throws IllegalArgumentException {
+		if (orderDTO == null) {
+			throw new IllegalArgumentException("Order cannot be null");
+		}
+
+		if (orderDTO.getItems() == null || orderDTO.getItems().isEmpty()) {
+			throw new IllegalArgumentException("Order must contain at least one item");
+		}
+
 		for (OrderItemDTO orderItemDTO : orderDTO.getItems()) {
 			if (products.stream().noneMatch(p -> p.getId() == orderItemDTO.getProductId())) {
 				throw new IllegalArgumentException("Product not found for ID: " + orderItemDTO.getProductId());
@@ -75,17 +83,24 @@ public class OrderService {
 				.totalPriceWithDiscount(null)
 				.build();
 
-		order.setOrderItems(orderDTO.getItems().stream().map(orderItemDTO -> OrderItem.builder()
-				.order(order)
-				.product(products.stream().filter(p -> p.getId() == orderItemDTO.getProductId()).findFirst().get())
-				.count(orderItemDTO.getCount())
-				.build()
-		).toList());
+		for (OrderItemDTO orderItemDTO : orderDTO.getItems()) {
+			Product product = products.stream().filter(p -> p.getId() == orderItemDTO.getProductId()).findFirst().get();
+			BigDecimal totalPrice = product.getPrice().multiply(BigDecimal.valueOf(orderItemDTO.getCount()));
+			OrderItem orderItem = OrderItem.builder()
+					.order(order)
+					.product(product)
+					.totalPrice(totalPrice)
+					.totalPriceWithDiscount(totalPrice)
+					.count(orderItemDTO.getCount())
+					.build();
+			order.getOrderItems().add(orderItem);
+		}
 
 		order.setTotalPrice(order.getOrderItems().stream()
 				.map(orderItem -> orderItem.getProduct().getPrice().multiply(BigDecimal.valueOf(orderItem.getCount())))
 				.reduce(BigDecimal.ZERO, BigDecimal::add)
 		);
+
 		order.setTotalPriceWithDiscount(order.getTotalPrice());
 
 		return order;

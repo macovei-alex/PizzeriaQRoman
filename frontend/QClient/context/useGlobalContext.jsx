@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext } from "react";
 
 const GlobalContext = createContext();
 
@@ -7,7 +7,5 @@ export function useGlobalContext() {
 }
 
 export function GlobalContextProvider({ children }) {
-  const [gProduct, gSetProduct] = useState(null);
-
-  return <GlobalContext.Provider value={{ gProduct, gSetProduct }}>{children}</GlobalContext.Provider>;
+  return <GlobalContext.Provider value={null}>{children}</GlobalContext.Provider>;
 }

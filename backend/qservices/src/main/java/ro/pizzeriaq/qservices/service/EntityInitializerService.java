@@ -384,7 +384,5 @@ public class EntityInitializerService {
 				.map(OrderItem::getTotalPriceWithDiscount)
 				.reduce(BigDecimal::add)
 				.orElseThrow());
-
-		orderRepository.saveAll(orders);
 	}
 }

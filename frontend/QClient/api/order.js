@@ -4,5 +4,5 @@ import config from "./config";
 const baseOrderRoute = `${config.baseApiUrl}/order`;
 
 export async function sendOrder(order) {
-  return (await axios.post(`${baseOrderRoute}/place`, order)).data;
+  return axios.post(`${baseOrderRoute}/place`, order);
 }

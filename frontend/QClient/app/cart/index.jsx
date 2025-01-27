@@ -1,27 +1,61 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import useColorTheme from "../../hooks/useColorTheme";
-import HorizontalLine from "../../components/menu/product/HorizontalLine";
-import React from "react";
+import React, { useState } from "react";
 import ProductSection from "../../components/cart/index/ProductSection";
 import TitleSection from "../../components/cart/index/TitleSection";
+import api from "../../api";
+import { useCartContext } from "../../context/useCartContext";
 
 export default function Cart() {
   const colorTheme = useColorTheme();
+  const { cart } = useCartContext();
+
+  const [sendingOrder, setSendingOrder] = useState(false);
+
+  function sendOrder() {
+    if (cart.length === 0) {
+      return;
+    }
+
+    setSendingOrder(() => true);
+
+    const order = {
+      items: cart.map((cartItem) => ({ productId: cartItem.product.id, count: cartItem.count })),
+      additionalNotes: null,
+    };
+
+    api
+      .sendOrder(order)
+      .then((res) => {
+        if (res.status === 200 || res.status === 201) {
+          console.log("Order sent successfully");
+        }
+      })
+      .catch((error) => {
+        console.error("Error sending order:", error.response.data);
+      })
+      .finally(() => setSendingOrder(() => false));
+  }
 
   return (
     <SafeAreaView>
-      <ScrollView>
-        <TitleSection />
+      {!sendingOrder ? (
+        <ScrollView>
+          <TitleSection />
 
-        <ProductSection />
+          <ProductSection />
 
-        <View style={styles.sendOrderContainer}>
-          <TouchableOpacity style={[styles.sendOrderButton, { backgroundColor: colorTheme.background[500] }]}>
-            <Text style={[styles.sendOrderText, { color: colorTheme.text[300] }]}>Trimite comanda</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+          <View style={styles.sendOrderContainer}>
+            <TouchableOpacity
+              style={[styles.sendOrderButton, { backgroundColor: colorTheme.background[500] }]}
+              onPress={sendOrder}
+            >
+              <Text style={[styles.sendOrderText, { color: colorTheme.text[300] }]}>Trimite comanda</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      ) : null}
     </SafeAreaView>
   );
 }
@@ -32,7 +66,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   sendOrderButton: {
-    paddingHorizontal: 40,
+    paddingHorizontal: 52,
     paddingVertical: 12,
     borderRadius: 18,
   },
