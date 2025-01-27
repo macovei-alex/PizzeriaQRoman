@@ -13,17 +13,13 @@ import useSingleImage from "../../hooks/useSingleImage";
 import Toast from "react-native-toast-message";
 import { ToastAndroid } from "react-native";
 import React from "react";
+import useApiProductWithOptions from "../../hooks/useApiProductWithOptions";
 
 export default function Product() {
   const { productId, imageName } = useLocalSearchParams();
   const { cart, setCart } = useCartContext();
   const colorTheme = useColorTheme();
-
-  const productQuery = useQuery({
-    queryFn: () => api.fetchProductWithOptions(productId),
-    queryKey: ["product", productId],
-  });
-
+  const productQuery = useApiProductWithOptions(productId);
   const image = useSingleImage(imageName);
 
   if (productQuery.isLoading || !image) {

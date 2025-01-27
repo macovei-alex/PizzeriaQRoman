@@ -6,9 +6,11 @@ import { useQuery } from "react-query";
 import api from "../../api";
 import { useImageContext } from "../../context/useImageContext";
 import * as FileSystem from "expo-file-system";
+import useApiProducts from "../../hooks/useApiProducts";
 
 export default function TestComponent() {
   const imageContext = useImageContext();
+  const productsQuery = useApiProducts();
 
   const newImagesQuery = useQuery({
     queryFn: async () => {
@@ -18,11 +20,6 @@ export default function TestComponent() {
       return [];
     },
     queryKey: "test-images",
-  });
-
-  const productsQuery = useQuery({
-    queryFn: api.fetchProducts,
-    queryKey: "test-products",
   });
 
   const [images, setImages] = useState([]);

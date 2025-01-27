@@ -123,7 +123,7 @@ export function ImageContextProvider({ children }) {
     for (const imageName of imageNames) {
       imagePromises.push(getSingleImage(imageName));
     }
-    return await Promise.all(imagePromises);
+    return Promise.all(imagePromises);
   }
 
   /** @param {{name: string, data: string}[]} images */
@@ -145,7 +145,7 @@ export function ImageContextProvider({ children }) {
       return false;
     }
 
-    return await saveImagesToFiles(images);
+    return saveImagesToFiles(images);
   }
 
   function invalidateImageCache() {

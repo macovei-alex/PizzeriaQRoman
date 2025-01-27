@@ -9,20 +9,16 @@ import LogoSection from "../../components/menu/index/LogoSection";
 import HorizontalCategorySection from "../../components/menu/index/HorizontalCategorySection";
 import VerticalCategorySection from "../../components/menu/index/VerticalCategorySection";
 import useImages from "../../hooks/useImages";
+import useApiProducts from "../../hooks/useApiProducts";
+import useApiCategories from "../../hooks/useApiCategories";
 
 export default function Menu() {
   const [productsPerCategroy, setProductsPerCategory] = useState([{ category: { id: 1 }, products: [] }]);
   const { scrollRef, scrollToPos } = useScrollRef();
   const [categoryPositions, setCategoryPositions] = useState({});
 
-  const productQuery = useQuery({
-    queryKey: ["products"],
-    queryFn: api.fetchProducts,
-  });
-  const categoryQuery = useQuery({
-    queryKey: ["categories"],
-    queryFn: api.fetchCategories,
-  });
+  const productQuery = useApiProducts();
+  const categoryQuery = useApiCategories();
 
   const images = useImages(productQuery.data?.map((product) => product.imageName));
 
