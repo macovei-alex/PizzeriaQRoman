@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Procesul de devoltare</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <h1>Descrierea procesului de dezvoltare utilizat</h1>
+    <p>
+      Procesul de dezvoltare utilizat este unul iterativ, care se axeaza pe implementarea si livrarea
+      incrementala a sistemului. Fiecare feature este dezvoltat si integrat pe rand, astfel incat produsul
+      devine din ce in ce mai complet. Planificarea initiala a proiectului a fost facuta doar in linii mari,
+      urmand ca fiecare iteratie sa fie planificate in detaliu inainte de a fi implementata.
+    </p>
+
+    <p>
+      Baza de date a fost planificata in cat mai mare detaliu pentru a nu schimba foarte mult modelul de date
+      in timpul implementarii, aceasta putand duce la inconsistente enervante. In rest, ordinea in care au
+      fost dezvoltate featerurile implementate la momentul actual a fost, in mare:
+    </p>
+    <ul>
+      <li>meniul cu produse (cu imaginile memorate ca asseturi statice in aplicatie)</li>
+      <li>detaliile produselor: liste de optiuni</li>
+      <li>incarcarea imaginilor cu produse de pe server</li>
+      <li>adaugarea produselor in cos</li>
+      <li>efectuarea unei comenzi simple (fara optiuni adaugate)</li>
+      <li>vizualizarea istoricului comenzilor</li>
+    </ul>
+
+    <p>
+      La fiecare pas au fost rulate teste pe server, dupa care acesta a fost impachetat pentru a putea fi
+      pornit din linie de comanda. Astfel, a fost asigurata in mod continuu functionarea corecta a aplicatiei
+      si posibilitatea de a deployment.
+    </p>
+  </body>
+</html>
