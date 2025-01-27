@@ -1,5 +1,4 @@
 import { Tabs, usePathname } from "expo-router";
-import { GlobalContextProvider } from "../context/useGlobalContext";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { useEffect } from "react";
 import { Alert, BackHandler, Platform, StyleSheet } from "react-native";
@@ -54,49 +53,47 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <GlobalContextProvider>
-        <ImageContextProvider>
-          <CartContextProvider>
-            <Tabs
-              screenOptions={{
-                headerShown: false,
-                tabBarStyle: [styles.tabBar, { backgroundColor: colorTheme.background[100] }],
+      <ImageContextProvider>
+        <CartContextProvider>
+          <Tabs
+            screenOptions={{
+              headerShown: false,
+              tabBarStyle: [styles.tabBar, { backgroundColor: colorTheme.background[100] }],
+            }}
+          >
+            <Tabs.Screen name="index" options={{ href: null }}></Tabs.Screen>
+            <Tabs.Screen
+              name="menu"
+              options={{
+                title: "Meniu",
+                tabBarIcon: () => <HomeIconSvg style={svgColors} />,
               }}
-            >
-              <Tabs.Screen name="index" options={{ href: null }}></Tabs.Screen>
-              <Tabs.Screen
-                name="menu"
-                options={{
-                  title: "Meniu",
-                  tabBarIcon: () => <HomeIconSvg style={svgColors} />,
-                }}
-              />
-              <Tabs.Screen
-                name="cart"
-                options={{
-                  title: "Coș",
-                  tabBarIcon: () => <CartIconSvg style={svgColors} />,
-                }}
-              />
-              <Tabs.Screen
-                name="profile"
-                options={{
-                  title: "Profil",
-                  tabBarIcon: () => <ProfileIcon style={svgColors} />,
-                }}
-              />
-              <Tabs.Screen
-                name="test"
-                options={{
-                  title: "Test",
-                  tabBarIcon: () => <CartIconSvg style={svgColors} />,
-                }}
-              />
-            </Tabs>
-            {Platform.OS === "ios" && <Toast />}
-          </CartContextProvider>
-        </ImageContextProvider>
-      </GlobalContextProvider>
+            />
+            <Tabs.Screen
+              name="cart"
+              options={{
+                title: "Coș",
+                tabBarIcon: () => <CartIconSvg style={svgColors} />,
+              }}
+            />
+            <Tabs.Screen
+              name="profile"
+              options={{
+                title: "Profil",
+                tabBarIcon: () => <ProfileIcon style={svgColors} />,
+              }}
+            />
+            <Tabs.Screen
+              name="test"
+              options={{
+                title: "Test",
+                tabBarIcon: () => <CartIconSvg style={svgColors} />,
+              }}
+            />
+          </Tabs>
+          {Platform.OS === "ios" && <Toast />}
+        </CartContextProvider>
+      </ImageContextProvider>
     </QueryClientProvider>
   );
 }
