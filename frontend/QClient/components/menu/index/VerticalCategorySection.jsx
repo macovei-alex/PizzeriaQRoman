@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import MenuProduct from "./MenuProduct";
-import { useColorTheme } from "../../../hooks/useColorTheme";
+import useColorTheme from "../../../hooks/useColorTheme";
 
 /**
  * @param {Object} props

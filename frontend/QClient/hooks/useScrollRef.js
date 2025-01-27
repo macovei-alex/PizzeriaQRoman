@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-export function useScrollRef() {
+export default function useScrollRef() {
   const scrollRef = useRef();
 
   const scrollToStart = () => {

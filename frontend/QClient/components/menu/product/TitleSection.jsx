@@ -1,6 +1,6 @@
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import GoBackButtonSVG from "../../svg/GoBackButtonSVG";
-import { useColorTheme } from "../../../hooks/useColorTheme";
+import useColorTheme from "../../../hooks/useColorTheme";
 import { useRouter } from "expo-router";
 import { imageOrDefault } from "../../../utils/files";
 import React from "react";

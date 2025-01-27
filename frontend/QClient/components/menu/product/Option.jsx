@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
-import { useColorTheme } from "../../../hooks/useColorTheme";
+import useColorTheme from "../../../hooks/useColorTheme";
 import TickCheckboxSvg from "../../svg/TickCheckboxSvg";
 
 export default function Option({ option, checked, customOnPress }) {

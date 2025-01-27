@@ -1,7 +1,7 @@
 import { StyleSheet, TextInput, View } from "react-native";
 import React, { useState } from "react";
 import SearchIconSVG from "../../svg/SearchIconSVG";
-import { useColorTheme } from "../../../hooks/useColorTheme";
+import useColorTheme from "../../../hooks/useColorTheme";
 
 export default function SearchBar({ placeholder, onSearch }) {
   const colorTheme = useColorTheme();

@@ -1,7 +1,7 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { imageOrDefault } from "../../../utils/files";
 import useSingleImage from "../../../hooks/useSingleImage";
-import { useColorTheme } from "../../../hooks/useColorTheme";
+import useColorTheme from "../../../hooks/useColorTheme";
 import HorizontalLine from "../../menu/product/HorizontalLine";
 import React from "react";
 import PlusCircle from "../../svg/PlusCircle";

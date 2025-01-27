@@ -2,7 +2,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useCartContext } from "../../context/useCartContext";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import CartItem from "../../components/cart/index/CartItem";
-import { useColorTheme } from "../../hooks/useColorTheme";
+import useColorTheme from "../../hooks/useColorTheme";
 import HorizontalLine from "../../components/menu/product/HorizontalLine";
 import React from "react";
 
