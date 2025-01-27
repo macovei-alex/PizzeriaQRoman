@@ -19,7 +19,7 @@ export default function Confirmation() {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colorTheme.background[500] }]}
-            onPress={() => router.push("/cart")}
+            onPress={() => router.back()}
           >
             <Text style={[styles.buttonText, { color: colorTheme.text[300] }]}>Înapoi la comandă</Text>
           </TouchableOpacity>
