@@ -8,6 +8,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.web.filter.AbstractRequestLoggingFilter;
+import org.springframework.web.filter.CommonsRequestLoggingFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import ro.pizzeriaq.qservices.service.EntityInitializerService;
@@ -45,6 +47,18 @@ public class QservicesApplication {
 	@Bean
 	public CommandLineRunner logEnvironment() {
 		return (_) -> logger.info("Environment: {}", environment);
+	}
+
+
+	@Bean
+	public AbstractRequestLoggingFilter requestLoggingFilter() {
+		AbstractRequestLoggingFilter loggingFilter = new CommonsRequestLoggingFilter();
+		loggingFilter.setIncludeQueryString(true);
+		loggingFilter.setIncludeHeaders(true);
+		loggingFilter.setIncludePayload(true);
+		loggingFilter.setIncludeClientInfo(true);
+		loggingFilter.setMaxPayloadLength(10000);
+		return loggingFilter;
 	}
 
 
