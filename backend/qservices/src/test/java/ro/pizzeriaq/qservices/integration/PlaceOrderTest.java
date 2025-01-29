@@ -183,4 +183,22 @@ public class PlaceOrderTest {
 						.content(objectMapper.writeValueAsString(placedOrderDTO)))
 				.andExpect(status().isOk());
 	}
+
+	@Test
+	void goodPayloadTest2() throws Exception {
+		var products = productService.getProducts();
+
+		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+				.items(products.stream()
+						.map(product -> PlacedOrderItemDTO.builder()
+								.productId(product.getId())
+								.count(10)
+								.build())
+						.toList())
+				.build();
+
+		mockMvc.perform(constructDefaultPostRequest()
+						.content(objectMapper.writeValueAsString(placedOrderDTO)))
+				.andExpect(status().isOk());
+	}
 }
