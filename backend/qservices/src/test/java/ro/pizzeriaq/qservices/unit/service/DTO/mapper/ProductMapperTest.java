@@ -1,4 +1,4 @@
-package ro.pizzeriaq.qservices.unit.service.DTO;
+package ro.pizzeriaq.qservices.unit.service.DTO.mapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

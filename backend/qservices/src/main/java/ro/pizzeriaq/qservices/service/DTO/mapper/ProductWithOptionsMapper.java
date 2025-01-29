@@ -1,14 +1,9 @@
 package ro.pizzeriaq.qservices.service.DTO.mapper;
 
 import org.springframework.stereotype.Service;
-import ro.pizzeriaq.qservices.data.model.OptionList;
 import ro.pizzeriaq.qservices.data.model.Product;
-import ro.pizzeriaq.qservices.service.DTO.OptionListDTO;
 import ro.pizzeriaq.qservices.service.DTO.ProductWithOptionsDTO;
 import ro.pizzeriaq.qservices.service.ImageManagementService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class ProductWithOptionsMapper {

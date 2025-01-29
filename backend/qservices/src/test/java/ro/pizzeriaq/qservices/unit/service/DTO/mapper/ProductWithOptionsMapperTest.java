@@ -1,4 +1,4 @@
-package ro.pizzeriaq.qservices.unit.service.DTO;
+package ro.pizzeriaq.qservices.unit.service.DTO.mapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,6 @@ import ro.pizzeriaq.qservices.data.model.Product;
 import ro.pizzeriaq.qservices.data.model.ProductCategory;
 import ro.pizzeriaq.qservices.service.DTO.ProductWithOptionsDTO;
 import ro.pizzeriaq.qservices.service.DTO.mapper.OptionListMapper;
-import ro.pizzeriaq.qservices.service.DTO.mapper.ProductCategoryMapper;
 import ro.pizzeriaq.qservices.service.DTO.mapper.ProductWithOptionsMapper;
 import ro.pizzeriaq.qservices.service.ImageManagementService;
 
@@ -26,14 +25,18 @@ public class ProductWithOptionsMapperTest {
 	private ImageManagementService imageManagementService;
 	@Mock
 	private OptionListMapper optionListMapper;
+
 	private ProductWithOptionsMapper productWithOptionsMapper;
 
 
 	@BeforeEach
 	void setup() {
+		if (productWithOptionsMapper == null) {
+			productWithOptionsMapper = new ProductWithOptionsMapper(imageManagementService, optionListMapper);
+		}
+		assertNotNull(productWithOptionsMapper);
 		assertNotNull(imageManagementService);
 		assertNotNull(optionListMapper);
-		productWithOptionsMapper = new ProductWithOptionsMapper(imageManagementService, optionListMapper);
 	}
 
 

@@ -1,25 +1,39 @@
-package ro.pizzeriaq.qservices.unit.service.DTO;
+package ro.pizzeriaq.qservices.unit.service.DTO.mapper;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ro.pizzeriaq.qservices.data.model.Option;
 import ro.pizzeriaq.qservices.service.DTO.OptionDTO;
+import ro.pizzeriaq.qservices.service.DTO.mapper.OptionMapper;
 
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class OptionDTOTest {
+public class OptionMapperTest {
+
+	private OptionMapper optionMapper;
+
+
+	@BeforeEach
+	void setup() {
+		if (optionMapper == null) {
+			optionMapper = new OptionMapper();
+		}
+		assertNotNull(optionMapper);
+	}
+
 
 	@Test
 	void entityNull() {
-		assertNull(OptionDTO.fromEntity(null));
+		assertNull(optionMapper.fromEntity(null));
 	}
 
 	@Test
 	void throwCases() {
-		assertThrows(NullPointerException.class, () -> OptionDTO.fromEntity(Option.builder()
+		assertThrows(NullPointerException.class, () -> optionMapper.fromEntity(Option.builder()
 				.build()));
-		assertThrows(NullPointerException.class, () -> OptionDTO.fromEntity(Option.builder()
+		assertThrows(NullPointerException.class, () -> optionMapper.fromEntity(Option.builder()
 				.id(null).build()));
 	}
 
@@ -41,6 +55,6 @@ public class OptionDTOTest {
 				.maxCount(22)
 				.build();
 
-		assertEquals(expected, OptionDTO.fromEntity(option));
+		assertEquals(expected, optionMapper.fromEntity(option));
 	}
 }
