@@ -31,7 +31,7 @@ public class ProductService {
 
 	@Transactional
 	public List<ProductDTO> getProducts() {
-		List<Product> productEntities = productRepository.findAll();
+		List<Product> productEntities = productRepository.findAllWithCategory();
 		return productEntities.stream().map(productMapper::fromEntity).toList();
 	}
 
