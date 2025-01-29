@@ -31,14 +31,14 @@ public class ProductService {
 
 	@Transactional
 	public List<ProductDTO> getProducts() {
-		List<Product> productEntities = productRepository.findAllWithCategory();
+		List<Product> productEntities = productRepository.findAllCategoryPreload();
 		return productEntities.stream().map(productMapper::fromEntity).toList();
 	}
 
 
 	@Transactional
 	public Optional<ProductWithOptionsDTO> getProduct(int id) {
-		var productOptional = productRepository.findById(id);
+		var productOptional = productRepository.findByIdFullPreload(id);
 		return productOptional.map(productWithOptionsMapper::fromEntity);
 	}
 }
