@@ -1,5 +1,6 @@
 package ro.pizzeriaq.qservices.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import ro.pizzeriaq.qservices.service.DTO.HistoryOrderMinimalDTO;
 import ro.pizzeriaq.qservices.service.DTO.PlacedOrderDTO;
@@ -20,7 +21,7 @@ public class OrderController {
 
 
 	@PostMapping("/place")
-	public void placeOrder(@RequestBody PlacedOrderDTO placedOrderDTO) {
+	public void placeOrder(@Valid @RequestBody PlacedOrderDTO placedOrderDTO) {
 		orderService.placeOrder(placedOrderDTO);
 	}
 

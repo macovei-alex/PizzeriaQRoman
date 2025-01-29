@@ -56,20 +56,9 @@ public class OrderService {
 
 
 	private void validateOrder(PlacedOrderDTO placedOrderDTO, List<Product> products) throws IllegalArgumentException {
-		if (placedOrderDTO == null) {
-			throw new IllegalArgumentException("Order cannot be null");
-		}
-
-		if (placedOrderDTO.getItems() == null || placedOrderDTO.getItems().isEmpty()) {
-			throw new IllegalArgumentException("Order must contain at least one item");
-		}
-
 		for (PlacedOrderItemDTO placedOrderItemDTO : placedOrderDTO.getItems()) {
 			if (products.stream().noneMatch(p -> p.getId() == placedOrderItemDTO.getProductId())) {
 				throw new IllegalArgumentException("Product not found for ID: " + placedOrderItemDTO.getProductId());
-			}
-			if (placedOrderItemDTO.getCount() <= 0) {
-				throw new IllegalArgumentException("Invalid count for product ID: " + placedOrderItemDTO.getProductId());
 			}
 		}
 	}
