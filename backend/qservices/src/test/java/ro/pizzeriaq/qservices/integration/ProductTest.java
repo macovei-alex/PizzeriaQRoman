@@ -53,10 +53,7 @@ class ProductTest {
 	void setUp() {
 		logger.info("Environment: {}", environment);
 
-		entityInitializerService.deleteAll();
-		entityInitializerService.addProducts();
-		entityInitializerService.addOptionLists();
-		entityInitializerService.bindOptionsToProducts();
+		EntityInitializerService.reInitializeEntities(entityInitializerService);
 	}
 
 	@AfterAll

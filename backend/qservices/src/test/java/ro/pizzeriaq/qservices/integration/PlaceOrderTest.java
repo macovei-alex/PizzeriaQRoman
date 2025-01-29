@@ -53,12 +53,7 @@ public class PlaceOrderTest {
 	void setUp() {
 		logger.info("Environment: {}", environment);
 
-		entityInitializerService.deleteAll();
-		entityInitializerService.addProducts();
-		entityInitializerService.addOptionLists();
-		entityInitializerService.addAccounts();
-		entityInitializerService.addOrders();
-		entityInitializerService.bindOptionsToProducts();
+		EntityInitializerService.reInitializeEntities(entityInitializerService);
 	}
 
 	@AfterAll

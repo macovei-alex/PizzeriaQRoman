@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ro.pizzeriaq.qservices.data.model.*;
 import ro.pizzeriaq.qservices.data.repository.*;
 
+import javax.swing.text.html.parser.Entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,6 +38,17 @@ public class EntityInitializerService {
 		this.accountRepository = accountRepository;
 		this.orderRepository = orderRepository;
 		this.orderItemRepository = orderItemRepository;
+	}
+
+
+	public static void reInitializeEntities(EntityInitializerService entityInitializerService) {
+		entityInitializerService.deleteAll();
+
+		entityInitializerService.addProducts();
+		entityInitializerService.addOptionLists();
+		entityInitializerService.bindOptionsToProducts();
+		entityInitializerService.addAccounts();
+		entityInitializerService.addOrders();
 	}
 
 
