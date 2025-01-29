@@ -1,6 +1,5 @@
 package ro.pizzeriaq.qservices.unit.service.DTO.mapper;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ro.pizzeriaq.qservices.data.model.Option;
 import ro.pizzeriaq.qservices.service.DTO.OptionDTO;
@@ -12,16 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class OptionMapperTest {
 
-	private OptionMapper optionMapper;
-
-
-	@BeforeEach
-	void setup() {
-		if (optionMapper == null) {
-			optionMapper = new OptionMapper();
-		}
-		assertNotNull(optionMapper);
-	}
+	private final OptionMapper optionMapper = new OptionMapper();
 
 
 	@Test

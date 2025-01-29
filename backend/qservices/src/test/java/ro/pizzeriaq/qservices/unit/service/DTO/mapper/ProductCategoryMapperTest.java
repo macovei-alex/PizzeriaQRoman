@@ -1,6 +1,5 @@
 package ro.pizzeriaq.qservices.unit.service.DTO.mapper;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ro.pizzeriaq.qservices.data.model.ProductCategory;
 import ro.pizzeriaq.qservices.service.DTO.ProductCategoryDTO;
@@ -10,16 +9,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ProductCategoryMapperTest {
 
-	private ProductCategoryMapper productCategoryMapper;
+	private final ProductCategoryMapper productCategoryMapper = new ProductCategoryMapper();
 
-
-	@BeforeEach
-	void setup() {
-		if (productCategoryMapper == null) {
-			productCategoryMapper = new ProductCategoryMapper();
-		}
-		assertNotNull(productCategoryMapper);
-	}
 
 	@Test
 	void entityNull() {

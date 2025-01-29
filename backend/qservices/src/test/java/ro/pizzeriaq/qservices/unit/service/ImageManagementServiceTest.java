@@ -3,8 +3,7 @@ package ro.pizzeriaq.qservices.unit.service;
 import org.junit.jupiter.api.Test;
 import ro.pizzeriaq.qservices.service.ImageManagementService;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ImageManagementServiceTest {
 
