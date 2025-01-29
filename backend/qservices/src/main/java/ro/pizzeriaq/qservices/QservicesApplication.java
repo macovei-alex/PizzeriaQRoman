@@ -66,7 +66,7 @@ public class QservicesApplication {
 	@Profile("default")
 	public CommandLineRunner initializeEntities(EntityInitializerService entityInitializerService) {
 		return (_) -> {
-			EntityInitializerService.reInitializeEntities(entityInitializerService);
+			// EntityInitializerService.reInitializeEntities(entityInitializerService);
 		};
 	}
 }
