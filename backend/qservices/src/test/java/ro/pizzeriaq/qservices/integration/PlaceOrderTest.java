@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import ro.pizzeriaq.qservices.service.DTO.PlacedOrderDTO;
 import ro.pizzeriaq.qservices.service.DTO.PlacedOrderItemDTO;
 import ro.pizzeriaq.qservices.service.EntityInitializerService;
@@ -54,6 +55,14 @@ public class PlaceOrderTest {
 	private ObjectMapper objectMapper;
 
 
+	private MockHttpServletRequestBuilder constructDefaultPostRequest() {
+		return post(contextPath + "/order/place")
+				.contextPath(contextPath)
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON);
+	}
+
+
 	@BeforeAll
 	void setUp() {
 		logger.info("Environment: {}", environment);
@@ -79,38 +88,27 @@ public class PlaceOrderTest {
 
 	@Test
 	void badPayloadTest1() throws Exception {
-		mockMvc.perform(post(contextPath + "/order/place")
-						.contextPath(contextPath)
-						.accept(MediaType.APPLICATION_JSON))
+		mockMvc.perform(constructDefaultPostRequest())
 				.andExpect(status().isInternalServerError());
 	}
 
 	@Test
 	void badPayloadTest2() throws Exception {
-		mockMvc.perform(post(contextPath + "/order/place")
-						.contextPath(contextPath)
-						.accept(MediaType.APPLICATION_JSON)
-						.contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(constructDefaultPostRequest()
 						.content(""))
 				.andExpect(status().isInternalServerError());
 	}
 
 	@Test
 	void badPayloadTest3() throws Exception {
-		mockMvc.perform(post(contextPath + "/order/place")
-						.contextPath(contextPath)
-						.accept(MediaType.APPLICATION_JSON)
-						.contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(constructDefaultPostRequest()
 						.content("{}"))
 				.andExpect(status().isBadRequest());
 	}
 
 	@Test
 	void badPayloadTest4() throws Exception {
-		mockMvc.perform(post(contextPath + "/order/place")
-						.contextPath(contextPath)
-						.accept(MediaType.APPLICATION_JSON)
-						.contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(constructDefaultPostRequest()
 						.content("{\"nonexistentField\":  null}"))
 				.andExpect(status().isBadRequest());
 	}
@@ -121,10 +119,7 @@ public class PlaceOrderTest {
 				.items(null)
 				.build();
 
-		mockMvc.perform(post(contextPath + "/order/place")
-						.contextPath(contextPath)
-						.accept(MediaType.APPLICATION_JSON)
-						.contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(constructDefaultPostRequest()
 						.content(objectMapper.writeValueAsString(placedOrderDTO)))
 				.andExpect(status().isBadRequest());
 	}
@@ -135,10 +130,7 @@ public class PlaceOrderTest {
 				.items(List.of())
 				.build();
 
-		mockMvc.perform(post(contextPath + "/order/place")
-						.contextPath(contextPath)
-						.accept(MediaType.APPLICATION_JSON)
-						.contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(constructDefaultPostRequest()
 						.content(objectMapper.writeValueAsString(placedOrderDTO)))
 				.andExpect(status().isBadRequest());
 	}
@@ -149,10 +141,7 @@ public class PlaceOrderTest {
 				.items(List.of(PlacedOrderItemDTO.builder().productId(0).count(1).build()))
 				.build();
 
-		mockMvc.perform(post(contextPath + "/order/place")
-						.contextPath(contextPath)
-						.accept(MediaType.APPLICATION_JSON)
-						.contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(constructDefaultPostRequest()
 						.content(objectMapper.writeValueAsString(placedOrderDTO)))
 				.andExpect(status().isBadRequest());
 	}
@@ -163,10 +152,7 @@ public class PlaceOrderTest {
 				.items(List.of(PlacedOrderItemDTO.builder().productId(1).count(0).build()))
 				.build();
 
-		mockMvc.perform(post(contextPath + "/order/place")
-						.contextPath(contextPath)
-						.accept(MediaType.APPLICATION_JSON)
-						.contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(constructDefaultPostRequest()
 						.content(objectMapper.writeValueAsString(placedOrderDTO)))
 				.andExpect(status().isBadRequest());
 	}
@@ -177,11 +163,24 @@ public class PlaceOrderTest {
 				.items(List.of(PlacedOrderItemDTO.builder().productId(Integer.MAX_VALUE).count(1).build()))
 				.build();
 
-		mockMvc.perform(post(contextPath + "/order/place")
-						.contextPath(contextPath)
-						.accept(MediaType.APPLICATION_JSON)
-						.contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(constructDefaultPostRequest()
 						.content(objectMapper.writeValueAsString(placedOrderDTO)))
 				.andExpect(status().isBadRequest());
+	}
+
+	@Test
+	void goodPayloadTest1() throws Exception {
+		var products = productService.getProducts();
+
+		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+				.items(List.of(
+						PlacedOrderItemDTO.builder().productId(products.get(0).getId()).count(1).build(),
+						PlacedOrderItemDTO.builder().productId(products.get(1).getId()).count(2).build()
+				))
+				.build();
+
+		mockMvc.perform(constructDefaultPostRequest()
+						.content(objectMapper.writeValueAsString(placedOrderDTO)))
+				.andExpect(status().isOk());
 	}
 }
