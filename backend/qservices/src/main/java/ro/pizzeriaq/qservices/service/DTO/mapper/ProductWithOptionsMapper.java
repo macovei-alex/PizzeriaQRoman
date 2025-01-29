@@ -14,17 +14,23 @@ import java.util.List;
 public class ProductWithOptionsMapper {
 
 	private final ImageManagementService imageManagementService;
+	private final OptionListMapper optionListMapper;
 
-	public ProductWithOptionsMapper(ImageManagementService imageManagementService) {
+
+	public ProductWithOptionsMapper(
+			ImageManagementService imageManagementService,
+			OptionListMapper optionListMapper) {
 		this.imageManagementService = imageManagementService;
+		this.optionListMapper = optionListMapper;
 	}
+
 
 	public ProductWithOptionsDTO fromEntity(Product product) {
 		if (product == null) {
 			return null;
 		}
 
-		ProductWithOptionsDTO productDto = ProductWithOptionsDTO.builder()
+		return ProductWithOptionsDTO.builder()
 				.id(product.getId())
 				.name(product.getName())
 				.subtitle(product.getSubtitle())
@@ -34,9 +40,7 @@ public class ProductWithOptionsMapper {
 						? product.getImageName()
 						: null)
 				.categoryId(product.getCategory().getId())
-				.optionLists(product.getOptionLists().stream().map(OptionListDTO::fromEntity).toList())
+				.optionLists(product.getOptionLists().stream().map(optionListMapper::fromEntity).toList())
 				.build();
-
-		return productDto;
 	}
 }

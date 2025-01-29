@@ -80,7 +80,7 @@ public class OrderService {
 		for (PlacedOrderItemDTO placedOrderItemDTO : placedOrderDTO.getItems()) {
 			Product product = products.stream()
 					.filter(p -> p.getId() == placedOrderItemDTO.getProductId())
-					.findFirst().get();
+					.findFirst().orElseThrow();
 			BigDecimal totalPrice = product.getPrice().multiply(BigDecimal.valueOf(placedOrderItemDTO.getCount()));
 			OrderItem orderItem = OrderItem.builder()
 					.order(order)
@@ -107,10 +107,8 @@ public class OrderService {
 	public List<HistoryOrderMinimalDTO> getOrdersHistory() {
 		List<Order> orders = orderRepository.findAll();
 
-		List<HistoryOrderMinimalDTO> orderHistory = orders.stream()
+		return orders.stream()
 				.map(historyOrderMinimalMapper::fromEntity)
 				.toList();
-
-		return orderHistory;
 	}
 }

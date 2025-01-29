@@ -11,12 +11,13 @@ import ro.pizzeriaq.qservices.service.ImageManagementService;
 public class ProductMapper {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProductMapper.class);
-
 	private final ImageManagementService imageManagementService;
+
 
 	public ProductMapper(ImageManagementService imageManagementService) {
 		this.imageManagementService = imageManagementService;
 	}
+
 
 	public ProductDTO fromEntity(Product product) {
 		if (product == null) {

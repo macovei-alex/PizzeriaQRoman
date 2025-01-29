@@ -10,6 +10,7 @@ public class ImageManagementServiceTest {
 
 	private final ImageManagementService imageManagementService = new ImageManagementService();
 
+
 	@Test
 	void imageExists() {
 		assertTrue(imageManagementService.imageExists("generic-pizza.jpg"));

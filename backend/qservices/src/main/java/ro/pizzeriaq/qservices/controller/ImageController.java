@@ -18,9 +18,7 @@ import java.util.List;
 public class ImageController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ImageController.class);
-
 	private final ImageManagementService imageManagementService;
-
 	private final ProductService productService;
 
 

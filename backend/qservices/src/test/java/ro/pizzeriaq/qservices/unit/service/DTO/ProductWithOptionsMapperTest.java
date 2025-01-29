@@ -8,6 +8,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ro.pizzeriaq.qservices.data.model.Product;
 import ro.pizzeriaq.qservices.data.model.ProductCategory;
 import ro.pizzeriaq.qservices.service.DTO.ProductWithOptionsDTO;
+import ro.pizzeriaq.qservices.service.DTO.mapper.OptionListMapper;
+import ro.pizzeriaq.qservices.service.DTO.mapper.ProductCategoryMapper;
 import ro.pizzeriaq.qservices.service.DTO.mapper.ProductWithOptionsMapper;
 import ro.pizzeriaq.qservices.service.ImageManagementService;
 
@@ -22,14 +24,16 @@ public class ProductWithOptionsMapperTest {
 
 	@Mock
 	private ImageManagementService imageManagementService;
-
+	@Mock
+	private OptionListMapper optionListMapper;
 	private ProductWithOptionsMapper productWithOptionsMapper;
 
 
 	@BeforeEach
 	void setup() {
 		assertNotNull(imageManagementService);
-		productWithOptionsMapper = new ProductWithOptionsMapper(imageManagementService);
+		assertNotNull(optionListMapper);
+		productWithOptionsMapper = new ProductWithOptionsMapper(imageManagementService, optionListMapper);
 	}
 
 

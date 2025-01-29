@@ -16,9 +16,7 @@ import java.util.Optional;
 public class ProductService {
 
 	private final ProductRepository productRepository;
-
 	private final ProductMapper productMapper;
-
 	private final ProductWithOptionsMapper productWithOptionsMapper;
 
 
