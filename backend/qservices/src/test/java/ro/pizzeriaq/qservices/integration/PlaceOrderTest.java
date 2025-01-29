@@ -13,16 +13,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
 import ro.pizzeriaq.qservices.service.EntityInitializerService;
 import ro.pizzeriaq.qservices.service.ProductService;
 
-import java.util.Comparator;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -31,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PlaceOrderTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(PlaceOrderTest.class);
+
 
 	@Value("${server.servlet.context-path}")
 	private String contextPath;
@@ -70,5 +67,43 @@ public class PlaceOrderTest {
 	@Test
 	void entitiesInitializationTest() {
 		assertThat(productService.getProducts()).isNotEmpty();
+	}
+
+	@Test
+	void badPayloadTest1() throws Exception {
+		mockMvc.perform(post(contextPath + "/order/place")
+						.contextPath(contextPath)
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isInternalServerError());
+	}
+
+	@Test
+	void badPayloadTest2() throws Exception {
+		mockMvc.perform(post(contextPath + "/order/place")
+						.contextPath(contextPath)
+						.accept(MediaType.APPLICATION_JSON)
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(""))
+				.andExpect(status().isInternalServerError());
+	}
+
+	@Test
+	void badPayloadTest3() throws Exception {
+		mockMvc.perform(post(contextPath + "/order/place")
+						.contextPath(contextPath)
+						.accept(MediaType.APPLICATION_JSON)
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{}"))
+				.andExpect(status().isBadRequest());
+	}
+
+	@Test
+	void badPayloadTest4() throws Exception {
+		mockMvc.perform(post(contextPath + "/order/place")
+						.contextPath(contextPath)
+						.accept(MediaType.APPLICATION_JSON)
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"nonexistentField\": 0}"))
+				.andExpect(status().isBadRequest());
 	}
 }

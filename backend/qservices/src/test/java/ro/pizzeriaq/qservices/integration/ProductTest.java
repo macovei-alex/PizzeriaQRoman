@@ -101,13 +101,12 @@ class ProductTest {
 
 	@Test
 	void getProductWithValidId() throws Exception {
-		var product = productService.getProduct(
-						productService.getProducts()
-								.stream()
-								.sorted(Comparator.comparing(ProductDTO::getName))
-								.toList()
-								.get(2)
-								.getId())
+		var product = productService.getProduct(productService.getProducts()
+						.stream()
+						.sorted(Comparator.comparing(ProductDTO::getName))
+						.toList()
+						.get(2)
+						.getId())
 				.orElse(null);
 
 		assertThat(product).isNotNull();
