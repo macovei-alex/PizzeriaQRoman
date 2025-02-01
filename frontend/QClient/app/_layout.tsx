@@ -1,15 +1,15 @@
+import React from "react";
 import { Tabs, usePathname } from "expo-router";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { useEffect } from "react";
 import { Alert, BackHandler, Platform, StyleSheet } from "react-native";
 import HomeIconSvg from "@/components/svg/HomeIconSvg";
-import useColorTheme from "../hooks/useColorTheme";
-import CartIconSvg from "../components/svg/CartIconSvg";
-import { CartContextProvider } from "../context/useCartContext";
-import { ImageContextProvider } from "../context/useImageContext";
+import useColorTheme from "@/hooks/useColorTheme";
+import CartIconSvg from "@/components/svg/CartIconSvg";
+import { CartContextProvider } from "@/context/useCartContext";
+import { ImageContextProvider } from "@/context/useImageContext";
 import Toast from "react-native-toast-message";
-import React from "react";
-import ProfileIcon from "../components/svg/ProfileIcon";
+import ProfileIcon from "@/components/svg/ProfileIcon";
 
 const queryClient = new QueryClient({
   defaultOptions: {

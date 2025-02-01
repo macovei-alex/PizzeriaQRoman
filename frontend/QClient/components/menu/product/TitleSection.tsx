@@ -1,9 +1,9 @@
-import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import GoBackButtonSVG from "../../svg/GoBackButtonSVG";
-import useColorTheme from "../../../hooks/useColorTheme";
-import { useRouter } from "expo-router";
-import { ImageFile, imageOrDefault } from "../../../utils/files";
 import React from "react";
+import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import GoBackButtonSVG from "@/components/svg/GoBackButtonSVG";
+import useColorTheme from "@/hooks/useColorTheme";
+import { useRouter } from "expo-router";
+import { ImageFile, imageOrDefault } from "@/utils/files";
 import { ProductWithOptions } from "@/api/types/Product";
 
 type TitleSectionProps = {

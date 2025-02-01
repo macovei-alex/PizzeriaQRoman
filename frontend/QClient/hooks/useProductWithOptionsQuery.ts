@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import api from "../api";
+import api from "@/api";
 import { ProductId, ProductWithOptions } from "@/api/types/Product";
 
 export default function useProductWithOptionsQuery(productId: ProductId) {

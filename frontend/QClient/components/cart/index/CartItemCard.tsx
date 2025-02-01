@@ -1,12 +1,12 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { imageOrDefault } from "../../../utils/files";
-import useSingleImage from "../../../hooks/useSingleImage";
-import useColorTheme from "../../../hooks/useColorTheme";
-import HorizontalLine from "../../menu/product/HorizontalLine";
 import React from "react";
-import PlusCircle from "../../svg/PlusCircle";
-import MinusCircle from "../../svg/MinusCircle";
-import { CartContextType, CartItem, useCartContext } from "../../../context/useCartContext";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { imageOrDefault } from "@/utils/files";
+import useSingleImage from "@/hooks/useSingleImage";
+import useColorTheme from "@/hooks/useColorTheme";
+import HorizontalLine from "@/components/menu/product/HorizontalLine";
+import PlusCircle from "@/components/svg/PlusCircle";
+import MinusCircle from "@/components/svg/MinusCircle";
+import { CartContextType, CartItem, useCartContext } from "@/context/useCartContext";
 
 type CartItemCardProps = {
   cartItem: CartItem;

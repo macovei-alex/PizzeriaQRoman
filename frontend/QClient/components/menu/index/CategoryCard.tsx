@@ -1,6 +1,6 @@
 import React from "react";
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import useColorTheme from "../../../hooks/useColorTheme";
+import useColorTheme from "@/hooks/useColorTheme";
 import { Category } from "@/api/types/Category";
 
 type CategoryCardProps = {

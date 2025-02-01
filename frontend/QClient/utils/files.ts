@@ -1,4 +1,4 @@
-import { images } from "../constants";
+import { images } from "@/constants";
 import * as FileSystem from "expo-file-system";
 
 export type ImageFile = { name: string; data: string | null };

@@ -1,7 +1,7 @@
 import { View, Text, ImageBackground, Image, StyleSheet } from "react-native";
 import React from "react";
-import { images } from "../../../constants";
-import useColorTheme from "../../../hooks/useColorTheme";
+import { images } from "@/constants";
+import useColorTheme from "@/hooks/useColorTheme";
 
 export default function LogoSection() {
   const colorTheme = useColorTheme();

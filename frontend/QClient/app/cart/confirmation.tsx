@@ -1,8 +1,9 @@
+import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import useColorTheme from "../../hooks/useColorTheme";
+import useColorTheme from "@/hooks/useColorTheme";
 import { router } from "expo-router";
-import TickCheckboxSvg from "../../components/svg/TickCheckboxSvg";
+import TickCheckboxSvg from "@/components/svg/TickCheckboxSvg";
 
 export default function Confirmation() {
   const colorTheme = useColorTheme();

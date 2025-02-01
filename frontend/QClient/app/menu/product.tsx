@@ -1,16 +1,16 @@
+import React from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import OptionList from "../../components/menu/product/OptionListCard";
-import useColorTheme from "../../hooks/useColorTheme";
-import HorizontalLine from "../../components/menu/product/HorizontalLine";
+import OptionList from "@/components/menu/product/OptionListCard";
+import useColorTheme from "@/hooks/useColorTheme";
+import HorizontalLine from "@/components/menu/product/HorizontalLine";
 import { Fragment } from "react";
-import TitleSection from "../../components/menu/product/TitleSection";
+import TitleSection from "@/components/menu/product/TitleSection";
 import { useLocalSearchParams } from "expo-router/build/hooks";
-import { CartContextType, useCartContext } from "../../context/useCartContext";
-import useSingleImage from "../../hooks/useSingleImage";
-import React from "react";
-import useProductWithOptionsQuery from "../../hooks/useProductWithOptionsQuery";
-import { showToast } from "../../utils/toast";
+import { CartContextType, useCartContext } from "@/context/useCartContext";
+import useSingleImage from "@/hooks/useSingleImage";
+import useProductWithOptionsQuery from "@/hooks/useProductWithOptionsQuery";
+import { showToast } from "@/utils/toast";
 import { ProductWithOptions } from "@/api/types/Product";
 
 export default function ProductScreen() {

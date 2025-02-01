@@ -1,8 +1,8 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { StyleSheet } from "react-native";
-import useColorTheme from "../../../hooks/useColorTheme";
-import { ImageFile, imageOrDefault } from "../../../utils/files";
+import useColorTheme from "@/hooks/useColorTheme";
+import { ImageFile, imageOrDefault } from "@/utils/files";
 import { Product } from "@/api/types/Product";
 
 type MenuProductProps = {

@@ -1,8 +1,8 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { CartContextType, useCartContext } from "../../../context/useCartContext";
+import { CartContextType, useCartContext } from "@/context/useCartContext";
 import CartItemCard from "./CartItemCard";
-import useColorTheme from "../../../hooks/useColorTheme";
+import useColorTheme from "@/hooks/useColorTheme";
 
 export default function ProductSection() {
   const { cart } = useCartContext() as CartContextType;

@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
-import useColorTheme from "../../../hooks/useColorTheme";
+import { StyleSheet, Text, View } from "react-native";
+import useColorTheme from "@/hooks/useColorTheme";
 import { OptionId, OptionList } from "@/api/types/Product";
 import OptionCard from "./OptionCard";
 

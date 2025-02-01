@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet, LayoutChangeEvent } from "react-native";
 import React from "react";
+import { View, Text, StyleSheet, LayoutChangeEvent } from "react-native";
 import MenuProduct from "./MenuProduct";
-import useColorTheme from "../../../hooks/useColorTheme";
+import useColorTheme from "@/hooks/useColorTheme";
 import { Category, CategoryId } from "@/api/types/Category";
 import { Product } from "@/api/types/Product";
 import { ImageFile } from "@/utils/files";

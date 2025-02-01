@@ -1,5 +1,5 @@
-import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import React from "react";
+import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 
 type HorizontalLineProps = {
   style?: StyleProp<ViewStyle>;

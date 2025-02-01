@@ -1,12 +1,12 @@
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import useColorTheme from "../../hooks/useColorTheme";
-import React, { useState } from "react";
-import ProductSection from "../../components/cart/index/ProductSection";
-import TitleSection from "../../components/cart/index/TitleSection";
-import api from "../../api";
-import { CartContextType, useCartContext } from "../../context/useCartContext";
-import { showToast } from "../../utils/toast";
+import useColorTheme from "@/hooks/useColorTheme";
+import ProductSection from "@/components/cart/index/ProductSection";
+import TitleSection from "@/components/cart/index/TitleSection";
+import api from "@/api";
+import { CartContextType, useCartContext } from "@/context/useCartContext";
+import { showToast } from "@/utils/toast";
 import { router } from "expo-router";
 import { PlacedOrder } from "@/api/types/Order";
 
