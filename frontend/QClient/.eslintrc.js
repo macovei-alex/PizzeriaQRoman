@@ -6,6 +6,7 @@ module.exports = {
   extends: ["expo"],
   parserOptions: {
     ecmaFeatures: {
+      tsx: true,
       jsx: true, // Enable linting for JSX
     },
     ecmaVersion: 12, // Use modern JavaScript syntax

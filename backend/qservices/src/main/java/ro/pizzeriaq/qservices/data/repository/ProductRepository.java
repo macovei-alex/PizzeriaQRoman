@@ -10,14 +10,17 @@ import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
-	@Query("SELECT p FROM Product p JOIN FETCH p.category")
+	@Query("""
+		SELECT p FROM Product p
+		JOIN FETCH p.category
+	""")
 	List<Product> findAllCategoryPreload();
 
 
 	@Query("""
-		SELECT p FROM Product p
+		SELECT DISTINCT p FROM Product p
 		JOIN FETCH p.category
-		JOIN FETCH p.optionLists
+		JOIN FETCH p.optionLists ol
 		WHERE p.id = :id
 	""")
 	Optional<Product> findByIdFullPreload(@Param("id") Integer id);
