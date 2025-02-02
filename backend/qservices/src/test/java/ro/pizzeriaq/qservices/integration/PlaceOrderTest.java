@@ -15,15 +15,19 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import ro.pizzeriaq.qservices.service.DTO.HistoryOrderMinimalDTO;
 import ro.pizzeriaq.qservices.service.DTO.PlacedOrderDTO;
 import ro.pizzeriaq.qservices.service.DTO.PlacedOrderItemDTO;
 import ro.pizzeriaq.qservices.service.EntityInitializerService;
+import ro.pizzeriaq.qservices.service.OrderService;
 import ro.pizzeriaq.qservices.service.ProductService;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -53,10 +57,19 @@ public class PlaceOrderTest {
 
 	@Autowired
 	private ObjectMapper objectMapper;
+	@Autowired
+	private OrderService orderService;
 
 
 	private MockHttpServletRequestBuilder constructDefaultPostRequest() {
 		return post(contextPath + "/order/place")
+				.contextPath(contextPath)
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON);
+	}
+
+	private MockHttpServletRequestBuilder constructDefaultGetRequest() {
+		return get(contextPath + "/order/history")
 				.contextPath(contextPath)
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON);
@@ -179,9 +192,16 @@ public class PlaceOrderTest {
 				))
 				.build();
 
+		var historyOrders = orderService.getOrdersHistory();
+
 		mockMvc.perform(constructDefaultPostRequest()
 						.content(objectMapper.writeValueAsString(placedOrderDTO)))
 				.andExpect(status().isOk());
+
+		mockMvc.perform(constructDefaultGetRequest())
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$").isArray())
+				.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1));
 	}
 
 	@Test
@@ -197,8 +217,15 @@ public class PlaceOrderTest {
 						.toList())
 				.build();
 
+		var historyOrders = orderService.getOrdersHistory();
+
 		mockMvc.perform(constructDefaultPostRequest()
 						.content(objectMapper.writeValueAsString(placedOrderDTO)))
 				.andExpect(status().isOk());
+
+		mockMvc.perform(constructDefaultGetRequest())
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$").isArray())
+				.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1));
 	}
 }
