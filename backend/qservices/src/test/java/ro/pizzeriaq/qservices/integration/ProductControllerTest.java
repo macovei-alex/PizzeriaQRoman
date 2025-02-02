@@ -27,9 +27,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureMockMvc
-class ProductTest {
+class ProductControllerTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(ProductTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(ProductControllerTest.class);
 
 
 	@Value("${server.servlet.context-path}")

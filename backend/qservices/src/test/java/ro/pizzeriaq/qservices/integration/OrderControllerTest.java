@@ -15,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import ro.pizzeriaq.qservices.service.DTO.HistoryOrderMinimalDTO;
 import ro.pizzeriaq.qservices.service.DTO.PlacedOrderDTO;
 import ro.pizzeriaq.qservices.service.DTO.PlacedOrderItemDTO;
 import ro.pizzeriaq.qservices.service.EntityInitializerService;
@@ -34,9 +33,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureMockMvc
-public class PlaceOrderTest {
+public class OrderControllerTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(PlaceOrderTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(OrderControllerTest.class);
 
 
 	@Value("${server.servlet.context-path}")
