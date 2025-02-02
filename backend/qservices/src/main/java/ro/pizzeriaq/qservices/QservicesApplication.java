@@ -58,6 +58,7 @@ public class QservicesApplication {
 		loggingFilter.setIncludePayload(true);
 		loggingFilter.setIncludeClientInfo(true);
 		loggingFilter.setMaxPayloadLength(10000);
+		loggingFilter.setAfterMessageSuffix("\n");
 		return loggingFilter;
 	}
 

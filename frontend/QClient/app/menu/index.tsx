@@ -18,11 +18,9 @@ type ProductSplit = {
 };
 
 export default function Menu() {
-  const [productsPerCategroy, setProductsPerCategory] = useState<ProductSplit[]>([
-    { category: { id: 1, name: "" }, products: [] },
-  ]);
+  const [productsPerCategroy, setProductsPerCategory] = useState<ProductSplit[]>([]);
   const { scrollRef, scrollToPos } = useScrollRef();
-  const [categoryPositions, setCategoryPositions] = useState<Map<CategoryId, number>>(new Map());
+  const [categoryPositions, setCategoryPositions] = useState<Record<CategoryId, number>>({});
 
   const productQuery = useProductsQuery();
   const categoryQuery = useCategoriesQuery();
@@ -35,14 +33,12 @@ export default function Menu() {
     // and event.nativeEvent will be set to null afterwards.
     const { layout } = event.nativeEvent;
     setCategoryPositions((prevPositions) => {
-      const newPositions = new Map(prevPositions);
-      newPositions.set(categoryId, layout.y);
-      return newPositions;
+      return { ...prevPositions, [categoryId]: layout.y };
     });
   }
 
   function scrollToCategoryId(categoryId: CategoryId) {
-    const pos = categoryPositions.get(categoryId);
+    const pos = categoryPositions[categoryId];
     if (pos) {
       scrollToPos({ y: pos });
     }
@@ -88,7 +84,7 @@ export default function Menu() {
         />
 
         <View>
-          {productsPerCategroy.map(({ category, products }) => (
+          {productsPerCategroy?.map(({ category, products }) => (
             <VerticalCategorySection
               key={category.id}
               category={category}
