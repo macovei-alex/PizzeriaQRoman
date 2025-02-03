@@ -53,3 +53,11 @@ export async function loadSingleImageFromFile(imageName: string) {
     return { name: imageName, data: null } as ImageFile;
   }
 }
+
+export async function deleteImages(imageNames: string[]) {
+  let promises = [];
+  for (const imageName of imageNames) {
+    promises.push(FileSystem.deleteAsync(FileSystem.documentDirectory + imageName));
+  }
+  return Promise.all(promises);
+}

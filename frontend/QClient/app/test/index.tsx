@@ -1,62 +1,66 @@
 import { View, StyleSheet, ScrollView, Text, Image, TouchableOpacity } from "react-native";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, startTransition, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import GoBackButtonSVG from "../../components/svg/GoBackButtonSVG";
-import { useQuery } from "react-query";
-import api from "../../api";
-import { useImageContext } from "../../context/useImageContext";
+import GoBackButtonSVG from "@/components/svg/GoBackButtonSVG";
+import { useQuery } from "@tanstack/react-query";
+import api from "@/api";
+import { useImageContext } from "@/context/useImageContext";
 import * as FileSystem from "expo-file-system";
-import useProductsQuery from "../../hooks/useProductsQuery";
+import useProductsQuery from "@/hooks/useProductsQuery";
+import { ImageFile, ValidImageFile } from "@/utils/files";
 
 export default function TestComponent() {
   const imageContext = useImageContext();
   const productsQuery = useProductsQuery();
+  const [images, setImages] = useState<ImageFile[]>([]);
 
-  const newImagesQuery = useQuery({
+  const newImagesQuery = useQuery<ImageFile[], Error>({
     queryFn: async () => {
       if (await api.fetchImageRefetchCheck("yes")) {
         return api.fetchImages();
       }
       return [];
     },
-    queryKey: "test-images",
+    queryKey: ["test-images"],
   });
 
-  const [images, setImages] = useState([]);
+  if (!imageContext) throw new Error("ImageContext is not defined");
 
   useEffect(() => {
-    if (!newImagesQuery.data || !productsQuery.data) {
-      return;
-    }
+    if (!newImagesQuery.data || !productsQuery.data || newImagesQuery.isFetching) return;
+    if (!imageContext) throw new Error("ImageContext is not defined");
 
-    let imageNames = newImagesQuery.data.map((image) => image.name);
-    let imagesToSave = newImagesQuery.data;
+    const imageNames = newImagesQuery.data.map((img) => img.name);
+    const imagesToSave = newImagesQuery.data.filter((img) => !!img.data) as ValidImageFile[];
 
     async function processImages() {
+      if (!imageContext) throw new Error("ImageContext is not defined");
       try {
         await imageContext.saveImages(imagesToSave);
         const loaded = await imageContext.getImages(imageNames);
         setImages(() => loaded);
       } catch (error) {
-        console.error("Error processing images:", error);
+        console.error(`Error processing images: ${error}`);
       }
     }
 
     processImages();
-  }, [newImagesQuery.data, productsQuery.data, imageContext]);
+  }, [newImagesQuery.data, productsQuery.data, newImagesQuery.isFetching, imageContext]);
 
   async function deleteImages() {
+    if (!imageContext) throw new Error("ImageContext is not defined");
     let promises = [];
     for (const image of images) {
       promises.push(FileSystem.deleteAsync(FileSystem.documentDirectory + image.name));
     }
     await Promise.all(promises);
-    setImages(() => []);
-    imageContext.invalidateImageCache();
-    newImagesQuery.refetch();
+    startTransition(() => {
+      newImagesQuery.refetch();
+      imageContext.invalidateImageCache();
+    });
   }
 
-  if (newImagesQuery.isLoading || newImagesQuery.isFetching) {
+  if (newImagesQuery.isFetching) {
     return <Text>Loading new images from server...</Text>;
   }
   if (newImagesQuery.isError) {

@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs, usePathname } from "expo-router";
-import { QueryClientProvider, QueryClient } from "react-query";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { Alert, BackHandler, Platform, StyleSheet } from "react-native";
 import HomeIconSvg from "@/components/svg/HomeIconSvg";
@@ -15,8 +15,8 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      cacheTime: 3600 * 1000,
       staleTime: 3600 * 1000,
+      gcTime: 3600 * 1000,
     },
   },
 });

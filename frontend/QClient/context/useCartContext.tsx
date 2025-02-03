@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, ReactNode, useContext, useState } from "react";
 
 export type CartItem = {
   id: number;
@@ -17,7 +17,7 @@ export function useCartContext() {
   return useContext(CartContext);
 }
 
-export function CartContextProvider({ children }: { children: any }) {
+export function CartContextProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
 
   return <CartContext.Provider value={{ cart, setCart }}>{children}</CartContext.Provider>;
