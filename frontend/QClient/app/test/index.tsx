@@ -7,7 +7,7 @@ import api from "@/api";
 import { useImageContext } from "@/context/useImageContext";
 import * as FileSystem from "expo-file-system";
 import useProductsQuery from "@/hooks/useProductsQuery";
-import { ImageFile, ValidImageFile } from "@/utils/files";
+import { ImageFile, imageOrDefault, ValidImageFile } from "@/utils/files";
 
 export default function TestComponent() {
   const imageContext = useImageContext();
@@ -83,7 +83,7 @@ export default function TestComponent() {
           {images.map((image) => (
             <Fragment key={image.name}>
               <Text>{image.name}</Text>
-              <Image source={{ uri: image.data }} style={styles.image} />
+              <Image source={imageOrDefault(image)} style={styles.image} />
             </Fragment>
           ))}
         </View>
