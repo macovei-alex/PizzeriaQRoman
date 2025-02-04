@@ -24,7 +24,11 @@ export default function Menu() {
   const productQuery = useProductsQuery();
   const categoryQuery = useCategoriesQuery();
 
-  const images = useImages(productQuery.data?.map((product) => product.imageName) || []);
+  const imageNames = useMemo(
+    () => productQuery.data?.map((product) => product.imageName) || [],
+    [productQuery.data]
+  );
+  const images = useImages(imageNames);
 
   // Save the position of each category for the scroll to position from the horizontal menu
   function updateCategoryLayoutPosition(categoryId: CategoryId, event: LayoutChangeEvent) {
