@@ -1,5 +1,6 @@
 import { images } from "@/constants";
 import * as FileSystem from "expo-file-system";
+import logger from "./logger";
 
 export type ImageFile = { name: string; data: string | null };
 export type ValidImageFile = { name: string; data: string };
@@ -16,7 +17,7 @@ export async function saveSingleImageToFile(image: ValidImageFile) {
     });
     return true;
   } catch (error) {
-    console.error(`error saving image ${image.name}: ${error}`);
+    logger.error(`error saving image ${image.name}: ${error}`);
     return false;
   }
 }
@@ -40,7 +41,7 @@ export async function loadSingleImageFromFile(imageName: string) {
   const header = `data:image/${imageName.split(",").pop()};base64,`;
   const fileInfo = await FileSystem.getInfoAsync(fileUri);
   if (fileInfo.exists === false) {
-    console.error(`file ${fileUri} does not exist`);
+    logger.error(`file ${fileUri} does not exist`);
     return { name: imageName, data: null } as ImageFile;
   }
   try {
@@ -49,7 +50,7 @@ export async function loadSingleImageFromFile(imageName: string) {
     });
     return { name: imageName, data: header + contents } as ImageFile;
   } catch (error) {
-    console.error(`error loading image: ${error}`);
+    logger.error(`error loading image: ${error}`);
     return { name: imageName, data: null } as ImageFile;
   }
 }

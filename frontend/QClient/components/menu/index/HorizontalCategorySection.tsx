@@ -3,6 +3,7 @@ import React from "react";
 import CategoryCard from "./CategoryCard";
 import SearchBar from "./SearchBar";
 import { Category, CategoryId } from "@/api/types/Category";
+import logger from "@/utils/logger";
 
 type HorizontalCategorySectionProps = {
   categories: Category[];
@@ -29,7 +30,7 @@ export default function HorizontalCategorySection({
       <SearchBar
         placeholder={"Caută ce îți dorești"}
         onSearch={(text) => {
-          console.log(text);
+          logger.log(text);
         }}
       />
     </>

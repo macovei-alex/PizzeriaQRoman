@@ -9,6 +9,7 @@ import { CartContextType, useCartContext } from "@/context/useCartContext";
 import { showToast } from "@/utils/toast";
 import { router } from "expo-router";
 import { PlacedOrder } from "@/api/types/Order";
+import logger from "@/utils/logger";
 
 export default function Cart() {
   const colorTheme = useColorTheme();
@@ -34,11 +35,11 @@ export default function Cart() {
       .sendOrder(order)
       .then((res) => {
         if (res.status === 200 || res.status === 201) {
-          console.log("Order sent successfully");
+          logger.log("Order sent successfully");
         }
       })
       .catch((error) => {
-        console.error("Error sending order:", error.response.data);
+        logger.error("Error sending order:", error.response.data);
       })
       .finally(() => {
         setSendingOrder(() => false);

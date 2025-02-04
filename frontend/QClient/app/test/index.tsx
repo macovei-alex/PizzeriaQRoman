@@ -8,6 +8,7 @@ import { useImageContext } from "@/context/useImageContext";
 import * as FileSystem from "expo-file-system";
 import useProductsQuery from "@/hooks/useProductsQuery";
 import { ImageFile, imageOrDefault, ValidImageFile } from "@/utils/files";
+import logger from "@/utils/logger";
 
 export default function TestComponent() {
   const imageContext = useImageContext();
@@ -40,7 +41,7 @@ export default function TestComponent() {
         const loaded = await imageContext.getImages(imageNames);
         setImages(() => loaded);
       } catch (error) {
-        console.error(`Error processing images: ${error}`);
+        logger.error(`Error processing images: ${error}`);
       }
     }
 
