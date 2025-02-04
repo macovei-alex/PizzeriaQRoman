@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LayoutChangeEvent, ScrollView, Text, View } from "react-native";
 import { router } from "expo-router";
@@ -18,7 +18,6 @@ type ProductSplit = {
 };
 
 export default function Menu() {
-  const [productsPerCategroy, setProductsPerCategory] = useState<ProductSplit[]>([]);
   const { scrollRef, scrollToPos } = useScrollRef();
   const [categoryPositions, setCategoryPositions] = useState<Record<CategoryId, number>>({});
 
@@ -45,9 +44,9 @@ export default function Menu() {
   }
 
   // Split products by category
-  useEffect(() => {
+  const productsPerCategory = useMemo(() => {
     if (!productQuery.data || !categoryQuery.data) {
-      return;
+      return [];
     }
 
     const productsSplit: ProductSplit[] = [];
@@ -60,7 +59,7 @@ export default function Menu() {
       }
       productsSplit.push(newProductSplit);
     }
-    setProductsPerCategory(productsSplit);
+    return productsSplit;
   }, [productQuery.data, categoryQuery.data]);
 
   if (productQuery.isLoading || categoryQuery.isLoading || !images || images.length === 0) {
@@ -84,7 +83,7 @@ export default function Menu() {
         />
 
         <View>
-          {productsPerCategroy?.map(({ category, products }) => (
+          {productsPerCategory.map(({ category, products }) => (
             <VerticalCategorySection
               key={category.id}
               category={category}

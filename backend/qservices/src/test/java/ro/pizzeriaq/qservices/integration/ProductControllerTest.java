@@ -101,6 +101,7 @@ class ProductControllerTest {
 
 	@Test
 	void getProductWithValidId() throws Exception {
+		// TODO: Add another test just like this one to check if a product with no option lists is returned correctly
 		var product = productService.getProduct(productService.getProducts().stream()
 						.sorted(Comparator.comparing(ProductDTO::getName))
 						.filter((p) -> p.getName().equals("Pizza Capriciosa"))
