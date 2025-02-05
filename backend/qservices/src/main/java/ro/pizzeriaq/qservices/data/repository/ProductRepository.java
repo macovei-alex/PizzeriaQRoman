@@ -17,11 +17,11 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 	List<Product> findAllCategoryPreload();
 
 
-	// TODO: Optimize the findByIdFullPreload query
 	@Query("""
 		SELECT DISTINCT p FROM Product p
 		JOIN FETCH p.category
+		LEFT JOIN FETCH p.optionLists
 		WHERE p.id = :id
 	""")
-	Optional<Product> findByIdFullPreload(@Param("id") Integer id);
+	Optional<Product> findByIdOptionListsPreload(@Param("id") Integer id);
 }

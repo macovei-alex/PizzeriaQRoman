@@ -1,8 +1,11 @@
 package ro.pizzeriaq.qservices.service;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.pizzeriaq.qservices.data.model.Product;
+import ro.pizzeriaq.qservices.data.repository.OptionListRepository;
 import ro.pizzeriaq.qservices.data.repository.ProductRepository;
 import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
 import ro.pizzeriaq.qservices.service.DTO.ProductWithOptionsDTO;
@@ -15,17 +18,22 @@ import java.util.Optional;
 @Service
 public class ProductService {
 
+	@PersistenceContext
+	private EntityManager entityManager;
+
 	private final ProductRepository productRepository;
 	private final ProductMapper productMapper;
 	private final ProductWithOptionsMapper productWithOptionsMapper;
+	private final OptionListRepository optionListRepository;
 
 
 	public ProductService(ProductRepository productRepository,
 						  ProductMapper productMapper,
-						  ProductWithOptionsMapper productWithOptionsMapper) {
+						  ProductWithOptionsMapper productWithOptionsMapper, OptionListRepository optionListRepository) {
 		this.productRepository = productRepository;
 		this.productMapper = productMapper;
 		this.productWithOptionsMapper = productWithOptionsMapper;
+		this.optionListRepository = optionListRepository;
 	}
 
 
@@ -38,7 +46,19 @@ public class ProductService {
 
 	@Transactional
 	public Optional<ProductWithOptionsDTO> getProduct(int id) {
-		var productOptional = productRepository.findByIdFullPreload(id);
-		return productOptional.map(productWithOptionsMapper::fromEntity);
+		var productOptional = productRepository.findByIdOptionListsPreload(id);
+		if (productOptional.isEmpty()) {
+			return Optional.empty();
+		}
+
+		var product = productOptional.get();
+		entityManager.detach(product);
+
+		if (!product.getOptionLists().isEmpty()) {
+			var optionLists = optionListRepository.findAllByProductPreloadOptions(product);
+			product.setOptionLists(optionLists);
+		}
+
+		return Optional.ofNullable(productWithOptionsMapper.fromEntity(product));
 	}
 }

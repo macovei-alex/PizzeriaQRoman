@@ -8,10 +8,24 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
+@NamedEntityGraph(
+		name = "Product.fullPreload",
+		attributeNodes = {
+				@NamedAttributeNode("category"),
+				@NamedAttributeNode(value = "optionLists", subgraph = "optionListsSubgraph")
+		},
+		subgraphs = {
+				@NamedSubgraph(
+						name = "optionListsSubgraph",
+						attributeNodes = @NamedAttributeNode("options")
+				)
+		}
+)
 public class Product {
 
 	@Id
