@@ -11,7 +11,11 @@ type ImageContextType = {
 const ImageContext = createContext<ImageContextType | null>(null);
 
 export function useImageContext() {
-  return useContext(ImageContext);
+  const context = useContext(ImageContext);
+  if (!context) {
+    throw new Error("useImageContext must be used within a ImageContextProvider");
+  }
+  return context;
 }
 
 export function ImageContextProvider({ children }: { children: ReactNode }) {

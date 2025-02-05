@@ -7,7 +7,6 @@ export default function useImages(imageNames: string[]) {
   const [images, setImages] = useState<ImageFile[]>([]);
 
   useEffect(() => {
-    if (!imageContext) throw new Error("ImageContext is not initialized");
     imageContext.getImages(imageNames).then((images) => setImages(images));
   }, [imageContext, imageNames]);
   return images;

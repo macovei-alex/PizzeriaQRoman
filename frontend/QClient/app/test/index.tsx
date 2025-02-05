@@ -25,17 +25,13 @@ export default function TestComponent() {
     queryKey: ["test-images"],
   });
 
-  if (!imageContext) throw new Error("ImageContext is not defined");
-
   useEffect(() => {
     if (!newImagesQuery.data || !productsQuery.data || newImagesQuery.isFetching) return;
-    if (!imageContext) throw new Error("ImageContext is not defined");
 
     const imageNames = newImagesQuery.data.map((img) => img.name);
     const imagesToSave = newImagesQuery.data.filter((img) => !!img.data) as ValidImageFile[];
 
     async function processImages() {
-      if (!imageContext) throw new Error("ImageContext is not defined");
       try {
         await imageContext.saveImages(imagesToSave);
         const loaded = await imageContext.getImages(imageNames);
@@ -49,7 +45,6 @@ export default function TestComponent() {
   }, [newImagesQuery.data, productsQuery.data, newImagesQuery.isFetching, imageContext]);
 
   async function deleteImages() {
-    if (!imageContext) throw new Error("ImageContext is not defined");
     let promises = [];
     for (const image of images) {
       promises.push(FileSystem.deleteAsync(FileSystem.documentDirectory + image.name));

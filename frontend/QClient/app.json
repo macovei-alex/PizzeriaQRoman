@@ -11,12 +11,9 @@
     "platforms": ["android", "ios"],
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/menu-background.png",
+      "image": "./assets/images/logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
-    },
-    "ios": {
-      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
@@ -24,6 +21,9 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.pizzeriaq"
+    },
+    "ios": {
+      "supportsTablet": true
     },
     "plugins": ["expo-router"],
     "extra": {

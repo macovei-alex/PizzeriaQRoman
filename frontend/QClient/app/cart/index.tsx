@@ -5,7 +5,7 @@ import useColorTheme from "@/hooks/useColorTheme";
 import ProductSection from "@/components/cart/index/ProductSection";
 import TitleSection from "@/components/cart/index/TitleSection";
 import api from "@/api";
-import { CartContextType, useCartContext } from "@/context/useCartContext";
+import { useCartContext } from "@/context/useCartContext";
 import { showToast } from "@/utils/toast";
 import { router } from "expo-router";
 import { PlacedOrder } from "@/api/types/Order";
@@ -13,7 +13,7 @@ import logger from "@/utils/logger";
 
 export default function Cart() {
   const colorTheme = useColorTheme();
-  const { cart } = useCartContext() as CartContextType;
+  const { cart } = useCartContext();
 
   const [sendingOrder, setSendingOrder] = useState(false);
 

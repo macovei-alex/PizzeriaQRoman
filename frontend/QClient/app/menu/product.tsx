@@ -7,7 +7,7 @@ import HorizontalLine from "@/components/menu/product/HorizontalLine";
 import { Fragment } from "react";
 import TitleSection from "@/components/menu/product/TitleSection";
 import { useLocalSearchParams } from "expo-router/build/hooks";
-import { CartContextType, useCartContext } from "@/context/useCartContext";
+import { useCartContext } from "@/context/useCartContext";
 import useSingleImage from "@/hooks/useSingleImage";
 import useProductWithOptionsQuery from "@/hooks/useProductWithOptionsQuery";
 import { showToast } from "@/utils/toast";
@@ -15,7 +15,7 @@ import { ProductWithOptions } from "@/api/types/Product";
 
 export default function ProductScreen() {
   const { productId, imageName } = useLocalSearchParams() as { productId: string; imageName: string };
-  const { cart, setCart } = useCartContext() as CartContextType;
+  const { addToCart } = useCartContext();
   const colorTheme = useColorTheme();
   const productQuery = useProductWithOptionsQuery(Number(productId));
   const image = useSingleImage(imageName);
@@ -28,21 +28,6 @@ export default function ProductScreen() {
   }
 
   const product = productQuery.data as ProductWithOptions;
-
-  function addToCart() {
-    showToast("Produs adăugat in coș");
-    if (cart.find((item) => item.product.id === product.id)) {
-      setCart([
-        ...cart.map((item) =>
-          item.product.id === product.id
-            ? { id: item.id, product: item.product, count: item.count + 1 }
-            : item
-        ),
-      ]);
-    } else {
-      setCart([...cart, { id: product.id, product: product, count: 1 }]);
-    }
-  }
 
   return (
     <SafeAreaView>
@@ -59,7 +44,10 @@ export default function ProductScreen() {
         <View style={styles.addToCartButtonContainer}>
           <TouchableOpacity
             style={[styles.addToCartButton, { backgroundColor: colorTheme.background[500] }]}
-            onPress={addToCart}
+            onPress={() => {
+              showToast("Produs adăugat in coș");
+              addToCart(product, 1);
+            }}
           >
             <Text style={[styles.addToCartButtonText, { color: colorTheme.text[300] }]}>Adaugă în coș</Text>
           </TouchableOpacity>

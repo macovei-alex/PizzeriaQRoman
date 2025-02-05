@@ -6,7 +6,7 @@ import useColorTheme from "@/hooks/useColorTheme";
 import HorizontalLine from "@/components/menu/product/HorizontalLine";
 import PlusCircle from "@/components/svg/PlusCircle";
 import MinusCircle from "@/components/svg/MinusCircle";
-import { CartContextType, CartItem, useCartContext } from "@/context/useCartContext";
+import { CartItem, useCartContext } from "@/context/useCartContext";
 
 type CartItemCardProps = {
   cartItem: CartItem;
@@ -15,24 +15,7 @@ type CartItemCardProps = {
 export default function CartItemCard({ cartItem }: CartItemCardProps) {
   const image = useSingleImage(cartItem.product.imageName);
   const colorTheme = useColorTheme();
-  const { setCart } = useCartContext() as CartContextType;
-
-  /** @param {number} difference */
-  function changeItemCount(difference: number) {
-    if (cartItem.count + difference <= 0) {
-      // remove whole item from cart
-      setCart((prev) => prev.filter((item) => item.product.id !== cartItem.product.id));
-    } else {
-      // increase or decrease item count
-      setCart((prev) =>
-        prev.map((item) =>
-          item.product.id === cartItem.product.id
-            ? { id: item.id, product: item.product, count: item.count + difference }
-            : item
-        )
-      );
-    }
-  }
+  const { addToCart, removeFromCart } = useCartContext();
 
   const totalPrice = cartItem.product.price * cartItem.count;
 
@@ -71,11 +54,11 @@ export default function CartItemCard({ cartItem }: CartItemCardProps) {
         <View style={[styles.priceContainer, { backgroundColor: colorTheme.background[500] }]}>
           <Text style={[styles.priceText, { color: colorTheme.text[300] }]}>{totalPrice.toFixed(2)} RON</Text>
         </View>
-        <TouchableOpacity onPress={() => changeItemCount(-1)}>
+        <TouchableOpacity onPress={() => removeFromCart(cartItem.id, 1)}>
           <MinusCircle style={styles.plusMinusSvg} />
         </TouchableOpacity>
         <Text style={styles.itemCountText}>{cartItem.count}</Text>
-        <TouchableOpacity onPress={() => changeItemCount(1)}>
+        <TouchableOpacity onPress={() => addToCart(cartItem.product, 1)}>
           <PlusCircle style={styles.plusMinusSvg} />
         </TouchableOpacity>
       </View>
