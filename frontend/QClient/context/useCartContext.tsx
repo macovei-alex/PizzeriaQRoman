@@ -1,5 +1,6 @@
 import { Product } from "@/api/types/Product";
-import React, { createContext, ReactNode, useContext, useRef, useState } from "react";
+import logger from "@/utils/logger";
+import React, { createContext, ReactNode, useCallback, useContext, useRef, useState } from "react";
 
 export type CartItem = {
   id: number;
@@ -24,30 +25,38 @@ export function useCartContext() {
 }
 
 export function CartContextProvider({ children }: { children: ReactNode }) {
+  logger.render("CartContextProvider");
+
   const [cart, setCart] = useState<CartItem[]>([]);
   const nextId = useRef(1);
 
-  function addToCart(product: Product, count: number) {
-    const item = cart.find((item) => item.product.id === product.id);
-    if (item) {
-      item.count += count;
-      setCart([...cart]);
-    } else {
-      setCart([...cart, { id: nextId.current++, product, count }]);
-    }
-  }
-
-  function removeFromCart(cartItemId: number, count: number) {
-    const item = cart.find((item) => item.id === cartItemId);
-    if (item) {
-      item.count -= count;
-      if (item.count <= 0) {
-        setCart(cart.filter((item) => item.id !== cartItemId));
-      } else {
+  const addToCart = useCallback(
+    (product: Product, count: number) => {
+      const item = cart.find((item) => item.product.id === product.id);
+      if (item) {
+        item.count += count;
         setCart([...cart]);
+      } else {
+        setCart([...cart, { id: nextId.current++, product, count }]);
       }
-    }
-  }
+    },
+    [cart]
+  );
+
+  const removeFromCart = useCallback(
+    (cartItemId: number, count: number) => {
+      const item = cart.find((item) => item.id === cartItemId);
+      if (item) {
+        item.count -= count;
+        if (item.count <= 0) {
+          setCart(cart.filter((item) => item.id !== cartItemId));
+        } else {
+          setCart([...cart]);
+        }
+      }
+    },
+    [cart]
+  );
 
   return <CartContext.Provider value={{ cart, addToCart, removeFromCart }}>{children}</CartContext.Provider>;
 }

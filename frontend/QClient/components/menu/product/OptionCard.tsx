@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import useColorTheme from "@/hooks/useColorTheme";
 import TickCheckboxSvg from "@/components/svg/TickCheckboxSvg";
 import { Option } from "@/api/types/Product";
+import logger from "@/utils/logger";
 
 type OptionCardProps = {
   option: Option;
@@ -11,6 +12,8 @@ type OptionCardProps = {
 };
 
 export default function OptionCard({ option, checked, customOnPress }: OptionCardProps) {
+  logger.render("OptionCard");
+
   const colorTheme = useColorTheme();
 
   return (

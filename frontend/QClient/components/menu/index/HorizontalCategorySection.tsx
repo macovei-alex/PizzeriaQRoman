@@ -14,6 +14,8 @@ export default function HorizontalCategorySection({
   categories,
   onCategoryPress,
 }: HorizontalCategorySectionProps) {
+  logger.render("HorizontalCategorySection");
+
   return (
     <>
       <ScrollView horizontal style={styles.scrollContainer}>

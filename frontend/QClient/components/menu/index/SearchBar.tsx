@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import SearchIconSVG from "@/components/svg/SearchIconSVG";
 import useColorTheme from "@/hooks/useColorTheme";
+import logger from "@/utils/logger";
 
 type SearchBarProps = {
   placeholder: string;
@@ -9,6 +10,8 @@ type SearchBarProps = {
 };
 
 export default function SearchBar({ placeholder, onSearch }: SearchBarProps) {
+  logger.render("SearchBar");
+
   const colorTheme = useColorTheme();
   const [text, setText] = useState("");
 

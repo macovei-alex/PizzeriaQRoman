@@ -11,6 +11,7 @@ import useProductsQuery from "@/hooks/useProductsQuery";
 import useCategoriesQuery from "@/hooks/useCategoriesQuery";
 import { Category, CategoryId } from "@/api/types/Category";
 import { Product } from "@/api/types/Product";
+import logger from "@/utils/logger";
 
 type ProductSplit = {
   category: Category;
@@ -18,6 +19,8 @@ type ProductSplit = {
 };
 
 export default function Menu() {
+  logger.render("Menu");
+
   const { scrollRef, scrollToPos } = useScrollRef();
   const [categoryPositions, setCategoryPositions] = useState<Record<CategoryId, number>>({});
 

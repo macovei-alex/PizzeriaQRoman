@@ -11,6 +11,8 @@ import { ImageFile, imageOrDefault, ValidImageFile } from "@/utils/files";
 import logger from "@/utils/logger";
 
 export default function TestComponent() {
+  logger.render("TestComponent");
+
   const imageContext = useImageContext();
   const productsQuery = useProductsQuery();
   const [images, setImages] = useState<ImageFile[]>([]);

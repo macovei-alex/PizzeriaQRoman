@@ -4,8 +4,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import useColorTheme from "@/hooks/useColorTheme";
 import { router } from "expo-router";
 import TickCheckboxSvg from "@/components/svg/TickCheckboxSvg";
+import logger from "@/utils/logger";
 
 export default function Confirmation() {
+  logger.render("Confirmation");
+
   const colorTheme = useColorTheme();
 
   return (

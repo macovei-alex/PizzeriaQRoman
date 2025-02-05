@@ -4,6 +4,7 @@ import { StyleSheet } from "react-native";
 import useColorTheme from "@/hooks/useColorTheme";
 import { ImageFile, imageOrDefault } from "@/utils/files";
 import { Product } from "@/api/types/Product";
+import logger from "@/utils/logger";
 
 type MenuProductProps = {
   product: Product;
@@ -12,6 +13,8 @@ type MenuProductProps = {
 };
 
 export default function MenuProduct({ product, productImage, onPress }: MenuProductProps) {
+  logger.render("MenuProduct");
+
   const colorTheme = useColorTheme();
 
   return (

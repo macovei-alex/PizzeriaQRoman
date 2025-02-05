@@ -3,8 +3,11 @@ import { StyleSheet, Text, View } from "react-native";
 import { useCartContext } from "@/context/useCartContext";
 import CartItemCard from "./CartItemCard";
 import useColorTheme from "@/hooks/useColorTheme";
+import logger from "@/utils/logger";
 
 export default function ProductSection() {
+  logger.render("ProductSection");
+
   const { cart } = useCartContext();
   const colorTheme = useColorTheme();
 

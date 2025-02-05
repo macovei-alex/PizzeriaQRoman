@@ -7,12 +7,15 @@ import HorizontalLine from "@/components/menu/product/HorizontalLine";
 import PlusCircle from "@/components/svg/PlusCircle";
 import MinusCircle from "@/components/svg/MinusCircle";
 import { CartItem, useCartContext } from "@/context/useCartContext";
+import logger from "@/utils/logger";
 
 type CartItemCardProps = {
   cartItem: CartItem;
 };
 
 export default function CartItemCard({ cartItem }: CartItemCardProps) {
+  logger.render("CartItemCard");
+
   const image = useSingleImage(cartItem.product.imageName);
   const colorTheme = useColorTheme();
   const { addToCart, removeFromCart } = useCartContext();

@@ -1,8 +1,11 @@
 import React from "react";
 import { Text, View } from "react-native";
 import useOrderHistoryQuery from "@/hooks/useOrderHistoryQuery";
+import logger from "@/utils/logger";
 
 export default function OrderHistory() {
+  logger.render("OrderHistory");
+
   const ordersQuery = useOrderHistoryQuery();
 
   if (ordersQuery.isLoading) {

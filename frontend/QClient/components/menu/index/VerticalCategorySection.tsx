@@ -5,6 +5,7 @@ import useColorTheme from "@/hooks/useColorTheme";
 import { Category, CategoryId } from "@/api/types/Category";
 import { Product } from "@/api/types/Product";
 import { ImageFile } from "@/utils/files";
+import logger from "@/utils/logger";
 
 type VerticalCategorySectionProps = {
   category: Category;
@@ -21,6 +22,8 @@ export default function VerticalCategorySection({
   customOnLayout,
   onMenuProductClick,
 }: VerticalCategorySectionProps) {
+  logger.render("VerticalCategorySection");
+
   const colorTheme = useColorTheme();
 
   return (

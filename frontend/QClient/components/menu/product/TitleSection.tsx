@@ -5,6 +5,7 @@ import useColorTheme from "@/hooks/useColorTheme";
 import { useRouter } from "expo-router";
 import { ImageFile, imageOrDefault } from "@/utils/files";
 import { ProductWithOptions } from "@/api/types/Product";
+import logger from "@/utils/logger";
 
 type TitleSectionProps = {
   product: ProductWithOptions;
@@ -12,6 +13,8 @@ type TitleSectionProps = {
 };
 
 export default function TitleSection({ product, productImage }: TitleSectionProps) {
+  logger.render("TitleSection");
+
   const colorTheme = useColorTheme();
   const router = useRouter();
 

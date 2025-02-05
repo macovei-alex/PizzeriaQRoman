@@ -8,6 +8,9 @@ const logger = Object.freeze({
   error(message?: any, ...optionalParams: any[]) {
     console.error(message, ...optionalParams);
   },
+  render: (componentName: string) => {
+    // console.log(`Rendering ${componentName}`);
+  },
 });
 
 export default logger;

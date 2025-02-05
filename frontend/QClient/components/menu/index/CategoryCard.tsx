@@ -2,6 +2,7 @@ import React from "react";
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import useColorTheme from "@/hooks/useColorTheme";
 import { Category } from "@/api/types/Category";
+import logger from "@/utils/logger";
 
 type CategoryCardProps = {
   category: Category;
@@ -10,6 +11,8 @@ type CategoryCardProps = {
 };
 
 export default function CategoryCard({ category, onPress, style }: CategoryCardProps) {
+  logger.render("CategoryCard");
+
   const colorTheme = useColorTheme();
 
   return (

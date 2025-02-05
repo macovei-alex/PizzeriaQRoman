@@ -9,5 +9,6 @@ export default function useImages(imageNames: string[]) {
   useEffect(() => {
     imageContext.getImages(imageNames).then((images) => setImages(images));
   }, [imageContext, imageNames]);
+  
   return images;
 }

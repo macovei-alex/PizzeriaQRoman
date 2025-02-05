@@ -11,6 +11,7 @@ import { ImageContextProvider } from "@/context/useImageContext";
 import Toast from "react-native-toast-message";
 import ProfileIcon from "@/components/svg/ProfileIcon";
 import { StatusBar } from "expo-status-bar";
+import logger from "@/utils/logger";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,6 +24,8 @@ const queryClient = new QueryClient({
 });
 
 export default function RootLayout() {
+  logger.render("RootLayout");
+
   const pathname = usePathname();
   const colorTheme = useColorTheme();
   const svgColors = {

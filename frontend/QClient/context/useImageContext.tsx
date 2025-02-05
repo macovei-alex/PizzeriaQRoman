@@ -1,5 +1,6 @@
-import React, { createContext, ReactNode, useContext, useState } from "react";
+import React, { createContext, ReactNode, useCallback, useContext, useState } from "react";
 import { ImageFile, loadSingleImageFromFile, saveImagesToFiles, ValidImageFile } from "@/utils/files";
+import logger from "@/utils/logger";
 
 type ImageContextType = {
   getSingleImage: (imageName: string) => Promise<ImageFile>;
@@ -19,41 +20,49 @@ export function useImageContext() {
 }
 
 export function ImageContextProvider({ children }: { children: ReactNode }) {
+  logger.render("ImageContextProvider");
+
   const [contextImages, setContextImages] = useState<ImageFile[]>([]);
 
-  async function getSingleImage(imageName: string) {
-    const found = contextImages.find((img) => img.name === imageName);
-    if (found) {
-      return found;
-    }
-    const newImage = await loadSingleImageFromFile(imageName);
-    setContextImages((prev) => {
-      const found = prev.find((img) => img.name === newImage.name);
+  const getSingleImage = useCallback(
+    async (imageName: string) => {
+      const found = contextImages.find((img) => img.name === imageName);
       if (found) {
-        found.data = newImage.data;
-        return [...prev];
-      } else {
-        return [...prev, newImage];
+        return found;
       }
-    });
-    return newImage;
-  }
+      const newImage = await loadSingleImageFromFile(imageName);
+      setContextImages((prev) => {
+        const found = prev.find((img) => img.name === newImage.name);
+        if (found) {
+          found.data = newImage.data;
+          return [...prev];
+        } else {
+          return [...prev, newImage];
+        }
+      });
+      return newImage;
+    },
+    [contextImages]
+  );
 
-  async function getImages(imageNames: string[]) {
-    const imagePromises = [];
-    for (const imageName of imageNames) {
-      imagePromises.push(getSingleImage(imageName));
-    }
-    return Promise.all(imagePromises);
-  }
+  const getImages = useCallback(
+    async (imageNames: string[]) => {
+      const imagePromises = [];
+      for (const imageName of imageNames) {
+        imagePromises.push(getSingleImage(imageName));
+      }
+      return Promise.all(imagePromises);
+    },
+    [getSingleImage]
+  );
 
-  async function saveImages(images: ValidImageFile[]) {
+  const saveImages = useCallback(async (images: ValidImageFile[]) => {
     return saveImagesToFiles(images);
-  }
+  }, []);
 
-  function invalidateImageCache() {
+  const invalidateImageCache = useCallback(() => {
     setContextImages(() => []);
-  }
+  }, []);
 
   return (
     <ImageContext.Provider value={{ getSingleImage, getImages, saveImages, invalidateImageCache }}>

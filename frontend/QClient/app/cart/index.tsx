@@ -12,6 +12,8 @@ import { PlacedOrder } from "@/api/types/Order";
 import logger from "@/utils/logger";
 
 export default function Cart() {
+  logger.render("Cart");
+
   const colorTheme = useColorTheme();
   const { cart } = useCartContext();
 

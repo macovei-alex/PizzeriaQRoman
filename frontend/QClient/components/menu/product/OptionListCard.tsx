@@ -3,12 +3,15 @@ import { StyleSheet, Text, View } from "react-native";
 import useColorTheme from "@/hooks/useColorTheme";
 import { OptionId, OptionList } from "@/api/types/Product";
 import OptionCard from "./OptionCard";
+import logger from "@/utils/logger";
 
 type OptionListProps = {
   optionList: OptionList;
 };
 
 export default function OptionListCard({ optionList }: OptionListProps) {
+  logger.render("OptionListCard");
+
   const colorTheme = useColorTheme();
   const [selectedOptions, setSelectedOptions] = useState<OptionId[]>([]);
 

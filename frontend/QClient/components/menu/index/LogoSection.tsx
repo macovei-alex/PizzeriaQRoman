@@ -2,8 +2,11 @@ import { View, Text, ImageBackground, Image, StyleSheet } from "react-native";
 import React from "react";
 import { images } from "@/constants";
 import useColorTheme from "@/hooks/useColorTheme";
+import logger from "@/utils/logger";
 
 export default function LogoSection() {
+  logger.render("LogoSection");
+
   const colorTheme = useColorTheme();
 
   return (

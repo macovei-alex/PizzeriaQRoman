@@ -12,8 +12,11 @@ import useSingleImage from "@/hooks/useSingleImage";
 import useProductWithOptionsQuery from "@/hooks/useProductWithOptionsQuery";
 import { showToast } from "@/utils/toast";
 import { ProductWithOptions } from "@/api/types/Product";
+import logger from "@/utils/logger";
 
 export default function ProductScreen() {
+  logger.render("ProductScreen");
+
   const { productId, imageName } = useLocalSearchParams() as { productId: string; imageName: string };
   const { addToCart } = useCartContext();
   const colorTheme = useColorTheme();

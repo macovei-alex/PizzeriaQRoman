@@ -2,8 +2,11 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import HorizontalLine from "@/components/menu/product/HorizontalLine";
 import useColorTheme from "@/hooks/useColorTheme";
+import logger from "@/utils/logger";
 
 export default function TitleSection() {
+  logger.render("TitleSection");
+
   const colorTheme = useColorTheme();
 
   return (
