@@ -38,3 +38,5 @@ yarn-error.*
 
 dev
 *.session.sql
+android/
+ios/

@@ -10,6 +10,7 @@ import { CartContextProvider } from "@/context/useCartContext";
 import { ImageContextProvider } from "@/context/useImageContext";
 import Toast from "react-native-toast-message";
 import ProfileIcon from "@/components/svg/ProfileIcon";
+import { StatusBar } from "expo-status-bar";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -55,6 +56,7 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <ImageContextProvider>
         <CartContextProvider>
+          <StatusBar style={colorTheme.statusBarStyle} />
           <Tabs
             screenOptions={{
               headerShown: false,

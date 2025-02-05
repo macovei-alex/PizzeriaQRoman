@@ -1,3 +1,5 @@
+import { Theme } from "./theme-type";
+
 const background = {
   100: "#ffffff",
   200: "#c9d3c4",
@@ -15,4 +17,4 @@ const text = {
   400: "#cf4949",
 };
 
-export const lightTheme = { background, text, name: "light" };
+export const lightTheme: Theme = { name: "light", statusBarStyle: "dark", background, text };

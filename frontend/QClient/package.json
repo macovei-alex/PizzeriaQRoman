@@ -13,7 +13,7 @@
     "@tanstack/react-query": "^5.66.0",
     "@types/react": "~18.3.12",
     "axios": "^1.7.8",
-    "expo": "~52.0.26",
+    "expo": "~52.0.30",
     "expo-constants": "~17.0.5",
     "expo-file-system": "^18.0.7",
     "expo-linking": "~7.0.5",

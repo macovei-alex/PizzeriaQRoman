@@ -59,6 +59,6 @@ public class ProductService {
 			product.setOptionLists(optionLists);
 		}
 
-		return Optional.ofNullable(productWithOptionsMapper.fromEntity(product));
+		return Optional.of(productWithOptionsMapper.fromEntity(product));
 	}
 }

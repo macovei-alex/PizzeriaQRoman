@@ -1,14 +1,17 @@
 {
   "expo": {
+    "owner": "mac02",
     "name": "PizzeriaQ",
     "slug": "pizzeriaq",
     "scheme": "pizzeriaq",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/logo.png",
+    "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "automatic",
+    "platforms": ["android", "ios"],
+    "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/menu-background.jpg",
+      "image": "./assets/images/menu-background.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,18 +20,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/logo.png",
+        "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.pizzeriaq"
     },
-    "web": {
-      "favicon": "./assets/images/logo.png"
-    },
-    "plugins": [
-      "expo-router"
-    ],
-    "newArchEnabled": true,
+    "plugins": ["expo-router"],
     "extra": {
       "router": {
         "origin": false
@@ -36,7 +33,6 @@
       "eas": {
         "projectId": "eed8e08d-d2de-457f-a2ad-3b9e362d4684"
       }
-    },
-    "owner": "mac02"
+    }
   }
 }

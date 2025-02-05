@@ -6,7 +6,7 @@ export type ImageFile = { name: string; data: string | null };
 export type ValidImageFile = { name: string; data: string };
 
 export function imageOrDefault(image: ImageFile) {
-  return image?.data ? { uri: image.data } : images.pizzaDemo;
+  return image?.data ? { uri: image.data } : images.defaultPizza;
 }
 
 export async function saveSingleImageToFile(image: ValidImageFile) {
