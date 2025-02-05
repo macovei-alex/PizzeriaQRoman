@@ -283,15 +283,19 @@ public class EntityInitializerService {
 
 	@Transactional
 	public void bindOptionsToProducts() {
-		List<Product> products = productRepository.findAll(Sort.by(Sort.Order.asc("name")));
+		List<Product> products = productRepository.findAll();
 		List<OptionList> optionLists = optionListRepository.findAll();
 
-		products.get(2).getOptionLists().add(optionLists.get(0));
-		products.get(2).getOptionLists().add(optionLists.get(1));
-		products.get(2).getOptionLists().add(optionLists.get(3));
+		var product1 = products.stream().filter((p) -> p.getName().equals("Pizza Capriciosa")).findFirst().orElseThrow();
 
-		products.get(3).getOptionLists().add(optionLists.get(1));
-		products.get(3).getOptionLists().add(optionLists.get(2));
+		product1.getOptionLists().add(optionLists.get(0));
+		product1.getOptionLists().add(optionLists.get(1));
+		product1.getOptionLists().add(optionLists.get(3));
+
+		var product2 = products.stream().filter((p) -> p.getName().equals("Pizza Margherita")).findFirst().orElseThrow();
+
+		product2.getOptionLists().add(optionLists.get(1));
+		product2.getOptionLists().add(optionLists.get(2));
 	}
 
 

@@ -100,15 +100,14 @@ class ProductControllerTest {
 	}
 
 	@Test
-	void getProductWithValidId() throws Exception {
-		// TODO: Add another test just like this one to check if a product with no option lists is returned correctly
-		var product = productService.getProduct(productService.getProducts().stream()
-						.sorted(Comparator.comparing(ProductDTO::getName))
-						.filter((p) -> p.getName().equals("Pizza Capriciosa"))
-						.findFirst()
-						.orElseThrow()
-						.getId())
-				.orElseThrow();
+	void getProductWithValidIdAndOptionLists1() throws Exception {
+		var productId = productService.getProducts().stream()
+				.sorted(Comparator.comparing(ProductDTO::getName))
+				.filter((p) -> p.getName().equals("Pizza Capriciosa"))
+				.findFirst()
+				.orElseThrow()
+				.getId();
+		var product = productService.getProduct(productId).orElseThrow();
 
 		mockMvc.perform(get(contextPath + "/product/{id}", product.getId())
 						.contextPath(contextPath)
@@ -119,5 +118,66 @@ class ProductControllerTest {
 				.andExpect(jsonPath("$.name").value("Pizza Capriciosa"))
 				.andExpect(jsonPath("$.optionLists").isArray())
 				.andExpect(jsonPath("$.optionLists.length()").value(3));
+	}
+
+	@Test
+	void getProductWithValidIdAndOptionLists2() throws Exception {
+		var productId = productService.getProducts().stream()
+				.sorted(Comparator.comparing(ProductDTO::getName))
+				.filter((p) -> p.getName().equals("Pizza Margherita"))
+				.findFirst()
+				.orElseThrow()
+				.getId();
+		var product = productService.getProduct(productId).orElseThrow();
+
+		mockMvc.perform(get(contextPath + "/product/{id}", product.getId())
+						.contextPath(contextPath)
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$.id").value(product.getId()))
+				.andExpect(jsonPath("$.name").value("Pizza Margherita"))
+				.andExpect(jsonPath("$.optionLists").isArray())
+				.andExpect(jsonPath("$.optionLists.length()").value(2));
+	}
+
+	@Test
+	void getProductWithValidIdAndNoOptionLists1() throws Exception {
+		var productId = productService.getProducts().stream()
+				.filter((p) -> p.getName().equals("Pizza Quattro Stagioni"))
+				.findFirst()
+				.orElseThrow()
+				.getId();
+		var product = productService.getProduct(productId).orElseThrow();
+
+		mockMvc.perform(get(contextPath + "/product/{id}", product.getId())
+						.contextPath(contextPath)
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$.id").value(product.getId()))
+				.andExpect(jsonPath("$.name").value("Pizza Quattro Stagioni"))
+				.andExpect(jsonPath("$.optionLists").isArray())
+				.andExpect(jsonPath("$.optionLists.length()").value(0));
+	}
+
+	@Test
+	void getProductWithValidIdAndNoOptionLists2() throws Exception {
+		var productId = productService.getProducts().stream()
+				.filter((p) -> p.getName().equals("Pizza Quattro Formaggi"))
+				.findFirst()
+				.orElseThrow()
+				.getId();
+		var product = productService.getProduct(productId).orElseThrow();
+
+		mockMvc.perform(get(contextPath + "/product/{id}", product.getId())
+						.contextPath(contextPath)
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$.id").value(product.getId()))
+				.andExpect(jsonPath("$.name").value("Pizza Quattro Formaggi"))
+				.andExpect(jsonPath("$.optionLists").isArray())
+				.andExpect(jsonPath("$.optionLists.length()").value(0));
 	}
 }
