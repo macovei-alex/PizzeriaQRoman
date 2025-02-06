@@ -34,7 +34,7 @@ export default function SearchBar({ placeholder, onSearch }: SearchBarProps) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    left: "5%",
+    alignSelf: "center",
     width: "90%",
     borderRadius: 9999,
   },
@@ -45,7 +45,6 @@ const styles = StyleSheet.create({
   },
   textInput: {
     textAlign: "center",
-    marginVertical: 8,
     flexGrow: 1,
   },
 });

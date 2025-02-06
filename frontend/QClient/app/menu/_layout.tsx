@@ -6,6 +6,7 @@ export default function MenuLayout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
       <Stack.Screen name="product" />
+      <Stack.Screen name="test-loading" />
     </Stack>
   );
 }

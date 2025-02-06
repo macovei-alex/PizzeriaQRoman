@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { LayoutChangeEvent, ScrollView, Text, View } from "react-native";
+import { LayoutChangeEvent, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { router } from "expo-router";
 import useScrollRef from "@/hooks/useScrollRef";
 import LogoSection from "@/components/menu/index/LogoSection";
@@ -12,6 +12,8 @@ import useCategoriesQuery from "@/hooks/useCategoriesQuery";
 import { Category, CategoryId } from "@/api/types/Category";
 import { Product } from "@/api/types/Product";
 import logger from "@/utils/logger";
+import GoBackButtonSVG from "@/components/svg/GoBackButtonSVG";
+import MenuSkeletonLoader from "@/components/menu/index/MenuSkeletonLoader";
 
 type ProductSplit = {
   category: Category;
@@ -70,7 +72,7 @@ export default function Menu() {
   }, [productQuery.data, categoryQuery.data]);
 
   if (productQuery.isLoading || categoryQuery.isLoading || !images || images.length === 0) {
-    return <Text>Loading...</Text>;
+    return <MenuSkeletonLoader />;
   }
   if (productQuery.isError) {
     return <Text>Error: {productQuery.error.message}</Text>;
@@ -83,6 +85,14 @@ export default function Menu() {
     <SafeAreaView>
       <ScrollView ref={scrollRef}>
         <LogoSection />
+
+        {/* For testing purposes */}
+        <TouchableOpacity
+          style={{ position: "absolute", top: 20, left: 20 }}
+          onPress={() => router.push("/menu/test-loading")}
+        >
+          <GoBackButtonSVG style={{ width: 38, height: 38 }} />
+        </TouchableOpacity>
 
         <HorizontalCategorySection
           categories={categoryQuery.data as Category[]}

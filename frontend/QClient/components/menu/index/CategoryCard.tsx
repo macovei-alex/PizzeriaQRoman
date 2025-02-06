@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 12,
-    marginHorizontal: 4,
     ...Platform.select({
       // TODO: Test if this works on iOS
       ios: {

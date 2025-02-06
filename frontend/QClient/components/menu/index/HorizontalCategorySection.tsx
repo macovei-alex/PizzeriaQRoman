@@ -44,6 +44,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   category: {
-    marginHorizontal: 4,
+    marginHorizontal: 8,
   },
 });
