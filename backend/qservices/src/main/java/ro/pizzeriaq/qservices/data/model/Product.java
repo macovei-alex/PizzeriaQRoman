@@ -13,19 +13,18 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
-@NamedEntityGraph(
-		name = "Product.fullPreload",
-		attributeNodes = {
-				@NamedAttributeNode("category"),
-				@NamedAttributeNode(value = "optionLists", subgraph = "optionListsSubgraph")
-		},
-		subgraphs = {
-				@NamedSubgraph(
-						name = "optionListsSubgraph",
-						attributeNodes = @NamedAttributeNode("options")
-				)
-		}
-)
+// Example of a named entity graph, but this only works with relations mapped using Set, not List
+//@NamedEntityGraph(
+//		name = "Product.fullPreload",
+//		attributeNodes = {
+//				@NamedAttributeNode("category"),
+//				@NamedAttributeNode(value = "optionLists", subgraph = "optionLists.options")
+//		},
+//		subgraphs = @NamedSubgraph(
+//				name = "optionLists.options",
+//				attributeNodes = @NamedAttributeNode("options")
+//		)
+//)
 public class Product {
 
 	@Id
