@@ -1,0 +1,8 @@
+incompatible libraries (npm uninstall):
+	- react-native-reanimated
+
+steps:
+	- set newArchEnabled: false in @/app.json
+	- follow android-manifest.txt instructions
+	- run `npx expo prebuild --clean` if you want to clean the @/android directory
+	- run `npx expo run:android --variant release -d`

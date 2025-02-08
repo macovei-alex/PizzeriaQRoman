@@ -36,7 +36,7 @@ yarn-error.*
 
 .vscode/
 
-dev
 *.session.sql
 android/
 ios/
+!dev/**/*/

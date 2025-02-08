@@ -1,59 +1,32 @@
 import useColorTheme from "@/hooks/useColorTheme";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
-import { useCallback, useEffect } from "react";
 
 export default function MenuSkeletonLoader() {
   const colorTheme = useColorTheme();
 
-  const opacity = useSharedValue(0.4);
-
-  const startAnimation = useCallback(() => {
-    opacity.value = withRepeat(withTiming(1, { duration: 800 }), -1, true);
-  }, [opacity]);
-
-  useEffect(() => {
-    startAnimation();
-  }, [startAnimation]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-  }));
-
   return (
     <SafeAreaView style={{ backgroundColor: colorTheme.background[600] }}>
-      <Animated.View
-        style={[styles.logoSection, { backgroundColor: colorTheme.background[200] }, animatedStyle]}
-      />
-      <Animated.View style={[styles.horizontalCategorySection, animatedStyle]}>
+      <View style={[styles.logoSection, { backgroundColor: colorTheme.background[200] }]} />
+      <View style={[styles.horizontalCategorySection]}>
         {Array.from({ length: 3 }).map((_, index) => {
           return (
-            <Animated.View
+            <View
               key={index}
               style={[styles.horizontalCategory, { backgroundColor: colorTheme.background[200] }]}
             />
           );
         })}
-      </Animated.View>
+      </View>
 
-      <Animated.View
-        style={[styles.searchBar, { backgroundColor: colorTheme.background[200] }, animatedStyle]}
-      />
+      <View style={[styles.searchBar, { backgroundColor: colorTheme.background[200] }]} />
 
-      <Animated.View
-        style={[styles.verticalCategoryText, { backgroundColor: colorTheme.background[200] }, animatedStyle]}
-      />
+      <View style={[styles.verticalCategoryText, { backgroundColor: colorTheme.background[200] }]} />
 
       {Array.from({ length: 2 }).map((_, index) => (
-        <Animated.View
-          key={index}
-          style={[styles.productContainer, { backgroundColor: colorTheme.background[200] }, animatedStyle]}
-        >
-          <Animated.View
-            style={[styles.productImage, { backgroundColor: colorTheme.background[400] }, animatedStyle]}
-          />
-        </Animated.View>
+        <View key={index} style={[styles.productContainer, { backgroundColor: colorTheme.background[200] }]}>
+          <View style={[styles.productImage, { backgroundColor: colorTheme.background[400] }]} />
+        </View>
       ))}
     </SafeAreaView>
   );
