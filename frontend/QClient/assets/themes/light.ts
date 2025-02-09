@@ -1,20 +1,21 @@
 import { Theme } from "./theme-type";
 
 const background = {
-  100: "#ffffff",
-  200: "#c9d3c4",
-  300: "#55dd00",
-  400: "#dceadb",
-  500: "#cf4949",
-  600: "#f0f0f0",
-  700: "#f6f6f6",
+  primary: "#f2f2f2",
+  card: "#c9d3c4",
+  onCard: "#dceadb",
+  navbar: "#ffffff",
+  success: "#60b238",
+  accent: "#cf4949",
+  elevated: "#f6f6f6",
 };
 
 const text = {
-  100: "#000000",
-  200: "#898080",
-  300: "#ffffff",
-  400: "#cf4949",
+  primary: "#000000",
+  secondary: "#898080",
+  accent: "#cf4949",
+  onAccent: "#ffffff",
+  success: "#ffffff",
 };
 
 export const lightTheme: Theme = { name: "light", statusBarStyle: "dark", background, text };

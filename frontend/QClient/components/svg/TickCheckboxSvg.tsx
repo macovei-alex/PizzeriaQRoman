@@ -3,18 +3,23 @@ import React from "react";
 import { ColorValue, StyleProp, ViewStyle } from "react-native";
 
 type TickCheckboxSvgProps = {
-  style?: StyleProp<ViewStyle> & {
-    _checkStroke?: ColorValue;
-    _checkedFill?: ColorValue;
-    _uncheckedFill?: ColorValue;
-  };
+  style?: StyleProp<ViewStyle>;
+  checkStroke?: ColorValue;
+  checkedFill?: ColorValue;
+  uncheckedFill?: ColorValue;
   checked: boolean;
 };
 
-export default function TickCheckboxSvg({ style, checked }: TickCheckboxSvgProps) {
-  const checkStroke = style?._checkStroke ?? "white";
-  const checkedFill = style?._checkedFill ?? "#428820";
-  const uncheckedFill = style?._uncheckedFill ?? "white";
+export default function TickCheckboxSvg({
+  style,
+  checkStroke,
+  checkedFill,
+  uncheckedFill,
+  checked,
+}: TickCheckboxSvgProps) {
+  checkStroke = checkStroke ?? "white";
+  checkedFill = checkedFill ?? "#428820";
+  uncheckedFill = uncheckedFill ?? "white";
 
   return (
     <Svg style={style} viewBox="0 0 30 30" fill="none">

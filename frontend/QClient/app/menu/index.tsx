@@ -14,6 +14,7 @@ import { Product } from "@/api/types/Product";
 import logger from "@/utils/logger";
 import GoBackButtonSVG from "@/components/svg/GoBackButtonSVG";
 import MenuSkeletonLoader from "@/components/menu/index/MenuSkeletonLoader";
+import useColorTheme from "@/hooks/useColorTheme";
 
 type ProductSplit = {
   category: Category;
@@ -23,6 +24,7 @@ type ProductSplit = {
 export default function Menu() {
   logger.render("Menu");
 
+  const colorTheme = useColorTheme();
   const { scrollRef, scrollToPos } = useScrollRef();
   const [categoryPositions, setCategoryPositions] = useState<Record<CategoryId, number>>({});
 
@@ -82,7 +84,7 @@ export default function Menu() {
   }
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ backgroundColor: colorTheme.background.primary }}>
       <ScrollView ref={scrollRef}>
         <LogoSection />
 

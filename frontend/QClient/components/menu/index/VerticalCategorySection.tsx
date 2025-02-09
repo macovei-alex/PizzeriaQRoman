@@ -35,7 +35,7 @@ export default function VerticalCategorySection({
       }}
     >
       <View style={styles.categoryTextContainer}>
-        <Text style={[styles.categoryText, { color: colorTheme.text[100] }]}>{category.name}</Text>
+        <Text style={[styles.categoryText, { color: colorTheme.text.primary }]}>{category.name}</Text>
       </View>
       {products.map((product) => (
         <MenuProduct

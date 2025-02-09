@@ -29,9 +29,9 @@ export default function RootLayout() {
   const pathname = usePathname();
   const colorTheme = useColorTheme();
   const svgColors = {
-    _stroke: colorTheme.text[100],
-    _fillPrimary: colorTheme.background[700],
-    _fillSecondary: colorTheme.background[700],
+    _stroke: colorTheme.text.primary,
+    _fillPrimary: colorTheme.background.primary,
+    _fillSecondary: colorTheme.background.primary,
   };
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function RootLayout() {
           <Tabs
             screenOptions={{
               headerShown: false,
-              tabBarStyle: [styles.tabBar, { backgroundColor: colorTheme.background[100] }],
+              tabBarStyle: [styles.tabBar, { backgroundColor: colorTheme.background.navbar }],
             }}
           >
             <Tabs.Screen name="index" options={{ href: null }}></Tabs.Screen>

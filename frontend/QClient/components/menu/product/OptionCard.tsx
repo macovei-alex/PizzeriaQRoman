@@ -19,14 +19,14 @@ export default function OptionCard({ option, checked, customOnPress }: OptionCar
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        style={[styles.checkboxContainer, { borderColor: colorTheme.text[100] }]}
+        style={[styles.checkboxContainer, { borderColor: colorTheme.text.primary }]}
         onPress={() => customOnPress(option.id)}
       >
         <TickCheckboxSvg checked={checked} style={styles.checkbox} />
       </TouchableOpacity>
-      <Text style={[styles.optionNameText, { color: colorTheme.text[100] }]}>{option.name}</Text>
+      <Text style={[styles.optionNameText, { color: colorTheme.text.primary }]}>{option.name}</Text>
       {option.price > 0 && (
-        <Text style={[styles.priceText, { color: colorTheme.text[400] }]}>
+        <Text style={[styles.priceText, { color: colorTheme.text.accent }]}>
           +{option.price.toFixed(2)} lei
         </Text>
       )}

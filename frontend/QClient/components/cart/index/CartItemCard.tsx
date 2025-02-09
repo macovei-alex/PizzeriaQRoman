@@ -28,14 +28,14 @@ export default function CartItemCard({ cartItem }: CartItemCardProps) {
         <Image source={imageOrDefault(image)} style={styles.image} />
         <View style={styles.textSectionContainer}>
           <Text
-            style={[styles.productNameText, { color: colorTheme.text[100] }]}
+            style={[styles.productNameText, { color: colorTheme.text.primary }]}
             numberOfLines={1}
             ellipsizeMode="tail"
           >
             {cartItem.product.name}
           </Text>
           <Text
-            style={[styles.productSubtitleText, { color: colorTheme.text[100] }]}
+            style={[styles.productSubtitleText, { color: colorTheme.text.primary }]}
             numberOfLines={1}
             ellipsizeMode="tail"
           >
@@ -43,7 +43,7 @@ export default function CartItemCard({ cartItem }: CartItemCardProps) {
           </Text>
           <View style={styles.productDescriptionContainer}>
             <Text
-              style={[styles.productDescriptionText, { color: colorTheme.text[200] }]}
+              style={[styles.productDescriptionText, { color: colorTheme.text.secondary }]}
               numberOfLines={3}
               ellipsizeMode="tail"
             >
@@ -54,8 +54,10 @@ export default function CartItemCard({ cartItem }: CartItemCardProps) {
       </View>
 
       <View style={styles.priceSectionContainer}>
-        <View style={[styles.priceContainer, { backgroundColor: colorTheme.background[500] }]}>
-          <Text style={[styles.priceText, { color: colorTheme.text[300] }]}>{totalPrice.toFixed(2)} RON</Text>
+        <View style={[styles.priceContainer, { backgroundColor: colorTheme.background.accent }]}>
+          <Text style={[styles.priceText, { color: colorTheme.text.onAccent }]}>
+            {totalPrice.toFixed(2)} RON
+          </Text>
         </View>
         <TouchableOpacity onPress={() => removeFromCart(cartItem.id, 1)}>
           <MinusCircle style={styles.plusMinusSvg} />
@@ -66,7 +68,7 @@ export default function CartItemCard({ cartItem }: CartItemCardProps) {
         </TouchableOpacity>
       </View>
 
-      <HorizontalLine style={[styles.hr, { backgroundColor: colorTheme.background[200] }]} />
+      <HorizontalLine style={[styles.hr, { backgroundColor: colorTheme.background.card }]} />
     </View>
   );
 }

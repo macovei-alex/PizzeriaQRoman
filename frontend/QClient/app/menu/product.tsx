@@ -39,20 +39,22 @@ export default function ProductScreen() {
 
         {product.optionLists?.map((optionList) => (
           <Fragment key={optionList.id}>
-            <HorizontalLine style={[styles.horizontalLine, { backgroundColor: colorTheme.text[200] }]} />
+            <HorizontalLine style={[styles.horizontalLine, { backgroundColor: colorTheme.text.secondary }]} />
             <OptionList optionList={optionList} />
           </Fragment>
         ))}
 
         <View style={styles.addToCartButtonContainer}>
           <TouchableOpacity
-            style={[styles.addToCartButton, { backgroundColor: colorTheme.background[500] }]}
+            style={[styles.addToCartButton, { backgroundColor: colorTheme.background.accent }]}
             onPress={() => {
               showToast("Produs adăugat in coș");
               addToCart(product, 1);
             }}
           >
-            <Text style={[styles.addToCartButtonText, { color: colorTheme.text[300] }]}>Adaugă în coș</Text>
+            <Text style={[styles.addToCartButtonText, { color: colorTheme.text.onAccent }]}>
+              Adaugă în coș
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

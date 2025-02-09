@@ -16,7 +16,7 @@ export default function SearchBar({ placeholder, onSearch }: SearchBarProps) {
   const [text, setText] = useState("");
 
   return (
-    <View style={[styles.container, { backgroundColor: colorTheme.background[700] }]}>
+    <View style={[styles.container, { backgroundColor: colorTheme.background.elevated }]}>
       <SearchIconSVG style={styles.searchIcon} />
       <TextInput
         style={styles.textInput}

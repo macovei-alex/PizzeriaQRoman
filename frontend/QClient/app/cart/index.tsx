@@ -59,10 +59,10 @@ export default function Cart() {
 
           <View style={styles.sendOrderContainer}>
             <TouchableOpacity
-              style={[styles.sendOrderButton, { backgroundColor: colorTheme.background[500] }]}
+              style={[styles.sendOrderButton, { backgroundColor: colorTheme.background.accent }]}
               onPress={sendOrder}
             >
-              <Text style={[styles.sendOrderText, { color: colorTheme.text[300] }]}>Trimite comanda</Text>
+              <Text style={[styles.sendOrderText, { color: colorTheme.text.onAccent }]}>Trimite comanda</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

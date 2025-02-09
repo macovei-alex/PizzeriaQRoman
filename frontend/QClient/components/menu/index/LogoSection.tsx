@@ -14,8 +14,8 @@ export default function LogoSection() {
       <ImageBackground source={images.menuBackground} style={styles.imageBackground}>
         <View style={styles.centerSection}>
           <Image source={images.logo} style={styles.logoImage} />
-          <View style={[styles.subtextContainer, { backgroundColor: colorTheme.background[300] }]}>
-            <Text style={[styles.subtext, { color: colorTheme.text[100] }]}>
+          <View style={[styles.subtextContainer, { backgroundColor: colorTheme.background.success }]}>
+            <Text style={[styles.subtext, { color: colorTheme.text.primary }]}>
               Comanda minimă este de 40 RON
             </Text>
           </View>

@@ -12,20 +12,20 @@ export default function Confirmation() {
   const colorTheme = useColorTheme();
 
   return (
-    <SafeAreaView style={[styles.screen, { backgroundColor: colorTheme.background[100] }]}>
-      <View style={[styles.container, { backgroundColor: colorTheme.background[600] }]}>
-        <TickCheckboxSvg checked={true} style={styles.icon} />
+    <SafeAreaView style={[styles.screen, { backgroundColor: colorTheme.background.navbar }]}>
+      <View style={[styles.container, { backgroundColor: colorTheme.background.primary }]}>
+        <TickCheckboxSvg checked={true} style={styles.icon} checkedFill={colorTheme.background.success} />
 
-        <Text style={[styles.mainMessageText, { color: colorTheme.text[100] }]}>
+        <Text style={[styles.mainMessageText, { color: colorTheme.text.primary }]}>
           Comanda dumneavostră va fi preluată în cel mai scurt timp
         </Text>
 
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            style={[styles.button, { backgroundColor: colorTheme.background[500] }]}
+            style={[styles.button, { backgroundColor: colorTheme.background.success }]}
             onPress={() => router.back()}
           >
-            <Text style={[styles.buttonText, { color: colorTheme.text[300] }]}>Înapoi la comandă</Text>
+            <Text style={[styles.buttonText, { color: colorTheme.text.success }]}>Înapoi la comandă</Text>
           </TouchableOpacity>
         </View>
       </View>

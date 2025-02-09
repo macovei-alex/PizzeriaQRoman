@@ -25,13 +25,15 @@ export default function TitleSection({ product, productImage }: TitleSectionProp
           <GoBackButtonSVG style={styles.goBackSvg} />
         </TouchableOpacity>
       </ImageBackground>
-      <Text style={[styles.titleText, { color: colorTheme.text[100] }]}>{product.name}</Text>
+      <Text style={[styles.titleText, { color: colorTheme.text.primary }]}>{product.name}</Text>
       <View style={styles.subtitleContainer}>
-        <Text style={[styles.subtitleText, { color: colorTheme.text[100] }]}>
+        <Text style={[styles.subtitleText, { color: colorTheme.text.primary }]}>
           {product.subtitle} - {product.price.toFixed(2)} lei
         </Text>
       </View>
-      <Text style={[styles.descriptionText, { color: colorTheme.text[200] }]}>{product.description}</Text>
+      <Text style={[styles.descriptionText, { color: colorTheme.text.secondary }]}>
+        {product.description}
+      </Text>
     </>
   );
 }

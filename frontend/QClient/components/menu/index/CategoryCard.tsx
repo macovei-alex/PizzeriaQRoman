@@ -4,24 +4,24 @@ import useColorTheme from "@/hooks/useColorTheme";
 import { Category } from "@/api/types/Category";
 import logger from "@/utils/logger";
 
-type CategoryCardProps = {
+type HorizontalCategoryProps = {
   category: Category;
   onPress: () => void;
   style?: any;
 };
 
-export default function CategoryCard({ category, onPress, style }: CategoryCardProps) {
-  logger.render("CategoryCard");
+export default function HorizontalCategory({ category, onPress, style }: HorizontalCategoryProps) {
+  logger.render("HorizontalCategory");
 
   const colorTheme = useColorTheme();
 
   return (
     <View style={style}>
       <TouchableOpacity
-        style={[styles.button, { backgroundColor: colorTheme.background[700] }]}
+        style={[styles.button, { backgroundColor: colorTheme.background.elevated }]}
         onPress={onPress}
       >
-        <Text style={[styles.text, { color: colorTheme.text[100] }]}>{category.name}</Text>
+        <Text style={[styles.text, { color: colorTheme.text.primary }]}>{category.name}</Text>
       </TouchableOpacity>
     </View>
   );

@@ -22,9 +22,9 @@ export default function AnimatedMenuSkeletonLoader() {
   }));
 
   return (
-    <SafeAreaView style={{ backgroundColor: colorTheme.background[600] }}>
+    <SafeAreaView style={{ backgroundColor: colorTheme.background.primary }}>
       <Animated.View
-        style={[styles.logoSection, { backgroundColor: colorTheme.background[200] }, animatedStyle]}
+        style={[styles.logoSection, { backgroundColor: colorTheme.background.card }, animatedStyle]}
       />
       <View style={[styles.horizontalCategorySection]}>
         {Array.from({ length: 3 }).map((_, index) => {
@@ -33,7 +33,7 @@ export default function AnimatedMenuSkeletonLoader() {
               key={index}
               style={[
                 styles.horizontalCategory,
-                { backgroundColor: colorTheme.background[200] },
+                { backgroundColor: colorTheme.background.card },
                 animatedStyle,
               ]}
             />
@@ -42,20 +42,20 @@ export default function AnimatedMenuSkeletonLoader() {
       </View>
 
       <Animated.View
-        style={[styles.searchBar, { backgroundColor: colorTheme.background[200] }, animatedStyle]}
+        style={[styles.searchBar, { backgroundColor: colorTheme.background.card }, animatedStyle]}
       />
 
       <Animated.View
-        style={[styles.verticalCategoryText, { backgroundColor: colorTheme.background[200] }, animatedStyle]}
+        style={[styles.verticalCategoryText, { backgroundColor: colorTheme.background.card }, animatedStyle]}
       />
 
       {Array.from({ length: 2 }).map((_, index) => (
         <Animated.View
           key={index}
-          style={[styles.productContainer, { backgroundColor: colorTheme.background[200] }, animatedStyle]}
+          style={[styles.productContainer, { backgroundColor: colorTheme.background.card }, animatedStyle]}
         >
           <Animated.View
-            style={[styles.productImage, { backgroundColor: colorTheme.background[400] }, animatedStyle]}
+            style={[styles.productImage, { backgroundColor: colorTheme.background.onCard }, animatedStyle]}
           />
         </Animated.View>
       ))}

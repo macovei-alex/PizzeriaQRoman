@@ -19,8 +19,8 @@ export default function ProductSection() {
         <CartItemCard key={cartItem.product.id} cartItem={cartItem} />
       ))}
       <View style={styles.totalPriceContainerContainer}>
-        <View style={[styles.totalPriceContainer, { backgroundColor: colorTheme.background[500] }]}>
-          <Text style={[styles.totalPriceText, { color: colorTheme.text[300] }]}>
+        <View style={[styles.totalPriceContainer, { backgroundColor: colorTheme.background.accent }]}>
+          <Text style={[styles.totalPriceText, { color: colorTheme.text.onAccent }]}>
             Total de plată: {totalPrice.toFixed(2)} RON
           </Text>
         </View>

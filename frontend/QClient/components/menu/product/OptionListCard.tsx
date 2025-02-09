@@ -29,7 +29,7 @@ export default function OptionListCard({ optionList }: OptionListProps) {
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.titleText, { color: colorTheme.text[100] }]}>{optionList.text}</Text>
+      <Text style={[styles.titleText, { color: colorTheme.text.primary }]}>{optionList.text}</Text>
       {optionList.options.map((option) => (
         <OptionCard
           key={option.id}

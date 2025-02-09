@@ -18,26 +18,26 @@ export default function MenuProduct({ product, productImage, onPress }: MenuProd
   const colorTheme = useColorTheme();
 
   return (
-    <View style={[styles.container, { backgroundColor: colorTheme.background[400] }]}>
+    <View style={[styles.container, { backgroundColor: colorTheme.background.card }]}>
       <Image source={imageOrDefault(productImage)} style={styles.image} />
       <View style={styles.infoSection}>
         <View style={styles.titleContainer}>
-          <Text style={[styles.titleText, { color: colorTheme.text[100] }]}>{product.name}</Text>
+          <Text style={[styles.titleText, { color: colorTheme.text.primary }]}>{product.name}</Text>
         </View>
         <View style={styles.subtitleContainer}>
-          <Text style={[styles.subtitleText, { color: colorTheme.text[100] }]}>{product.subtitle}</Text>
+          <Text style={[styles.subtitleText, { color: colorTheme.text.primary }]}>{product.subtitle}</Text>
         </View>
         <View style={styles.priceContainer}>
-          <Text style={[styles.priceText, { color: colorTheme.text[100] }]}>
+          <Text style={[styles.priceText, { color: colorTheme.text.primary }]}>
             {`${product.price.toFixed(2)} RON`}
           </Text>
         </View>
         <TouchableOpacity
           testID={product.name === "Pizza Capriciosa" ? "info-button-capriciosa" : undefined}
-          style={[styles.infoButtonContainer, { backgroundColor: colorTheme.background[500] }]}
+          style={[styles.infoButtonContainer, { backgroundColor: colorTheme.background.accent }]}
           onPress={onPress}
         >
-          <Text style={[styles.infoButtonText, { color: colorTheme.text[300] }]}>Informații</Text>
+          <Text style={[styles.infoButtonText, { color: colorTheme.text.onAccent }]}>Informații</Text>
         </TouchableOpacity>
       </View>
     </View>

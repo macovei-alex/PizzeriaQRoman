@@ -6,26 +6,26 @@ export default function MenuSkeletonLoader() {
   const colorTheme = useColorTheme();
 
   return (
-    <SafeAreaView style={{ backgroundColor: colorTheme.background[600] }}>
-      <View style={[styles.logoSection, { backgroundColor: colorTheme.background[200] }]} />
+    <SafeAreaView style={{ backgroundColor: colorTheme.background.primary }}>
+      <View style={[styles.logoSection, { backgroundColor: colorTheme.background.card }]} />
       <View style={[styles.horizontalCategorySection]}>
         {Array.from({ length: 3 }).map((_, index) => {
           return (
             <View
               key={index}
-              style={[styles.horizontalCategory, { backgroundColor: colorTheme.background[200] }]}
+              style={[styles.horizontalCategory, { backgroundColor: colorTheme.background.card }]}
             />
           );
         })}
       </View>
 
-      <View style={[styles.searchBar, { backgroundColor: colorTheme.background[200] }]} />
+      <View style={[styles.searchBar, { backgroundColor: colorTheme.background.card }]} />
 
-      <View style={[styles.verticalCategoryText, { backgroundColor: colorTheme.background[200] }]} />
+      <View style={[styles.verticalCategoryText, { backgroundColor: colorTheme.background.card }]} />
 
       {Array.from({ length: 2 }).map((_, index) => (
-        <View key={index} style={[styles.productContainer, { backgroundColor: colorTheme.background[200] }]}>
-          <View style={[styles.productImage, { backgroundColor: colorTheme.background[400] }]} />
+        <View key={index} style={[styles.productContainer, { backgroundColor: colorTheme.background.card }]}>
+          <View style={[styles.productImage, { backgroundColor: colorTheme.background.onCard }]} />
         </View>
       ))}
     </SafeAreaView>

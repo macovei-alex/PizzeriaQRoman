@@ -12,7 +12,7 @@ export default function TitleSection() {
   return (
     <>
       <View style={styles.titleContainer}>
-        <Text style={[styles.titleText, { color: colorTheme.text[100] }]}>Comanda mea</Text>
+        <Text style={[styles.titleText, { color: colorTheme.text.primary }]}>Comanda mea</Text>
       </View>
       <HorizontalLine style={styles.hr} />
     </>

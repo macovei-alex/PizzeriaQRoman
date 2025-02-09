@@ -4,18 +4,19 @@ export type Theme = {
   name: "light" | "dark";
   statusBarStyle: "light" | "dark";
   background: {
-    100: ColorValue;
-    200: ColorValue;
-    300: ColorValue;
-    400: ColorValue;
-    500: ColorValue;
-    600: ColorValue;
-    700: ColorValue;
+    primary: ColorValue;
+    card: ColorValue;
+    onCard: ColorValue;
+    success: ColorValue;
+    accent: ColorValue;
+    navbar: ColorValue;
+    elevated: ColorValue;
   };
   text: {
-    100: ColorValue;
-    200: ColorValue;
-    300: ColorValue;
-    400: ColorValue;
+    primary: ColorValue;
+    secondary: ColorValue;
+    accent: ColorValue;
+    onAccent: ColorValue;
+    success: ColorValue;
   };
 };
