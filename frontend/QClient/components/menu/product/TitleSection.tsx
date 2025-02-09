@@ -1,6 +1,6 @@
 import React from "react";
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import GoBackButtonSVG from "@/components/svg/GoBackButtonSVG";
+import GoBackButtonSvg from "@/components/svg/GoBackButtonSvg";
 import useColorTheme from "@/hooks/useColorTheme";
 import { useRouter } from "expo-router";
 import { ImageFile, imageOrDefault } from "@/utils/files";
@@ -22,7 +22,7 @@ export default function TitleSection({ product, productImage }: TitleSectionProp
     <>
       <ImageBackground source={imageOrDefault(productImage)} style={styles.image}>
         <TouchableOpacity onPress={() => router.back()}>
-          <GoBackButtonSVG style={styles.goBackSvg} />
+          <GoBackButtonSvg style={styles.goBackSvg} />
         </TouchableOpacity>
       </ImageBackground>
       <Text style={[styles.titleText, { color: colorTheme.text.primary }]}>{product.name}</Text>

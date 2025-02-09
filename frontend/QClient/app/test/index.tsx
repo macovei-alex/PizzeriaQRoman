@@ -1,7 +1,7 @@
 import { View, StyleSheet, ScrollView, Text, Image, TouchableOpacity } from "react-native";
 import React, { Fragment, startTransition, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import GoBackButtonSVG from "@/components/svg/GoBackButtonSVG";
+import GoBackButtonSvg from "@/components/svg/GoBackButtonSvg";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/api";
 import { useImageContext } from "@/context/useImageContext";
@@ -75,7 +75,7 @@ export default function TestComponent() {
       </TouchableOpacity>
       <ScrollView>
         <TouchableOpacity>
-          <GoBackButtonSVG style={{ width: 38, height: 38 }} />
+          <GoBackButtonSvg style={{ width: 38, height: 38 }} />
         </TouchableOpacity>
         <View style={styles.container}>
           {images.map((image) => (

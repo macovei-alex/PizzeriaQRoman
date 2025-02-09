@@ -9,7 +9,7 @@ import CartIconSvg from "@/components/svg/CartIconSvg";
 import { CartContextProvider } from "@/context/useCartContext";
 import { ImageContextProvider } from "@/context/useImageContext";
 import Toast from "react-native-toast-message";
-import ProfileIcon from "@/components/svg/ProfileIcon";
+import ProfileIconSvg from "@/components/svg/ProfileIconSvg";
 import { StatusBar } from "expo-status-bar";
 import logger from "@/utils/logger";
 
@@ -29,9 +29,9 @@ export default function RootLayout() {
   const pathname = usePathname();
   const colorTheme = useColorTheme();
   const svgColors = {
-    _stroke: colorTheme.text.primary,
-    _fillPrimary: colorTheme.background.primary,
-    _fillSecondary: colorTheme.background.primary,
+    stroke: colorTheme.text.primary,
+    fillPrimary: colorTheme.background.primary,
+    fillSecondary: colorTheme.background.primary,
   };
 
   useEffect(() => {
@@ -71,28 +71,52 @@ export default function RootLayout() {
               name="menu"
               options={{
                 title: "Meniu",
-                tabBarIcon: () => <HomeIconSvg style={svgColors} />,
+                tabBarIcon: () => (
+                  <HomeIconSvg
+                    stroke={svgColors.stroke}
+                    fillPrimary={svgColors.fillPrimary}
+                    fillSecondary={svgColors.fillSecondary}
+                  />
+                ),
               }}
             />
             <Tabs.Screen
               name="cart"
               options={{
                 title: "Coș",
-                tabBarIcon: () => <CartIconSvg style={svgColors} />,
+                tabBarIcon: () => (
+                  <CartIconSvg
+                    stroke={svgColors.stroke}
+                    fillPrimary={svgColors.fillPrimary}
+                    fillSecondary={svgColors.fillSecondary}
+                  />
+                ),
               }}
             />
             <Tabs.Screen
               name="profile"
               options={{
                 title: "Profil",
-                tabBarIcon: () => <ProfileIcon style={svgColors} />,
+                tabBarIcon: () => (
+                  <ProfileIconSvg
+                    stroke={svgColors.stroke}
+                    fillPrimary={svgColors.fillPrimary}
+                    fillSecondary={svgColors.fillSecondary}
+                  />
+                ),
               }}
             />
             <Tabs.Screen
               name="test"
               options={{
                 title: "Test",
-                tabBarIcon: () => <CartIconSvg style={svgColors} />,
+                tabBarIcon: () => (
+                  <CartIconSvg
+                    stroke={svgColors.stroke}
+                    fillPrimary={svgColors.fillPrimary}
+                    fillSecondary={svgColors.fillSecondary}
+                  />
+                ),
               }}
             />
           </Tabs>

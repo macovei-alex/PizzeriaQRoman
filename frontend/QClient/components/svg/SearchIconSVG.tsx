@@ -2,16 +2,15 @@ import React from "react";
 import { ColorValue, StyleProp, ViewStyle } from "react-native";
 import Svg, { Circle, Line } from "react-native-svg";
 
-type SearchIconSVGProps = {
-  style?: StyleProp<ViewStyle> & {
-    _stroke?: ColorValue;
-    _fillPrimary?: ColorValue;
-  };
+type SearchIconSvgProps = {
+  style?: StyleProp<ViewStyle>;
+  stroke?: ColorValue;
+  fillPrimary?: ColorValue;
 };
 
-export default function SearchIconSVG({ style }: SearchIconSVGProps) {
-  const stroke = style?._stroke ?? "black";
-  const fillPrimary = style?._fillPrimary ?? "none";
+export default function SearchIconSvg({ style, stroke, fillPrimary }: SearchIconSvgProps) {
+  stroke = stroke ?? "black";
+  fillPrimary = fillPrimary ?? "none";
 
   return (
     <Svg style={style} viewBox="0 0 30 33">

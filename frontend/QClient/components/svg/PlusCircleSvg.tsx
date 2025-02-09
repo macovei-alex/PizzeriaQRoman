@@ -2,11 +2,11 @@ import React from "react";
 import Svg, { Line, Rect } from "react-native-svg";
 import { StyleProp, ViewStyle } from "react-native";
 
-type PlusCircleProps = {
+type PlusCircleSvgProps = {
   style?: StyleProp<ViewStyle>;
 };
 
-export default function PlusCircle({ style }: PlusCircleProps) {
+export default function PlusCircleSvg({ style }: PlusCircleSvgProps) {
   return (
     <Svg style={style} viewBox="0 0 36 38" fill="none">
       <Rect x="0.460205" y="0.652374" width="34.6559" height="36.3861" rx="17.3279" fill="#428820" />

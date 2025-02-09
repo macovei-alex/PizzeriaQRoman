@@ -4,8 +4,8 @@ import { imageOrDefault } from "@/utils/files";
 import useSingleImage from "@/hooks/useSingleImage";
 import useColorTheme from "@/hooks/useColorTheme";
 import HorizontalLine from "@/components/menu/product/HorizontalLine";
-import PlusCircle from "@/components/svg/PlusCircle";
-import MinusCircle from "@/components/svg/MinusCircle";
+import PlusCircleSvg from "@/components/svg/PlusCircleSvg";
+import MinusCircleSvg from "@/components/svg/MinusCircleSvg";
 import { CartItem, useCartContext } from "@/context/useCartContext";
 import logger from "@/utils/logger";
 
@@ -60,11 +60,11 @@ export default function CartItemCard({ cartItem }: CartItemCardProps) {
           </Text>
         </View>
         <TouchableOpacity onPress={() => removeFromCart(cartItem.id, 1)}>
-          <MinusCircle style={styles.plusMinusSvg} />
+          <MinusCircleSvg style={styles.plusMinusSvg} />
         </TouchableOpacity>
         <Text style={styles.itemCountText}>{cartItem.count}</Text>
         <TouchableOpacity onPress={() => addToCart(cartItem.product, 1)}>
-          <PlusCircle style={styles.plusMinusSvg} />
+          <PlusCircleSvg style={styles.plusMinusSvg} />
         </TouchableOpacity>
       </View>
 

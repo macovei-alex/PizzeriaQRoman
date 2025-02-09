@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
-import SearchIconSVG from "@/components/svg/SearchIconSVG";
+import SearchIconSvg from "@/components/svg/SearchIconSVG";
 import useColorTheme from "@/hooks/useColorTheme";
 import logger from "@/utils/logger";
 
@@ -17,7 +17,7 @@ export default function SearchBar({ placeholder, onSearch }: SearchBarProps) {
 
   return (
     <View style={[styles.container, { backgroundColor: colorTheme.background.elevated }]}>
-      <SearchIconSVG style={styles.searchIcon} />
+      <SearchIconSvg style={styles.searchIcon} />
       <TextInput
         style={styles.textInput}
         placeholder={placeholder}

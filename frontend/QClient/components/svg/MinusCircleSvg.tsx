@@ -6,7 +6,7 @@ type MinusCircleProps = {
   style?: StyleProp<ViewStyle>;
 };
 
-export default function MinusCircle({ style }: MinusCircleProps) {
+export default function MinusCircleSvg({ style }: MinusCircleProps) {
   return (
     <Svg style={style} viewBox="0 0 35 38" fill="none">
       <Rect x="0.150391" y="0.652374" width="34.6559" height="36.3861" rx="17.3279" fill="#428820" />

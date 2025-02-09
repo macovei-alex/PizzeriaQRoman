@@ -1,18 +1,17 @@
 import { ColorValue, StyleProp, ViewStyle } from "react-native";
 import Svg, { Path } from "react-native-svg";
 
-type ProfileIconProps = {
-  style?: StyleProp<ViewStyle> & {
-    _stroke?: ColorValue;
-    _fillPrimary?: ColorValue;
-    _fillSecondary?: ColorValue;
-  };
+type ProfileIconSvgProps = {
+  style?: StyleProp<ViewStyle>;
+  stroke?: ColorValue;
+  fillPrimary?: ColorValue;
+  fillSecondary?: ColorValue;
 };
 
-export default function ProfileIcon({ style }: ProfileIconProps) {
-  const stroke = style?._stroke ?? "black";
-  const fillPrimary = style?._fillPrimary ?? "white";
-  const fillSecondary = style?._fillSecondary ?? "white";
+export default function ProfileIconSvg({ style, stroke, fillPrimary, fillSecondary }: ProfileIconSvgProps) {
+  stroke = stroke ?? "black";
+  fillPrimary = fillPrimary ?? "white";
+  fillSecondary = fillSecondary ?? "white";
 
   return (
     <Svg style={style} viewBox="0 0 32 32" fill="none">

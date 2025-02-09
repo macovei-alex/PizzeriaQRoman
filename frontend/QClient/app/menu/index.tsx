@@ -12,9 +12,9 @@ import useCategoriesQuery from "@/hooks/useCategoriesQuery";
 import { Category, CategoryId } from "@/api/types/Category";
 import { Product } from "@/api/types/Product";
 import logger from "@/utils/logger";
-import GoBackButtonSVG from "@/components/svg/GoBackButtonSVG";
 import MenuSkeletonLoader from "@/components/menu/index/MenuSkeletonLoader";
 import useColorTheme from "@/hooks/useColorTheme";
+import GoBackButtonSvg from "@/components/svg/GoBackButtonSvg";
 
 type ProductSplit = {
   category: Category;
@@ -93,7 +93,7 @@ export default function Menu() {
           style={{ position: "absolute", top: 20, left: 20 }}
           onPress={() => router.push("/menu/test-loading")}
         >
-          <GoBackButtonSVG style={{ width: 38, height: 38 }} />
+          <GoBackButtonSvg style={{ width: 38, height: 38 }} />
         </TouchableOpacity>
 
         <HorizontalCategorySection
