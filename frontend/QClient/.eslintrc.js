@@ -28,8 +28,6 @@ module.exports = {
         trailingComma: "es5",
       },
     ],
-    // "react-native/no-inline-styles": "error",
-    // "unused-imports/no-unused-imports": "warn",
   },
   settings: {
     react: {
