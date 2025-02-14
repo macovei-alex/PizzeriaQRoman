@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
-import SearchIconSvg from "@/components/svg/SearchIconSVG";
+import SearchIconSvg from "@/components/svg/SearchIconSvg";
 import useColorTheme from "@/hooks/useColorTheme";
 import logger from "@/utils/logger";
 

@@ -1,25 +1,40 @@
 // https://docs.expo.dev/guides/using-eslint/
 module.exports = {
   env: {
-    es2021: true, // Enables ES2021 syntax
+    es2021: true,
   },
-  extends: ["expo"],
+  extends: [
+    "expo",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:prettier/recommended",
+  ],
   parserOptions: {
     ecmaFeatures: {
       tsx: true,
-      jsx: true, // Enable linting for JSX
+      jsx: true,
     },
-    ecmaVersion: 12, // Use modern JavaScript syntax
-    sourceType: "module", // Support ES modules
+    ecmaVersion: 12,
+    sourceType: "module",
   },
-  plugins: ["react"], // Include the React plugin
+  plugins: ["react", "prettier"],
   rules: {
-    "react/prop-types": "off", // Disable prop-types validation (optional)
+    "react/prop-types": "error",
+    "prettier/prettier": [
+      "error",
+      {
+        printWidth: 110,
+        endOfLine: "lf",
+        trailingComma: "es5",
+      },
+    ],
+    // "react-native/no-inline-styles": "error",
+    // "unused-imports/no-unused-imports": "warn",
   },
   settings: {
     react: {
-      version: "detect", // Automatically detect React version
+      version: "detect",
     },
   },
-  ignorePatterns: ["/dist/*"],
+  ignorePatterns: ["/dist/*", "/node_modules/*", "/android/*", "/ios/*"],
 };

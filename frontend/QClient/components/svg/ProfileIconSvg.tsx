@@ -1,3 +1,4 @@
+import React from "react";
 import { ColorValue, StyleProp, ViewStyle } from "react-native";
 import Svg, { Path } from "react-native-svg";
 

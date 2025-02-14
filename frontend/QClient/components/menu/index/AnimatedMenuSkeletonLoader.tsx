@@ -2,7 +2,7 @@ import useColorTheme from "@/hooks/useColorTheme";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
-import { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 
 export default function AnimatedMenuSkeletonLoader() {
   const colorTheme = useColorTheme();
