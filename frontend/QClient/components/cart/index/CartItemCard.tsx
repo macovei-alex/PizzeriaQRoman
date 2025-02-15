@@ -8,6 +8,7 @@ import PlusCircleSvg from "@/components/svg/PlusCircleSvg";
 import MinusCircleSvg from "@/components/svg/MinusCircleSvg";
 import { CartItem, useCartContext } from "@/context/useCartContext";
 import logger from "@/utils/logger";
+import { useRouter } from "expo-router";
 
 type CartItemCardProps = {
   cartItem: CartItem;
@@ -18,14 +19,25 @@ export default function CartItemCard({ cartItem }: CartItemCardProps) {
 
   const image = useSingleImage(cartItem.product.imageName);
   const colorTheme = useColorTheme();
-  const { addToCart, removeFromCart } = useCartContext();
+  const { changeCartItemCount } = useCartContext();
+  const router = useRouter();
 
   const totalPrice = cartItem.product.price * cartItem.count;
 
   return (
     <View style={styles.container}>
       <View style={styles.infoSectionContainer}>
-        <Image source={imageOrDefault(image)} style={styles.image} />
+        <TouchableOpacity
+          style={styles.imageContainer}
+          onPress={() => {
+            router.push({
+              pathname: "/menu/product",
+              params: { cartItemId: cartItem.id },
+            });
+          }}
+        >
+          <Image source={imageOrDefault(image)} style={styles.image} />
+        </TouchableOpacity>
         <View style={styles.textSectionContainer}>
           <Text
             style={[styles.productNameText, { color: colorTheme.text.primary }]}
@@ -59,11 +71,11 @@ export default function CartItemCard({ cartItem }: CartItemCardProps) {
             {totalPrice.toFixed(2)} RON
           </Text>
         </View>
-        <TouchableOpacity onPress={() => removeFromCart(cartItem.id, 1)}>
+        <TouchableOpacity onPress={() => changeCartItemCount(cartItem.id, -1)}>
           <MinusCircleSvg style={styles.plusMinusSvg} />
         </TouchableOpacity>
         <Text style={styles.itemCountText}>{cartItem.count}</Text>
-        <TouchableOpacity onPress={() => addToCart(cartItem.product, 1)}>
+        <TouchableOpacity onPress={() => changeCartItemCount(cartItem.id, 1)}>
           <PlusCircleSvg style={styles.plusMinusSvg} />
         </TouchableOpacity>
       </View>
@@ -82,8 +94,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: "5%",
   },
-  image: {
+  imageContainer: {
     width: "35%",
+  },
+  image: {
     aspectRatio: 1,
     borderRadius: 9999,
   },

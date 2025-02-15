@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OptionList from "@/components/menu/product/OptionListCard";
@@ -7,22 +7,59 @@ import HorizontalLine from "@/components/menu/product/HorizontalLine";
 import { Fragment } from "react";
 import TitleSection from "@/components/menu/product/TitleSection";
 import { useLocalSearchParams } from "expo-router/build/hooks";
-import { useCartContext } from "@/context/useCartContext";
+import { CartItemOptions, useCartContext } from "@/context/useCartContext";
 import useSingleImage from "@/hooks/useSingleImage";
 import useProductWithOptionsQuery from "@/hooks/useProductWithOptionsQuery";
 import { showToast } from "@/utils/toast";
 import { OptionId, OptionListId, ProductWithOptions } from "@/api/types/Product";
 import logger from "@/utils/logger";
+import { useNavigation } from "expo-router";
+
+type ProductSearchParams = {
+  productId: string;
+  imageName: string;
+  cartItemId: string;
+};
 
 export default function ProductScreen() {
   logger.render("ProductScreen");
 
+  const params = useLocalSearchParams() as ProductSearchParams;
+  if ((!params.productId || !params.imageName) && !params.cartItemId) {
+    throw new Error(
+      `Missing required search params. Expected {productId, imageName} or {cartItemId}, but got ${JSON.stringify(params)} instead`
+    );
+  }
+
+  const { productId, imageName, cartItemId } = params;
+
   const colorTheme = useColorTheme();
-  const { productId, imageName } = useLocalSearchParams() as { productId: string; imageName: string };
-  const { addToCart } = useCartContext();
-  const productQuery = useProductWithOptionsQuery(Number(productId));
-  const image = useSingleImage(imageName);
-  const [optionCounts, setOptionCounts] = useState<Record<OptionListId, Record<OptionId, number>>>({});
+  const navigation = useNavigation();
+  const { cart, addCartItem, changeCartItemOptions } = useCartContext();
+
+  const cartItem = cart.find((item) => item.id === Number(cartItemId));
+  if (cartItemId && !cartItem) {
+    throw new Error(`Cart item not found: ${cartItemId}`);
+  }
+
+  const productQuery = useProductWithOptionsQuery(Number(cartItem?.product.id ?? productId));
+  const image = useSingleImage(cartItem?.product.imageName ?? imageName);
+  const [cartItemOptions, setCartItemOptions] = useState<CartItemOptions>(cartItem?.options ?? {});
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("blur", () => {
+      if (!cartItem) {
+        throw new Error("Cart item not found for update");
+      }
+
+      if (JSON.stringify(cartItem.options) === JSON.stringify(cartItemOptions)) {
+        return;
+      }
+      showToast("Opțiuni actualizate");
+      changeCartItemOptions(cartItem.id, cartItemOptions);
+    });
+    return unsubscribe;
+  }, [navigation, cart, cartItem, cartItemOptions, changeCartItemOptions]);
 
   if (productQuery.isLoading || !image) {
     return <Text>Loading...</Text>;
@@ -48,16 +85,16 @@ export default function ProductScreen() {
       throw new Error(`Invalid option count: ${newCount}`);
     }
 
-    const choiceCount = Object.values(optionCounts[optionListId] || {}).reduce(
+    const choiceCount = Object.values(cartItemOptions[optionListId] || {}).reduce(
       (acc, count) => acc + (count !== 0 ? 1 : 0),
       0
     );
-    if (choiceCount === optionList.maxChoices && (optionCounts[optionListId][optionId] ?? 0) === 0) {
+    if (choiceCount === optionList.maxChoices && (cartItemOptions[optionListId][optionId] ?? 0) === 0) {
       showToast(`Poți alege maxim ${optionList.maxChoices} opțiuni din această listă`);
       return;
     }
 
-    setOptionCounts((prev) => {
+    setCartItemOptions((prev) => {
       const newOptionCounts = { ...prev[optionListId], [optionId]: newCount };
       return { ...prev, [optionListId]: newOptionCounts };
     });
@@ -73,7 +110,7 @@ export default function ProductScreen() {
             <HorizontalLine style={[styles.horizontalLine, { backgroundColor: colorTheme.text.secondary }]} />
             <OptionList
               optionList={optionList}
-              currentOptionCounts={optionCounts[optionList.id] || {}}
+              currentOptionCounts={cartItemOptions[optionList.id] || {}}
               onOptionChange={handleOptionChange}
             />
           </Fragment>
@@ -82,10 +119,7 @@ export default function ProductScreen() {
         <View style={styles.addToCartButtonContainer}>
           <TouchableOpacity
             style={[styles.addToCartButton, { backgroundColor: colorTheme.background.accent }]}
-            onPress={() => {
-              showToast("Produs adăugat in coș");
-              addToCart(product, 1);
-            }}
+            onPress={() => addCartItem(product, cartItemOptions)}
           >
             <Text style={[styles.addToCartButtonText, { color: colorTheme.text.onAccent }]}>
               Adaugă în coș

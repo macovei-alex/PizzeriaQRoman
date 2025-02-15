@@ -5,17 +5,18 @@ import useColorTheme from "@/hooks/useColorTheme";
 import { ImageFile, imageOrDefault } from "@/utils/files";
 import { Product } from "@/api/types/Product";
 import logger from "@/utils/logger";
+import { useRouter } from "expo-router";
 
 type MenuProductProps = {
   product: Product;
   productImage: ImageFile;
-  onPress: () => void;
 };
 
-export default function MenuProduct({ product, productImage, onPress }: MenuProductProps) {
+export default function MenuProduct({ product, productImage }: MenuProductProps) {
   logger.render("MenuProduct");
 
   const colorTheme = useColorTheme();
+  const router = useRouter();
 
   return (
     <View style={[styles.container, { backgroundColor: colorTheme.background.card }]}>
@@ -35,7 +36,12 @@ export default function MenuProduct({ product, productImage, onPress }: MenuProd
         <TouchableOpacity
           testID={product.name === "Pizza Capriciosa" ? "info-button-capriciosa" : undefined}
           style={[styles.infoButtonContainer, { backgroundColor: colorTheme.background.accent }]}
-          onPress={onPress}
+          onPress={() => {
+            router.push({
+              pathname: "/menu/product",
+              params: { productId: product.id, imageName: product.imageName },
+            });
+          }}
         >
           <Text style={[styles.infoButtonText, { color: colorTheme.text.onAccent }]}>Informații</Text>
         </TouchableOpacity>

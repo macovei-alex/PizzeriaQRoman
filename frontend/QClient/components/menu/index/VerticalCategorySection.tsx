@@ -1,6 +1,5 @@
 import React from "react";
 import { View, Text, StyleSheet, LayoutChangeEvent } from "react-native";
-import { useRouter } from "expo-router";
 import MenuProduct from "./MenuProduct";
 import useColorTheme from "@/hooks/useColorTheme";
 import { Category, CategoryId } from "@/api/types/Category";
@@ -23,7 +22,6 @@ export default function VerticalCategorySection({
 }: VerticalCategorySectionProps) {
   logger.render("VerticalCategorySection");
 
-  const router = useRouter();
   const colorTheme = useColorTheme();
 
   return (
@@ -42,12 +40,6 @@ export default function VerticalCategorySection({
           key={product.id}
           product={product}
           productImage={productImages.find((img) => img.name === product.imageName) as ImageFile}
-          onPress={() => {
-            router.push({
-              pathname: "/menu/product",
-              params: { productId: product.id, imageName: product.imageName },
-            });
-          }}
         />
       ))}
     </View>

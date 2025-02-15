@@ -16,7 +16,7 @@ export default function ProductSection() {
   return (
     <>
       {cart.map((cartItem) => (
-        <CartItemCard key={cartItem.product.id} cartItem={cartItem} />
+        <CartItemCard key={cartItem.id} cartItem={cartItem} />
       ))}
       <View style={styles.totalPriceContainerContainer}>
         <View style={[styles.totalPriceContainer, { backgroundColor: colorTheme.background.accent }]}>

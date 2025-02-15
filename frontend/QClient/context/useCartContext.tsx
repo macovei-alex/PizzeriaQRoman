@@ -1,17 +1,21 @@
-import { Product } from "@/api/types/Product";
+import { OptionId, OptionListId, Product } from "@/api/types/Product";
 import logger from "@/utils/logger";
 import React, { createContext, ReactNode, useCallback, useContext, useRef, useState } from "react";
 
+export type CartItemId = number;
+export type CartItemOptions = Record<OptionListId, Record<OptionId, number>>;
 export type CartItem = {
-  id: number;
+  id: CartItemId;
   product: Product;
+  options: CartItemOptions;
   count: number;
 };
 
 type CartContextType = {
   cart: CartItem[];
-  addToCart: (product: Product, count: number) => void;
-  removeFromCart: (cartItemId: number, count: number) => void;
+  addCartItem: (product: Product, options: CartItemOptions) => void;
+  changeCartItemCount: (cartItemId: CartItemId, increment: number) => void;
+  changeCartItemOptions: (cartItemId: CartItemId, options: CartItemOptions) => void;
 };
 
 const CartContext = createContext<CartContextType | null>(null);
@@ -30,33 +34,49 @@ export function CartContextProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const nextId = useRef(1);
 
-  const addToCart = useCallback(
-    (product: Product, count: number) => {
-      const item = cart.find((item) => item.product.id === product.id);
-      if (item) {
-        item.count += count;
-        setCart([...cart]);
-      } else {
-        setCart([...cart, { id: nextId.current++, product, count }]);
-      }
+  const addNewItem = useCallback(
+    (product: Product, options: CartItemOptions) => {
+      setCart([...cart, { id: nextId.current++, product, options, count: 1 }]);
     },
     [cart]
   );
 
-  const removeFromCart = useCallback(
-    (cartItemId: number, count: number) => {
+  const changeCartItemCount = useCallback(
+    (cartItemId: CartItemId, increment: number) => {
       const item = cart.find((item) => item.id === cartItemId);
-      if (item) {
-        item.count -= count;
-        if (item.count <= 0) {
-          setCart(cart.filter((item) => item.id !== cartItemId));
-        } else {
-          setCart([...cart]);
-        }
+      if (!item) {
+        throw new Error(`Item ( ${cartItemId} ) not found in cart`);
+      }
+
+      item.count += increment;
+      if (item.count <= 0) {
+        setCart(cart.filter((item) => item.id !== cartItemId));
+      } else {
+        setCart([...cart]);
       }
     },
     [cart]
   );
 
-  return <CartContext.Provider value={{ cart, addToCart, removeFromCart }}>{children}</CartContext.Provider>;
+  const changeCartItemOptions = useCallback(
+    (cartItemId: number, options: CartItemOptions) => {
+      console.log("changeCartItemOptions", cartItemId);
+      const item = cart.find((item) => item.id === cartItemId);
+      if (!item) {
+        throw new Error(`Item ( ${cartItemId} ) not found in cart`);
+      }
+
+      item.options = options;
+      setCart([...cart]);
+    },
+    [cart]
+  );
+
+  return (
+    <CartContext.Provider
+      value={{ cart, addCartItem: addNewItem, changeCartItemCount, changeCartItemOptions }}
+    >
+      {children}
+    </CartContext.Provider>
+  );
 }
