@@ -2,10 +2,10 @@ import { Theme } from "./theme-type";
 
 const background = {
   primary: "#f2f2f2",
-  card: "#c9d3c4",
-  onCard: "#dceadb",
+  card: "#dceadb",
+  onCard: "#ddf1db",
   navbar: "#ffffff",
-  success: "#60b238",
+  success: "#5ab02d",
   accent: "#cf4949",
   elevated: "#f6f6f6",
 };
