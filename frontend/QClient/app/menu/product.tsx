@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OptionList from "@/components/menu/product/OptionListCard";
@@ -11,17 +11,18 @@ import { useCartContext } from "@/context/useCartContext";
 import useSingleImage from "@/hooks/useSingleImage";
 import useProductWithOptionsQuery from "@/hooks/useProductWithOptionsQuery";
 import { showToast } from "@/utils/toast";
-import { ProductWithOptions } from "@/api/types/Product";
+import { OptionId, OptionListId, ProductWithOptions } from "@/api/types/Product";
 import logger from "@/utils/logger";
 
 export default function ProductScreen() {
   logger.render("ProductScreen");
 
+  const colorTheme = useColorTheme();
   const { productId, imageName } = useLocalSearchParams() as { productId: string; imageName: string };
   const { addToCart } = useCartContext();
-  const colorTheme = useColorTheme();
   const productQuery = useProductWithOptionsQuery(Number(productId));
   const image = useSingleImage(imageName);
+  const [optionCounts, setOptionCounts] = useState<Record<OptionListId, Record<OptionId, number>>>({});
 
   if (productQuery.isLoading || !image) {
     return <Text>Loading...</Text>;
@@ -32,6 +33,36 @@ export default function ProductScreen() {
 
   const product = productQuery.data as ProductWithOptions;
 
+  function handleOptionChange(optionListId: OptionListId, optionId: OptionId, newCount: number) {
+    const optionList = product.optionLists.find((optionList) => optionList.id === optionListId);
+    if (!optionList) {
+      throw new Error(`Option list not found: ${optionListId}`);
+    }
+
+    const option = optionList.options.find((option) => option.id === optionId);
+    if (!option) {
+      throw new Error(`Option not found: ${optionId}`);
+    }
+
+    if (newCount < 0 || newCount > option.maxCount) {
+      throw new Error(`Invalid option count: ${newCount}`);
+    }
+
+    const choiceCount = Object.values(optionCounts[optionListId] || {}).reduce(
+      (acc, count) => acc + (count !== 0 ? 1 : 0),
+      0
+    );
+    if (choiceCount === optionList.maxChoices && (optionCounts[optionListId][optionId] ?? 0) === 0) {
+      showToast(`Poți alege maxim ${optionList.maxChoices} opțiuni din această listă`);
+      return;
+    }
+
+    setOptionCounts((prev) => {
+      const newOptionCounts = { ...prev[optionListId], [optionId]: newCount };
+      return { ...prev, [optionListId]: newOptionCounts };
+    });
+  }
+
   return (
     <SafeAreaView>
       <ScrollView>
@@ -40,7 +71,11 @@ export default function ProductScreen() {
         {product.optionLists?.map((optionList) => (
           <Fragment key={optionList.id}>
             <HorizontalLine style={[styles.horizontalLine, { backgroundColor: colorTheme.text.secondary }]} />
-            <OptionList optionList={optionList} />
+            <OptionList
+              optionList={optionList}
+              currentOptionCounts={optionCounts[optionList.id] || {}}
+              onOptionChange={handleOptionChange}
+            />
           </Fragment>
         ))}
 

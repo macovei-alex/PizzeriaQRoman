@@ -1,31 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import useColorTheme from "@/hooks/useColorTheme";
-import { OptionId, OptionList } from "@/api/types/Product";
+import { OptionId, OptionList, OptionListId } from "@/api/types/Product";
 import OptionCard from "./OptionCard";
 import logger from "@/utils/logger";
 
 type OptionListProps = {
   optionList: OptionList;
+  currentOptionCounts: Record<OptionId, number>;
+  onOptionChange: (optionListId: OptionListId, optionId: OptionId, newCount: number) => void;
 };
 
-export default function OptionListCard({ optionList }: OptionListProps) {
+export default function OptionListCard({ optionList, currentOptionCounts, onOptionChange }: OptionListProps) {
   logger.render("OptionListCard");
 
   const colorTheme = useColorTheme();
-  const [selectedOptions, setSelectedOptions] = useState<OptionId[]>([]);
-
-  function handleOptionPress(optionId: OptionId) {
-    if (selectedOptions.includes(optionId)) {
-      setSelectedOptions(selectedOptions.filter((id) => id !== optionId));
-    } else {
-      if (selectedOptions.length < optionList.maxChoices) {
-        setSelectedOptions([...selectedOptions, optionId]);
-      } else if (optionList.maxChoices === 1) {
-        setSelectedOptions([optionId]);
-      }
-    }
-  }
 
   return (
     <View style={styles.container}>
@@ -34,8 +23,8 @@ export default function OptionListCard({ optionList }: OptionListProps) {
         <OptionCard
           key={option.id}
           option={option}
-          checked={selectedOptions.includes(option.id)}
-          customOnPress={handleOptionPress}
+          currentCount={currentOptionCounts[option.id] || 0}
+          onOptionChange={(optionId, newCount) => onOptionChange(optionList.id, optionId, newCount)}
         />
       ))}
     </View>

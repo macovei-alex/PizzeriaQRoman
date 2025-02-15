@@ -2,28 +2,30 @@ import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import useColorTheme from "@/hooks/useColorTheme";
 import TickCheckboxSvg from "@/components/svg/TickCheckboxSvg";
-import { Option } from "@/api/types/Product";
+import { Option, OptionId } from "@/api/types/Product";
 import logger from "@/utils/logger";
 
 type OptionCardProps = {
   option: Option;
-  checked: boolean;
-  customOnPress: (optionId: number) => void;
+  currentCount: number;
+  onOptionChange: (optionId: OptionId, newCount: number) => void;
 };
 
-export default function OptionCard({ option, checked, customOnPress }: OptionCardProps) {
+export default function OptionCard({ option, currentCount, onOptionChange }: OptionCardProps) {
   logger.render("OptionCard");
 
   const colorTheme = useColorTheme();
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={[styles.checkboxContainer, { borderColor: colorTheme.text.primary }]}
-        onPress={() => customOnPress(option.id)}
-      >
-        <TickCheckboxSvg checked={checked} style={styles.checkbox} />
-      </TouchableOpacity>
+      {option.maxCount === 1 ? (
+        <TouchableOpacity
+          style={[styles.checkboxContainer, { borderColor: colorTheme.text.primary }]}
+          onPress={() => onOptionChange(option.id, currentCount === 1 ? 0 : 1)}
+        >
+          <TickCheckboxSvg checked={currentCount === 1} style={styles.checkbox} />
+        </TouchableOpacity>
+      ) : null}
       <Text style={[styles.optionNameText, { color: colorTheme.text.primary }]}>{option.name}</Text>
       {option.price > 0 && (
         <Text style={[styles.priceText, { color: colorTheme.text.accent }]}>
