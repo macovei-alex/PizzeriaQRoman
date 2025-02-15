@@ -21,7 +21,7 @@ module.exports = {
   rules: {
     "react/prop-types": "error",
     "prettier/prettier": [
-      "error",
+      "warn",
       {
         printWidth: 110,
         endOfLine: "lf",
