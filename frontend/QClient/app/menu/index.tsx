@@ -108,13 +108,7 @@ export default function Menu() {
               category={category}
               products={products}
               productImages={images}
-              customOnLayout={updateCategoryLayoutPosition}
-              onMenuProductClick={(product) => {
-                router.push({
-                  pathname: "/menu/product",
-                  params: { productId: product.id, imageName: product.imageName },
-                });
-              }}
+              onLayout={updateCategoryLayoutPosition}
             />
           ))}
         </View>

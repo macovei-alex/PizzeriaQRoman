@@ -39,12 +39,12 @@ const styles = StyleSheet.create({
     borderRadius: 9999,
   },
   searchIcon: {
-    position: "absolute",
     width: 40,
     height: 40,
   },
   textInput: {
     textAlign: "center",
     flexGrow: 1,
+    left: -20,
   },
 });

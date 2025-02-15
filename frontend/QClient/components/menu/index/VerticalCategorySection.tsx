@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, LayoutChangeEvent } from "react-native";
+import { useRouter } from "expo-router";
 import MenuProduct from "./MenuProduct";
 import useColorTheme from "@/hooks/useColorTheme";
 import { Category, CategoryId } from "@/api/types/Category";
@@ -11,19 +12,18 @@ type VerticalCategorySectionProps = {
   category: Category;
   products: Product[];
   productImages: ImageFile[];
-  customOnLayout: (categoryId: CategoryId, event: LayoutChangeEvent) => void;
-  onMenuProductClick: (product: Product) => void;
+  onLayout: (categoryId: CategoryId, event: LayoutChangeEvent) => void;
 };
 
 export default function VerticalCategorySection({
   category,
   products,
   productImages,
-  customOnLayout,
-  onMenuProductClick,
+  onLayout,
 }: VerticalCategorySectionProps) {
   logger.render("VerticalCategorySection");
 
+  const router = useRouter();
   const colorTheme = useColorTheme();
 
   return (
@@ -31,7 +31,7 @@ export default function VerticalCategorySection({
       key={category.id}
       onLayout={(event) => {
         // Save the position of each category for the scroll to position from the horizontal menu
-        customOnLayout(category.id, event);
+        onLayout(category.id, event);
       }}
     >
       <View style={styles.categoryTextContainer}>
@@ -42,7 +42,12 @@ export default function VerticalCategorySection({
           key={product.id}
           product={product}
           productImage={productImages.find((img) => img.name === product.imageName) as ImageFile}
-          onPress={() => onMenuProductClick(product)}
+          onPress={() => {
+            router.push({
+              pathname: "/menu/product",
+              params: { productId: product.id, imageName: product.imageName },
+            });
+          }}
         />
       ))}
     </View>
