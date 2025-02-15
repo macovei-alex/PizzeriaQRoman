@@ -34,7 +34,7 @@ export function CartContextProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const nextId = useRef(1);
 
-  const addNewItem = useCallback(
+  const addCartItem = useCallback(
     (product: Product, options: CartItemOptions) => {
       setCart([...cart, { id: nextId.current++, product, options, count: 1 }]);
     },
@@ -73,9 +73,7 @@ export function CartContextProvider({ children }: { children: ReactNode }) {
   );
 
   return (
-    <CartContext.Provider
-      value={{ cart, addCartItem: addNewItem, changeCartItemCount, changeCartItemOptions }}
-    >
+    <CartContext.Provider value={{ cart, addCartItem, changeCartItemCount, changeCartItemOptions }}>
       {children}
     </CartContext.Provider>
   );
