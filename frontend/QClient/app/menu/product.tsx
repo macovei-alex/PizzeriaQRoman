@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OptionList from "@/components/menu/product/OptionListCard";
@@ -13,7 +13,8 @@ import useProductWithOptionsQuery from "@/hooks/useProductWithOptionsQuery";
 import { showToast } from "@/utils/toast";
 import { OptionId, OptionListId, ProductWithOptions } from "@/api/types/Product";
 import logger from "@/utils/logger";
-import { useNavigation } from "expo-router";
+import { useFocusEffect } from "expo-router";
+import { deepEquals } from "@/utils/utils";
 
 type ProductSearchParams = {
   productId: string;
@@ -32,9 +33,7 @@ export default function ProductScreen() {
   }
 
   const { productId, imageName, cartItemId } = params;
-
   const colorTheme = useColorTheme();
-  const navigation = useNavigation();
   const { cart, addCartItem, changeCartItemOptions } = useCartContext();
 
   const cartItem = cart.find((item) => item.id === Number(cartItemId));
@@ -46,20 +45,35 @@ export default function ProductScreen() {
   const image = useSingleImage(cartItem?.product.imageName ?? imageName);
   const [cartItemOptions, setCartItemOptions] = useState<CartItemOptions>(cartItem?.options ?? {});
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("blur", () => {
-      if (!cartItem) {
-        throw new Error("Cart item not found for update");
-      }
+  // Update the cached UI state. Prevents a bug where pressing a cart item, then the cart icon
+  // and then another product doesn't reload the UI with the correct options.
+  const handleScreenFocus = useCallback(() => {
+    console.log("focus");
+    if (cartItem) {
+      setCartItemOptions(() => cartItem.options);
+    }
+  }, [cartItem]);
 
-      if (JSON.stringify(cartItem.options) === JSON.stringify(cartItemOptions)) {
-        return;
-      }
-      showToast("Opțiuni actualizate");
-      changeCartItemOptions(cartItem.id, cartItemOptions);
-    });
-    return unsubscribe;
-  }, [navigation, cart, cartItem, cartItemOptions, changeCartItemOptions]);
+  // Update the cart item options only when the screen is blurred for performance reasons
+  // since the cart is in a context.
+  const handleScreenBlur = useCallback(() => {
+    console.log("blur");
+    if (!cartItem) {
+      return;
+    }
+    if (deepEquals(cartItem.options, cartItemOptions)) {
+      return;
+    }
+    showToast("Opțiuni actualizate");
+    changeCartItemOptions(cartItem.id, cartItemOptions);
+  }, [cartItem, cartItemOptions, changeCartItemOptions]);
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     handleScreenFocus();
+  //     return handleScreenBlur;
+  //   }, [handleScreenFocus, handleScreenBlur])
+  // );
 
   if (productQuery.isLoading || !image) {
     return <Text>Loading...</Text>;
@@ -96,7 +110,19 @@ export default function ProductScreen() {
 
     setCartItemOptions((prev) => {
       const newOptionCounts = { ...prev[optionListId], [optionId]: newCount };
-      return { ...prev, [optionListId]: newOptionCounts };
+      if (newCount === 0) {
+        delete newOptionCounts[optionId];
+      }
+      const newOptions = { ...prev, [optionListId]: newOptionCounts };
+      if (Object.keys(newOptionCounts).length === 0) {
+        delete newOptions[optionListId];
+      }
+
+      if (cartItem) {
+        changeCartItemOptions(Number(cartItem.id), newOptions);
+      }
+
+      return newOptions;
     });
   }
 

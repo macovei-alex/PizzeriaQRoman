@@ -34,12 +34,22 @@ export function CartContextProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const nextId = useRef(1);
 
-  const addCartItem = useCallback(
-    (product: Product, options: CartItemOptions) => {
-      setCart([...cart, { id: nextId.current++, product, options, count: 1 }]);
-    },
-    [cart]
-  );
+  const addCartItem = useCallback((product: Product, options: CartItemOptions) => {
+    setCart((prev) => {
+      const newCart = [...prev, { id: nextId.current++, product, options, count: 1 }];
+      console.log(
+        JSON.stringify(
+          newCart.map((item) => {
+            return {
+              id: item.id,
+              options: item.options,
+            };
+          })
+        )
+      );
+      return newCart;
+    });
+  }, []);
 
   const changeCartItemCount = useCallback(
     (cartItemId: CartItemId, increment: number) => {
@@ -50,9 +60,35 @@ export function CartContextProvider({ children }: { children: ReactNode }) {
 
       item.count += increment;
       if (item.count <= 0) {
-        setCart(cart.filter((item) => item.id !== cartItemId));
+        setCart((prev) => {
+          const newCart = prev.filter((item) => item.id !== cartItemId);
+          console.log(
+            JSON.stringify(
+              newCart.map((item) => {
+                return {
+                  id: item.id,
+                  options: item.options,
+                };
+              })
+            )
+          );
+          return newCart;
+        });
       } else {
-        setCart([...cart]);
+        setCart((prev) => {
+          const newCart = [...prev];
+          console.log(
+            JSON.stringify(
+              newCart.map((item) => {
+                return {
+                  id: item.id,
+                  options: item.options,
+                };
+              })
+            )
+          );
+          return newCart;
+        });
       }
     },
     [cart]
@@ -60,14 +96,26 @@ export function CartContextProvider({ children }: { children: ReactNode }) {
 
   const changeCartItemOptions = useCallback(
     (cartItemId: number, options: CartItemOptions) => {
-      console.log("changeCartItemOptions", cartItemId);
       const item = cart.find((item) => item.id === cartItemId);
       if (!item) {
         throw new Error(`Item ( ${cartItemId} ) not found in cart`);
       }
 
       item.options = options;
-      setCart([...cart]);
+      setCart((prev) => {
+        const newCart = [...prev];
+        console.log(
+          JSON.stringify(
+            newCart.map((item) => {
+              return {
+                id: item.id,
+                options: item.options,
+              };
+            })
+          )
+        );
+        return newCart;
+      });
     },
     [cart]
   );

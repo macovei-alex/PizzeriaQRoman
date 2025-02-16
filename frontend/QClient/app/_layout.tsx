@@ -1,8 +1,7 @@
 import React from "react";
-import { Tabs, usePathname } from "expo-router";
+import { Tabs } from "expo-router";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
-import { Alert, BackHandler, Platform, StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import HomeIconSvg from "@/components/svg/HomeIconSvg";
 import useColorTheme from "@/hooks/useColorTheme";
 import CartIconSvg from "@/components/svg/CartIconSvg";
@@ -26,34 +25,12 @@ const queryClient = new QueryClient({
 export default function RootLayout() {
   logger.render("RootLayout");
 
-  const pathname = usePathname();
   const colorTheme = useColorTheme();
   const svgColors = {
     stroke: colorTheme.text.primary,
     fillPrimary: colorTheme.background.primary,
     fillSecondary: colorTheme.background.primary,
   };
-
-  useEffect(() => {
-    function handleBackPress() {
-      if (pathname === "/menu") {
-        Alert.alert("Parasire aplicatie", "Sunteti sigur ca doriti sa parasiti aplicatia?", [
-          { text: "Anulare", style: "cancel" },
-          { text: "OK", onPress: () => BackHandler.exitApp() },
-        ]);
-        // Prevent default action
-        return true;
-      }
-      // Allow default back action
-      return false;
-    }
-
-    BackHandler.addEventListener("hardwareBackPress", handleBackPress);
-
-    return () => {
-      BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
-    };
-  }, [pathname]);
 
   return (
     <QueryClientProvider client={queryClient}>
