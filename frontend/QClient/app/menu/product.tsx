@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OptionList from "@/components/menu/product/OptionListCard";
@@ -13,7 +13,6 @@ import useProductWithOptionsQuery from "@/hooks/useProductWithOptionsQuery";
 import { showToast } from "@/utils/toast";
 import { OptionId, OptionListId, ProductWithOptions } from "@/api/types/Product";
 import logger from "@/utils/logger";
-import { useFocusEffect } from "expo-router";
 import { deepEquals } from "@/utils/utils";
 
 type ProductSearchParams = {
@@ -47,33 +46,34 @@ export default function ProductScreen() {
 
   // Update the cached UI state. Prevents a bug where pressing a cart item, then the cart icon
   // and then another product doesn't reload the UI with the correct options.
-  const handleScreenFocus = useCallback(() => {
-    console.log("focus");
-    if (cartItem) {
-      setCartItemOptions(() => cartItem.options);
-    }
-  }, [cartItem]);
+  // const handleScreenFocus = useCallback(() => {
+  //   console.log("focus");
+  //   if (cartItem) {
+  //     setCartItemOptions(() => cartItem.options);
+  //   }
+  // }, [cartItem]);
 
   // Update the cart item options only when the screen is blurred for performance reasons
   // since the cart is in a context.
-  const handleScreenBlur = useCallback(() => {
-    console.log("blur");
-    if (!cartItem) {
-      return;
-    }
-    if (deepEquals(cartItem.options, cartItemOptions)) {
-      return;
-    }
-    showToast("Opțiuni actualizate");
-    changeCartItemOptions(cartItem.id, cartItemOptions);
-  }, [cartItem, cartItemOptions, changeCartItemOptions]);
+  // const handleScreenBlur = useCallback(() => {
+  //   console.log("blur");
+  //   if (!cartItem) {
+  //     return;
+  //   }
+  //   if (deepEquals(cartItem.options, cartItemOptions)) {
+  //     return;
+  //   }
+  //   showToast("Opțiuni actualizate");
+  //   changeCartItemOptions(cartItem.id, cartItemOptions);
+  // }, [cartItem, cartItemOptions, changeCartItemOptions]);
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     handleScreenFocus();
-  //     return handleScreenBlur;
-  //   }, [handleScreenFocus, handleScreenBlur])
-  // );
+  // Update the cached UI state. Prevents a bug where pressing a cart item, then the cart icon
+  // and then another product doesn't refresh the UI state with the correct options.
+  useEffect(() => {
+    if (cartItem && !deepEquals(cartItem.options, cartItemOptions)) {
+      setCartItemOptions(() => cartItem.options);
+    }
+  }, [cartItem, cartItemOptions]);
 
   if (productQuery.isLoading || !image) {
     return <Text>Loading...</Text>;
@@ -109,6 +109,9 @@ export default function ProductScreen() {
     }
 
     setCartItemOptions((prev) => {
+      if (!!prev[optionListId] && newCount === prev[optionListId][optionId]) {
+        return prev;
+      }
       const newOptionCounts = { ...prev[optionListId], [optionId]: newCount };
       if (newCount === 0) {
         delete newOptionCounts[optionId];
@@ -118,6 +121,7 @@ export default function ProductScreen() {
         delete newOptions[optionListId];
       }
 
+      // TODO: Improve performance by not refreshing the cart every time.
       if (cartItem) {
         changeCartItemOptions(Number(cartItem.id), newOptions);
       }
