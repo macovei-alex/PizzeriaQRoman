@@ -3,8 +3,6 @@ package ro.pizzeriaq.qservices.service.DTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.List;
@@ -15,8 +13,7 @@ public class PlacedOrderDTO {
 
 	private String additionalNotes;
 
-	@NotNull(message = "The list of items in an order cannot be null")
-	@Size(min = 1, message = "An order cannot contain 0 or less items")
+	@NotEmpty(message = "The list of items in an order cannot be null or empty")
 	private List<Item> items;
 
 
@@ -40,7 +37,8 @@ public class PlacedOrderDTO {
 			@Min(value = 1, message = "You cannot add an option list with the ID less than or equal to 0")
 			private int optionListId;
 
-			@NotEmpty(message = "An option list cannot contain 0 or less options")
+			@NotEmpty(message = "An option list cannot be null or empty")
+			@Valid
 			private List<Option> options;
 
 

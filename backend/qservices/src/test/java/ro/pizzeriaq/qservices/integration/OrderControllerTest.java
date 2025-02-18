@@ -28,6 +28,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
+// TODO: Add Validation message testing
+// TODO: Add tests with orders with options
+
+
 @SpringBootTest
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -226,6 +231,4 @@ public class OrderControllerTest {
 				.andExpect(jsonPath("$").isArray())
 				.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1));
 	}
-
-	// TODO: add tests with orders with options
 }
