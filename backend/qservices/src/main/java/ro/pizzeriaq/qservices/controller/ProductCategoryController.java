@@ -8,6 +8,8 @@ import ro.pizzeriaq.qservices.service.ProductCategoryService;
 
 import java.util.List;
 
+// TODO: add @AllArgsConstructor for beans
+
 @RestController
 @RequestMapping("/category")
 public class ProductCategoryController {

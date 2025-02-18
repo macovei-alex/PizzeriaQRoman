@@ -16,7 +16,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import ro.pizzeriaq.qservices.service.DTO.PlacedOrderDTO;
-import ro.pizzeriaq.qservices.service.DTO.PlacedOrderItemDTO;
 import ro.pizzeriaq.qservices.service.EntityInitializerService;
 import ro.pizzeriaq.qservices.service.OrderService;
 import ro.pizzeriaq.qservices.service.ProductService;
@@ -150,7 +149,7 @@ public class OrderControllerTest {
 	@Test
 	void badPayloadValidation3() throws Exception {
 		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
-				.items(List.of(PlacedOrderItemDTO.builder().productId(0).count(1).build()))
+				.items(List.of(PlacedOrderDTO.Item.builder().productId(0).count(1).build()))
 				.build();
 
 		mockMvc.perform(constructDefaultPostRequest()
@@ -161,7 +160,7 @@ public class OrderControllerTest {
 	@Test
 	void badPayloadValidation4() throws Exception {
 		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
-				.items(List.of(PlacedOrderItemDTO.builder().productId(1).count(0).build()))
+				.items(List.of(PlacedOrderDTO.Item.builder().productId(1).count(0).build()))
 				.build();
 
 		mockMvc.perform(constructDefaultPostRequest()
@@ -172,7 +171,7 @@ public class OrderControllerTest {
 	@Test
 	void badPayloadDBValuesTest() throws Exception {
 		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
-				.items(List.of(PlacedOrderItemDTO.builder().productId(Integer.MAX_VALUE).count(1).build()))
+				.items(List.of(PlacedOrderDTO.Item.builder().productId(Integer.MAX_VALUE).count(1).build()))
 				.build();
 
 		mockMvc.perform(constructDefaultPostRequest()
@@ -186,8 +185,8 @@ public class OrderControllerTest {
 
 		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
 				.items(List.of(
-						PlacedOrderItemDTO.builder().productId(products.get(0).getId()).count(1).build(),
-						PlacedOrderItemDTO.builder().productId(products.get(1).getId()).count(2).build()
+						PlacedOrderDTO.Item.builder().productId(products.get(0).getId()).count(1).build(),
+						PlacedOrderDTO.Item.builder().productId(products.get(1).getId()).count(2).build()
 				))
 				.build();
 
@@ -209,7 +208,7 @@ public class OrderControllerTest {
 
 		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
 				.items(products.stream()
-						.map(product -> PlacedOrderItemDTO.builder()
+						.map(product -> PlacedOrderDTO.Item.builder()
 								.productId(product.getId())
 								.count(10)
 								.build())
@@ -227,4 +226,6 @@ public class OrderControllerTest {
 				.andExpect(jsonPath("$").isArray())
 				.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1));
 	}
+
+	// TODO: add tests with orders with options
 }

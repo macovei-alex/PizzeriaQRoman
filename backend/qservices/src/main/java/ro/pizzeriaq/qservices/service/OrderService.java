@@ -9,7 +9,6 @@ import ro.pizzeriaq.qservices.data.repository.OrderRepository;
 import ro.pizzeriaq.qservices.data.repository.ProductRepository;
 import ro.pizzeriaq.qservices.service.DTO.HistoryOrderMinimalDTO;
 import ro.pizzeriaq.qservices.service.DTO.PlacedOrderDTO;
-import ro.pizzeriaq.qservices.service.DTO.PlacedOrderItemDTO;
 import ro.pizzeriaq.qservices.service.DTO.mapper.HistoryOrderMinimalMapper;
 
 import java.math.BigDecimal;
@@ -56,7 +55,7 @@ public class OrderService {
 
 
 	private void validateOrder(PlacedOrderDTO placedOrderDTO, List<Product> products) throws IllegalArgumentException {
-		for (PlacedOrderItemDTO placedOrderItemDTO : placedOrderDTO.getItems()) {
+		for (PlacedOrderDTO.Item placedOrderItemDTO : placedOrderDTO.getItems()) {
 			if (products.stream().noneMatch(p -> p.getId() == placedOrderItemDTO.getProductId())) {
 				throw new IllegalArgumentException("Product not found for ID: " + placedOrderItemDTO.getProductId());
 			}
@@ -77,7 +76,7 @@ public class OrderService {
 				.totalPriceWithDiscount(null)
 				.build();
 
-		for (PlacedOrderItemDTO placedOrderItemDTO : placedOrderDTO.getItems()) {
+		for (PlacedOrderDTO.Item placedOrderItemDTO : placedOrderDTO.getItems()) {
 			Product product = products.stream()
 					.filter(p -> p.getId() == placedOrderItemDTO.getProductId())
 					.findFirst().orElseThrow();
