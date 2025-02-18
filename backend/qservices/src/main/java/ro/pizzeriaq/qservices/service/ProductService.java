@@ -2,6 +2,7 @@ package ro.pizzeriaq.qservices.service;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.pizzeriaq.qservices.data.model.Product;
@@ -16,25 +17,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class ProductService {
 
 	@PersistenceContext
-	private EntityManager entityManager;
+	private final EntityManager entityManager;
 
 	private final ProductRepository productRepository;
 	private final ProductMapper productMapper;
 	private final ProductWithOptionsMapper productWithOptionsMapper;
 	private final OptionListRepository optionListRepository;
-
-
-	public ProductService(ProductRepository productRepository,
-						  ProductMapper productMapper,
-						  ProductWithOptionsMapper productWithOptionsMapper, OptionListRepository optionListRepository) {
-		this.productRepository = productRepository;
-		this.productMapper = productMapper;
-		this.productWithOptionsMapper = productWithOptionsMapper;
-		this.optionListRepository = optionListRepository;
-	}
 
 
 	@Transactional

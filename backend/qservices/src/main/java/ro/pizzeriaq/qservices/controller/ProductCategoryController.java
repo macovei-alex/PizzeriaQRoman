@@ -1,5 +1,6 @@
 package ro.pizzeriaq.qservices.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,18 +9,12 @@ import ro.pizzeriaq.qservices.service.ProductCategoryService;
 
 import java.util.List;
 
-// TODO: add @AllArgsConstructor for beans
-
 @RestController
 @RequestMapping("/category")
+@AllArgsConstructor
 public class ProductCategoryController {
 
 	private final ProductCategoryService service;
-
-
-	public ProductCategoryController(ProductCategoryService service) {
-		this.service = service;
-	}
 
 
 	@GetMapping("/all")

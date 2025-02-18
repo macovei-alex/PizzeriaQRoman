@@ -1,44 +1,28 @@
 package ro.pizzeriaq.qservices.service;
 
 
-import org.springframework.data.domain.Sort;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.pizzeriaq.qservices.data.model.*;
 import ro.pizzeriaq.qservices.data.repository.*;
 
-import javax.swing.text.html.parser.Entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class EntityInitializerService {
-	ProductRepository productRepository;
-	ProductCategoryRepository categoryRepository;
-	OptionListRepository optionListRepository;
-	OptionRepository optionRepository;
-	AccountRepository accountRepository;
-	OrderRepository orderRepository;
-	OrderItemRepository orderItemRepository;
 
-
-	public EntityInitializerService(ProductRepository productRepository,
-									ProductCategoryRepository categoryRepository,
-									OptionListRepository optionListRepository,
-									OptionRepository optionRepository,
-									AccountRepository accountRepository,
-									OrderRepository orderRepository,
-									OrderItemRepository orderItemRepository) {
-		this.productRepository = productRepository;
-		this.categoryRepository = categoryRepository;
-		this.optionListRepository = optionListRepository;
-		this.optionRepository = optionRepository;
-		this.accountRepository = accountRepository;
-		this.orderRepository = orderRepository;
-		this.orderItemRepository = orderItemRepository;
-	}
+	private final ProductRepository productRepository;
+	private final ProductCategoryRepository categoryRepository;
+	private final OptionListRepository optionListRepository;
+	private final OptionRepository optionRepository;
+	private final AccountRepository accountRepository;
+	private final OrderRepository orderRepository;
+	private final OrderItemRepository orderItemRepository;
 
 
 	public static void reInitializeEntities(EntityInitializerService entityInitializerService) {

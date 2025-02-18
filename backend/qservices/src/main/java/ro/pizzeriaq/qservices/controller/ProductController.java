@@ -1,5 +1,6 @@
 package ro.pizzeriaq.qservices.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,14 +16,10 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/product")
+@AllArgsConstructor
 public class ProductController {
 
 	private final ProductService service;
-
-
-	public ProductController(ProductService service) {
-		this.service = service;
-	}
 
 
 	@GetMapping("/all")

@@ -1,5 +1,6 @@
 package ro.pizzeriaq.qservices.controller;
 
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,17 +16,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/image")
+@AllArgsConstructor
 public class ImageController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ImageController.class);
 	private final ImageManagementService imageManagementService;
 	private final ProductService productService;
-
-
-	public ImageController(ImageManagementService imageManagementService, ProductService productService) {
-		this.imageManagementService = imageManagementService;
-		this.productService = productService;
-	}
 
 
 	@GetMapping("/all")

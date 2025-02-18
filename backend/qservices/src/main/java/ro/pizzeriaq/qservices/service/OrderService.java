@@ -1,5 +1,6 @@
 package ro.pizzeriaq.qservices.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.pizzeriaq.qservices.data.model.*;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class OrderService {
 
 	private final HistoryOrderMinimalMapper historyOrderMinimalMapper;
@@ -24,20 +26,6 @@ public class OrderService {
 	private final OrderItemRepository orderItemRepository;
 	private final ProductRepository productRepository;
 	private final AccountRepository accountRepository;
-
-
-	public OrderService(
-			HistoryOrderMinimalMapper historyOrderMinimalMapper,
-			OrderRepository orderRepository,
-			OrderItemRepository orderItemRepository,
-			ProductRepository productRepository,
-			AccountRepository accountRepository) {
-		this.historyOrderMinimalMapper = historyOrderMinimalMapper;
-		this.orderRepository = orderRepository;
-		this.orderItemRepository = orderItemRepository;
-		this.productRepository = productRepository;
-		this.accountRepository = accountRepository;
-	}
 
 
 	@Transactional

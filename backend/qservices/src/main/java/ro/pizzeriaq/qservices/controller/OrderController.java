@@ -1,6 +1,7 @@
 package ro.pizzeriaq.qservices.controller;
 
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ro.pizzeriaq.qservices.service.DTO.HistoryOrderMinimalDTO;
 import ro.pizzeriaq.qservices.service.DTO.PlacedOrderDTO;
@@ -10,14 +11,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/order")
+@AllArgsConstructor
 public class OrderController {
 
 	private final OrderService orderService;
-
-
-	public OrderController(OrderService orderService) {
-		this.orderService = orderService;
-	}
 
 
 	@PostMapping("/place")
