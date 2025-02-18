@@ -89,7 +89,6 @@ export default function ProductScreen() {
     if (!optionList) {
       throw new Error(`Option list not found: ${optionListId}`);
     }
-
     const option = optionList.options.find((option) => option.id === optionId);
     if (!option) {
       throw new Error(`Option not found: ${optionId}`);

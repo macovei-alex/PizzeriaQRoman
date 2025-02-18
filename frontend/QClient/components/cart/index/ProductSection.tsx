@@ -1,17 +1,23 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { useCartContext } from "@/context/useCartContext";
+import { CartItem, useCartContext } from "@/context/useCartContext";
 import CartItemCard from "./CartItemCard";
 import useColorTheme from "@/hooks/useColorTheme";
 import logger from "@/utils/logger";
 
+function calculatePrice(item: CartItem) {
+  const optionLists = Object.entries(item.options);
+  console.log(JSON.stringify(optionLists));
+  return item.product.price * item.count;
+}
+
 export default function ProductSection() {
   logger.render("ProductSection");
 
-  const { cart } = useCartContext();
   const colorTheme = useColorTheme();
+  const { cart } = useCartContext();
 
-  const totalPrice = cart.reduce((total, cartItem) => total + cartItem.product.price * cartItem.count, 0);
+  const totalPrice = cart.reduce((total, cartItem) => total + calculatePrice(cartItem), 0);
 
   return (
     <>

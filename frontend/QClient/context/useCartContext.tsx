@@ -1,19 +1,32 @@
-import { OptionId, OptionListId, Product } from "@/api/types/Product";
+import { OptionId, OptionListId, ProductWithOptions } from "@/api/types/Product";
 import logger from "@/utils/logger";
 import React, { createContext, ReactNode, useCallback, useContext, useRef, useState } from "react";
+
+function logCart(cart: CartItem[]) {
+  console.log(
+    JSON.stringify(
+      cart.map((item) => {
+        return {
+          id: item.id,
+          options: item.options,
+        };
+      })
+    )
+  );
+}
 
 export type CartItemId = number;
 export type CartItemOptions = Record<OptionListId, Record<OptionId, number>>;
 export type CartItem = {
   id: CartItemId;
-  product: Product;
+  product: ProductWithOptions;
   options: CartItemOptions;
   count: number;
 };
 
 type CartContextType = {
   cart: CartItem[];
-  addCartItem: (product: Product, options: CartItemOptions) => void;
+  addCartItem: (product: Readonly<ProductWithOptions>, options: CartItemOptions) => void;
   changeCartItemCount: (cartItemId: CartItemId, increment: number) => void;
   changeCartItemOptions: (cartItemId: CartItemId, options: CartItemOptions) => void;
 };
@@ -34,19 +47,9 @@ export function CartContextProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const nextId = useRef(1);
 
-  const addCartItem = useCallback((product: Product, options: CartItemOptions) => {
+  const addCartItem = useCallback((product: Readonly<ProductWithOptions>, options: CartItemOptions) => {
     setCart((prev) => {
       const newCart = [...prev, { id: nextId.current++, product, options, count: 1 }];
-      console.log(
-        JSON.stringify(
-          newCart.map((item) => {
-            return {
-              id: item.id,
-              options: item.options,
-            };
-          })
-        )
-      );
       return newCart;
     });
   }, []);
@@ -62,31 +65,13 @@ export function CartContextProvider({ children }: { children: ReactNode }) {
       if (item.count <= 0) {
         setCart((prev) => {
           const newCart = prev.filter((item) => item.id !== cartItemId);
-          console.log(
-            JSON.stringify(
-              newCart.map((item) => {
-                return {
-                  id: item.id,
-                  options: item.options,
-                };
-              })
-            )
-          );
+          logCart(newCart);
           return newCart;
         });
       } else {
         setCart((prev) => {
           const newCart = [...prev];
-          console.log(
-            JSON.stringify(
-              newCart.map((item) => {
-                return {
-                  id: item.id,
-                  options: item.options,
-                };
-              })
-            )
-          );
+          logCart(newCart);
           return newCart;
         });
       }
@@ -104,16 +89,7 @@ export function CartContextProvider({ children }: { children: ReactNode }) {
       item.options = options;
       setCart((prev) => {
         const newCart = [...prev];
-        console.log(
-          JSON.stringify(
-            newCart.map((item) => {
-              return {
-                id: item.id,
-                options: item.options,
-              };
-            })
-          )
-        );
+        logCart(newCart);
         return newCart;
       });
     },
