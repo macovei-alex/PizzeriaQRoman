@@ -15,14 +15,13 @@ export default function Cart() {
   logger.render("Cart");
 
   const colorTheme = useColorTheme();
-  const { cart } = useCartContext();
+  const { cart, emptyCart } = useCartContext();
 
   const [sendingOrder, setSendingOrder] = useState(false);
 
   function sendOrder() {
     if (cart.length === 0) {
       showToast("Coșul este gol");
-      router.push("/cart/confirmation");
       return;
     }
 
@@ -45,6 +44,7 @@ export default function Cart() {
       })
       .finally(() => {
         setSendingOrder(() => false);
+        emptyCart();
         router.push("/cart/confirmation");
       });
   }

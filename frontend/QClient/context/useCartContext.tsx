@@ -29,6 +29,7 @@ type CartContextType = {
   addCartItem: (product: Readonly<ProductWithOptions>, options: CartItemOptions) => void;
   changeCartItemCount: (cartItemId: CartItemId, increment: number) => void;
   changeCartItemOptions: (cartItemId: CartItemId, options: CartItemOptions) => void;
+  emptyCart: () => void;
 };
 
 const CartContext = createContext<CartContextType | null>(null);
@@ -97,8 +98,14 @@ export function CartContextProvider({ children }: { children: ReactNode }) {
     [cart]
   );
 
+  const emptyCart = useCallback(() => {
+    setCart(() => []);
+  }, [setCart]);
+
   return (
-    <CartContext.Provider value={{ cart, addCartItem, changeCartItemCount, changeCartItemOptions }}>
+    <CartContext.Provider
+      value={{ cart, addCartItem, changeCartItemCount, changeCartItemOptions, emptyCart }}
+    >
       {children}
     </CartContext.Provider>
   );
