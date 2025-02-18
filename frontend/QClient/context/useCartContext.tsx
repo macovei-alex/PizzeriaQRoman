@@ -50,6 +50,7 @@ export function CartContextProvider({ children }: { children: ReactNode }) {
   const addCartItem = useCallback((product: Readonly<ProductWithOptions>, options: CartItemOptions) => {
     setCart((prev) => {
       const newCart = [...prev, { id: nextId.current++, product, options, count: 1 }];
+      logCart(newCart);
       return newCart;
     });
   }, []);

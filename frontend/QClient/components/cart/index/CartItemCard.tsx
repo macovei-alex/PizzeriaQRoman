@@ -12,17 +12,16 @@ import { useRouter } from "expo-router";
 
 type CartItemCardProps = {
   cartItem: CartItem;
+  price: number;
 };
 
-export default function CartItemCard({ cartItem }: CartItemCardProps) {
+export default function CartItemCard({ cartItem, price }: CartItemCardProps) {
   logger.render("CartItemCard");
 
   const image = useSingleImage(cartItem.product.imageName);
   const colorTheme = useColorTheme();
   const { changeCartItemCount } = useCartContext();
   const router = useRouter();
-
-  const totalPrice = cartItem.product.price * cartItem.count;
 
   return (
     <View style={styles.container}>
@@ -67,9 +66,7 @@ export default function CartItemCard({ cartItem }: CartItemCardProps) {
 
       <View style={styles.priceSectionContainer}>
         <View style={[styles.priceContainer, { backgroundColor: colorTheme.background.accent }]}>
-          <Text style={[styles.priceText, { color: colorTheme.text.onAccent }]}>
-            {totalPrice.toFixed(2)} RON
-          </Text>
+          <Text style={[styles.priceText, { color: colorTheme.text.onAccent }]}>{price.toFixed(2)} RON</Text>
         </View>
         <TouchableOpacity onPress={() => changeCartItemCount(cartItem.id, -1)}>
           <MinusCircleSvg style={styles.plusMinusSvg} />
