@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

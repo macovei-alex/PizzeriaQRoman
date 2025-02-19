@@ -16,6 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import ro.pizzeriaq.qservices.service.DTO.PlacedOrderDTO;
+import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
 import ro.pizzeriaq.qservices.service.EntityInitializerService;
 import ro.pizzeriaq.qservices.service.OrderService;
 import ro.pizzeriaq.qservices.service.ProductService;
@@ -25,8 +26,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 // TODO: Add Validation message testing
@@ -148,35 +148,60 @@ public class OrderControllerTest {
 
 		mockMvc.perform(constructDefaultPostRequest()
 						.content(objectMapper.writeValueAsString(placedOrderDTO)))
-				.andExpect(status().isBadRequest());
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.['items']").value("The list of items in an order cannot be null or empty"));
 	}
 
 	@Test
 	void badPayloadValidation3() throws Exception {
 		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
-				.items(List.of(PlacedOrderDTO.Item.builder().productId(0).count(1).build()))
+				.items(List.of(
+						PlacedOrderDTO.Item.builder().productId(0).count(1).optionLists(List.of()).build()))
 				.build();
 
 		mockMvc.perform(constructDefaultPostRequest()
 						.content(objectMapper.writeValueAsString(placedOrderDTO)))
-				.andExpect(status().isBadRequest());
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.['items[0].productId']").value("You cannot order a product with the ID less than or equal to 0"));
 	}
 
 	@Test
 	void badPayloadValidation4() throws Exception {
+		var productId = productService.getProducts().stream().findFirst().orElseThrow().getId();
+
 		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
-				.items(List.of(PlacedOrderDTO.Item.builder().productId(1).count(0).build()))
+				.items(List.of(
+						PlacedOrderDTO.Item.builder().productId(productId).count(0).optionLists(List.of()).build()))
 				.build();
 
 		mockMvc.perform(constructDefaultPostRequest()
 						.content(objectMapper.writeValueAsString(placedOrderDTO)))
-				.andExpect(status().isBadRequest());
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.['items[0].count']").value("You cannot order an amount of items less than or equal to 0"));
+	}
+
+	@Test
+	void badPayloadValidation5() throws Exception {
+		var productId = productService.getProducts().stream().findFirst().orElseThrow().getId();
+
+		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+				.items(List.of(
+						PlacedOrderDTO.Item.builder().productId(productId).count(1).optionLists(null).build()
+				))
+				.build();
+
+		mockMvc.perform(constructDefaultPostRequest()
+						.content(objectMapper.writeValueAsString(placedOrderDTO)))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.['items[0].optionLists']").value("The list of options for any item cannot be null, only empty if no options were selected"));
 	}
 
 	@Test
 	void badPayloadDBValuesTest() throws Exception {
 		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
-				.items(List.of(PlacedOrderDTO.Item.builder().productId(Integer.MAX_VALUE).count(1).build()))
+				.items(List.of(
+						PlacedOrderDTO.Item.builder().productId(Integer.MAX_VALUE).count(1).optionLists(List.of()).build()
+				))
 				.build();
 
 		mockMvc.perform(constructDefaultPostRequest()
@@ -186,12 +211,12 @@ public class OrderControllerTest {
 
 	@Test
 	void goodPayloadTest1() throws Exception {
-		var products = productService.getProducts();
+		var productIds = productService.getProducts().stream().map(ProductDTO::getId).toList();
 
 		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
 				.items(List.of(
-						PlacedOrderDTO.Item.builder().productId(products.get(0).getId()).count(1).build(),
-						PlacedOrderDTO.Item.builder().productId(products.get(1).getId()).count(2).build()
+						PlacedOrderDTO.Item.builder().productId(productIds.get(0)).count(1).optionLists(List.of()).build(),
+						PlacedOrderDTO.Item.builder().productId(productIds.get(1)).count(2).optionLists(List.of()).build()
 				))
 				.build();
 
@@ -216,6 +241,7 @@ public class OrderControllerTest {
 						.map(product -> PlacedOrderDTO.Item.builder()
 								.productId(product.getId())
 								.count(10)
+								.optionLists(List.of())
 								.build())
 						.toList())
 				.build();

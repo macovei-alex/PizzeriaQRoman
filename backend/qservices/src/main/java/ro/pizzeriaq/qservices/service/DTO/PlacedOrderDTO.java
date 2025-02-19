@@ -3,6 +3,7 @@ package ro.pizzeriaq.qservices.service.DTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;
@@ -13,6 +14,7 @@ public class PlacedOrderDTO {
 
 	private String additionalNotes;
 
+	@Valid
 	@NotEmpty(message = "The list of items in an order cannot be null or empty")
 	private List<Item> items;
 
@@ -28,6 +30,7 @@ public class PlacedOrderDTO {
 		private int count;
 
 		@Valid
+		@NotNull(message = "The list of options for any item cannot be null, only empty if no options were selected")
 		private List<OptionList> optionLists;
 
 
