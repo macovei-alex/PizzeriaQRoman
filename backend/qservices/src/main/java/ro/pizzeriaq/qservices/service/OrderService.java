@@ -121,8 +121,8 @@ public class OrderService {
 				.orderTimestamp(LocalDateTime.now())
 				.deliveryTimestamp(null)
 				.additionalNotes(placedOrderDTO.getAdditionalNotes())
-				.totalPrice(null)
-				.totalPriceWithDiscount(null)
+				.totalPrice(BigDecimal.ZERO)
+				.totalPriceWithDiscount(BigDecimal.ZERO)
 				.build();
 
 		for (PlacedOrderDTO.Item placedOrderItemDTO : placedOrderDTO.getItems()) {
@@ -137,16 +137,10 @@ public class OrderService {
 			OrderItem orderItem = generateOrderItem(placedOrderItemDTO, product);
 			orderItem.setOrder(order);
 
+			order.setTotalPrice(order.getTotalPrice().add(orderItem.getTotalPrice()));
+			order.setTotalPriceWithDiscount(order.getTotalPriceWithDiscount().add(orderItem.getTotalPriceWithDiscount()));
 			order.getOrderItems().add(orderItem);
 		}
-
-		order.setTotalPrice(order.getOrderItems().stream()
-				.map(orderItem -> orderItem.getProduct().getPrice()
-						.multiply(BigDecimal.valueOf(orderItem.getCount())))
-				.reduce(BigDecimal.ZERO, BigDecimal::add)
-		);
-
-		order.setTotalPriceWithDiscount(order.getTotalPrice());
 
 		return order;
 	}
@@ -156,10 +150,7 @@ public class OrderService {
 		OrderItem orderItem = OrderItem.builder()
 				.order(null)
 				.product(product)
-				.totalPrice(null)
-				.totalPriceWithDiscount(null)
 				.count(placedItem.getCount())
-				.options(null)
 				.build();
 
 		BigDecimal totalPrice = product.getPrice();
@@ -182,9 +173,7 @@ public class OrderService {
 				// Bad Option IDs were already sanitized during validation
 				assert option != null;
 
-				totalPrice = totalPrice.add(
-						option.getPrice().multiply(BigDecimal.valueOf(itemOption.getCount()))
-				);
+				totalPrice = totalPrice.add(option.getPrice().multiply(BigDecimal.valueOf(itemOption.getCount())));
 
 				// TODO: Generation optionLists and options for the db.
 			}
@@ -201,7 +190,7 @@ public class OrderService {
 
 	@Transactional(readOnly = true)
 	public List<HistoryOrderMinimalDTO> getOrdersHistory() {
-		List<Order> orders = orderRepository.findAll();
+		List<Order> orders = orderRepository.findAllOrderByOrderTimestampDesc();
 
 		return orders.stream()
 				.map(historyOrderMinimalMapper::fromEntity)

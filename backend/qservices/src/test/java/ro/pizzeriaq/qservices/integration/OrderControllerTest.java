@@ -15,22 +15,24 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import ro.pizzeriaq.qservices.data.model.OrderStatus;
+import ro.pizzeriaq.qservices.service.DTO.OptionDTO;
+import ro.pizzeriaq.qservices.service.DTO.OptionListDTO;
 import ro.pizzeriaq.qservices.service.DTO.PlacedOrderDTO;
 import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
 import ro.pizzeriaq.qservices.service.EntityInitializerService;
 import ro.pizzeriaq.qservices.service.OrderService;
 import ro.pizzeriaq.qservices.service.ProductService;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-
-// TODO: Add Validation message testing
-// TODO: Add tests with orders with options
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @SpringBootTest
@@ -211,16 +213,24 @@ public class OrderControllerTest {
 
 	@Test
 	void goodPayloadTest1() throws Exception {
-		var productIds = productService.getProducts().stream().map(ProductDTO::getId).toList();
+		var products = productService.getProducts().stream().limit(2).toList();
 
 		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
-				.items(List.of(
-						PlacedOrderDTO.Item.builder().productId(productIds.get(0)).count(1).optionLists(List.of()).build(),
-						PlacedOrderDTO.Item.builder().productId(productIds.get(1)).count(2).optionLists(List.of()).build()
-				))
+				.items(products.stream()
+						.map((p) -> PlacedOrderDTO.Item.builder()
+								.productId(p.getId())
+								.count(2)
+								.optionLists(List.of())
+								.build()
+						).toList()
+				)
 				.build();
 
 		var historyOrders = orderService.getOrdersHistory();
+
+		BigDecimal expectedPrice = products.stream()
+				.map(ProductDTO::getPrice)
+				.reduce(BigDecimal.ZERO, (acc, price) -> acc.add(price.multiply(BigDecimal.valueOf(2))));
 
 		mockMvc.perform(constructDefaultPostRequest()
 						.content(objectMapper.writeValueAsString(placedOrderDTO)))
@@ -229,7 +239,10 @@ public class OrderControllerTest {
 		mockMvc.perform(constructDefaultGetRequest())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$").isArray())
-				.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1));
+				.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
+				.andExpect(jsonPath("$[0].totalPrice").value(expectedPrice.floatValue()))
+				.andExpect(jsonPath("$[0].totalPriceWithDiscount").value(expectedPrice.floatValue()))
+				.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
 	}
 
 	@Test
@@ -246,6 +259,10 @@ public class OrderControllerTest {
 						.toList())
 				.build();
 
+		BigDecimal expectedPrice = products.stream()
+				.map(ProductDTO::getPrice)
+				.reduce(BigDecimal.ZERO, (acc, price) -> acc.add(price.multiply(BigDecimal.valueOf(10))));
+
 		var historyOrders = orderService.getOrdersHistory();
 
 		mockMvc.perform(constructDefaultPostRequest()
@@ -255,6 +272,138 @@ public class OrderControllerTest {
 		mockMvc.perform(constructDefaultGetRequest())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$").isArray())
-				.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1));
+				.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
+				.andExpect(jsonPath("$[0].totalPrice").value(expectedPrice.floatValue()))
+				.andExpect(jsonPath("$[0].totalPriceWithDiscount").value(expectedPrice.floatValue()))
+				.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
+	}
+
+	@Test
+	void goodPayloadTest3() throws Exception {
+		var products = productService.getProducts().stream()
+				.map((product) -> productService.getProduct(product.getId()).orElseThrow())
+				.limit(5)
+				.toList();
+
+		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+				.items(products.stream()
+						.map(product -> {
+							var orderItem = PlacedOrderDTO.Item.builder()
+									.productId(product.getId())
+									.count(3)
+									.optionLists(List.of())
+									.build();
+
+							if (product.getOptionLists().isEmpty()) {
+								return orderItem;
+							}
+
+							OptionListDTO optionList = product.getOptionLists().get(0);
+							PlacedOrderDTO.Item.OptionList optionListDTO = PlacedOrderDTO.Item.OptionList.builder()
+									.optionListId(optionList.getId())
+									.options(List.of(
+											PlacedOrderDTO.Item.OptionList.Option.builder()
+													.optionId(optionList.getOptions().get(0).getId())
+													.count(1)
+													.build()
+									))
+									.build();
+
+							orderItem.setOptionLists(List.of(optionListDTO));
+							return orderItem;
+						})
+						.toList())
+				.build();
+
+		BigDecimal expectedPrice = products.stream()
+				.map((product) -> product.getPrice()
+						.add(!product.getOptionLists().isEmpty()
+								? product.getOptionLists().get(0).getOptions().get(0).getPrice()
+								: BigDecimal.ZERO)
+						.multiply(BigDecimal.valueOf(3)))
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+
+		var historyOrders = orderService.getOrdersHistory();
+
+		mockMvc.perform(constructDefaultPostRequest()
+						.content(objectMapper.writeValueAsString(placedOrderDTO)))
+				.andExpect(status().isOk());
+
+		mockMvc.perform(constructDefaultGetRequest())
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$").isArray())
+				.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
+				.andExpect(jsonPath("$[0].totalPrice").value(expectedPrice.floatValue()))
+				.andExpect(jsonPath("$[0].totalPriceWithDiscount").value(expectedPrice.floatValue()))
+				.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
+	}
+
+	@Test
+	void goodPayloadTest4() throws Exception {
+		var products = productService.getProducts().stream()
+				.map((product) -> productService.getProduct(product.getId()).orElseThrow())
+				.limit(5)
+				.toList();
+
+		AtomicInteger i = new AtomicInteger(0);
+
+		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+				.items(products.stream()
+						.map(product -> {
+							var orderItem = PlacedOrderDTO.Item.builder()
+									.productId(product.getId())
+									.count(i.incrementAndGet())
+									.optionLists(List.of())
+									.build();
+
+							if (product.getOptionLists().isEmpty()) {
+								return orderItem;
+							}
+
+							OptionListDTO optionList = product.getOptionLists().get(0);
+							OptionDTO option = optionList.getOptions().get(0);
+
+							PlacedOrderDTO.Item.OptionList optionListDTO = PlacedOrderDTO.Item.OptionList.builder()
+									.optionListId(optionList.getId())
+									.options(List.of(
+											PlacedOrderDTO.Item.OptionList.Option.builder()
+													.optionId(option.getId())
+													.count(option.getMaxCount())
+													.build()
+									))
+									.build();
+
+							orderItem.setOptionLists(List.of(optionListDTO));
+							return orderItem;
+						})
+						.toList())
+				.build();
+
+		i.set(0);
+
+		BigDecimal expectedPrice = products.stream()
+				.map((product) -> {
+					OptionDTO option = !product.getOptionLists().isEmpty()
+							? product.getOptionLists().get(0).getOptions().get(0)
+							: OptionDTO.builder().price(BigDecimal.ZERO).maxCount(1).build();
+					return product.getPrice()
+							.add(option.getPrice().multiply(BigDecimal.valueOf(option.getMaxCount())))
+							.multiply(BigDecimal.valueOf(i.incrementAndGet()));
+				})
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+
+		var historyOrders = orderService.getOrdersHistory();
+
+		mockMvc.perform(constructDefaultPostRequest()
+						.content(objectMapper.writeValueAsString(placedOrderDTO)))
+				.andExpect(status().isOk());
+
+		mockMvc.perform(constructDefaultGetRequest())
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$").isArray())
+				.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
+				.andExpect(jsonPath("$[0].totalPrice").value(expectedPrice.floatValue()))
+				.andExpect(jsonPath("$[0].totalPriceWithDiscount").value(expectedPrice.floatValue()))
+				.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
 	}
 }

@@ -35,6 +35,7 @@ public class PlacedOrderDTO {
 
 
 		@Data
+		@Builder
 		public static class OptionList {
 
 			@Min(value = 1, message = "You cannot add an option list with the ID less than or equal to 0")
@@ -46,6 +47,7 @@ public class PlacedOrderDTO {
 
 
 			@Data
+			@Builder
 			public static class Option {
 
 				@Min(value = 1, message = "You cannot add an option with the ID less than or equal to 0")
