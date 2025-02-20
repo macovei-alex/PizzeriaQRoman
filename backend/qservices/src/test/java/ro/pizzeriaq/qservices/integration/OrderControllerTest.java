@@ -345,14 +345,14 @@ public class OrderControllerTest {
 				.limit(5)
 				.toList();
 
-		AtomicInteger i = new AtomicInteger(0);
+		AtomicInteger optionCounter = new AtomicInteger(0);
 
 		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
 				.items(products.stream()
 						.map(product -> {
 							var orderItem = PlacedOrderDTO.Item.builder()
 									.productId(product.getId())
-									.count(i.incrementAndGet())
+									.count(optionCounter.incrementAndGet())
 									.optionLists(List.of())
 									.build();
 
@@ -379,16 +379,17 @@ public class OrderControllerTest {
 						.toList())
 				.build();
 
-		i.set(0);
+		optionCounter.set(0);
 
 		BigDecimal expectedPrice = products.stream()
 				.map((product) -> {
 					OptionDTO option = !product.getOptionLists().isEmpty()
 							? product.getOptionLists().get(0).getOptions().get(0)
 							: OptionDTO.builder().price(BigDecimal.ZERO).maxCount(1).build();
+					System.out.println("Product: " + product.getName() + " Option: " + option.getName());
 					return product.getPrice()
 							.add(option.getPrice().multiply(BigDecimal.valueOf(option.getMaxCount())))
-							.multiply(BigDecimal.valueOf(i.incrementAndGet()));
+							.multiply(BigDecimal.valueOf(optionCounter.incrementAndGet()));
 				})
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 

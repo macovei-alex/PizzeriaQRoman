@@ -23,7 +23,7 @@ public class OrderService {
 	private final OrderItemRepository orderItemRepository;
 	private final ProductRepository productRepository;
 	private final AccountRepository accountRepository;
-	private final OptionListRepository optionListRepository;
+	private final OrderItem_OptionList_OptionRepository orderItemOptionListOptionRepository;
 
 
 	@Transactional
@@ -35,6 +35,9 @@ public class OrderService {
 
 		orderRepository.save(order);
 		orderItemRepository.saveAll(order.getOrderItems());
+		order.getOrderItems().forEach((orderItem) -> {
+			orderItemOptionListOptionRepository.saveAll(orderItem.getOptions());
+		});
 	}
 
 
@@ -114,6 +117,7 @@ public class OrderService {
 		validateOrder(placedOrderDTO, products);
 
 		Order order = Order.builder()
+				.id(null)
 				.account(account)
 				.orderItems(new ArrayList<>())
 				.orderStatus(OrderStatus.RECEIVED)
@@ -148,21 +152,23 @@ public class OrderService {
 
 	private OrderItem generateOrderItem(PlacedOrderDTO.Item placedItem, Product product) {
 		OrderItem orderItem = OrderItem.builder()
+				.id(null)
 				.order(null)
 				.product(product)
+				.options(new ArrayList<>())
 				.count(placedItem.getCount())
 				.build();
 
 		BigDecimal totalPrice = product.getPrice();
 
 		for (PlacedOrderDTO.Item.OptionList itemOptionList : placedItem.getOptionLists()) {
-			 OptionList optionList = product.getOptionLists().stream()
+			OptionList optionList = product.getOptionLists().stream()
 					.filter((ol) -> ol.getId() == itemOptionList.getOptionListId())
 					.findFirst()
 					.orElse(null);
 
-			 // Bad OptionList IDs were already sanitized during validation
-			 assert optionList != null;
+			// Bad OptionList IDs were already sanitized during validation
+			assert optionList != null;
 
 			for (PlacedOrderDTO.Item.OptionList.Option itemOption : itemOptionList.getOptions()) {
 				Option option = optionList.getOptions().stream()
@@ -175,7 +181,13 @@ public class OrderService {
 
 				totalPrice = totalPrice.add(option.getPrice().multiply(BigDecimal.valueOf(itemOption.getCount())));
 
-				// TODO: Generation optionLists and options for the db.
+				orderItem.getOptions().add(OrderItem_OptionList_Option.builder()
+						.id(null)
+						.orderItem(orderItem)
+						.optionList(optionList)
+						.option(option)
+						.count(itemOption.getCount())
+						.build());
 			}
 		}
 

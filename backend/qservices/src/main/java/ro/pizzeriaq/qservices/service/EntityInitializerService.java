@@ -23,6 +23,7 @@ public class EntityInitializerService {
 	private final AccountRepository accountRepository;
 	private final OrderRepository orderRepository;
 	private final OrderItemRepository orderItemRepository;
+	private final OrderItem_OptionList_OptionRepository orderItemOptionListOptionRepository;
 
 
 	public static void reInitializeEntities(EntityInitializerService entityInitializerService) {
@@ -38,6 +39,7 @@ public class EntityInitializerService {
 
 	@Transactional
 	public void deleteAll() {
+		orderItemOptionListOptionRepository.deleteAll();
 		orderItemRepository.deleteAll();
 		productRepository.deleteAll();
 		categoryRepository.deleteAll();
