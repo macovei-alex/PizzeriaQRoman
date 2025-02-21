@@ -43,7 +43,6 @@ export default function Cart() {
       .sendOrder(order)
       .then((res) => {
         if (res.status === 200 || res.status === 201) {
-          logger.log("Order sent successfully");
           emptyCart();
           router.push("/cart/confirmation");
         } else {

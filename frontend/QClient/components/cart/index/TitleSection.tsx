@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import HorizontalLine from "@/components/menu/product/HorizontalLine";
+import HorizontalLine from "@/components/shared/product/HorizontalLine";
 import useColorTheme from "@/hooks/useColorTheme";
 import logger from "@/utils/logger";
 

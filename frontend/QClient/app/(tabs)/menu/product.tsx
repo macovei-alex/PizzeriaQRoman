@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import OptionList from "@/components/menu/product/OptionListCard";
+import OptionList from "@/components/shared/product/OptionListCard";
 import useColorTheme from "@/hooks/useColorTheme";
-import HorizontalLine from "@/components/menu/product/HorizontalLine";
+import HorizontalLine from "@/components/shared/product/HorizontalLine";
 import { Fragment } from "react";
-import TitleSection from "@/components/menu/product/TitleSection";
+import TitleSection from "@/components/shared/product/TitleSection";
 import { useLocalSearchParams } from "expo-router/build/hooks";
 import { CartItemOptions, useCartContext } from "@/context/useCartContext";
 import useSingleImage from "@/hooks/useSingleImage";
@@ -21,10 +21,10 @@ type ProductSearchParams = {
   cartItemId: string;
 };
 
-export default function ProductScreen() {
+export default function MenuProductScreen() {
   logger.render("ProductScreen");
 
-  const params = useLocalSearchParams() as ProductSearchParams;
+  const params = useLocalSearchParams<ProductSearchParams>();
   if ((!params.productId || !params.imageName) && !params.cartItemId) {
     throw new Error(
       `Missing required search params. Expected {productId, imageName} or {cartItemId}, but got ${JSON.stringify(params)} instead`

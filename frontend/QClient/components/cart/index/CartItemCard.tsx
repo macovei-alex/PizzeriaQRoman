@@ -3,7 +3,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { imageOrDefault } from "@/utils/files";
 import useSingleImage from "@/hooks/useSingleImage";
 import useColorTheme from "@/hooks/useColorTheme";
-import HorizontalLine from "@/components/menu/product/HorizontalLine";
+import HorizontalLine from "@/components/shared/product/HorizontalLine";
 import PlusCircleSvg from "@/components/svg/PlusCircleSvg";
 import MinusCircleSvg from "@/components/svg/MinusCircleSvg";
 import { CartItem, useCartContext } from "@/context/useCartContext";
@@ -30,7 +30,7 @@ export default function CartItemCard({ cartItem, price }: CartItemCardProps) {
           style={styles.imageContainer}
           onPress={() => {
             router.push({
-              pathname: "/menu/product",
+              pathname: "/cart/product",
               params: { cartItemId: cartItem.id },
             });
           }}
