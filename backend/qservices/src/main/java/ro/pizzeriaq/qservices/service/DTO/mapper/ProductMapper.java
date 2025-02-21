@@ -1,5 +1,6 @@
 package ro.pizzeriaq.qservices.service.DTO.mapper;
 
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -8,15 +9,12 @@ import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
 import ro.pizzeriaq.qservices.service.ImageManagementService;
 
 @Service
+@AllArgsConstructor
 public class ProductMapper {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProductMapper.class);
+
 	private final ImageManagementService imageManagementService;
-
-
-	public ProductMapper(ImageManagementService imageManagementService) {
-		this.imageManagementService = imageManagementService;
-	}
 
 
 	public ProductDTO fromEntity(Product product) {

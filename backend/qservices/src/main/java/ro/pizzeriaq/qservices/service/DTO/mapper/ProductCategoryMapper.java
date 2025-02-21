@@ -13,9 +13,9 @@ public class ProductCategoryMapper {
 			return null;
 		}
 
-		ProductCategoryDTO productCategoryDTO = new ProductCategoryDTO();
-		productCategoryDTO.setId(productCategory.getId());
-		productCategoryDTO.setName(productCategory.getName());
-		return productCategoryDTO;
+		return ProductCategoryDTO.builder()
+				.id(productCategory.getId())
+				.name(productCategory.getName())
+				.build();
 	}
 }

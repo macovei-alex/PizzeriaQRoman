@@ -2,8 +2,11 @@ package ro.pizzeriaq.qservices.service.DTO.mapper;
 
 import org.springframework.stereotype.Service;
 import ro.pizzeriaq.qservices.data.model.Order;
+import ro.pizzeriaq.qservices.data.model.OrderItem;
 import ro.pizzeriaq.qservices.service.DTO.HistoryOrderItemMinimalDTO;
 import ro.pizzeriaq.qservices.service.DTO.HistoryOrderMinimalDTO;
+
+// TODO: Write unit tests for this class
 
 @Service
 public class HistoryOrderMinimalMapper {
@@ -23,10 +26,17 @@ public class HistoryOrderMinimalMapper {
 				.additionalNotes(order.getAdditionalNotes())
 				.totalPrice(order.getTotalPrice())
 				.totalPriceWithDiscount(order.getTotalPriceWithDiscount())
-				.items(order.getOrderItems().stream().map(item -> HistoryOrderItemMinimalDTO.builder()
-						.productId(item.getProduct().getId())
-						.count(item.getCount())
-						.build()).toList())
+				.items(order.getOrderItems().stream().map(this::mapOrderItem).toList())
+				.build();
+	}
+
+
+	private HistoryOrderItemMinimalDTO mapOrderItem(OrderItem item) {
+		assert item != null;
+
+		return HistoryOrderItemMinimalDTO.builder()
+				.productId(item.getProduct().getId())
+				.count(item.getCount())
 				.build();
 	}
 }

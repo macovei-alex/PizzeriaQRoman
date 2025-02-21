@@ -6,38 +6,34 @@ import ro.pizzeriaq.qservices.data.model.OptionList;
 import ro.pizzeriaq.qservices.service.DTO.OptionDTO;
 import ro.pizzeriaq.qservices.service.DTO.OptionListDTO;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 public class OptionListMapper {
-
-	private final OptionMapper optionMapper;
-
-
-	public OptionListMapper(OptionMapper optionMapper) {
-		this.optionMapper = optionMapper;
-	}
-
 
 	public OptionListDTO fromEntity(OptionList optionList) {
 		if (optionList == null) {
 			return null;
 		}
 
-		OptionListDTO optionListDTO = new OptionListDTO();
-		optionListDTO.setId(optionList.getId());
-		optionListDTO.setText(optionList.getText());
-		optionListDTO.setMinChoices(optionList.getMinChoices());
-		optionListDTO.setMaxChoices(optionList.getMaxChoices());
+		return OptionListDTO.builder()
+				.id(optionList.getId())
+				.text(optionList.getText())
+				.minChoices(optionList.getMinChoices())
+				.maxChoices(optionList.getMaxChoices())
+				.options(optionList.getOptions().stream().map(this::mapOption).toList())
+				.build();
+	}
 
-		List<OptionDTO> optionDTOs = new ArrayList<>();
-		for (Option option : optionList.getOptions()) {
-			optionDTOs.add(optionMapper.fromEntity(option));
-		}
 
-		optionListDTO.setOptions(optionDTOs);
+	private OptionDTO mapOption(Option option) {
+		assert option != null;
 
-		return optionListDTO;
+		return OptionDTO.builder()
+				.id(option.getId())
+				.name(option.getName())
+				.additionalDescription(option.getAdditionalDescription())
+				.price(option.getPrice())
+				.minCount(option.getMinCount())
+				.maxCount(option.getMaxCount())
+				.build();
 	}
 }

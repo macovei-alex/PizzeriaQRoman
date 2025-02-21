@@ -35,9 +35,7 @@ public class OrderService {
 
 		orderRepository.save(order);
 		orderItemRepository.saveAll(order.getOrderItems());
-		order.getOrderItems().forEach((orderItem) -> {
-			orderItemOptionListOptionRepository.saveAll(orderItem.getOptions());
-		});
+		order.getOrderItems().forEach((orderItem) -> orderItemOptionListOptionRepository.saveAll(orderItem.getOptions()));
 	}
 
 

@@ -1,23 +1,17 @@
 package ro.pizzeriaq.qservices.service.DTO.mapper;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ro.pizzeriaq.qservices.data.model.Product;
 import ro.pizzeriaq.qservices.service.DTO.ProductWithOptionsDTO;
 import ro.pizzeriaq.qservices.service.ImageManagementService;
 
 @Service
+@AllArgsConstructor
 public class ProductWithOptionsMapper {
 
 	private final ImageManagementService imageManagementService;
 	private final OptionListMapper optionListMapper;
-
-
-	public ProductWithOptionsMapper(
-			ImageManagementService imageManagementService,
-			OptionListMapper optionListMapper) {
-		this.imageManagementService = imageManagementService;
-		this.optionListMapper = optionListMapper;
-	}
 
 
 	public ProductWithOptionsDTO fromEntity(Product product) {
