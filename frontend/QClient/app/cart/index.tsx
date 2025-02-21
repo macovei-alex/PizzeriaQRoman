@@ -10,12 +10,15 @@ import { showToast } from "@/utils/toast";
 import { router } from "expo-router";
 import { PlacedOrder } from "@/api/types/Order";
 import logger from "@/utils/logger";
+import { convertCartItemOptions } from "@/utils/convertions";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Cart() {
   logger.render("Cart");
 
   const colorTheme = useColorTheme();
   const { cart, emptyCart } = useCartContext();
+  const queryClient = useQueryClient();
 
   const [sendingOrder, setSendingOrder] = useState(false);
 
@@ -28,7 +31,11 @@ export default function Cart() {
     setSendingOrder(() => true);
 
     const order: PlacedOrder = {
-      items: cart.map((cartItem) => ({ productId: cartItem.product.id, count: cartItem.count })),
+      items: cart.map((cartItem) => ({
+        productId: cartItem.product.id,
+        count: cartItem.count,
+        optionLists: convertCartItemOptions(cartItem.options),
+      })),
       additionalNotes: null,
     };
 
@@ -37,15 +44,18 @@ export default function Cart() {
       .then((res) => {
         if (res.status === 200 || res.status === 201) {
           logger.log("Order sent successfully");
+          emptyCart();
+          router.push("/cart/confirmation");
+        } else {
+          logger.error("Error sending order:", res.data);
         }
+        queryClient.invalidateQueries({ queryKey: ["order-history"] });
       })
       .catch((error) => {
         logger.error("Error sending order:", error.response.data);
       })
       .finally(() => {
         setSendingOrder(() => false);
-        emptyCart();
-        router.push("/cart/confirmation");
       });
   }
 

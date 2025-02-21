@@ -1,9 +1,21 @@
-import { ProductId } from "./Product";
+import { OptionId, OptionListId, ProductId } from "./Product";
+
+// TODO: Create these types
+export type PlacedOrderOption = {
+  optionId: OptionId;
+  count: number;
+};
+
+export type PlacedOrderOptionList = {
+  optionListId: OptionListId;
+  options: PlacedOrderOption[];
+};
 
 export type PlacedOrder = {
   items: {
     productId: ProductId;
     count: number;
+    optionLists: PlacedOrderOptionList[];
   }[];
   additionalNotes: string | null;
 };
