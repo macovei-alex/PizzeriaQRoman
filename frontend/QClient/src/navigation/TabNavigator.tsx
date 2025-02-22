@@ -1,0 +1,59 @@
+import React from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import useColorTheme from "@/hooks/useColorTheme";
+import OrderHistoryScreen from "@/screens/profile/OrderHistoryScreen";
+import TestScreen from "@/screens/test/TestScreen";
+import SvgIcons from "@/components/svg/SvgIcons";
+import { StyleSheet } from "react-native";
+import MenuStackNavigator from "./MenuStackNavigator";
+import CartStackNavigator from "./CartStackNavigator";
+
+const routeToIconMap: Readonly<Record<string, string>> = {
+  MenuStackNavigator: "home",
+  CartStackNavigator: "cart",
+  ProfileScreen: "profile",
+  TestScreen: "cart",
+};
+
+const Tab = createBottomTabNavigator();
+
+export default function TabNavigator() {
+  const colorTheme = useColorTheme();
+
+  const svgColors = {
+    stroke: colorTheme.text.primary,
+    fillPrimary: colorTheme.background.primary,
+    fillSecondary: colorTheme.background.primary,
+  };
+
+  return (
+    <Tab.Navigator
+      screenOptions={({ route, navigation }) => ({
+        headerShown: false,
+        tabBarStyle: [styles.tabBar, { backgroundColor: colorTheme.background.navbar }],
+        tabBarIcon: ({ focused, color, size }) => {
+          return (
+            <SvgIcons
+              name={routeToIconMap[route.name]}
+              stroke={svgColors.stroke}
+              fillPrimary={svgColors.fillPrimary}
+              fillSecondary={svgColors.fillSecondary}
+            />
+          );
+        },
+      })}
+    >
+      <Tab.Screen name="MenuStackNavigator" component={MenuStackNavigator} options={{ title: "Meniu" }} />
+      <Tab.Screen name="CartStackNavigator" component={CartStackNavigator} options={{ title: "Coș" }} />
+      <Tab.Screen name="ProfileScreen" component={OrderHistoryScreen} options={{ title: "Profil" }} />
+      <Tab.Screen name="TestScreen" component={TestScreen} options={{ title: "Test" }} />
+    </Tab.Navigator>
+  );
+}
+
+const styles = StyleSheet.create({
+  tabBar: {
+    borderTopRightRadius: 16,
+    borderTopLeftRadius: 16,
+  },
+});

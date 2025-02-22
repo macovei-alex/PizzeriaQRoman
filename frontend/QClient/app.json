@@ -25,7 +25,6 @@
     "ios": {
       "supportsTablet": true
     },
-    "plugins": ["expo-router"],
     "extra": {
       "router": {
         "origin": false
