@@ -1,8 +1,8 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import MenuScreen from "@/screens/menu/MenuScreen";
-import ProductScreen from "@/screens/shared/ProductScreen";
-import SkeletonLoaderTestScreen from "@/screens/menu/SkeletonLoaderTestScreen";
+import MenuScreen from "src/screens/menu/MenuScreen";
+import ProductScreen from "src/screens/shared/ProductScreen";
+import SkeletonLoaderTestScreen from "src/screens/menu/SkeletonLoaderTestScreen";
 
 const MenuStack = createNativeStackNavigator();
 

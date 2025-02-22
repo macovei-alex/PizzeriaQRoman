@@ -1,10 +1,10 @@
 import React from "react";
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import GoBackButtonSvg from "@/components/svg/GoBackButtonSvg";
-import useColorTheme from "@/hooks/useColorTheme";
-import { ImageFile, imageOrDefault } from "@/utils/files";
-import { ProductWithOptions } from "@/api/types/Product";
-import logger from "@/utils/logger";
+import GoBackButtonSvg from "src/components/svg/GoBackButtonSvg";
+import useColorTheme from "src/hooks/useColorTheme";
+import { ImageFile, imageOrDefault } from "src/utils/files";
+import { ProductWithOptions } from "src/api/types/Product";
+import logger from "src/utils/logger";
 import { useNavigation } from "@react-navigation/native";
 
 type TitleSectionProps = {

@@ -1,8 +1,8 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import HorizontalLine from "@/components/shared/ProductScreen/HorizontalLine";
-import useColorTheme from "@/hooks/useColorTheme";
-import logger from "@/utils/logger";
+import HorizontalLine from "src/components/shared/ProductScreen/HorizontalLine";
+import useColorTheme from "src/hooks/useColorTheme";
+import logger from "src/utils/logger";
 
 export default function TitleSection() {
   logger.render("TitleSection");

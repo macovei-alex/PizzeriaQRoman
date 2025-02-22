@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import useColorTheme from "@/hooks/useColorTheme";
-import ProductSection from "@/components/cart/CartScreen/ProductSection";
-import TitleSection from "@/components/cart/CartScreen/TitleSection";
-import api from "@/api";
-import { useCartContext } from "@/context/useCartContext";
-import { showToast } from "@/utils/toast";
-import { PlacedOrder } from "@/api/types/Order";
-import logger from "@/utils/logger";
-import { convertCartItemOptions } from "@/utils/convertions";
+import useColorTheme from "src/hooks/useColorTheme";
+import ProductSection from "src/components/cart/CartScreen/ProductSection";
+import TitleSection from "src/components/cart/CartScreen/TitleSection";
+import api from "src/api";
+import { useCartContext } from "src/context/useCartContext";
+import { showToast } from "src/utils/toast";
+import { PlacedOrder } from "src/api/types/Order";
+import logger from "src/utils/logger";
+import { convertCartItemOptions } from "src/utils/convertions";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigation } from "@react-navigation/native";
 
 export default function CartScreen() {
-  logger.render("Cart");
+  logger.render("CartScreen");
 
   const navigation = useNavigation();
   const colorTheme = useColorTheme();
@@ -59,24 +59,26 @@ export default function CartScreen() {
       });
   }
 
+  if (sendingOrder) {
+    return <Text>Sending order...</Text>;
+  }
+
   return (
     <SafeAreaView>
-      {!sendingOrder ? (
-        <ScrollView>
-          <TitleSection />
+      <ScrollView>
+        <TitleSection />
 
-          <ProductSection />
+        <ProductSection />
 
-          <View style={styles.sendOrderContainer}>
-            <TouchableOpacity
-              style={[styles.sendOrderButton, { backgroundColor: colorTheme.background.accent }]}
-              onPress={sendOrder}
-            >
-              <Text style={[styles.sendOrderText, { color: colorTheme.text.onAccent }]}>Trimite comanda</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      ) : null}
+        <View style={styles.sendOrderContainer}>
+          <TouchableOpacity
+            style={[styles.sendOrderButton, { backgroundColor: colorTheme.background.accent }]}
+            onPress={sendOrder}
+          >
+            <Text style={[styles.sendOrderText, { color: colorTheme.text.onAccent }]}>Trimite comanda</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

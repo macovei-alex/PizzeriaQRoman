@@ -1,9 +1,12 @@
 import React from "react";
-import useColorTheme from "@/hooks/useColorTheme";
+import useColorTheme from "src/hooks/useColorTheme";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import logger from "src/utils/logger";
 
 export default function MenuSkeletonLoader() {
+  logger.render("MenuSkeletonLoader");
+
   const colorTheme = useColorTheme();
 
   return (

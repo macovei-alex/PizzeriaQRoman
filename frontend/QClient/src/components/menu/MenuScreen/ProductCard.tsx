@@ -1,10 +1,10 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import { StyleSheet } from "react-native";
-import useColorTheme from "@/hooks/useColorTheme";
-import { ImageFile, imageOrDefault } from "@/utils/files";
-import { Product } from "@/api/types/Product";
-import logger from "@/utils/logger";
+import useColorTheme from "src/hooks/useColorTheme";
+import { ImageFile, imageOrDefault } from "src/utils/files";
+import { Product } from "src/api/types/Product";
+import logger from "src/utils/logger";
 import { useNavigation } from "@react-navigation/native";
 
 type MenuProductProps = {
@@ -13,7 +13,7 @@ type MenuProductProps = {
 };
 
 export default function ProductCard({ product, productImage }: MenuProductProps) {
-  logger.render("MenuProduct");
+  logger.render("ProductCard");
 
   const navigation = useNavigation();
   const colorTheme = useColorTheme();

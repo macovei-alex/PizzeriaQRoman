@@ -2,5 +2,5 @@ incompatible libraries (npm uninstall):
 	- react-native-reanimated
 
 steps:
-	- run `npx expo prebuild --clean` if you want to clean the @/android directory
+	- run `npx expo prebuild --clean` if you want to clean the android directory
 	- run `npx expo run:android -d`

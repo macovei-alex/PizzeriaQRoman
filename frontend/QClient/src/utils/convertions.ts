@@ -1,5 +1,5 @@
-import { CartItemOptions } from "@/context/useCartContext";
-import { PlacedOrderOptionList } from "@/api/types/Order";
+import { CartItemOptions } from "src/context/useCartContext";
+import { PlacedOrderOptionList } from "src/api/types/Order";
 
 export function convertCartItemOptions(cartItemOptions: CartItemOptions): PlacedOrderOptionList[] {
   return Object.entries(cartItemOptions).map(([optionListId, optionList]) => ({

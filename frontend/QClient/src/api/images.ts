@@ -1,6 +1,6 @@
 import axios from "axios";
 import config from "./config";
-import { ValidImageFile } from "@/utils/files";
+import { ValidImageFile } from "src/utils/files";
 
 const baseImageRoute = `${config.baseApiUrl}/image`;
 

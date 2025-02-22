@@ -1,13 +1,13 @@
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { imageOrDefault } from "@/utils/files";
-import useSingleImage from "@/hooks/useSingleImage";
-import useColorTheme from "@/hooks/useColorTheme";
-import HorizontalLine from "@/components/shared/ProductScreen/HorizontalLine";
-import PlusCircleSvg from "@/components/svg/PlusCircleSvg";
-import MinusCircleSvg from "@/components/svg/MinusCircleSvg";
-import { CartItem, useCartContext } from "@/context/useCartContext";
-import logger from "@/utils/logger";
+import { imageOrDefault } from "src/utils/files";
+import useSingleImage from "src/hooks/useSingleImage";
+import useColorTheme from "src/hooks/useColorTheme";
+import HorizontalLine from "src/components/shared/ProductScreen/HorizontalLine";
+import PlusCircleSvg from "src/components/svg/PlusCircleSvg";
+import MinusCircleSvg from "src/components/svg/MinusCircleSvg";
+import { CartItem, useCartContext } from "src/context/useCartContext";
+import logger from "src/utils/logger";
 import { useNavigation } from "@react-navigation/native";
 
 type CartItemCardProps = {
@@ -28,7 +28,13 @@ export default function CartItemCard({ cartItem, price }: CartItemCardProps) {
       <View style={styles.infoSectionContainer}>
         <TouchableOpacity
           style={styles.imageContainer}
-          onPress={() => navigation.navigate("ProductScreen", { cartItemId: cartItem.id })}
+          onPress={() =>
+            navigation.navigate("ProductScreen", {
+              productId: cartItem.product.id,
+              imageName: cartItem.product.imageName,
+              cartItemId: cartItem.id,
+            })
+          }
         >
           <Image source={imageOrDefault(image)} style={styles.image} />
         </TouchableOpacity>

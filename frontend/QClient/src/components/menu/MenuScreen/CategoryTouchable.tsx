@@ -1,8 +1,8 @@
 import React from "react";
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import useColorTheme from "@/hooks/useColorTheme";
-import { Category } from "@/api/types/Category";
-import logger from "@/utils/logger";
+import useColorTheme from "src/hooks/useColorTheme";
+import { Category } from "src/api/types/Category";
+import logger from "src/utils/logger";
 
 type HorizontalCategoryProps = {
   category: Category;
@@ -10,8 +10,8 @@ type HorizontalCategoryProps = {
   style?: any;
 };
 
-export default function HorizontalCategory({ category, onPress, style }: HorizontalCategoryProps) {
-  logger.render("HorizontalCategory");
+export default function CategoryTouchable({ category, onPress, style }: HorizontalCategoryProps) {
+  logger.render("CategoryTouchable");
 
   const colorTheme = useColorTheme();
 

@@ -1,11 +1,11 @@
 import React from "react";
 import { View, Text, StyleSheet, LayoutChangeEvent } from "react-native";
 import ProductCard from "./ProductCard";
-import useColorTheme from "@/hooks/useColorTheme";
-import { Category, CategoryId } from "@/api/types/Category";
-import { Product } from "@/api/types/Product";
-import { ImageFile } from "@/utils/files";
-import logger from "@/utils/logger";
+import useColorTheme from "src/hooks/useColorTheme";
+import { Category, CategoryId } from "src/api/types/Category";
+import { Product } from "src/api/types/Product";
+import { ImageFile } from "src/utils/files";
+import logger from "src/utils/logger";
 
 type VerticalCategorySectionProps = {
   category: Category;

@@ -1,17 +1,17 @@
 import { View, StyleSheet, ScrollView, Text, Image, TouchableOpacity } from "react-native";
 import React, { Fragment, startTransition, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import GoBackButtonSvg from "@/components/svg/GoBackButtonSvg";
+import GoBackButtonSvg from "src/components/svg/GoBackButtonSvg";
 import { useQuery } from "@tanstack/react-query";
-import api from "@/api";
-import { useImageContext } from "@/context/useImageContext";
+import api from "src/api";
+import { useImageContext } from "src/context/useImageContext";
 import * as FileSystem from "expo-file-system";
-import useProductsQuery from "@/hooks/useProductsQuery";
-import { ImageFile, imageOrDefault, ValidImageFile } from "@/utils/files";
-import logger from "@/utils/logger";
+import useProductsQuery from "src/hooks/useProductsQuery";
+import { ImageFile, imageOrDefault, ValidImageFile } from "src/utils/files";
+import logger from "src/utils/logger";
 
 export default function TestScreen() {
-  logger.render("TestComponent");
+  logger.render("TestScreen");
 
   const imageContext = useImageContext();
   const productsQuery = useProductsQuery();

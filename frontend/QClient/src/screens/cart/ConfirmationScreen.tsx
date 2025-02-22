@@ -1,13 +1,13 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import useColorTheme from "@/hooks/useColorTheme";
-import TickCheckboxSvg from "@/components/svg/TickCheckboxSvg";
-import logger from "@/utils/logger";
+import useColorTheme from "src/hooks/useColorTheme";
+import TickCheckboxSvg from "src/components/svg/TickCheckboxSvg";
+import logger from "src/utils/logger";
 import { useNavigation } from "@react-navigation/native";
 
 export default function ConfirmationScreen() {
-  logger.render("Confirmation");
+  logger.render("ConfirmationScreen");
 
   const navigation = useNavigation();
   const colorTheme = useColorTheme();

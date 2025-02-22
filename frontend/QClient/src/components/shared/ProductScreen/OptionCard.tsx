@@ -1,9 +1,9 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import useColorTheme from "@/hooks/useColorTheme";
-import TickCheckboxSvg from "@/components/svg/TickCheckboxSvg";
-import { Option, OptionId } from "@/api/types/Product";
-import logger from "@/utils/logger";
+import useColorTheme from "src/hooks/useColorTheme";
+import TickCheckboxSvg from "src/components/svg/TickCheckboxSvg";
+import { Option, OptionId } from "src/api/types/Product";
+import logger from "src/utils/logger";
 
 type OptionCardProps = {
   option: Option;

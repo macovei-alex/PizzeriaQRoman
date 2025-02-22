@@ -15,7 +15,7 @@
     "@tanstack/react-query": "^5.66.0",
     "@types/react": "~18.3.12",
     "axios": "^1.7.8",
-    "expo": "~52.0.35",
+    "expo": "~52.0.36",
     "expo-constants": "~17.0.5",
     "expo-dev-client": "~5.0.12",
     "expo-file-system": "^18.0.7",
@@ -28,8 +28,7 @@
     "react-native-screens": "~4.4.0",
     "react-native-svg": "^15.8.0",
     "react-native-toast-message": "^2.2.1",
-    "typescript": "^5.3.3",
-    "react-native-gesture-handler": "~2.20.2"
+    "typescript": "^5.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

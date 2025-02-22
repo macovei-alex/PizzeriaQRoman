@@ -1,14 +1,13 @@
-import "react-native-gesture-handler";
 import React from "react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { Platform } from "react-native";
-import useColorTheme from "@/hooks/useColorTheme";
-import { CartContextProvider } from "@/context/useCartContext";
-import { ImageContextProvider } from "@/context/useImageContext";
+import useColorTheme from "src/hooks/useColorTheme";
+import { CartContextProvider } from "src/context/useCartContext";
+import { ImageContextProvider } from "src/context/useImageContext";
 import Toast from "react-native-toast-message";
 import { StatusBar } from "expo-status-bar";
-import logger from "@/utils/logger";
-import Navigation from "@/navigation/Navigation";
+import logger from "src/utils/logger";
+import Navigation from "src/navigation/Navigation";
 
 const queryClient = new QueryClient({
   defaultOptions: {

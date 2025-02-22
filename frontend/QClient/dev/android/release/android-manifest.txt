@@ -1,4 +1,4 @@
-AndroidManifest.xml path: @/android/app/src/main/AndroidManifest.xml
+AndroidManifest.xml path: android/app/src/main/AndroidManifest.xml
 
 add
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>

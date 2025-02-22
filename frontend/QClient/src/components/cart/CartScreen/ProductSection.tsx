@@ -1,9 +1,9 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { CartItem, useCartContext } from "@/context/useCartContext";
+import { CartItem, useCartContext } from "src/context/useCartContext";
 import CartItemCard from "./CartItemCard";
-import useColorTheme from "@/hooks/useColorTheme";
-import logger from "@/utils/logger";
+import useColorTheme from "src/hooks/useColorTheme";
+import logger from "src/utils/logger";
 
 function calculatePrice(item: CartItem) {
   let price = item.product.price;

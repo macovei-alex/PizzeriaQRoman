@@ -1,51 +1,47 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import OptionList from "@/components/shared/ProductScreen/OptionListCard";
-import useColorTheme from "@/hooks/useColorTheme";
-import HorizontalLine from "@/components/shared/ProductScreen/HorizontalLine";
+import OptionList from "src/components/shared/ProductScreen/OptionListCard";
+import useColorTheme from "src/hooks/useColorTheme";
+import HorizontalLine from "src/components/shared/ProductScreen/HorizontalLine";
 import { Fragment } from "react";
-import TitleSection from "@/components/shared/ProductScreen/TitleSection";
-import { CartItemOptions, useCartContext } from "@/context/useCartContext";
-import useSingleImage from "@/hooks/useSingleImage";
-import useProductWithOptionsQuery from "@/hooks/useProductWithOptionsQuery";
-import { showToast } from "@/utils/toast";
-import { OptionId, OptionListId, ProductWithOptions } from "@/api/types/Product";
-import logger from "@/utils/logger";
-import { jsonEquals } from "@/utils/utils";
-import { ParamListBase, RouteProp } from "@react-navigation/native";
+import TitleSection from "src/components/shared/ProductScreen/TitleSection";
+import { CartItemOptions, useCartContext } from "src/context/useCartContext";
+import useSingleImage from "src/hooks/useSingleImage";
+import useProductWithOptionsQuery from "src/hooks/useProductWithOptionsQuery";
+import { showToast } from "src/utils/toast";
+import { OptionId, OptionListId, ProductWithOptions } from "src/api/types/Product";
+import logger from "src/utils/logger";
+import { jsonEquals } from "src/utils/utils";
+import { useRoute } from "@react-navigation/native";
 
 type ProductSearchParams = {
   productId: string;
   imageName: string;
-  cartItemId: string;
+  cartItemId?: string;
 };
 
-type ProductScreenProps = {
-  route: RouteProp<ParamListBase>;
-};
-
-export default function ProductScreen({ route }: ProductScreenProps) {
+export default function ProductScreen() {
   logger.render("ProductScreen");
 
-  const params = route.params as ProductSearchParams;
-  if ((!params.productId || !params.imageName) && !params.cartItemId) {
+  const route = useRoute();
+  const { productId, imageName, cartItemId } = route.params as ProductSearchParams;
+  if (!productId || !imageName) {
     throw new Error(
-      `Missing required search params. Expected {productId, imageName} or {cartItemId}, but got ${JSON.stringify(params)} instead`
+      `Missing required search params. Expected { productId, imageName }, but got ${JSON.stringify(route.params)} instead`
     );
   }
 
-  const { productId, imageName, cartItemId } = params;
   const colorTheme = useColorTheme();
   const { cart, addCartItem, changeCartItemOptions } = useCartContext();
 
   const cartItem = cart.find((item) => item.id === Number(cartItemId));
   if (cartItemId && !cartItem) {
-    throw new Error(`Cart item not found: ${cartItemId}`);
+    throw new Error(`Cart item not found for id ( ${cartItemId} )`);
   }
 
-  const productQuery = useProductWithOptionsQuery(Number(cartItem?.product.id ?? productId));
-  const image = useSingleImage(cartItem?.product.imageName ?? imageName);
+  const productQuery = useProductWithOptionsQuery(Number(productId));
+  const image = useSingleImage(imageName);
   const [cartItemOptions, setCartItemOptions] = useState<CartItemOptions>(cartItem?.options ?? {});
 
   // Update the cached UI state. Prevents a bug where pressing a cart item, then the cart icon

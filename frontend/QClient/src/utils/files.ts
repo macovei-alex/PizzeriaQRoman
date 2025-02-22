@@ -1,11 +1,11 @@
-import { images } from "@/constants";
+import { images } from "src/constants";
 import * as FileSystem from "expo-file-system";
 import logger from "./logger";
 
 export type ImageFile = { name: string; data: string | null };
 export type ValidImageFile = { name: string; data: string };
 
-export function imageOrDefault(image: ImageFile) {
+export function imageOrDefault(image: ImageFile): any {
   return image?.data ? { uri: image.data } : images.defaultPizza;
 }
 

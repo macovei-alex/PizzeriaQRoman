@@ -1,9 +1,9 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import useColorTheme from "@/hooks/useColorTheme";
-import { OptionId, OptionList, OptionListId } from "@/api/types/Product";
+import useColorTheme from "src/hooks/useColorTheme";
+import { OptionId, OptionList, OptionListId } from "src/api/types/Product";
 import OptionCard from "./OptionCard";
-import logger from "@/utils/logger";
+import logger from "src/utils/logger";
 
 type OptionListProps = {
   optionList: OptionList;

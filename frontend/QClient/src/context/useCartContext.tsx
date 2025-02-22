@@ -1,5 +1,5 @@
-import { OptionId, OptionListId, ProductWithOptions } from "@/api/types/Product";
-import logger from "@/utils/logger";
+import { OptionId, OptionListId, ProductWithOptions } from "src/api/types/Product";
+import logger from "src/utils/logger";
 import React, { createContext, ReactNode, useCallback, useContext, useRef, useState } from "react";
 
 function logCart(cart: CartItem[]) {

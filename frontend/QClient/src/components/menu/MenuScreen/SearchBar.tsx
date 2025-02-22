@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
-import SearchIconSvg from "@/components/svg/SearchIconSvg";
-import useColorTheme from "@/hooks/useColorTheme";
-import logger from "@/utils/logger";
+import SearchIconSvg from "src/components/svg/SearchIconSvg";
+import useColorTheme from "src/hooks/useColorTheme";
+import logger from "src/utils/logger";
 
 type SearchBarProps = {
   placeholder: string;

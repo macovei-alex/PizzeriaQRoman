@@ -1,9 +1,9 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import useColorTheme from "@/hooks/useColorTheme";
-import OrderHistoryScreen from "@/screens/profile/OrderHistoryScreen";
-import TestScreen from "@/screens/test/TestScreen";
-import SvgIcons from "@/components/svg/SvgIcons";
+import useColorTheme from "src/hooks/useColorTheme";
+import OrderHistoryScreen from "src/screens/profile/OrderHistoryScreen";
+import TestScreen from "src/screens/test/TestScreen";
+import SvgIcons from "src/components/svg/SvgIcons";
 import { StyleSheet } from "react-native";
 import MenuStackNavigator from "./MenuStackNavigator";
 import CartStackNavigator from "./CartStackNavigator";

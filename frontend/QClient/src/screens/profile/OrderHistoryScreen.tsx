@@ -1,10 +1,10 @@
 import React from "react";
 import { Text, View } from "react-native";
-import useOrderHistoryQuery from "@/hooks/useOrderHistoryQuery";
-import logger from "@/utils/logger";
+import useOrderHistoryQuery from "src/hooks/useOrderHistoryQuery";
+import logger from "src/utils/logger";
 
 export default function OrderHistoryScreen() {
-  logger.render("OrderHistory");
+  logger.render("OrderHistoryScreen");
 
   const ordersQuery = useOrderHistoryQuery();
 

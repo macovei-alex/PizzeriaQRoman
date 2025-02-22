@@ -1,9 +1,9 @@
-import { ScrollView, StyleSheet } from "react-native";
 import React from "react";
-import HorizontalCategory from "./CategoryCard";
+import { ScrollView, StyleSheet } from "react-native";
+import CategoryTouchable from "./CategoryTouchable";
 import SearchBar from "./SearchBar";
-import { Category, CategoryId } from "@/api/types/Category";
-import logger from "@/utils/logger";
+import { Category, CategoryId } from "src/api/types/Category";
+import logger from "src/utils/logger";
 
 type HorizontalCategorySectionProps = {
   categories: Category[];
@@ -20,7 +20,7 @@ export default function HorizontalCategorySection({
     <>
       <ScrollView horizontal style={styles.scrollContainer}>
         {categories.map((category) => (
-          <HorizontalCategory
+          <CategoryTouchable
             style={styles.category}
             key={category.id}
             category={category}

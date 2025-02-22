@@ -1,6 +1,6 @@
 // import { useColorScheme } from "react-native";
-import { lightTheme } from "@/../assets/themes/light";
-// import { darkTheme } from "@/assets/themes/dark";
+import { lightTheme } from "src/../assets/themes/light";
+// import { darkTheme } from "src/assets/themes/dark";
 // import { useState } from "react";
 
 export default function useColorTheme() {

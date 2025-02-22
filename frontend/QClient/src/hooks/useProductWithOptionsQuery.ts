@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import api from "@/api";
-import { ProductId, ProductWithOptions } from "@/api/types/Product";
+import api from "src/api";
+import { ProductId, ProductWithOptions } from "src/api/types/Product";
 
 export default function useProductWithOptionsQuery(productId: ProductId) {
   const productQuery = useQuery<ProductWithOptions, Error>({

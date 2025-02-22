@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useCallback, useContext, useState } from "react";
-import { ImageFile, loadSingleImageFromFile, saveImagesToFiles, ValidImageFile } from "@/utils/files";
-import logger from "@/utils/logger";
+import { ImageFile, loadSingleImageFromFile, saveImagesToFiles, ValidImageFile } from "src/utils/files";
+import logger from "src/utils/logger";
 
 type ImageContextType = {
   getSingleImage: (imageName: string) => Promise<ImageFile>;

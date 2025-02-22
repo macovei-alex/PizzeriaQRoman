@@ -1,3 +1,5 @@
+let renderCount = 1;
+
 const logger = Object.freeze({
   log: (message?: any, ...optionalParams: any[]) => {
     console.log(message, ...optionalParams);
@@ -9,7 +11,7 @@ const logger = Object.freeze({
     console.error(message, ...optionalParams);
   },
   render: (componentName: string) => {
-    // console.log(`Rendering ${componentName}`);
+    // console.log(`${renderCount++} Rendering ${componentName}`);
   },
 });
 

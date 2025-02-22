@@ -1,19 +1,19 @@
 import React, { useMemo, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LayoutChangeEvent, ScrollView, Text, TouchableOpacity, View } from "react-native";
-import useScrollRef from "@/hooks/useScrollRef";
-import LogoSection from "@/components/menu/MenuScreen/LogoSection";
-import HorizontalCategorySection from "@/components/menu/MenuScreen/HorizontalCategorySection";
-import VerticalCategorySection from "@/components/menu/MenuScreen/VerticalCategorySection";
-import useImages from "@/hooks/useImages";
-import useProductsQuery from "@/hooks/useProductsQuery";
-import useCategoriesQuery from "@/hooks/useCategoriesQuery";
-import { Category, CategoryId } from "@/api/types/Category";
-import { Product } from "@/api/types/Product";
-import logger from "@/utils/logger";
-import MenuSkeletonLoader from "@/components/menu/MenuScreen/MenuSkeletonLoader";
-import useColorTheme from "@/hooks/useColorTheme";
-import GoBackButtonSvg from "@/components/svg/GoBackButtonSvg";
+import useScrollRef from "src/hooks/useScrollRef";
+import LogoSection from "src/components/menu/MenuScreen/LogoSection";
+import HorizontalCategorySection from "src/components/menu/MenuScreen/HorizontalCategorySection";
+import VerticalCategorySection from "src/components/menu/MenuScreen/VerticalCategorySection";
+import useImages from "src/hooks/useImages";
+import useProductsQuery from "src/hooks/useProductsQuery";
+import useCategoriesQuery from "src/hooks/useCategoriesQuery";
+import { Category, CategoryId } from "src/api/types/Category";
+import { Product } from "src/api/types/Product";
+import logger from "src/utils/logger";
+import MenuSkeletonLoader from "src/components/menu/MenuScreen/MenuSkeletonLoader";
+import useColorTheme from "src/hooks/useColorTheme";
+import GoBackButtonSvg from "src/components/svg/GoBackButtonSvg";
 import { useNavigation } from "@react-navigation/native";
 
 type ProductSplit = {
@@ -22,7 +22,7 @@ type ProductSplit = {
 };
 
 export default function MenuScreen() {
-  logger.render("Menu");
+  logger.render("MenuScreen");
 
   const navigation = useNavigation();
   const colorTheme = useColorTheme();

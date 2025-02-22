@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useImageContext } from "@/context/useImageContext";
-import { ImageFile } from "@/utils/files";
+import { useImageContext } from "src/context/useImageContext";
+import { ImageFile } from "src/utils/files";
 
 export default function useImages(imageNames: string[]) {
   const imageContext = useImageContext();
