@@ -14,17 +14,19 @@ import logger from "src/utils/logger";
 import MenuSkeletonLoader from "src/components/menu/MenuScreen/MenuSkeletonLoader";
 import useColorTheme from "src/hooks/useColorTheme";
 import GoBackButtonSvg from "src/components/svg/GoBackButtonSvg";
-import { useNavigation } from "@react-navigation/native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { MenuStackParamList } from "src/navigation/MenuStackNavigator";
 
 type ProductSplit = {
   category: Category;
   products: Product[];
 };
 
-export default function MenuScreen() {
+type MenuScreenProps = NativeStackScreenProps<MenuStackParamList, "MenuScreen">;
+
+export default function MenuScreen({ navigation, route }: MenuScreenProps) {
   logger.render("MenuScreen");
 
-  const navigation = useNavigation();
   const colorTheme = useColorTheme();
   const { scrollRef, scrollToPos } = useScrollRef();
   const [categoryPositions, setCategoryPositions] = useState<Record<CategoryId, number>>({});
@@ -106,6 +108,8 @@ export default function MenuScreen() {
           {productsPerCategory.map(({ category, products }) => (
             <VerticalCategorySection
               key={category.id}
+              navigation={navigation}
+              route={route}
               category={category}
               products={products}
               productImages={images}

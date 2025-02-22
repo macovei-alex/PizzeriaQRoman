@@ -1,4 +1,4 @@
-let renderCount = 1;
+// let renderCount = 0;
 
 const logger = Object.freeze({
   log: (message?: any, ...optionalParams: any[]) => {

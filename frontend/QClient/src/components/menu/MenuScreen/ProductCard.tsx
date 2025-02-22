@@ -5,17 +5,17 @@ import useColorTheme from "src/hooks/useColorTheme";
 import { ImageFile, imageOrDefault } from "src/utils/files";
 import { Product } from "src/api/types/Product";
 import logger from "src/utils/logger";
-import { useNavigation } from "@react-navigation/native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { MenuStackParamList } from "src/navigation/MenuStackNavigator";
 
-type MenuProductProps = {
+type ProductCardProps = {
   product: Product;
   productImage: ImageFile;
-};
+} & NativeStackScreenProps<MenuStackParamList, "MenuScreen">;
 
-export default function ProductCard({ product, productImage }: MenuProductProps) {
+export default function ProductCard({ navigation, product, productImage }: ProductCardProps) {
   logger.render("ProductCard");
 
-  const navigation = useNavigation();
   const colorTheme = useColorTheme();
 
   return (
@@ -37,7 +37,10 @@ export default function ProductCard({ product, productImage }: MenuProductProps)
           testID={product.name === "Pizza Capriciosa" ? "info-button-capriciosa" : undefined}
           style={[styles.infoButtonContainer, { backgroundColor: colorTheme.background.accent }]}
           onPress={() => {
-            navigation.navigate("ProductScreen", { productId: product.id, imageName: product.imageName });
+            navigation.navigate("ProductScreen", {
+              productId: product.id.toString(),
+              imageName: product.imageName,
+            });
           }}
         >
           <Text style={[styles.infoButtonText, { color: colorTheme.text.onAccent }]}>Informații</Text>

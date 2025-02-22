@@ -8,17 +8,17 @@ import PlusCircleSvg from "src/components/svg/PlusCircleSvg";
 import MinusCircleSvg from "src/components/svg/MinusCircleSvg";
 import { CartItem, useCartContext } from "src/context/useCartContext";
 import logger from "src/utils/logger";
-import { useNavigation } from "@react-navigation/native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { CartStackParamList } from "src/navigation/CartStackNavigator";
 
 type CartItemCardProps = {
   cartItem: CartItem;
   price: number;
-};
+} & NativeStackScreenProps<CartStackParamList, "CartScreen">;
 
-export default function CartItemCard({ cartItem, price }: CartItemCardProps) {
+export default function CartItemCard({ navigation, cartItem, price }: CartItemCardProps) {
   logger.render("CartItemCard");
 
-  const navigation = useNavigation();
   const image = useSingleImage(cartItem.product.imageName);
   const colorTheme = useColorTheme();
   const { changeCartItemCount } = useCartContext();
@@ -30,9 +30,9 @@ export default function CartItemCard({ cartItem, price }: CartItemCardProps) {
           style={styles.imageContainer}
           onPress={() =>
             navigation.navigate("ProductScreen", {
-              productId: cartItem.product.id,
+              productId: cartItem.product.id.toString(),
               imageName: cartItem.product.imageName,
-              cartItemId: cartItem.id,
+              cartItemId: cartItem.id.toString(),
             })
           }
         >

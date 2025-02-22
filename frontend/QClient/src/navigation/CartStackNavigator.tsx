@@ -4,7 +4,13 @@ import CartScreen from "src/screens/cart/CartScreen";
 import ProductScreen from "src/screens/shared/ProductScreen";
 import ConfirmationScreen from "src/screens/cart/ConfirmationScreen";
 
-const CartStack = createNativeStackNavigator();
+export type CartStackParamList = {
+  CartScreen: undefined;
+  ProductScreen: { productId: string; imageName: string; cartItemId: string };
+  ConfirmationScreen: undefined;
+};
+
+const CartStack = createNativeStackNavigator<CartStackParamList>();
 
 export default function CartStackNavigator() {
   return (
