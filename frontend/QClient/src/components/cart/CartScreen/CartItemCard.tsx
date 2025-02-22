@@ -8,13 +8,13 @@ import PlusCircleSvg from "src/components/svg/PlusCircleSvg";
 import MinusCircleSvg from "src/components/svg/MinusCircleSvg";
 import { CartItem, useCartContext } from "src/context/useCartContext";
 import logger from "src/utils/logger";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
 
 type CartItemCardProps = {
   cartItem: CartItem;
   price: number;
-} & NativeStackScreenProps<CartStackParamList, "CartScreen">;
+} & { navigation: NativeStackNavigationProp<CartStackParamList, "CartScreen"> };
 
 export default function CartItemCard({ navigation, cartItem, price }: CartItemCardProps) {
   logger.render("CartItemCard");

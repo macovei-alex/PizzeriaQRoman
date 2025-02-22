@@ -14,7 +14,7 @@ import logger from "src/utils/logger";
 import MenuSkeletonLoader from "src/components/menu/MenuScreen/MenuSkeletonLoader";
 import useColorTheme from "src/hooks/useColorTheme";
 import GoBackButtonSvg from "src/components/svg/GoBackButtonSvg";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { MenuStackParamList } from "src/navigation/MenuStackNavigator";
 
 type ProductSplit = {
@@ -22,9 +22,9 @@ type ProductSplit = {
   products: Product[];
 };
 
-type MenuScreenProps = NativeStackScreenProps<MenuStackParamList, "MenuScreen">;
+type MenuScreenProps = { navigation: NativeStackNavigationProp<MenuStackParamList, "MenuScreen"> };
 
-export default function MenuScreen({ navigation, route }: MenuScreenProps) {
+export default function MenuScreen({ navigation }: MenuScreenProps) {
   logger.render("MenuScreen");
 
   const colorTheme = useColorTheme();
@@ -109,7 +109,6 @@ export default function MenuScreen({ navigation, route }: MenuScreenProps) {
             <VerticalCategorySection
               key={category.id}
               navigation={navigation}
-              route={route}
               category={category}
               products={products}
               productImages={images}

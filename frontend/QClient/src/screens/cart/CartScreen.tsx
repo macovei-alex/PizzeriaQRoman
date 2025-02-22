@@ -11,12 +11,12 @@ import { PlacedOrder } from "src/api/types/Order";
 import logger from "src/utils/logger";
 import { convertCartItemOptions } from "src/utils/convertions";
 import { useQueryClient } from "@tanstack/react-query";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
 
-type CartScreenProps = NativeStackScreenProps<CartStackParamList, "CartScreen">;
+type CartScreenProps = { navigation: NativeStackNavigationProp<CartStackParamList, "CartScreen"> };
 
-export default function CartScreen({ navigation, route }: CartScreenProps) {
+export default function CartScreen({ navigation }: CartScreenProps) {
   logger.render("CartScreen");
 
   const colorTheme = useColorTheme();
@@ -70,7 +70,7 @@ export default function CartScreen({ navigation, route }: CartScreenProps) {
       <ScrollView>
         <TitleSection />
 
-        <ProductSection navigation={navigation} route={route} />
+        <ProductSection navigation={navigation} />
 
         <View style={styles.sendOrderContainer}>
           <TouchableOpacity

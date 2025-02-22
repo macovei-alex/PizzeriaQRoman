@@ -13,24 +13,20 @@ import { showToast } from "src/utils/toast";
 import { OptionId, OptionListId, ProductWithOptions } from "src/api/types/Product";
 import logger from "src/utils/logger";
 import { jsonEquals } from "src/utils/utils";
-import { useRoute } from "@react-navigation/native";
+import { CartStackParamList } from "src/navigation/CartStackNavigator";
+import { MenuStackParamList } from "src/navigation/MenuStackNavigator";
+import { RouteProp } from "@react-navigation/native";
 
-type ProductSearchParams = {
-  productId: string;
-  imageName: string;
-  cartItemId?: string;
+type ProductScreenProps = {
+  route: RouteProp<MenuStackParamList, "ProductScreen"> | RouteProp<CartStackParamList, "ProductScreen">;
 };
 
-export default function ProductScreen() {
+export default function ProductScreen({ route }: ProductScreenProps) {
   logger.render("ProductScreen");
 
-  const route = useRoute();
-  const { productId, imageName, cartItemId } = route.params as ProductSearchParams;
-  if (!productId || !imageName) {
-    throw new Error(
-      `Missing required search params. Expected { productId, imageName }, but got ${JSON.stringify(route.params)} instead`
-    );
-  }
+  const productId = route.params.productId;
+  const imageName = route.params.imageName;
+  const cartItemId = "cartItemId" in route.params ? route.params.cartItemId : null;
 
   const colorTheme = useColorTheme();
   const { cart, addCartItem, changeCartItemOptions } = useCartContext();

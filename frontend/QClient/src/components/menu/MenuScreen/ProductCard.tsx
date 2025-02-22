@@ -5,13 +5,13 @@ import useColorTheme from "src/hooks/useColorTheme";
 import { ImageFile, imageOrDefault } from "src/utils/files";
 import { Product } from "src/api/types/Product";
 import logger from "src/utils/logger";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { MenuStackParamList } from "src/navigation/MenuStackNavigator";
 
 type ProductCardProps = {
   product: Product;
   productImage: ImageFile;
-} & NativeStackScreenProps<MenuStackParamList, "MenuScreen">;
+} & { navigation: NativeStackNavigationProp<MenuStackParamList, "MenuScreen"> };
 
 export default function ProductCard({ navigation, product, productImage }: ProductCardProps) {
   logger.render("ProductCard");
