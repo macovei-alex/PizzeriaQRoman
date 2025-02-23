@@ -7,12 +7,14 @@ import SvgIcons from "src/components/svg/SvgIcons";
 import { StyleSheet } from "react-native";
 import MenuStackNavigator from "./MenuStackNavigator";
 import CartStackNavigator from "./CartStackNavigator";
+import LoginScreen from "src/screens/login/LoginScreen";
 
 const routeToIconMap: Readonly<Record<string, string>> = {
+  LoginScreen: "search",
   MenuStackNavigator: "home",
   CartStackNavigator: "cart",
   ProfileScreen: "profile",
-  TestScreen: "cart",
+  TestScreen: "search",
 };
 
 const Tab = createBottomTabNavigator();
@@ -43,6 +45,7 @@ export default function TabNavigator() {
         },
       })}
     >
+      <Tab.Screen name="LoginScreen" component={LoginScreen} options={{ title: "Login" }} />
       <Tab.Screen name="MenuStackNavigator" component={MenuStackNavigator} options={{ title: "Meniu" }} />
       <Tab.Screen name="CartStackNavigator" component={CartStackNavigator} options={{ title: "Coș" }} />
       <Tab.Screen name="ProfileScreen" component={OrderHistoryScreen} options={{ title: "Profil" }} />
