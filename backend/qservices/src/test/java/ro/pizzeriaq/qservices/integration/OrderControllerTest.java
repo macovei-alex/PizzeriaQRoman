@@ -16,7 +16,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import ro.pizzeriaq.qservices.data.model.OrderStatus;
-import ro.pizzeriaq.qservices.service.DTO.OptionDTO;
 import ro.pizzeriaq.qservices.service.DTO.OptionListDTO;
 import ro.pizzeriaq.qservices.service.DTO.PlacedOrderDTO;
 import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
@@ -361,7 +360,7 @@ public class OrderControllerTest {
 							}
 
 							OptionListDTO optionList = product.getOptionLists().get(0);
-							OptionDTO option = optionList.getOptions().get(0);
+							OptionListDTO.Option option = optionList.getOptions().get(0);
 
 							PlacedOrderDTO.Item.OptionList optionListDTO = PlacedOrderDTO.Item.OptionList.builder()
 									.optionListId(optionList.getId())
@@ -383,9 +382,9 @@ public class OrderControllerTest {
 
 		BigDecimal expectedPrice = products.stream()
 				.map((product) -> {
-					OptionDTO option = !product.getOptionLists().isEmpty()
+					OptionListDTO.Option option = !product.getOptionLists().isEmpty()
 							? product.getOptionLists().get(0).getOptions().get(0)
-							: OptionDTO.builder().price(BigDecimal.ZERO).maxCount(1).build();
+							: OptionListDTO.Option.builder().price(BigDecimal.ZERO).maxCount(1).build();
 					System.out.println("Product: " + product.getName() + " Option: " + option.getName());
 					return product.getPrice()
 							.add(option.getPrice().multiply(BigDecimal.valueOf(option.getMaxCount())))

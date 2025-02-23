@@ -39,14 +39,27 @@ public class ProductMapperTest {
 
 	@Test
 	void throwCases() {
+		assertThrows(NullPointerException.class, () -> productMapper.fromEntity(Product.builder().build()));
 		assertThrows(NullPointerException.class, () -> productMapper.fromEntity(Product.builder()
+				.id(null)
+				.category(ProductCategory.builder().id(1).build())
 				.build()));
 		assertThrows(NullPointerException.class, () -> productMapper.fromEntity(Product.builder()
-				.id(null).build()));
+				.id(1)
+				.category(null)
+				.build()));
 		assertThrows(NullPointerException.class, () -> productMapper.fromEntity(Product.builder()
-				.id(1).category(null).build()));
-		assertThrows(NullPointerException.class, () -> productMapper.fromEntity(Product.builder()
-				.id(1).category(ProductCategory.builder().id(null).build()).build()));
+				.id(1)
+				.category(ProductCategory.builder().id(null).build())
+				.build()));
+	}
+
+	@Test
+	void minimalNotThrowCases() {
+		assertDoesNotThrow(() -> productMapper.fromEntity(Product.builder()
+				.id(1)
+				.category(ProductCategory.builder().id(1).build())
+				.build()));
 	}
 
 	@Test

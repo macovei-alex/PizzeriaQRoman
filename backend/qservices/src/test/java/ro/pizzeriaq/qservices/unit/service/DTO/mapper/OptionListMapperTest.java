@@ -3,12 +3,10 @@ package ro.pizzeriaq.qservices.unit.service.DTO.mapper;
 import org.junit.jupiter.api.Test;
 import ro.pizzeriaq.qservices.data.model.Option;
 import ro.pizzeriaq.qservices.data.model.OptionList;
-import ro.pizzeriaq.qservices.service.DTO.OptionDTO;
 import ro.pizzeriaq.qservices.service.DTO.OptionListDTO;
 import ro.pizzeriaq.qservices.service.DTO.mapper.OptionListMapper;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,6 +16,10 @@ public class OptionListMapperTest {
 	private final OptionListMapper optionListMapper = new OptionListMapper();
 
 
+	Option nullOption() {
+		return null;
+	}
+
 	@Test
 	void entityNull() {
 		assertNull(optionListMapper.fromEntity(null));
@@ -25,16 +27,35 @@ public class OptionListMapperTest {
 
 	@Test
 	void throwCases() {
+		assertThrows(NullPointerException.class, () -> optionListMapper.fromEntity(OptionList.builder().build()));
 		assertThrows(NullPointerException.class, () -> optionListMapper.fromEntity(OptionList.builder()
+				.id(null)
+				.options(List.of())
 				.build()));
 		assertThrows(NullPointerException.class, () -> optionListMapper.fromEntity(OptionList.builder()
-				.id(null).build()));
+				.id(1)
+				.options(null)
+				.build()));
 		assertThrows(NullPointerException.class, () -> optionListMapper.fromEntity(OptionList.builder()
-				.id(1).options(null).build()));
+				.id(1)
+				.options(List.of(nullOption()))
+				.build()));
 		assertThrows(NullPointerException.class, () -> optionListMapper.fromEntity(OptionList.builder()
-				.id(1).options(List.of((Option) null)).build()));
-		assertThrows(NullPointerException.class, () -> optionListMapper.fromEntity(OptionList.builder()
-				.id(1).options(List.of(Option.builder().id(null).build())).build()));
+				.id(1)
+				.options(List.of(Option.builder().id(null).build()))
+				.build()));
+	}
+
+	@Test
+	void minimalNotThrowCases() {
+		assertDoesNotThrow(() -> optionListMapper.fromEntity(OptionList.builder()
+				.id(1)
+				.options(List.of())
+				.build()));
+		assertDoesNotThrow(() -> optionListMapper.fromEntity(OptionList.builder()
+				.id(1)
+				.options(List.of(Option.builder().id(1).build()))
+				.build()));
 	}
 
 	@Test
@@ -70,8 +91,8 @@ public class OptionListMapperTest {
 				.id(10)
 				.text("Pizza")
 				.options(List.of(
-						OptionDTO.builder().id(1).name("option1").build(),
-						OptionDTO.builder().id(2).name("option2").build()
+						OptionListDTO.Option.builder().id(1).name("option1").build(),
+						OptionListDTO.Option.builder().id(2).name("option2").build()
 				))
 				.build();
 
@@ -108,7 +129,7 @@ public class OptionListMapperTest {
 				.id(10)
 				.text("Pizza")
 				.options(List.of(
-						OptionDTO.builder()
+						OptionListDTO.Option.builder()
 								.id(1)
 								.name("option1")
 								.additionalDescription("description1")
@@ -116,7 +137,7 @@ public class OptionListMapperTest {
 								.maxCount(3)
 								.price(BigDecimal.valueOf(10.0))
 								.build(),
-						OptionDTO.builder()
+						OptionListDTO.Option.builder()
 								.id(2)
 								.name("option2")
 								.additionalDescription("description2")

@@ -3,7 +3,6 @@ package ro.pizzeriaq.qservices.service.DTO.mapper;
 import org.springframework.stereotype.Service;
 import ro.pizzeriaq.qservices.data.model.Option;
 import ro.pizzeriaq.qservices.data.model.OptionList;
-import ro.pizzeriaq.qservices.service.DTO.OptionDTO;
 import ro.pizzeriaq.qservices.service.DTO.OptionListDTO;
 
 @Service
@@ -24,10 +23,10 @@ public class OptionListMapper {
 	}
 
 
-	private OptionDTO mapOption(Option option) {
+	private OptionListDTO.Option mapOption(Option option) {
 		assert option != null;
 
-		return OptionDTO.builder()
+		return OptionListDTO.Option.builder()
 				.id(option.getId())
 				.name(option.getName())
 				.additionalDescription(option.getAdditionalDescription())

@@ -6,14 +6,11 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
+@Data
 public class HistoryOrderMinimalDTO {
 
-	private Integer id;
+	private int id;
 	private String orderStatus;
 	private LocalDateTime orderTimestamp;
 	private LocalDateTime deliveryTimestamp;
@@ -21,6 +18,14 @@ public class HistoryOrderMinimalDTO {
 	private String additionalNotes;
 	private BigDecimal totalPrice;
 	private BigDecimal totalPriceWithDiscount;
-	private List<HistoryOrderItemMinimalDTO> items;
+	private List<Item> items;
+
+
+	@Builder
+	@Data
+	public static class Item {
+		private int productId;
+		private int count;
+	}
 
 }

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ro.pizzeriaq.qservices.data.model.OptionList;
 import ro.pizzeriaq.qservices.data.model.Product;
 import ro.pizzeriaq.qservices.data.model.ProductCategory;
 import ro.pizzeriaq.qservices.service.DTO.ProductWithOptionsDTO;
@@ -29,6 +30,10 @@ public class ProductWithOptionsMapperTest {
 	private ProductWithOptionsMapper productWithOptionsMapper;
 
 
+	OptionList nullOptionList() {
+		return null;
+	}
+
 	@BeforeEach
 	void setup() {
 		if (productWithOptionsMapper == null) {
@@ -47,16 +52,46 @@ public class ProductWithOptionsMapperTest {
 
 	@Test
 	void throwCases() {
-		assertThrows(NullPointerException.class, () -> productWithOptionsMapper.fromEntity(
-				Product.builder().build()));
-		assertThrows(NullPointerException.class, () -> productWithOptionsMapper.fromEntity(
-				Product.builder().id(null).build()));
-		assertThrows(NullPointerException.class, () -> productWithOptionsMapper.fromEntity(
-				Product.builder().id(1).category(null).build()));
-		assertThrows(NullPointerException.class, () -> productWithOptionsMapper.fromEntity(
-				Product.builder().id(1).category(ProductCategory.builder().id(null).build()).build()));
-		assertThrows(NullPointerException.class, () -> productWithOptionsMapper.fromEntity(
-				Product.builder().id(1).category(ProductCategory.builder().id(1).build()).optionLists(null).build()));
+		assertThrows(NullPointerException.class, () -> productWithOptionsMapper.fromEntity(Product.builder().build()));
+		assertThrows(NullPointerException.class, () -> productWithOptionsMapper.fromEntity(Product.builder()
+				.id(null)
+				.category(ProductCategory.builder().id(1).build())
+				.optionLists(List.of())
+				.build()));
+		assertThrows(NullPointerException.class, () -> productWithOptionsMapper.fromEntity(Product.builder()
+				.id(1)
+				.category(null)
+				.optionLists(List.of())
+				.build()));
+		assertThrows(NullPointerException.class, () -> productWithOptionsMapper.fromEntity(Product.builder()
+				.id(1)
+				.category(ProductCategory.builder().id(null).build())
+				.optionLists(List.of())
+				.build()));
+		assertThrows(NullPointerException.class, () -> productWithOptionsMapper.fromEntity(Product.builder()
+				.id(1)
+				.category(ProductCategory.builder().id(1).build())
+				.optionLists(null)
+				.build()));
+		assertThrows(NullPointerException.class, () -> productWithOptionsMapper.fromEntity(Product.builder()
+				.id(1)
+				.category(ProductCategory.builder().id(1).build())
+				.optionLists(List.of(nullOptionList()))
+				.build()));
+	}
+
+	@Test
+	void minimalNotThrowCases() {
+		assertDoesNotThrow(() -> productWithOptionsMapper.fromEntity(Product.builder()
+				.id(1)
+				.category(ProductCategory.builder().id(1).build())
+				.optionLists(List.of())
+				.build()));
+		assertDoesNotThrow(() -> productWithOptionsMapper.fromEntity(Product.builder()
+				.id(1)
+				.category(ProductCategory.builder().id(1).build())
+				.optionLists(List.of(OptionList.builder().id(1).options(List.of()).build()))
+				.build()));
 	}
 
 	@Test

@@ -19,10 +19,10 @@ public class ProductCategoryMapperTest {
 
 	@Test
 	void throwCases() {
+		assertThrows(NullPointerException.class, () -> productCategoryMapper.fromEntity(ProductCategory.builder().build()));
 		assertThrows(NullPointerException.class, () -> productCategoryMapper.fromEntity(ProductCategory.builder()
+				.id(null)
 				.build()));
-		assertThrows(NullPointerException.class, () -> productCategoryMapper.fromEntity(ProductCategory.builder()
-				.id(null).build()));
 	}
 
 	@Test
