@@ -1,8 +1,10 @@
+Manifest path: android/app/src/main/AndroidManifest.xml
+
 incompatible libraries (npm uninstall):
 	- react-native-reanimated
 
 steps:
-	- set newArchEnabled: false in app.json
-	- follow android-manifest.txt instructions
+	- set `expo.newArchEnabled: false` in app.json (the file paths for the new architecture are too long)
 	- run `npx expo prebuild --clean` if you want to clean the android directory
+	- add `android:usesCleartextTraffic="true"` as a property in the `<application>` tag in AndroidManifest.xml
 	- run `npx expo run:android --variant release -d`
