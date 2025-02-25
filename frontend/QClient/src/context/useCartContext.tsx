@@ -3,7 +3,7 @@ import logger from "src/utils/logger";
 import React, { createContext, ReactNode, useCallback, useContext, useRef, useState } from "react";
 
 function logCart(cart: CartItem[]) {
-  console.log(
+  logger.log(
     JSON.stringify(
       cart.map((item) => {
         return {

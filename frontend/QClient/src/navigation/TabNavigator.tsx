@@ -8,12 +8,14 @@ import { StyleSheet } from "react-native";
 import MenuStackNavigator from "./MenuStackNavigator";
 import CartStackNavigator from "./CartStackNavigator";
 import LoginScreen from "src/screens/login/LoginScreen";
+import ConsoleScreen from "src/screens/test/ConsoleScreen";
 
 const routeToIconMap: Readonly<Record<string, string>> = {
   LoginScreen: "search",
   MenuStackNavigator: "home",
   CartStackNavigator: "cart",
   ProfileScreen: "profile",
+  ConsoleScreen: "search",
   TestScreen: "search",
 };
 
@@ -30,7 +32,7 @@ export default function TabNavigator() {
 
   return (
     <Tab.Navigator
-      screenOptions={({ route, navigation }) => ({
+      screenOptions={({ navigation, route }) => ({
         headerShown: false,
         tabBarStyle: [styles.tabBar, { backgroundColor: colorTheme.background.navbar }],
         tabBarIcon: ({ focused, color, size }) => {
@@ -49,7 +51,8 @@ export default function TabNavigator() {
       <Tab.Screen name="MenuStackNavigator" component={MenuStackNavigator} options={{ title: "Meniu" }} />
       <Tab.Screen name="CartStackNavigator" component={CartStackNavigator} options={{ title: "Coș" }} />
       <Tab.Screen name="ProfileScreen" component={OrderHistoryScreen} options={{ title: "Profil" }} />
-      <Tab.Screen name="TestScreen" component={TestScreen} options={{ title: "Test" }} />
+      <Tab.Screen name="ConsoleScreen" component={ConsoleScreen} options={{ title: "Console" }} />
+      {/* <Tab.Screen name="TestScreen" component={TestScreen} options={{ title: "Test" }} /> */}
     </Tab.Navigator>
   );
 }
