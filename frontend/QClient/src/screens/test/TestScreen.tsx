@@ -19,8 +19,8 @@ export default function TestScreen() {
 
   const newImagesQuery = useQuery<ImageFile[], Error>({
     queryFn: async () => {
-      if (await api.fetchImageRefetchCheck("yes")) {
-        return api.fetchImages();
+      if (await api.fetchImageRefetchCheck.queryFn("yes")) {
+        return api.fetchImages.queryFn();
       }
       return [];
     },

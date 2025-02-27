@@ -4,10 +4,13 @@ import { ValidImageFile } from "src/utils/files";
 
 const baseImageRoute = `${config.baseApiUrl}/image`;
 
-export async function fetchImageRefetchCheck(doImageRefetch: "yes" | "no") {
-  return (await axios.get(`${baseImageRoute}/changes/${doImageRefetch}`)).data as boolean;
-}
+export const fetchImageRefetchCheck = {
+  queryFn: async (doImageRefetch: "yes" | "no") =>
+    (await axios.get(`${baseImageRoute}/changes/${doImageRefetch}`)).data as boolean,
+  queryKey: () => null,
+};
 
-export async function fetchImages() {
-  return (await axios.get(`${baseImageRoute}/all`)).data as ValidImageFile[];
-}
+export const fetchImages = {
+  queryFn: async () => (await axios.get(`${baseImageRoute}/all`)).data as ValidImageFile[],
+  queryKey: () => ["images"],
+};

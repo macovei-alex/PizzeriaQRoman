@@ -4,7 +4,7 @@ import { Category } from "src/api/types/Category";
 
 export default function useCategoriesQuery() {
   return useQuery<Category[], Error>({
-    queryKey: ["categories"],
-    queryFn: api.fetchCategories,
+    queryFn: api.fetchCategories.queryFn,
+    queryKey: api.fetchCategories.queryKey(),
   });
 }

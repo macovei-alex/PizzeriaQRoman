@@ -6,16 +6,23 @@ import { Category } from "./types/Category";
 const baseProductRoute = `${config.baseApiUrl}/product`;
 const baseCategoryRoute = `${config.baseApiUrl}/category`;
 
-async function fetchProducts() {
-  return (await axios.get(`${baseProductRoute}/all`)).data as Product[];
-}
+export const fetchProducts = {
+  queryFn: async () => {
+    return (await axios.get(`${baseProductRoute}/all`)).data as Product[];
+  },
+  queryKey: () => ["products"],
+};
 
-async function fetchCategories() {
-  return (await axios.get(`${baseCategoryRoute}/all`)).data as Category[];
-}
+export const fetchCategories = {
+  queryFn: async () => {
+    return (await axios.get(`${baseCategoryRoute}/all`)).data as Category[];
+  },
+  queryKey: () => ["categories"],
+};
 
-async function fetchProductWithOptions(productId: ProductId) {
-  return (await axios.get(`${baseProductRoute}/${productId}`)).data as ProductWithOptions;
-}
-
-export { fetchProducts, fetchCategories, fetchProductWithOptions };
+export const fetchProductWithOptions = {
+  queryFn: async (productId: ProductId) => {
+    return (await axios.get(`${baseProductRoute}/${productId}`)).data as ProductWithOptions;
+  },
+  queryKey: (productId: ProductId) => ["product", productId],
+};

@@ -4,7 +4,7 @@ import { Product } from "src/api/types/Product";
 
 export default function useProductsQuery() {
   return useQuery<Product[], Error>({
-    queryKey: ["products"],
-    queryFn: api.fetchProducts,
+    queryFn: api.fetchProducts.queryFn,
+    queryKey: api.fetchProducts.queryKey(),
   });
 }

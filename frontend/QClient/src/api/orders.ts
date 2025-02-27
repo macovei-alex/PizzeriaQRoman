@@ -8,7 +8,8 @@ export async function sendOrder(order: PlacedOrder) {
   return axios.post(`${baseOrderRoute}/place`, order);
 }
 
-export async function fetchOrderHistory() {
+export const fetchOrderHistory = {
   // TODO: Experiment with .then() instead of await for api functions
-  return (await axios.get(`${baseOrderRoute}/history`)).data as HistoryOrder[];
-}
+  queryFn: async () => (await axios.get(`${baseOrderRoute}/history`)).data as HistoryOrder[],
+  queryKey: () => ["order-history"],
+};
