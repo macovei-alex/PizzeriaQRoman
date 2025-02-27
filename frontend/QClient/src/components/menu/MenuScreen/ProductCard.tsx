@@ -7,6 +7,7 @@ import { Product } from "src/api/types/Product";
 import logger from "src/utils/logger";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { MenuStackParamList } from "src/navigation/MenuStackNavigator";
+import { formatPrice } from "src/utils/utils";
 
 type ProductCardProps = {
   product: Product;
@@ -30,7 +31,7 @@ export default function ProductCard({ navigation, product, productImage }: Produ
         </View>
         <View style={styles.priceContainer}>
           <Text style={[styles.priceText, { color: colorTheme.text.primary }]}>
-            {`${product.price.toFixed(2)} RON`}
+            {`${formatPrice(product.price)} RON`}
           </Text>
         </View>
         <TouchableOpacity

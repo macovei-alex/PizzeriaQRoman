@@ -6,6 +6,7 @@ import useColorTheme from "src/hooks/useColorTheme";
 import logger from "src/utils/logger";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
+import { formatPrice } from "src/utils/utils";
 
 function calculatePrice(item: CartItem) {
   let price = item.product.price;
@@ -45,7 +46,7 @@ export default function ProductSection({ navigation }: ProductSectionProps) {
       <View style={styles.totalPriceContainerContainer}>
         <View style={[styles.totalPriceContainer, { backgroundColor: colorTheme.background.accent }]}>
           <Text style={[styles.totalPriceText, { color: colorTheme.text.onAccent }]}>
-            Total de plată: {totalPrice.toFixed(2)} RON
+            Total de plată: {formatPrice(totalPrice)} RON
           </Text>
         </View>
       </View>

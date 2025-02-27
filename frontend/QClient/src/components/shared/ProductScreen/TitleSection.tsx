@@ -6,6 +6,7 @@ import { ImageFile, imageOrDefault } from "src/utils/files";
 import { ProductWithOptions } from "src/api/types/Product";
 import logger from "src/utils/logger";
 import { useNavigation } from "@react-navigation/native";
+import { formatPrice } from "src/utils/utils";
 
 type TitleSectionProps = {
   product: ProductWithOptions;
@@ -28,7 +29,7 @@ export default function TitleSection({ product, productImage }: TitleSectionProp
       <Text style={[styles.titleText, { color: colorTheme.text.primary }]}>{product.name}</Text>
       <View style={styles.subtitleContainer}>
         <Text style={[styles.subtitleText, { color: colorTheme.text.primary }]}>
-          {product.subtitle} - {product.price.toFixed(2)} lei
+          {product.subtitle} - {formatPrice(product.price)} lei
         </Text>
       </View>
       <Text style={[styles.descriptionText, { color: colorTheme.text.secondary }]}>

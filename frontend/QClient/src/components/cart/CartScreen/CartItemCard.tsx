@@ -10,6 +10,7 @@ import { CartItem, useCartContext } from "src/context/useCartContext";
 import logger from "src/utils/logger";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
+import { formatPrice } from "src/utils/utils";
 
 type CartItemCardProps = {
   cartItem: CartItem;
@@ -67,7 +68,9 @@ export default function CartItemCard({ navigation, cartItem, price }: CartItemCa
 
       <View style={styles.priceSectionContainer}>
         <View style={[styles.priceContainer, { backgroundColor: colorTheme.background.accent }]}>
-          <Text style={[styles.priceText, { color: colorTheme.text.onAccent }]}>{price.toFixed(2)} RON</Text>
+          <Text style={[styles.priceText, { color: colorTheme.text.onAccent }]}>
+            {formatPrice(price)} RON
+          </Text>
         </View>
         <TouchableOpacity onPress={() => changeCartItemCount(cartItem.id, -1)}>
           <MinusCircleSvg style={styles.plusMinusSvg} />

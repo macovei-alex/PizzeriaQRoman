@@ -3,7 +3,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import useColorTheme from "src/hooks/useColorTheme";
 import ProductSection from "src/components/cart/CartScreen/ProductSection";
-import TitleSection from "src/components/cart/CartScreen/TitleSection";
 import api from "src/api";
 import { useCartContext } from "src/context/useCartContext";
 import { showToast } from "src/utils/toast";
@@ -13,6 +12,7 @@ import { convertCartItemOptions } from "src/utils/convertions";
 import { useQueryClient } from "@tanstack/react-query";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
+import ScreenTitle from "src/components/shared/ScreenTitle";
 
 type CartScreenProps = { navigation: NativeStackNavigationProp<CartStackParamList, "CartScreen"> };
 
@@ -68,7 +68,7 @@ export default function CartScreen({ navigation }: CartScreenProps) {
   return (
     <SafeAreaView>
       <ScrollView>
-        <TitleSection />
+        <ScreenTitle title={"Comanda mea"} containerStyle={styles.titleScreenContainer} />
 
         <ProductSection navigation={navigation} />
 
@@ -86,6 +86,9 @@ export default function CartScreen({ navigation }: CartScreenProps) {
 }
 
 const styles = StyleSheet.create({
+  titleScreenContainer: {
+    marginBottom: 20,
+  },
   sendOrderContainer: {
     alignItems: "center",
     marginTop: 40,

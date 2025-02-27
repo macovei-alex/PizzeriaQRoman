@@ -4,6 +4,7 @@ import useColorTheme from "src/hooks/useColorTheme";
 import TickCheckboxSvg from "src/components/svg/TickCheckboxSvg";
 import { Option, OptionId } from "src/api/types/Product";
 import logger from "src/utils/logger";
+import { formatPrice } from "src/utils/utils";
 
 type OptionCardProps = {
   option: Option;
@@ -29,7 +30,7 @@ export default function OptionCard({ option, currentCount, onOptionChange }: Opt
       <Text style={[styles.optionNameText, { color: colorTheme.text.primary }]}>{option.name}</Text>
       {option.price > 0 && (
         <Text style={[styles.priceText, { color: colorTheme.text.accent }]}>
-          +{option.price.toFixed(2)} lei
+          +{formatPrice(option.price)} lei
         </Text>
       )}
     </View>
