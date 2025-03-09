@@ -30,18 +30,18 @@ public class QservicesApplication {
 	}
 
 
-	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**")
-						.allowedOrigins("*")
-						.allowedHeaders("*")
-						.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
-			}
-		};
-	}
+//	@Bean
+//	public WebMvcConfigurer corsConfigurer() {
+//		return new WebMvcConfigurer() {
+//			@Override
+//			public void addCorsMappings(CorsRegistry registry) {
+//				registry.addMapping("/**")
+//						.allowedOrigins("*")
+//						.allowedHeaders("*")
+//						.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
+//			}
+//		};
+//	}
 
 
 	@Bean
