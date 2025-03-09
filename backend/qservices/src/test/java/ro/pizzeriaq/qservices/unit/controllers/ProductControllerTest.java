@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import ro.pizzeriaq.qservices.controller.ProductController;
@@ -35,7 +36,8 @@ public class ProductControllerTest {
 
 
 	@Test
-	void getAllProductsTest() throws Exception {
+	@WithMockUser
+	void getAllProducts() throws Exception {
 		when(productService.getProducts())
 				.thenReturn(List.of());
 
@@ -45,7 +47,8 @@ public class ProductControllerTest {
 	}
 
 	@Test
-	void getSingleNonexistentProductTest() throws Exception {
+	@WithMockUser
+	void getSingleNonexistentProduct() throws Exception {
 		when(productService.getProduct(0))
 				.thenReturn(Optional.empty());
 
@@ -55,7 +58,8 @@ public class ProductControllerTest {
 	}
 
 	@Test
-	void getSingleProductWithInvalidIdTest() throws Exception {
+	@WithMockUser
+	void getSingleProductWithInvalidId() throws Exception {
 		mockMvc.perform(get(contextPath + "/product/invalid")
 						.contextPath(contextPath))
 				.andExpect(status().isBadRequest());

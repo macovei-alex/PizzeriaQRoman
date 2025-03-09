@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -61,6 +62,7 @@ public class OrderControllerTest {
 
 	@Autowired
 	private ObjectMapper objectMapper;
+
 	@Autowired
 	private OrderService orderService;
 
@@ -99,38 +101,52 @@ public class OrderControllerTest {
 	}
 
 	@Test
-	void entitiesInitializationTest() {
+	void entitiesInitialization() {
 		assertThat(productService.getProducts()).isNotEmpty();
 	}
 
 	@Test
-	void badPayloadTest1() throws Exception {
+	void unauthorizedAccess() throws Exception {
+		mockMvc.perform(constructDefaultGetRequest())
+				.andExpect(status().isUnauthorized());
+
+		mockMvc.perform(constructDefaultPostRequest())
+				.andExpect(status().isUnauthorized());
+	}
+
+	@Test
+	@WithMockUser
+	void badPayload1() throws Exception {
 		mockMvc.perform(constructDefaultPostRequest())
 				.andExpect(status().isInternalServerError());
 	}
 
 	@Test
-	void badPayloadTest2() throws Exception {
+	@WithMockUser
+	void badPayload2() throws Exception {
 		mockMvc.perform(constructDefaultPostRequest()
 						.content(""))
 				.andExpect(status().isInternalServerError());
 	}
 
 	@Test
-	void badPayloadTest3() throws Exception {
+	@WithMockUser
+	void badPayload3() throws Exception {
 		mockMvc.perform(constructDefaultPostRequest()
 						.content("{}"))
 				.andExpect(status().isBadRequest());
 	}
 
 	@Test
-	void badPayloadTest4() throws Exception {
+	@WithMockUser
+	void badPayload4() throws Exception {
 		mockMvc.perform(constructDefaultPostRequest()
 						.content("{\"nonexistentField\":  null}"))
 				.andExpect(status().isBadRequest());
 	}
 
 	@Test
+	@WithMockUser
 	void badPayloadValidation1() throws Exception {
 		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
 				.items(null)
@@ -142,6 +158,7 @@ public class OrderControllerTest {
 	}
 
 	@Test
+	@WithMockUser
 	void badPayloadValidation2() throws Exception {
 		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
 				.items(List.of())
@@ -154,6 +171,7 @@ public class OrderControllerTest {
 	}
 
 	@Test
+	@WithMockUser
 	void badPayloadValidation3() throws Exception {
 		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
 				.items(List.of(
@@ -167,6 +185,7 @@ public class OrderControllerTest {
 	}
 
 	@Test
+	@WithMockUser
 	void badPayloadValidation4() throws Exception {
 		var productId = productService.getProducts().stream().findFirst().orElseThrow().getId();
 
@@ -182,6 +201,7 @@ public class OrderControllerTest {
 	}
 
 	@Test
+	@WithMockUser
 	void badPayloadValidation5() throws Exception {
 		var productId = productService.getProducts().stream().findFirst().orElseThrow().getId();
 
@@ -198,7 +218,8 @@ public class OrderControllerTest {
 	}
 
 	@Test
-	void badPayloadDBValuesTest() throws Exception {
+	@WithMockUser
+	void badPayloadDBValues() throws Exception {
 		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
 				.items(List.of(
 						PlacedOrderDTO.Item.builder().productId(Integer.MAX_VALUE).count(1).optionLists(List.of()).build()
@@ -211,7 +232,8 @@ public class OrderControllerTest {
 	}
 
 	@Test
-	void goodPayloadTest1() throws Exception {
+	@WithMockUser
+	void goodPayload1() throws Exception {
 		var products = productService.getProducts().stream().limit(2).toList();
 
 		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
@@ -245,7 +267,8 @@ public class OrderControllerTest {
 	}
 
 	@Test
-	void goodPayloadTest2() throws Exception {
+	@WithMockUser
+	void goodPayload2() throws Exception {
 		var products = productService.getProducts();
 
 		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
@@ -278,7 +301,8 @@ public class OrderControllerTest {
 	}
 
 	@Test
-	void goodPayloadTest3() throws Exception {
+	@WithMockUser
+	void goodPayload3() throws Exception {
 		var products = productService.getProducts().stream()
 				.map((product) -> productService.getProduct(product.getId()).orElseThrow())
 				.limit(5)
@@ -338,7 +362,8 @@ public class OrderControllerTest {
 	}
 
 	@Test
-	void goodPayloadTest4() throws Exception {
+	@WithMockUser
+	void goodPayload4() throws Exception {
 		var products = productService.getProducts().stream()
 				.map((product) -> productService.getProduct(product.getId()).orElseThrow())
 				.limit(5)
