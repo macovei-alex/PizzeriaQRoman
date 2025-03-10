@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.KeyPair;
 import java.security.interfaces.RSAPrivateKey;
+import java.time.Duration;
 import java.util.Date;
 import java.util.UUID;
 
@@ -20,13 +21,13 @@ public class JwtService {
 	private final KeyPair keyPair;
 
 
-	public String generateToken(String username, long expirationMillis) throws Exception {
+	public String generateToken(String subject, Duration expirationDelay) throws Exception {
 		RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-				.subject(username)
 				.issuer("pizzeriaq")
-				.expirationTime(new Date(System.currentTimeMillis() + expirationMillis))
+				.subject(subject)
+				.expirationTime(new Date(System.currentTimeMillis() + expirationDelay.toMillis()))
 				.jwtID(UUID.randomUUID().toString())
 				.claim("roles", "ROLE_USER")
 				.build();

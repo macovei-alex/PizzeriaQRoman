@@ -2,6 +2,8 @@ package ro.pizzeriaq.qservices.service;
 
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.pizzeriaq.qservices.data.model.*;
@@ -16,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 public class EntityInitializerService {
 
+	private final PasswordEncoder passwordEncoder;
 	private final ProductRepository productRepository;
 	private final ProductCategoryRepository categoryRepository;
 	private final OptionListRepository optionListRepository;
@@ -289,7 +292,16 @@ public class EntityInitializerService {
 	public void addAccounts() {
 		List<Account> accounts = new ArrayList<>();
 		accounts.add(Account.builder()
+				.email("example1@email.com")
+				.password(passwordEncoder.encode("password1"))
 				.phoneNumber("0722 222 222")
+				.createdTimestamp(LocalDateTime.now().minusHours(2))
+				.build());
+
+		accounts.add(Account.builder()
+				.email("example2@email.com")
+				.password(passwordEncoder.encode("password2"))
+				.phoneNumber("0733 333 333")
 				.createdTimestamp(LocalDateTime.now().minusHours(2))
 				.build());
 

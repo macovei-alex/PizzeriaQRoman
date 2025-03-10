@@ -15,8 +15,12 @@ import java.util.List;
 public class Account {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private String id;
+
+
+	@OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
+	private Token token;
 
 
 	@ManyToMany
@@ -40,8 +44,16 @@ public class Account {
 	private LocalDateTime createdTimestamp;
 
 
+	@Column(nullable = false, length = 50)
+	private String email;
+
+
 	@Column(nullable = false, length = 20)
 	private String phoneNumber;
+
+
+	@Column(nullable = false, length = 100)
+	private String password;
 
 
 	@Column(nullable = false)
