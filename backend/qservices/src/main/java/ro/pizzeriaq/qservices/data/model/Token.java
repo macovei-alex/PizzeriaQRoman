@@ -1,13 +1,13 @@
 package ro.pizzeriaq.qservices.data.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Builder
 public class Token {
 
@@ -20,10 +20,10 @@ public class Token {
 	private Account account;
 
 
-	@Column(nullable = false, length = 256)
+	@Column(nullable = false, length = 2048)
 	private String accessToken;
 
 
-	@Column(nullable = false, length = 256)
+	@Column(nullable = false, length = 2048)
 	private String refreshToken;
 }

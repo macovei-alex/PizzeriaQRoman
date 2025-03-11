@@ -9,11 +9,12 @@ import ro.pizzeriaq.qservices.data.model.Account;
 import java.util.Optional;
 
 @Repository
-public interface AccountRepository extends JpaRepository<Account, Integer> {
+public interface AccountRepository extends JpaRepository<Account, String> {
 
 	@Query("""
 		SELECT a FROM Account a
 		WHERE a.email = :email
 	""")
 	Optional<Account> findByEmail(@Param("email") String email);
+
 }

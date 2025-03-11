@@ -1,10 +1,6 @@
 package ro.pizzeriaq.qservices.security;
 
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
-import com.nimbusds.jose.jwk.source.JWKSource;
-import com.nimbusds.jose.proc.SecurityContext;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,27 +8,18 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
-import java.util.UUID;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@AllArgsConstructor
 public class SecurityConfig {
 
+	private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+
 	@Bean
-	public SecurityFilterChain securityFilterChain(
-			HttpSecurity http,
-			JwtAuthenticationConverter jwtAuthenticationConverter,
-			JwtDecoder jwtDecoder
-	) throws Exception {
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 				.csrf(AbstractHttpConfigurer::disable)
 				.cors(AbstractHttpConfigurer::disable)
@@ -41,42 +28,9 @@ public class SecurityConfig {
 						.requestMatchers("/auth/login", "/auth/refresh").permitAll()
 						.anyRequest().authenticated()
 				)
-				.oauth2ResourceServer(oauth2 -> oauth2
-						.jwt(jwt -> jwt
-								.jwtAuthenticationConverter(jwtAuthenticationConverter)
-								.decoder(jwtDecoder)
-						)
-				);
+				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
-	}
-
-
-	@Bean
-	public JwtAuthenticationConverter jwtAuthenticationConverter() {
-		JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-		grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-		grantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
-
-		JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-		jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
-		return jwtAuthenticationConverter;
-	}
-
-
-	@Bean
-	public JwtDecoder jwtDecoder(KeyPair keyPair) {
-		return NimbusJwtDecoder
-				.withPublicKey((RSAPublicKey) keyPair.getPublic())
-				.build();
-	}
-
-
-	@Bean
-	public KeyPair keyPair() throws Exception {
-		KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance("RSA");
-		keyGenerator.initialize(2048);
-		return keyGenerator.generateKeyPair();
 	}
 
 
@@ -85,19 +39,5 @@ public class SecurityConfig {
 		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
 
-
-	/*@Bean
-	public JWKSource<SecurityContext> jwkSource(KeyPair keyPair) {
-		RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
-		RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-
-		RSAKey key = new RSAKey.Builder(publicKey)
-				.privateKey(privateKey)
-				.keyID(UUID.randomUUID().toString())
-				.build();
-
-		JWKSet set = new JWKSet(key);
-		return new ImmutableJWKSet<>(set);
-	}*/
 }
 
