@@ -35,18 +35,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		String token = extractToken(request);
 
-		if (token == null || SecurityContextHolder.getContext().getAuthentication() != null) {
-			filterChain.doFilter(request, response);
-			return;
-		}
-
-		try {
-			JwtAuthentication jwtAuthentication = jwtService.convertToken(token);
-			SecurityContextHolder.getContext().setAuthentication(jwtAuthentication);
-		} catch (JwtConvertAuthenticationException e) {
-			logger.warn("Failed to convert JWT token to authentication", e);
-			response.setStatus(e.getStatus());
-			return;
+		if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+			try {
+				JwtAuthentication jwtAuthentication = jwtService.convertToken(token);
+				SecurityContextHolder.getContext().setAuthentication(jwtAuthentication);
+			} catch (JwtConvertAuthenticationException e) {
+				logger.warn("Failed to convert JWT token to authentication", e);
+				response.setStatus(e.getStatus());
+				return;
+			}
 		}
 
 		filterChain.doFilter(request, response);
