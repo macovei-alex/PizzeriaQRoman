@@ -18,6 +18,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import ro.pizzeriaq.qservices.exceptions.JwtConvertAuthenticationException;
 import ro.pizzeriaq.qservices.security.JwtAuthentication;
+import ro.pizzeriaq.qservices.security.KeySource;
 import ro.pizzeriaq.qservices.service.DTO.GeneratedJwtPairDTO;
 
 import java.security.KeyPair;
@@ -40,11 +41,11 @@ public class JwtService {
 	@Value("${app.jwt.refresh-token.expiration-delay}")
 	private Duration refreshExpirationDelay;
 
-	private final KeyPair keyPair;
+	private final KeySource keySource;
 
 
-	public JwtService(KeyPair keyPair) {
-		this.keyPair = keyPair;
+	public JwtService(KeySource keySource) {
+		this.keySource = keySource;
 	}
 
 
@@ -66,6 +67,8 @@ public class JwtService {
 
 
 	private String generateToken(String subject, Duration expirationDelay) throws JOSEException {
+		KeyPair keyPair = getKeyPair();
+
 		RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
@@ -85,6 +88,18 @@ public class JwtService {
 		signedJWT.sign(new RSASSASigner(privateKey));
 
 		return signedJWT.serialize();
+	}
+
+
+	private KeyPair getKeyPair() throws JOSEException {
+		KeyPair keyPair;
+		try {
+			keyPair = keySource.getKeyPair();
+		} catch (Exception e) {
+			logger.error("Failed to get token generation key pair", e);
+			throw new JOSEException("Failed to get key pair");
+		}
+		return keyPair;
 	}
 
 
@@ -138,6 +153,8 @@ public class JwtService {
 
 
 	public JWTClaimsSet extractClaims(String token) throws ParseException, JOSEException {
+		KeyPair keyPair = getKeyPair();
+
 		if (token == null) {
 			throw new IllegalArgumentException("Token is null");
 		}
