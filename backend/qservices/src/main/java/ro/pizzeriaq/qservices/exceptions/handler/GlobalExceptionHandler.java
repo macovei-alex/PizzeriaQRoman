@@ -1,4 +1,4 @@
-package ro.pizzeriaq.qservices.controller.exceptions.handler;
+package ro.pizzeriaq.qservices.exceptions.handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -21,7 +21,7 @@ public class QservicesApplication {
 	private static final Logger logger = LoggerFactory.getLogger(QservicesApplication.class);
 
 
-	@Value("${application.environment}")
+	@Value("${app.environment}")
 	private String environment;
 
 

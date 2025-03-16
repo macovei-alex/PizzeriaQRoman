@@ -18,6 +18,7 @@ import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
 import ro.pizzeriaq.qservices.service.EntityInitializerService;
 import ro.pizzeriaq.qservices.service.ProductService;
 
+import java.time.Duration;
 import java.util.Comparator;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,7 +37,7 @@ class ProductControllerTest {
 	@Value("${server.servlet.context-path}")
 	private String contextPath;
 
-	@Value("${application.environment}")
+	@Value("${app.environment}")
 	private String environment;
 
 

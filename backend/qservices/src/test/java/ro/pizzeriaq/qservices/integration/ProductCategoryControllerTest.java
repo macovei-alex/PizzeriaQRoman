@@ -30,7 +30,7 @@ public class ProductCategoryControllerTest {
 	@Value("${server.servlet.context-path}")
 	private String contextPath;
 
-	@Value("${application.environment}")
+	@Value("${app.environment}")
 	private String environment;
 
 
