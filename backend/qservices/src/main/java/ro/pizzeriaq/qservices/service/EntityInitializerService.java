@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -292,17 +293,21 @@ public class EntityInitializerService {
 	public void addAccounts() {
 		List<Account> accounts = new ArrayList<>();
 		accounts.add(Account.builder()
+				.id(UUID.randomUUID())
 				.email("example1@email.com")
+				.isEmailVerified(true)
 				.password(passwordEncoder.encode("password1"))
 				.phoneNumber("0722 222 222")
-				.createdTimestamp(LocalDateTime.now().minusHours(2))
+				.createdAt(LocalDateTime.now().minusHours(2))
 				.build());
 
 		accounts.add(Account.builder()
+				.id(UUID.randomUUID())
 				.email("example2@email.com")
+				.isEmailVerified(true)
 				.password(passwordEncoder.encode("password2"))
 				.phoneNumber("0733 333 333")
-				.createdTimestamp(LocalDateTime.now().minusHours(2))
+				.createdAt(LocalDateTime.now().minusHours(2))
 				.build());
 
 		accountRepository.saveAll(accounts);

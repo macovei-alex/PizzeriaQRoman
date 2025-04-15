@@ -115,7 +115,7 @@ public class OrderControllerTest {
 	}
 
 	@Test
-	@WithMockUser
+	@WithMockUser()
 	void badPayload1() throws Exception {
 		mockMvc.perform(constructDefaultPostRequest())
 				.andExpect(status().isInternalServerError());

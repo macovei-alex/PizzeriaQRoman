@@ -6,6 +6,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -16,12 +17,7 @@ import java.util.List;
 public class Account {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.UUID)
-	private String id;
-
-
-	@OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
-	private Token token;
+	private UUID id;
 
 
 	@ManyToMany
@@ -42,11 +38,14 @@ public class Account {
 
 
 	@Column(nullable = false, columnDefinition = "DATETIME")
-	private LocalDateTime createdTimestamp;
+	private LocalDateTime createdAt;
 
 
 	@Column(nullable = false, length = 50)
 	private String email;
+
+	@Column(nullable = false)
+	private boolean isEmailVerified;
 
 
 	@Column(nullable = false, length = 20)
