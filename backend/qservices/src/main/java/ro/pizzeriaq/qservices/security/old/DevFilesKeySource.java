@@ -1,4 +1,4 @@
-package ro.pizzeriaq.qservices.security;
+package ro.pizzeriaq.qservices.security.old;
 
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
-@Service
+// @Service
 public class DevFilesKeySource implements KeySource {
 
 	private static final String PRIVATE_KEY_PATH = "src/main/resources/static/dev/private.pem";

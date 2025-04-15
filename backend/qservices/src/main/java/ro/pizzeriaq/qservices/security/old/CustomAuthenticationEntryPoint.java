@@ -1,4 +1,4 @@
-package ro.pizzeriaq.qservices.security;
+package ro.pizzeriaq.qservices.security.old;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Component
+// @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
 	@Override

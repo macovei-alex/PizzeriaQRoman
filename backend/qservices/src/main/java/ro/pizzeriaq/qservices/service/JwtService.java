@@ -17,8 +17,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import ro.pizzeriaq.qservices.exceptions.JwtConvertAuthenticationException;
-import ro.pizzeriaq.qservices.security.JwtAuthentication;
-import ro.pizzeriaq.qservices.security.KeySource;
+import ro.pizzeriaq.qservices.security.old.JwtAuthentication;
+import ro.pizzeriaq.qservices.security.old.KeySource;
 import ro.pizzeriaq.qservices.service.DTO.GeneratedJwtPairDTO;
 
 import java.security.KeyPair;
@@ -30,7 +30,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-@Service
+// @Service
 public class JwtService {
 	private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
 

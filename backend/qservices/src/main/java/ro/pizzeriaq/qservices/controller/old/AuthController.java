@@ -1,4 +1,4 @@
-package ro.pizzeriaq.qservices.controller;
+package ro.pizzeriaq.qservices.controller.old;
 
 import com.nimbusds.jose.JOSEException;
 import jakarta.persistence.EntityNotFoundException;
@@ -9,10 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import ro.pizzeriaq.qservices.exceptions.JwtConvertAuthenticationException;
-import ro.pizzeriaq.qservices.security.JwtAuthentication;
+import ro.pizzeriaq.qservices.security.old.JwtAuthentication;
 import ro.pizzeriaq.qservices.service.AccountService;
 import ro.pizzeriaq.qservices.service.DTO.LoginCredentialsDTO;
 import ro.pizzeriaq.qservices.service.DTO.RefreshCredentialsDTO;
@@ -20,8 +18,8 @@ import ro.pizzeriaq.qservices.service.JwtService;
 
 import java.util.Map;
 
-@RestController
-@RequestMapping("/auth")
+// @RestController
+// @RequestMapping("/auth")
 @AllArgsConstructor
 public class AuthController {
 

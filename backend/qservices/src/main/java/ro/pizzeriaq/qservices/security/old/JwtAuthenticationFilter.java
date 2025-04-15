@@ -1,4 +1,4 @@
-package ro.pizzeriaq.qservices.security;
+package ro.pizzeriaq.qservices.security.old;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -17,7 +17,7 @@ import ro.pizzeriaq.qservices.service.JwtService;
 
 import java.io.IOException;
 
-@Service
+// @Service
 @AllArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
