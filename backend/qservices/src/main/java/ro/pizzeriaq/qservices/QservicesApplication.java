@@ -35,6 +35,15 @@ public class QservicesApplication {
 
 
 	@Bean
+	@Profile("default")
+	public CommandLineRunner initializeEntities(EntityInitializerService entityInitializerService) {
+		return (_) -> {
+			// EntityInitializerService.reInitializeEntities(entityInitializerService);
+		};
+	}
+
+
+	@Bean
 	public AbstractRequestLoggingFilter requestLoggingFilter() {
 		AbstractRequestLoggingFilter loggingFilter = new CommonsRequestLoggingFilter();
 		loggingFilter.setIncludeQueryString(true);
@@ -44,14 +53,5 @@ public class QservicesApplication {
 		loggingFilter.setMaxPayloadLength(10000);
 		loggingFilter.setAfterMessageSuffix("\n");
 		return loggingFilter;
-	}
-
-
-	@Bean
-	@Profile("default")
-	public CommandLineRunner initializeEntities(EntityInitializerService entityInitializerService) {
-		return (_) -> {
-			// EntityInitializerService.reInitializeEntities(entityInitializerService);
-		};
 	}
 }

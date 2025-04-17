@@ -18,7 +18,6 @@ import java.util.List;
 @AllArgsConstructor
 public class EntityInitializerService {
 
-	private final PasswordEncoder passwordEncoder;
 	private final ProductRepository productRepository;
 	private final ProductCategoryRepository categoryRepository;
 	private final OptionListRepository optionListRepository;
@@ -303,7 +302,7 @@ public class EntityInitializerService {
 				.email(user.getEmail())
 				.isEmailVerified(user.isEmailVerified())
 				.phoneNumber("0722 222 222")
-				.createdAt(LocalDateTime.ofEpochSecond(user.getCreatedTimestamp(), 0, ZoneOffset.ofTotalSeconds(0)))
+				.createdAt(LocalDateTime.ofEpochSecond(user.getCreatedTimestamp() / 1000, 0, ZoneOffset.ofHours(0)))
 				.build());
 
 		user = keycloakUsers.get(1);
@@ -312,7 +311,7 @@ public class EntityInitializerService {
 				.email(user.getEmail())
 				.isEmailVerified(user.isEmailVerified())
 				.phoneNumber("0733 333 333")
-				.createdAt(LocalDateTime.ofEpochSecond(user.getCreatedTimestamp(), 0, ZoneOffset.ofTotalSeconds(0)))
+				.createdAt(LocalDateTime.ofEpochSecond(user.getCreatedTimestamp() / 1000, 0, ZoneOffset.ofTotalSeconds(0)))
 				.build());
 
 		accountRepository.saveAll(accounts);

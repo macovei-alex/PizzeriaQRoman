@@ -10,6 +10,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.AuthorizedClientServiceOAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProviderBuilder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -28,6 +33,7 @@ public class SecurityConfig {
 				.oauth2Client(Customizer.withDefaults())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
+						.requestMatchers("/internal/initialize").permitAll()
 						.requestMatchers("/account/all").hasAuthority("admin")
 						.anyRequest().authenticated()
 				)
@@ -60,6 +66,23 @@ public class SecurityConfig {
 		});
 
 		return converter;
+	}
+
+
+	// Optional config so that the client can be used to call other services without a ServletRequest
+	@Bean
+	public OAuth2AuthorizedClientManager authorizedClientManager(
+			ClientRegistrationRepository clients,
+			OAuth2AuthorizedClientService clientService
+	) {
+		var manager = new AuthorizedClientServiceOAuth2AuthorizedClientManager(clients, clientService);
+
+		manager.setAuthorizedClientProvider(OAuth2AuthorizedClientProviderBuilder.builder()
+				.clientCredentials()
+				.build()
+		);
+
+		return manager;
 	}
 
 }

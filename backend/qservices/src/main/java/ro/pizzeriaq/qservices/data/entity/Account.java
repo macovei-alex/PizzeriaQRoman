@@ -52,10 +52,6 @@ public class Account {
 	private String phoneNumber;
 
 
-	@Column(nullable = false, length = 100)
-	private String password;
-
-
 	@Column(nullable = false)
 	@ColumnDefault("1")
 	@Builder.Default
