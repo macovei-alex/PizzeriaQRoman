@@ -5,7 +5,7 @@ import jakarta.persistence.PersistenceContext;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ro.pizzeriaq.qservices.data.model.Product;
+import ro.pizzeriaq.qservices.data.entity.Product;
 import ro.pizzeriaq.qservices.data.repository.OptionListRepository;
 import ro.pizzeriaq.qservices.data.repository.ProductRepository;
 import ro.pizzeriaq.qservices.service.DTO.ProductDTO;

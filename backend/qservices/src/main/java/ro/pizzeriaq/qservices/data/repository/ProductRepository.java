@@ -1,10 +1,9 @@
 package ro.pizzeriaq.qservices.data.repository;
 
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import ro.pizzeriaq.qservices.data.model.Product;
+import ro.pizzeriaq.qservices.data.entity.Product;
 
 import java.util.List;
 import java.util.Optional;

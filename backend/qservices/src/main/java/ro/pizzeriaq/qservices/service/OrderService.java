@@ -3,7 +3,7 @@ package ro.pizzeriaq.qservices.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ro.pizzeriaq.qservices.data.model.*;
+import ro.pizzeriaq.qservices.data.entity.*;
 import ro.pizzeriaq.qservices.data.repository.*;
 import ro.pizzeriaq.qservices.service.DTO.HistoryOrderMinimalDTO;
 import ro.pizzeriaq.qservices.service.DTO.PlacedOrderDTO;

@@ -1,4 +1,4 @@
-package ro.pizzeriaq.qservices.data.model;
+package ro.pizzeriaq.qservices.data.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

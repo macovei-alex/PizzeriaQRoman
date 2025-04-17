@@ -2,18 +2,17 @@ package ro.pizzeriaq.qservices.service;
 
 
 import lombok.AllArgsConstructor;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ro.pizzeriaq.qservices.data.model.*;
+import ro.pizzeriaq.qservices.data.entity.*;
 import ro.pizzeriaq.qservices.data.repository.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -28,6 +27,7 @@ public class EntityInitializerService {
 	private final OrderRepository orderRepository;
 	private final OrderItemRepository orderItemRepository;
 	private final OrderItem_OptionList_OptionRepository orderItemOptionListOptionRepository;
+	private final KeycloakService keycloakService;
 
 
 	public static void reInitializeEntities(EntityInitializerService entityInitializerService) {
@@ -291,23 +291,28 @@ public class EntityInitializerService {
 
 	@Transactional
 	public void addAccounts() {
+		var keycloakUsers = keycloakService.getUsers();
+		if (keycloakUsers.size() < 2) {
+			throw new RuntimeException("Not enough users in Keycloak: a minimum of 2 users required");
+		}
+
 		List<Account> accounts = new ArrayList<>();
+		var user = keycloakUsers.get(0);
 		accounts.add(Account.builder()
-				.id(UUID.randomUUID())
-				.email("example1@email.com")
-				.isEmailVerified(true)
-				.password(passwordEncoder.encode("password1"))
+				.id(user.getId())
+				.email(user.getEmail())
+				.isEmailVerified(user.isEmailVerified())
 				.phoneNumber("0722 222 222")
-				.createdAt(LocalDateTime.now().minusHours(2))
+				.createdAt(LocalDateTime.ofEpochSecond(user.getCreatedTimestamp(), 0, ZoneOffset.ofTotalSeconds(0)))
 				.build());
 
+		user = keycloakUsers.get(1);
 		accounts.add(Account.builder()
-				.id(UUID.randomUUID())
-				.email("example2@email.com")
-				.isEmailVerified(true)
-				.password(passwordEncoder.encode("password2"))
+				.id(user.getId())
+				.email(user.getEmail())
+				.isEmailVerified(user.isEmailVerified())
 				.phoneNumber("0733 333 333")
-				.createdAt(LocalDateTime.now().minusHours(2))
+				.createdAt(LocalDateTime.ofEpochSecond(user.getCreatedTimestamp(), 0, ZoneOffset.ofTotalSeconds(0)))
 				.build());
 
 		accountRepository.saveAll(accounts);

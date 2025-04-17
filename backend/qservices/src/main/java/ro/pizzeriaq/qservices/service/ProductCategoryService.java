@@ -3,7 +3,7 @@ package ro.pizzeriaq.qservices.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ro.pizzeriaq.qservices.data.model.ProductCategory;
+import ro.pizzeriaq.qservices.data.entity.ProductCategory;
 import ro.pizzeriaq.qservices.data.repository.ProductCategoryRepository;
 import ro.pizzeriaq.qservices.service.DTO.ProductCategoryDTO;
 import ro.pizzeriaq.qservices.service.DTO.mapper.ProductCategoryMapper;

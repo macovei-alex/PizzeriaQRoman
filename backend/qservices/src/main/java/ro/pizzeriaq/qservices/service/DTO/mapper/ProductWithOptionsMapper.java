@@ -2,7 +2,7 @@ package ro.pizzeriaq.qservices.service.DTO.mapper;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ro.pizzeriaq.qservices.data.model.Product;
+import ro.pizzeriaq.qservices.data.entity.Product;
 import ro.pizzeriaq.qservices.service.DTO.ProductWithOptionsDTO;
 import ro.pizzeriaq.qservices.service.ImageManagementService;
 

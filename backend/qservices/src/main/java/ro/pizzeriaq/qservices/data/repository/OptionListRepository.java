@@ -4,8 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import ro.pizzeriaq.qservices.data.model.OptionList;
-import ro.pizzeriaq.qservices.data.model.Product;
+import ro.pizzeriaq.qservices.data.entity.OptionList;
+import ro.pizzeriaq.qservices.data.entity.Product;
 
 import java.util.List;
 

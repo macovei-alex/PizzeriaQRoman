@@ -1,8 +1,8 @@
 package ro.pizzeriaq.qservices.service.DTO.mapper;
 
 import org.springframework.stereotype.Service;
-import ro.pizzeriaq.qservices.data.model.Option;
-import ro.pizzeriaq.qservices.data.model.OptionList;
+import ro.pizzeriaq.qservices.data.entity.Option;
+import ro.pizzeriaq.qservices.data.entity.OptionList;
 import ro.pizzeriaq.qservices.service.DTO.OptionListDTO;
 
 @Service

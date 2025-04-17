@@ -2,7 +2,7 @@ package ro.pizzeriaq.qservices.data.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import ro.pizzeriaq.qservices.data.model.ProductCategory;
+import ro.pizzeriaq.qservices.data.entity.ProductCategory;
 
 import java.util.List;
 

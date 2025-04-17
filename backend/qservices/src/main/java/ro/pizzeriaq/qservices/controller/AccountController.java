@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ro.pizzeriaq.qservices.data.model.KeycloakUser;
 import ro.pizzeriaq.qservices.service.KeycloakService;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/account")
@@ -18,7 +18,8 @@ public class AccountController {
 
 
 	@GetMapping("/all")
-	public List<Map<String, Object>> getAccounts() {
+	public List<KeycloakUser> getAccounts() {
 		return keycloakService.getUsers();
 	}
+
 }

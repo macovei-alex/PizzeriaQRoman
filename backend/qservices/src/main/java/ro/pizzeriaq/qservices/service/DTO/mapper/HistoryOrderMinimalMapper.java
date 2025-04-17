@@ -1,8 +1,8 @@
 package ro.pizzeriaq.qservices.service.DTO.mapper;
 
 import org.springframework.stereotype.Service;
-import ro.pizzeriaq.qservices.data.model.Order;
-import ro.pizzeriaq.qservices.data.model.OrderItem;
+import ro.pizzeriaq.qservices.data.entity.Order;
+import ro.pizzeriaq.qservices.data.entity.OrderItem;
 import ro.pizzeriaq.qservices.service.DTO.HistoryOrderMinimalDTO;
 
 @Service

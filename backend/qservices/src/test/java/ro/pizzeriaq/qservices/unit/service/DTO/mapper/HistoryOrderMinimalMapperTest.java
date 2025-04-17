@@ -1,10 +1,10 @@
 package ro.pizzeriaq.qservices.unit.service.DTO.mapper;
 
 import org.junit.jupiter.api.Test;
-import ro.pizzeriaq.qservices.data.model.Order;
-import ro.pizzeriaq.qservices.data.model.OrderItem;
-import ro.pizzeriaq.qservices.data.model.OrderStatus;
-import ro.pizzeriaq.qservices.data.model.Product;
+import ro.pizzeriaq.qservices.data.entity.Order;
+import ro.pizzeriaq.qservices.data.entity.OrderItem;
+import ro.pizzeriaq.qservices.data.entity.OrderStatus;
+import ro.pizzeriaq.qservices.data.entity.Product;
 import ro.pizzeriaq.qservices.service.DTO.HistoryOrderMinimalDTO;
 import ro.pizzeriaq.qservices.service.DTO.mapper.HistoryOrderMinimalMapper;
 

@@ -6,9 +6,9 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+import ro.pizzeriaq.qservices.data.model.KeycloakUser;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class KeycloakService {
@@ -25,7 +25,7 @@ public class KeycloakService {
 	}
 
 
-	private OAuth2AuthorizeRequest createAuthorizeRequest() {
+	private OAuth2AuthorizeRequest createClientAuthorizeRequest() {
 		return OAuth2AuthorizeRequest
 				.withClientRegistrationId("keycloak")
 				.principal("keycloak-client")
@@ -33,8 +33,8 @@ public class KeycloakService {
 	}
 
 
-	public List<Map<String, Object>> getUsers() {
-		var authorizedClient = authorizedClientManager.authorize(createAuthorizeRequest());
+	public List<KeycloakUser> getUsers() {
+		var authorizedClient = authorizedClientManager.authorize(createClientAuthorizeRequest());
 		if (authorizedClient == null) {
 			throw new RuntimeException("Failed to authorize client");
 		}

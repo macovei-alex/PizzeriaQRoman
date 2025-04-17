@@ -1,7 +1,7 @@
 package ro.pizzeriaq.qservices.unit.service.DTO.mapper;
 
 import org.junit.jupiter.api.Test;
-import ro.pizzeriaq.qservices.data.model.ProductCategory;
+import ro.pizzeriaq.qservices.data.entity.ProductCategory;
 import ro.pizzeriaq.qservices.service.DTO.ProductCategoryDTO;
 import ro.pizzeriaq.qservices.service.DTO.mapper.ProductCategoryMapper;
 

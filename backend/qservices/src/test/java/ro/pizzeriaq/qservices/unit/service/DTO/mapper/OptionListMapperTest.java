@@ -1,8 +1,8 @@
 package ro.pizzeriaq.qservices.unit.service.DTO.mapper;
 
 import org.junit.jupiter.api.Test;
-import ro.pizzeriaq.qservices.data.model.Option;
-import ro.pizzeriaq.qservices.data.model.OptionList;
+import ro.pizzeriaq.qservices.data.entity.Option;
+import ro.pizzeriaq.qservices.data.entity.OptionList;
 import ro.pizzeriaq.qservices.service.DTO.OptionListDTO;
 import ro.pizzeriaq.qservices.service.DTO.mapper.OptionListMapper;
 
