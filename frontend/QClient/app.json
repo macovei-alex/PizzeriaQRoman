@@ -2,8 +2,8 @@
   "expo": {
     "owner": "mac02",
     "name": "PizzeriaQ",
-    "slug": "pizzeriaq",
-    "scheme": "pizzeriaq",
+    "slug": "com.pizzeriaq",
+    "scheme": "com.pizzeriaq",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

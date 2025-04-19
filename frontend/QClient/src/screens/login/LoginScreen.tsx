@@ -1,21 +1,26 @@
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import * as WebBrowser from "expo-web-browser";
 import {
   GoogleSignin,
   GoogleSigninButton,
-  statusCodes,
   isErrorWithCode,
   isSuccessResponse,
+  statusCodes,
 } from "@react-native-google-signin/google-signin";
-import { StyleSheet } from "react-native";
 import logger from "src/utils/logger";
+import { useKeycloakRequest as useKeycloakAuth } from "src/hooks/useKeycloakRequest";
+import useColorTheme from "src/hooks/useColorTheme";
+
+WebBrowser.maybeCompleteAuthSession();
 
 // TODO: Test this for iOS
-async function signIn() {
+async function signInWithGoogle() {
   try {
     await GoogleSignin.hasPlayServices();
     const response = await GoogleSignin.signIn();
-    logger.log(JSON.stringify(response));
+    console.log(JSON.stringify(response));
     if (!isSuccessResponse(response)) {
       // sign in was cancelled by user
       logger.warn("cancelled");
@@ -51,13 +56,22 @@ async function signIn() {
 }
 
 export default function LoginScreen() {
+  const colorTheme = useColorTheme();
+  const kc = useKeycloakAuth();
+
   return (
     <SafeAreaView style={styles.container}>
       <GoogleSigninButton
         size={GoogleSigninButton.Size.Wide}
         color={GoogleSigninButton.Color.Dark}
-        onPress={signIn}
+        onPress={signInWithGoogle}
       />
+      <TouchableOpacity
+        onPress={kc.startAuth}
+        style={[styles.button, { backgroundColor: colorTheme.background.card }]}
+      >
+        <Text style={styles.buttonText}>Sign In with Email and Password</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -65,7 +79,17 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    gap: 8,
     justifyContent: "center",
     alignItems: "center",
+  },
+  button: {
+    borderRadius: 8,
+  },
+  buttonText: {
+    padding: 14,
+    paddingHorizontal: 32,
+    borderRadius: 8,
+    fontWeight: "bold",
   },
 });

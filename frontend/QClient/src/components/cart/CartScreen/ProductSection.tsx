@@ -46,7 +46,7 @@ export default function ProductSection({ navigation }: ProductSectionProps) {
       <View style={styles.totalPriceContainerContainer}>
         <View style={[styles.totalPriceContainer, { backgroundColor: colorTheme.background.accent }]}>
           <Text style={[styles.totalPriceText, { color: colorTheme.text.onAccent }]}>
-            Total de plată: {formatPrice(totalPrice)} RON
+            Total de plată: {formatPrice(totalPrice)}
           </Text>
         </View>
       </View>

@@ -14,8 +14,9 @@ services:
     working_dir: /app
 
   keycloak:
-    build:
-      context: ./keycloak
+    image: quay.io/keycloak/keycloak:latest
+    # build:
+    #   context: ./keycloak
     container_name: kc-server
     ports:
       - "18080:8080"
@@ -26,10 +27,14 @@ services:
       KC_DB_URL: jdbc:postgresql://db:5432/keycloak
       KC_DB_USERNAME: postgres
       KC_DB_PASSWORD: 1q2w3e
-      KC_HOSTNAME: localhost
     depends_on:
       - db
-    command: start-dev
+    command: >
+      start-dev
+      --features=hostname:v2
+      --hostname-strict=false
+      --http-enabled=true
+      --hostname=192.168.1.140
 
 networks:
   default:

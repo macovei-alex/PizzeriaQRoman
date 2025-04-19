@@ -68,9 +68,7 @@ export default function CartItemCard({ navigation, cartItem, price }: CartItemCa
 
       <View style={styles.priceSectionContainer}>
         <View style={[styles.priceContainer, { backgroundColor: colorTheme.background.accent }]}>
-          <Text style={[styles.priceText, { color: colorTheme.text.onAccent }]}>
-            {formatPrice(price)} RON
-          </Text>
+          <Text style={[styles.priceText, { color: colorTheme.text.onAccent }]}>{formatPrice(price)}</Text>
         </View>
         <TouchableOpacity onPress={() => changeCartItemCount(cartItem.id, -1)}>
           <MinusCircleSvg style={styles.plusMinusSvg} />

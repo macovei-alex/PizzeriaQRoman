@@ -11,11 +11,11 @@ import Navigation from "src/navigation/Navigation";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 GoogleSignin.configure({
-  webClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID_WEB,
-  scopes: ["https://www.googleapis.com/auth/drive.readonly"],
+  webClientId: (process.env as any).EXPO_PUBLIC_GOOGLE_CLIENT_ID_WEB,
+  scopes: ["openid" /*, "https://www.googleapis.com/auth/drive.readonly"*/],
   offlineAccess: true,
   forceCodeForRefreshToken: true,
-  iosClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID_IOS,
+  iosClientId: (process.env as any).EXPO_PUBLIC_GOOGLE_CLIENT_ID_IOS,
 });
 
 const queryClient = new QueryClient({

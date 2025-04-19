@@ -33,7 +33,6 @@ public class SecurityConfig {
 				.oauth2Client(Customizer.withDefaults())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/internal/initialize").permitAll()
 						.requestMatchers("/account/all").hasAuthority("admin")
 						.anyRequest().authenticated()
 				)
@@ -42,6 +41,7 @@ public class SecurityConfig {
 
 		return http.build();
 	}
+
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {

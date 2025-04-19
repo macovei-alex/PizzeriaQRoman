@@ -22,5 +22,5 @@ ENV KC_DB=postgres
 ENV KC_DB_URL=jdbc:postgresql://localhost:5432/keycloak
 ENV KC_DB_USERNAME=postgres
 ENV KC_DB_PASSWORD=1q2w3e
-ENV KC_HOSTNAME=localhost
+
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
