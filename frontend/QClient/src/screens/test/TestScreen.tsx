@@ -4,9 +4,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import GoBackButtonSvg from "src/components/svg/GoBackButtonSvg";
 import { useQuery } from "@tanstack/react-query";
 import api from "src/api";
-import { useImageContext } from "src/context/useImageContext";
+import { useImageContext } from "src/context/ImageContext";
 import * as FileSystem from "expo-file-system";
-import useProductsQuery from "src/hooks/useProductsQuery";
+import useProductsQuery from "src/api/hooks/useProductsQuery";
 import { ImageFile, imageOrDefault, ValidImageFile } from "src/utils/files";
 import logger from "src/utils/logger";
 

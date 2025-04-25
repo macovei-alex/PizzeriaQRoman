@@ -6,7 +6,7 @@ import useColorTheme from "src/hooks/useColorTheme";
 import HorizontalLine from "src/components/shared/ProductScreen/HorizontalLine";
 import PlusCircleSvg from "src/components/svg/PlusCircleSvg";
 import MinusCircleSvg from "src/components/svg/MinusCircleSvg";
-import { CartItem, useCartContext } from "src/context/useCartContext";
+import { CartItem, useCartContext } from "src/context/CartContext";
 import logger from "src/utils/logger";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";

@@ -4,7 +4,7 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-nati
 import useColorTheme from "src/hooks/useColorTheme";
 import ProductSection from "src/components/cart/CartScreen/ProductSection";
 import api from "src/api";
-import { useCartContext } from "src/context/useCartContext";
+import { useCartContext } from "src/context/CartContext";
 import { showToast } from "src/utils/toast";
 import { PlacedOrder } from "src/api/types/Order";
 import logger from "src/utils/logger";

@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { CartItem, useCartContext } from "src/context/useCartContext";
+import { CartItem, useCartContext } from "src/context/CartContext";
 import CartItemCard from "./CartItemCard";
 import useColorTheme from "src/hooks/useColorTheme";
 import logger from "src/utils/logger";

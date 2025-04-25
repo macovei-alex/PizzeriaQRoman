@@ -1,4 +1,4 @@
-import { CartItemOptions } from "src/context/useCartContext";
+import { CartItemOptions } from "src/context/CartContext";
 import { PlacedOrderOptionList } from "src/api/types/Order";
 
 export function convertCartItemOptions(cartItemOptions: CartItemOptions): PlacedOrderOptionList[] {

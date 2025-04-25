@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useImageContext } from "src/context/useImageContext";
+import { useImageContext } from "src/context/ImageContext";
 import { ImageFile } from "src/utils/files";
 
 export default function useSingleImage(imageName: string) {

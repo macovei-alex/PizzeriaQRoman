@@ -1,10 +1,13 @@
-import * as productsApi from "./products";
-import * as imagesApi from "./images";
-import * as ordersApi from "./orders";
+import axios from "axios";
 
-const api = {
-  ...productsApi,
-  ...imagesApi,
-  ...ordersApi,
+const resConfig = {
+  baseUrl: "http://192.168.1.140:10100/api",
 };
-export default api;
+
+export const resApi = {
+  config: resConfig,
+  axios: axios.create({
+    baseURL: "http://192.168.1.140:10100/api",
+    withCredentials: false,
+  }),
+};
