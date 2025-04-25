@@ -29,7 +29,7 @@ export default function TitleSection({ product, productImage }: TitleSectionProp
       <Text style={[styles.titleText, { color: colorTheme.text.primary }]}>{product.name}</Text>
       <View style={styles.subtitleContainer}>
         <Text style={[styles.subtitleText, { color: colorTheme.text.primary }]}>
-          {product.subtitle} - {formatPrice(product.price)} lei
+          {product.subtitle} - {formatPrice(product.price)}
         </Text>
       </View>
       <Text style={[styles.descriptionText, { color: colorTheme.text.secondary }]}>

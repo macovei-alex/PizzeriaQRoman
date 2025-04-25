@@ -1,30 +1,41 @@
 import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
-import * as WebBrowser from "expo-web-browser";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import logger from "src/utils/logger";
-import { useKeycloakRequest as useKeycloakAuth } from "src/hooks/useKeycloakRequest";
 import useColorTheme from "src/hooks/useColorTheme";
-
-WebBrowser.maybeCompleteAuthSession();
+import { useAuthContext } from "src/context/AuthContext";
 
 export default function LoginScreen() {
   const colorTheme = useColorTheme();
-  const kc = useKeycloakAuth();
+  const authContext = useAuthContext();
 
   useEffect(() => {
-    if (kc.tokens) {
-      logger.log(kc.tokens.accessToken);
+    if (authContext.isAuthenticated) {
+      logger.log(authContext.account);
     }
-  }, [kc.tokens]);
+  }, [authContext.isAuthenticated, authContext.account]);
 
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity
-        onPress={kc.startAuth}
+        onPress={authContext.login}
         style={[styles.button, { backgroundColor: colorTheme.background.card }]}
       >
-        <Text style={styles.buttonText}>Sign In with Email and Password</Text>
+        <Text style={styles.buttonText}>Sign In</Text>
+      </TouchableOpacity>
+      <View style={{ alignContent: "flex-start" }}>
+        {authContext.isAuthenticated &&
+          Object.entries(authContext.account!).map(([key, value]) => (
+            <Text key={key}>
+              {key}: {value}
+            </Text>
+          ))}
+      </View>
+      <TouchableOpacity
+        onPress={authContext.logout}
+        style={[styles.button, { backgroundColor: colorTheme.background.card }]}
+      >
+        <Text style={styles.buttonText}>Sign Out</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

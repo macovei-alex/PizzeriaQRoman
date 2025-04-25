@@ -16,6 +16,9 @@ import useColorTheme from "src/hooks/useColorTheme";
 import GoBackButtonSvg from "src/components/svg/GoBackButtonSvg";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { MenuStackParamList } from "src/navigation/MenuStackNavigator";
+import * as WebBrowser from "expo-web-browser";
+
+WebBrowser.maybeCompleteAuthSession();
 
 type ProductSplit = {
   category: Category;

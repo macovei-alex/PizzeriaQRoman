@@ -8,6 +8,7 @@ import Toast from "react-native-toast-message";
 import { StatusBar } from "expo-status-bar";
 import logger from "src/utils/logger";
 import Navigation from "src/navigation/Navigation";
+import { AuthContextProvider } from "src/context/AuthContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,13 +27,15 @@ export default function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ImageContextProvider>
-        <CartContextProvider>
-          <StatusBar style={colorTheme.statusBarStyle} />
-          <Navigation />
-          {Platform.OS === "ios" && <Toast />}
-        </CartContextProvider>
-      </ImageContextProvider>
+      <AuthContextProvider>
+        <ImageContextProvider>
+          <CartContextProvider>
+            <StatusBar style={colorTheme.statusBarStyle} />
+            <Navigation />
+            {Platform.OS === "ios" && <Toast />}
+          </CartContextProvider>
+        </ImageContextProvider>
+      </AuthContextProvider>
     </QueryClientProvider>
   );
 }

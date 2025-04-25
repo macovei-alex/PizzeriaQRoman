@@ -30,7 +30,7 @@ export default function OptionCard({ option, currentCount, onOptionChange }: Opt
       <Text style={[styles.optionNameText, { color: colorTheme.text.primary }]}>{option.name}</Text>
       {option.price > 0 && (
         <Text style={[styles.priceText, { color: colorTheme.text.accent }]}>
-          +{formatPrice(option.price)} lei
+          +{formatPrice(option.price)}
         </Text>
       )}
     </View>
