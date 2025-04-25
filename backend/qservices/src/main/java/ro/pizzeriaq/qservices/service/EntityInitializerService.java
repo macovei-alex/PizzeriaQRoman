@@ -6,7 +6,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.pizzeriaq.qservices.data.entity.*;
+import ro.pizzeriaq.qservices.data.model.KeycloakUser;
 import ro.pizzeriaq.qservices.data.repository.*;
+import ro.pizzeriaq.qservices.exceptions.KeycloakException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
