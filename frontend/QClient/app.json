@@ -2,7 +2,7 @@
   "expo": {
     "owner": "mac02",
     "name": "PizzeriaQ",
-    "slug": "com.pizzeriaq",
+    "slug": "pizzeriaq",
     "scheme": "com.pizzeriaq",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -10,14 +10,7 @@
     "userInterfaceStyle": "automatic",
     "platforms": ["android", "ios"],
     "newArchEnabled": true,
-    "plugins": [
-      [
-        "@react-native-google-signin/google-signin",
-        {
-          "iosUrlScheme": "com.googleusercontent.apps.382534891824-o4sndgm4ljtfaqakc87o0vooup9dl3qd"
-        }
-      ]
-    ],
+    "plugins": [],
     "splash": {
       "image": "./assets/images/logo.png",
       "resizeMode": "contain",

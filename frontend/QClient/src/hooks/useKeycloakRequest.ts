@@ -1,16 +1,17 @@
 import * as AuthSession from "expo-auth-session";
 import { useCallback, useEffect, useState } from "react";
+import { ENV } from "src/constants/env";
 import logger from "src/utils/logger";
 
-const keycloakBaseUrl = "http://192.168.1.140:18080/realms/pizzeriaq";
+const keycloakBaseRealmUrl = `${ENV.EXPO_PUBLIC_KEYCLOAK_URL}/realms/pizzeriaq`;
 
 const discovery = {
-  authorizationEndpoint: `${keycloakBaseUrl}/protocol/openid-connect/auth`,
-  tokenEndpoint: `${keycloakBaseUrl}/protocol/openid-connect/token`,
+  authorizationEndpoint: `${keycloakBaseRealmUrl}/protocol/openid-connect/auth`,
+  tokenEndpoint: `${keycloakBaseRealmUrl}/protocol/openid-connect/token`,
 };
 
 export const useKeycloakRequest = () => {
-  const [idToken, setIdToken] = useState<{
+  const [tokens, setTokens] = useState<{
     accessToken: string;
     idToken: string;
   } | null>(null);
@@ -51,7 +52,7 @@ export const useKeycloakRequest = () => {
           if (!responseTokens?.idToken) {
             throw new Error("Missing id token in response");
           }
-          setIdToken({
+          setTokens({
             accessToken: responseTokens.accessToken,
             idToken: responseTokens.idToken,
           });
@@ -59,14 +60,14 @@ export const useKeycloakRequest = () => {
           throw new Error("Bad response type");
         }
       } catch (error) {
-        setIdToken(null);
+        setTokens(null);
         if (error instanceof Error) {
           setError(error.message);
         } else if (typeof error === "string") {
           setError(error);
         } else {
           logger.error(error);
-          setIdToken(null);
+          setTokens(null);
           setError("An unknown error occurred");
         }
       }
@@ -75,7 +76,7 @@ export const useKeycloakRequest = () => {
 
   return {
     startAuth,
-    idToken,
+    tokens,
     error,
   };
 };
