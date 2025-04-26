@@ -57,10 +57,10 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 function extractAccountClaims(idToken: string): AccountClaims {
   try {
-    const payload = idToken.split(".").slice(0, 2)[1];
-    return AccountClaimsSchema.parse(JSON.parse(atob(payload)));
+    return AccountClaimsSchema.parse(JSON.parse(atob(idToken.split(".")[1])));
   } catch (error) {
-    logger.error("Invalid JWT format:", idToken, error);
+    logger.error("Invalid JWT format:", idToken);
+    logger.error("Error decoding JWT:", error);
     throw error;
   }
 }
@@ -170,14 +170,8 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
         throw new Error("Bad response type");
       }
     } catch (error) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else if (typeof error === "string") {
-        setError(error);
-      } else {
-        logger.error(error);
-        setError("An unknown error occurred");
-      }
+      logger.error("Login failed: ", error);
+      setError("Something went wrong");
     }
   }, [request, promptAsync, setAccountInfo]);
 
@@ -209,9 +203,11 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
         acc: extractAccountClaims(response.data.id_token),
       });
     } catch (error) {
+      setError("Something went wrong");
       logger.warn("Access token refresh failed: ", error);
+      await removeAccountInfo();
     }
-  }, [refreshToken, setAccountInfo]);
+  }, [refreshToken, setAccountInfo, removeAccountInfo]);
 
   useLayoutEffect(() => {
     const resInterceptorId = api.axios.interceptors.request.use((config: InternalAxiosRequestConfig) => {
@@ -260,8 +256,10 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     const refreshToken = SecureStore.getItem("refreshToken");
     const account = SecureStore.getItem("account");
     if (!accessToken || !refreshToken || !account) {
-      logger.error("Some account information is missing");
-      removeAccountInfo();
+      if (!!accessToken || !!refreshToken || !!account) {
+        logger.error("Some account information is missing");
+        removeAccountInfo();
+      }
       return;
     }
     setAccessToken(accessToken);
