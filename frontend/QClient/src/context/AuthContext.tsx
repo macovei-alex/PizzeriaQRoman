@@ -176,9 +176,19 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
   }, [request, promptAsync, setAccountInfo]);
 
   const logout = useCallback(() => {
+    axios.post(
+      `${ENV.EXPO_PUBLIC_KEYCLOAK_REALM_URL}/protocol/openid-connect/logout`,
+      {
+        client_id: ENV.EXPO_PUBLIC_KEYCLOAK_CLIENT_ID,
+        refresh_token: refreshToken,
+      },
+      {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      }
+    );
     removeAccountInfo();
     return Promise.resolve();
-  }, [removeAccountInfo]);
+  }, [removeAccountInfo, refreshToken]);
 
   const tryRefreshTokens = useCallback(async () => {
     if (!refreshToken) return;
