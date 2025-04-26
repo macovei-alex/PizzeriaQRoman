@@ -1,13 +1,13 @@
 import axios from "axios";
 
-const resConfig = {
-  baseUrl: "http://192.168.1.140:10100/api",
+const config = {
+  baseUrl: "http://192.168.1.4:10100/api",
 };
 
-export const resApi = {
-  config: resConfig,
+export const api = {
+  config: config,
   axios: axios.create({
-    baseURL: "http://192.168.1.140:10100/api",
+    baseURL: config.baseUrl,
     withCredentials: false,
   }),
 };

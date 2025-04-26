@@ -13,9 +13,7 @@ const ImageContext = createContext<ImageContextType | null>(null);
 
 export function useImageContext() {
   const context = useContext(ImageContext);
-  if (!context) {
-    throw new Error("useImageContext must be used within a ImageContextProvider");
-  }
+  if (!context) throw new Error("useImageContext must be used within a ImageContextProvider");
   return context;
 }
 

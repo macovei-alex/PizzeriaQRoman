@@ -1,8 +1,8 @@
 import axios from "axios";
 import { ValidImageFile } from "src/utils/files";
-import { resApi } from ".";
+import { api } from ".";
 
-const baseImageRoute = `${resApi.config.baseUrl}/image`;
+const baseImageRoute = `${api.config.baseUrl}/image`;
 
 export const fetchImageRefetchCheck = {
   queryFn: async (doImageRefetch: "yes" | "no") =>

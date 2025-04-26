@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { resApi } from "src/api";
+import { api } from "src/api";
 import { HistoryOrder, HistoryOrderDTO } from "src/api/types/Order";
 
 export default function useOrderHistoryQuery() {
   return useQuery<HistoryOrder[], Error>({
     queryFn: async () => {
-      const historyOrderDtos = (await resApi.axios.get("/order/history")).data as HistoryOrderDTO[];
+      const historyOrderDtos = (await api.axios.get("/order/history")).data as HistoryOrderDTO[];
       return historyOrderDtos.map((dto) => {
         return {
           ...dto,

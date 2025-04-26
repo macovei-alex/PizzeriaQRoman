@@ -1,19 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import logger from "src/utils/logger";
 import useColorTheme from "src/hooks/useColorTheme";
 import { useAuthContext } from "src/context/AuthContext";
 
 export default function LoginScreen() {
   const colorTheme = useColorTheme();
   const authContext = useAuthContext();
-
-  useEffect(() => {
-    if (authContext.isAuthenticated) {
-      logger.log(authContext.account);
-    }
-  }, [authContext.isAuthenticated, authContext.account]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -31,6 +24,12 @@ export default function LoginScreen() {
             </Text>
           ))}
       </View>
+      <TouchableOpacity
+        onPress={authContext.tryRefreshTokens}
+        style={[styles.button, { backgroundColor: colorTheme.background.card }]}
+      >
+        <Text style={styles.buttonText}>Refresh</Text>
+      </TouchableOpacity>
       <TouchableOpacity
         onPress={authContext.logout}
         style={[styles.button, { backgroundColor: colorTheme.background.card }]}

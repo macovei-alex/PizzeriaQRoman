@@ -12,10 +12,10 @@ import useProductWithOptionsQuery from "src/api/hooks/useProductWithOptionsQuery
 import { showToast } from "src/utils/toast";
 import { OptionId, OptionListId, ProductWithOptions } from "src/api/types/Product";
 import logger from "src/utils/logger";
-import { jsonEquals } from "src/utils/utils";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
 import { MenuStackParamList } from "src/navigation/MenuStackNavigator";
 import { RouteProp } from "@react-navigation/native";
+import equal from "fast-deep-equal";
 
 type ProductScreenProps = {
   route: RouteProp<MenuStackParamList, "ProductScreen"> | RouteProp<CartStackParamList, "ProductScreen">;
@@ -56,7 +56,7 @@ export default function ProductScreen({ route }: ProductScreenProps) {
   //   if (!cartItem) {
   //     return;
   //   }
-  //   if (deepEquals(cartItem.options, cartItemOptions)) {
+  //   if (equal(cartItem.options, cartItemOptions)) {
   //     return;
   //   }
   //   showToast("Opțiuni actualizate");
@@ -66,7 +66,7 @@ export default function ProductScreen({ route }: ProductScreenProps) {
   // Update the cached UI state. Prevents a bug where pressing a cart item, then the cart icon
   // and then another product doesn't refresh the UI state with the correct options.
   useEffect(() => {
-    if (cartItem && !jsonEquals(cartItem.options, cartItemOptions)) {
+    if (cartItem && !equal(cartItem.options, cartItemOptions)) {
       setCartItemOptions(() => cartItem.options);
     }
   }, [cartItem, cartItemOptions]);

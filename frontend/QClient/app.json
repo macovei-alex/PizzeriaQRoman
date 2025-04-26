@@ -8,9 +8,14 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "automatic",
-    "platforms": ["android", "ios"],
+    "platforms": [
+      "android",
+      "ios"
+    ],
     "newArchEnabled": true,
-    "plugins": [],
+    "plugins": [
+      "expo-secure-store"
+    ],
     "splash": {
       "image": "./assets/images/logo.png",
       "resizeMode": "contain",
