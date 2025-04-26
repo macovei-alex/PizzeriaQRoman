@@ -60,7 +60,7 @@ function extractAccountClaims(idToken: string): AccountClaims {
     const payload = idToken.split(".").slice(0, 2)[1];
     return AccountClaimsSchema.parse(JSON.parse(atob(payload)));
   } catch (error) {
-    console.error("Invalid JWT format:", idToken, error);
+    logger.error("Invalid JWT format:", idToken, error);
     throw error;
   }
 }
@@ -259,17 +259,14 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     const accessToken = SecureStore.getItem("accessToken");
     const refreshToken = SecureStore.getItem("refreshToken");
     const account = SecureStore.getItem("account");
-    console.log("Access token: ", accessToken);
-    console.log("Refresh token: ", refreshToken);
-    console.log("Account: ", account);
-    if (!!accessToken !== !!refreshToken || !!accessToken !== !!account) {
-      logger.error("Access token and refresh token are not in sync");
+    if (!accessToken || !refreshToken || !account) {
+      logger.error("Some account information is missing");
       removeAccountInfo();
       return;
     }
     setAccessToken(accessToken);
     setRefreshToken(refreshToken);
-    setAccount(JSON.parse(account!));
+    setAccount(JSON.parse(account));
   }, [removeAccountInfo]);
 
   return (
