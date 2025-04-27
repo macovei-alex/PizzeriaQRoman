@@ -18,5 +18,6 @@ export type Theme = {
     accent: ColorValue;
     onAccent: ColorValue;
     success: ColorValue;
+    onDarkOverlay: ColorValue;
   };
 };

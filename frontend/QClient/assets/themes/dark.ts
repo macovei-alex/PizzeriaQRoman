@@ -16,6 +16,7 @@ const text = {
   accent: "#cf4949",
   onAccent: "#ffffff",
   success: "#ffffff",
+  onDarkOverlay: "white",
 };
 
 export const darkTheme: Theme = { name: "dark", statusBarStyle: "light", background, text };

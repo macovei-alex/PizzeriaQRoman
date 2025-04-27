@@ -16,9 +16,6 @@ import useColorTheme from "src/hooks/useColorTheme";
 import GoBackButtonSvg from "src/components/svg/GoBackButtonSvg";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { MenuStackParamList } from "src/navigation/MenuStackNavigator";
-import * as WebBrowser from "expo-web-browser";
-
-WebBrowser.maybeCompleteAuthSession();
 
 type ProductSplit = {
   category: Category;
@@ -82,11 +79,8 @@ export default function MenuScreen({ navigation }: MenuScreenProps) {
   if (productQuery.isLoading || categoryQuery.isLoading || !images || images.length === 0) {
     return <MenuSkeletonLoader />;
   }
-  if (productQuery.isError) {
-    return <Text>Error: {productQuery.error.message}</Text>;
-  }
-  if (categoryQuery.isError) {
-    return <Text>Error: {categoryQuery.error.message}</Text>;
+  if (productQuery.isError || categoryQuery.isError) {
+    return <Text>Error: {productQuery.error?.message || categoryQuery.error?.message}</Text>;
   }
 
   return (

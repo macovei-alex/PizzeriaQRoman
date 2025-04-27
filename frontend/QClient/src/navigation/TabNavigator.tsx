@@ -1,18 +1,16 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import useColorTheme from "src/hooks/useColorTheme";
-import OrderHistoryScreen from "src/screens/profile/OrderHistoryScreen";
 import SvgIcons from "src/components/svg/SvgIcons";
 import { StyleSheet } from "react-native";
 import MenuStackNavigator from "./MenuStackNavigator";
 import CartStackNavigator from "./CartStackNavigator";
-import LoginScreen from "src/screens/login/LoginScreen";
+import ProfileStackNavigator from "./ProfileStackNavigator";
 
 const routeToIconMap: Readonly<Record<string, string>> = {
-  LoginScreen: "search",
   MenuStackNavigator: "home",
   CartStackNavigator: "cart",
-  ProfileScreen: "profile",
+  ProfileStackNavigator: "profile",
   ConsoleScreen: "search",
   TestScreen: "search",
 };
@@ -45,10 +43,13 @@ export default function TabNavigator() {
         },
       })}
     >
-      <Tab.Screen name="LoginScreen" component={LoginScreen} options={{ title: "Login" }} />
       <Tab.Screen name="MenuStackNavigator" component={MenuStackNavigator} options={{ title: "Meniu" }} />
       <Tab.Screen name="CartStackNavigator" component={CartStackNavigator} options={{ title: "Coș" }} />
-      <Tab.Screen name="ProfileScreen" component={OrderHistoryScreen} options={{ title: "Profil" }} />
+      <Tab.Screen
+        name="ProfileStackNavigator"
+        component={ProfileStackNavigator}
+        options={{ title: "Profil" }}
+      />
       {/* <Tab.Screen name="ConsoleScreen" component={ConsoleScreen} options={{ title: "Console" }} /> */}
       {/* <Tab.Screen name="TestScreen" component={TestScreen} options={{ title: "Test" }} /> */}
     </Tab.Navigator>
