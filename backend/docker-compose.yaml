@@ -27,15 +27,11 @@ services:
       KC_DB_URL: jdbc:postgresql://db:5432/keycloak
       KC_DB_USERNAME: postgres
       KC_DB_PASSWORD: 1q2w3e
+      KC_HOSTNAME: localhost
+      KC_HTTP_RELATIVE_PATH: /auth
     depends_on:
       - db
-    command: >
-      start-dev
-      --features=hostname:v2
-      --hostname-strict=false
-      --http-enabled=true
-      --hostname=localhost
-
+    command: start-dev
 networks:
   default:
     name: keycloak-net

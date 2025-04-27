@@ -16,14 +16,15 @@ export default function LoginScreen() {
       >
         <Text style={styles.buttonText}>Sign In</Text>
       </TouchableOpacity>
-      <View style={{ alignContent: "flex-start" }}>
-        {authContext.isAuthenticated &&
-          Object.entries(authContext.account!).map(([key, value]) => (
+      {authContext.isAuthenticated && (
+        <View style={{ alignContent: "flex-start" }}>
+          {Object.entries(authContext.account!).map(([key, value]) => (
             <Text key={key}>
               {key}: {value}
             </Text>
           ))}
-      </View>
+        </View>
+      )}
       <TouchableOpacity
         onPress={authContext.tryRefreshTokens}
         style={[styles.button, { backgroundColor: colorTheme.background.card }]}
