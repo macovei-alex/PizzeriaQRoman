@@ -1,13 +1,9 @@
 import axios from "axios";
-
-const config = {
-  baseUrl: "http://192.168.1.4:10100/api",
-};
+import { ENV } from "src/constants";
 
 export const api = {
-  config: config,
   axios: axios.create({
-    baseURL: config.baseUrl,
+    baseURL: ENV.EXPO_PUBLIC_API_BASE_URL,
     withCredentials: false,
   }),
 };
