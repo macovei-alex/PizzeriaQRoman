@@ -1,5 +1,15 @@
-import React from "react";
-import { Image, ImageBackground, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useRef } from "react";
+import {
+  Animated,
+  Easing,
+  Image,
+  ImageBackground,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import useColorTheme from "src/hooks/useColorTheme";
 import { useAuthContext } from "src/context/AuthContext";
 import { images } from "src/constants";
@@ -7,31 +17,89 @@ import * as WebBrowser from "expo-web-browser";
 
 WebBrowser.maybeCompleteAuthSession();
 
+const AnimatedLogo = Animated.createAnimatedComponent(Image);
+const AnimatedImageBackground = Animated.createAnimatedComponent(ImageBackground);
+
 export default function LoginScreen() {
   const colorTheme = useColorTheme();
   const authContext = useAuthContext();
 
+  const logoOpacityAnim = useRef(new Animated.Value(0)).current;
+  const bottomSheetTranslationAnim = useRef(new Animated.Value(300)).current;
+  const backgroundScaleAnim = useRef(new Animated.Value(1.8)).current;
+  const backgroundImageRotationAnim = useRef(new Animated.Value(30)).current;
+
+  useEffect(() => {
+    Animated.timing(bottomSheetTranslationAnim, {
+      toValue: 0,
+      duration: 1200,
+      useNativeDriver: true,
+      easing: Easing.out(Easing.cubic),
+    }).start();
+    Animated.timing(logoOpacityAnim, {
+      toValue: 0.88,
+      duration: 1200,
+      useNativeDriver: true,
+      easing: Easing.in(Easing.cubic),
+    }).start();
+    Animated.timing(backgroundScaleAnim, {
+      toValue: 1.2,
+      duration: 1200,
+      useNativeDriver: true,
+      easing: Easing.inOut(Easing.cubic),
+    }).start();
+    Animated.timing(backgroundImageRotationAnim, {
+      toValue: 0,
+      duration: 1200,
+      useNativeDriver: true,
+      easing: Easing.inOut(Easing.cubic),
+    }).start();
+  }, [bottomSheetTranslationAnim, logoOpacityAnim, backgroundScaleAnim, backgroundImageRotationAnim]);
+
+  const backgroundImageRotation = backgroundImageRotationAnim.interpolate({
+    inputRange: [0, 360],
+    outputRange: ["0deg", "360deg"],
+  });
+
   return (
     <View style={styles.container}>
-      <ImageBackground source={images.menuBackground} style={styles.imageBackground}>
-        <View style={styles.overlay} />
+      {/* background image */}
+      <AnimatedImageBackground
+        source={images.menuBackground}
+        style={[
+          styles.imageBackground,
+          {
+            transform: [{ scale: backgroundScaleAnim }, { rotate: backgroundImageRotation }],
+          },
+        ]}
+      />
 
+      <View style={styles.contentContainer}>
+        {/* logo */}
         <View style={styles.logoContainer}>
-          <Image source={images.logo} style={styles.logoImage} />
+          <AnimatedLogo source={images.logo} style={[styles.logoImage, { opacity: logoOpacityAnim }]} />
         </View>
 
-        <View style={[styles.bottomSheet, { backgroundColor: colorTheme.background.primary }]}>
-          <Text style={[styles.subText, { color: colorTheme.text.primary }]}>Vă rugăm să vă conectați</Text>
+        {/* bottom sheet */}
+        <Animated.View
+          style={[
+            styles.bottomSheet,
+            {
+              backgroundColor: colorTheme.background.primary,
+              transform: [{ translateY: bottomSheetTranslationAnim }],
+            },
+          ]}
+        >
+          <Text style={[styles.subText, { color: colorTheme.text.primary }]}>Bine ați venit!</Text>
 
           <TouchableOpacity
             onPress={authContext.login}
             style={[styles.button, { backgroundColor: colorTheme.background.onCard }]}
-            activeOpacity={0.8}
           >
             <Text style={[styles.buttonText, { color: colorTheme.text.primary }]}>Conectare</Text>
           </TouchableOpacity>
-        </View>
-      </ImageBackground>
+        </Animated.View>
+      </View>
     </View>
   );
 }
@@ -41,17 +109,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   imageBackground: {
-    flex: 1,
-    resizeMode: "cover",
-    justifyContent: "center",
-  },
-  overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.2)",
+    resizeMode: "cover",
+  },
+  contentContainer: {
+    zIndex: 1,
+    alignItems: "center",
+    height: "100%",
   },
   logoContainer: {
     alignItems: "center",
     justifyContent: "center",
+    flex: 1,
     paddingHorizontal: 24,
     paddingVertical: 16,
   },
@@ -63,18 +132,18 @@ const styles = StyleSheet.create({
     resizeMode: "stretch",
   },
   bottomSheet: {
-    position: "absolute",
     bottom: 0,
     width: "100%",
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
     paddingVertical: 24,
     paddingHorizontal: 32,
     alignItems: "center",
+    opacity: 0.88,
+    borderTopLeftRadius: 48,
+    borderTopRightRadius: 48,
   },
   subText: {
     fontSize: 20,
-    marginBottom: 32,
+    marginBottom: 24,
   },
   button: {
     borderRadius: 24,
