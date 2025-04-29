@@ -14,16 +14,17 @@ import { OptionId, OptionListId, ProductWithOptions } from "src/api/types/Produc
 import logger from "src/utils/logger";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
 import { MenuStackParamList } from "src/navigation/MenuStackNavigator";
-import { RouteProp } from "@react-navigation/native";
+import { RouteProp, useRoute } from "@react-navigation/native";
 import equal from "fast-deep-equal";
 
-type ProductScreenProps = {
-  route: RouteProp<MenuStackParamList, "ProductScreen"> | RouteProp<CartStackParamList, "ProductScreen">;
-};
+type RouteProps =
+  | RouteProp<MenuStackParamList, "ProductScreen">
+  | RouteProp<CartStackParamList, "ProductScreen">;
 
-export default function ProductScreen({ route }: ProductScreenProps) {
+export default function ProductScreen() {
   logger.render("ProductScreen");
 
+  const route = useRoute<RouteProps>();
   const productId = route.params.productId;
   const imageName = route.params.imageName;
   const cartItemId = "cartItemId" in route.params ? route.params.cartItemId : null;

@@ -13,12 +13,14 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
 import ScreenTitle from "src/components/shared/ScreenTitle";
 import { api } from "src/api";
+import { useNavigation } from "@react-navigation/native";
 
-type CartScreenProps = { navigation: NativeStackNavigationProp<CartStackParamList, "CartScreen"> };
+type NavigationProps = NativeStackNavigationProp<CartStackParamList, "CartScreen">;
 
-export default function CartScreen({ navigation }: CartScreenProps) {
+export default function CartScreen() {
   logger.render("CartScreen");
 
+  const navigation = useNavigation<NavigationProps>();
   const colorTheme = useColorTheme();
   const { cart, emptyCart } = useCartContext();
   const queryClient = useQueryClient();
@@ -70,7 +72,7 @@ export default function CartScreen({ navigation }: CartScreenProps) {
       <ScrollView>
         <ScreenTitle title={"Comanda mea"} containerStyle={styles.titleScreenContainer} />
 
-        <ProductSection navigation={navigation} />
+        <ProductSection />
 
         <View style={styles.sendOrderContainer}>
           <TouchableOpacity

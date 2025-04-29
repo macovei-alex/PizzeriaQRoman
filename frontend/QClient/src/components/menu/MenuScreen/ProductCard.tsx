@@ -8,15 +8,18 @@ import logger from "src/utils/logger";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { MenuStackParamList } from "src/navigation/MenuStackNavigator";
 import { formatPrice } from "src/utils/utils";
+import { useNavigation } from "@react-navigation/native";
 
+type NavigationProps = NativeStackNavigationProp<MenuStackParamList, "MenuScreen">;
 type ProductCardProps = {
   product: Product;
   productImage: ImageFile;
-} & { navigation: NativeStackNavigationProp<MenuStackParamList, "MenuScreen"> };
+};
 
-export default function ProductCard({ navigation, product, productImage }: ProductCardProps) {
+export default function ProductCard({ product, productImage }: ProductCardProps) {
   logger.render("ProductCard");
 
+  const navigation = useNavigation<NavigationProps>();
   const colorTheme = useColorTheme();
 
   return (

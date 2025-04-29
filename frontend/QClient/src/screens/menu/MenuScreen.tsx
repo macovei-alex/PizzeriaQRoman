@@ -16,17 +16,19 @@ import useColorTheme from "src/hooks/useColorTheme";
 import GoBackButtonSvg from "src/components/svg/GoBackButtonSvg";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { MenuStackParamList } from "src/navigation/MenuStackNavigator";
+import { useNavigation } from "@react-navigation/native";
 
 type ProductSplit = {
   category: Category;
   products: Product[];
 };
 
-type MenuScreenProps = { navigation: NativeStackNavigationProp<MenuStackParamList, "MenuScreen"> };
+type NavigationProps = NativeStackNavigationProp<MenuStackParamList, "MenuScreen">;
 
-export default function MenuScreen({ navigation }: MenuScreenProps) {
+export default function MenuScreen() {
   logger.render("MenuScreen");
 
+  const navigation = useNavigation<NavigationProps>();
   const colorTheme = useColorTheme();
   const { scrollRef, scrollToPos } = useScrollRef();
   const [categoryPositions, setCategoryPositions] = useState<Record<CategoryId, number>>({});
@@ -76,7 +78,7 @@ export default function MenuScreen({ navigation }: MenuScreenProps) {
     return productsSplit;
   }, [productQuery.data, categoryQuery.data]);
 
-  if (productQuery.isLoading || categoryQuery.isLoading || !images || images.length === 0) {
+  if (productQuery.isLoading || categoryQuery.isLoading) {
     return <MenuSkeletonLoader />;
   }
   if (productQuery.isError || categoryQuery.isError) {
@@ -105,7 +107,6 @@ export default function MenuScreen({ navigation }: MenuScreenProps) {
           {productsPerCategory.map(({ category, products }) => (
             <VerticalCategorySection
               key={category.id}
-              navigation={navigation}
               category={category}
               products={products}
               productImages={images}

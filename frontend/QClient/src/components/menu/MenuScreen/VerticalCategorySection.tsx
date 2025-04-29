@@ -6,18 +6,15 @@ import { Category, CategoryId } from "src/api/types/Category";
 import { Product } from "src/api/types/Product";
 import { ImageFile } from "src/utils/files";
 import logger from "src/utils/logger";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { MenuStackParamList } from "src/navigation/MenuStackNavigator";
 
 type VerticalCategorySectionProps = {
   category: Category;
   products: Product[];
   productImages: ImageFile[];
   onLayout: (categoryId: CategoryId, event: LayoutChangeEvent) => void;
-} & { navigation: NativeStackNavigationProp<MenuStackParamList, "MenuScreen"> };
+};
 
 export default function VerticalCategorySection({
-  navigation,
   category,
   products,
   productImages,
@@ -41,7 +38,6 @@ export default function VerticalCategorySection({
       {products.map((product) => (
         <ProductCard
           key={product.id}
-          navigation={navigation}
           product={product}
           productImage={productImages.find((img) => img.name === product.imageName) as ImageFile}
         />

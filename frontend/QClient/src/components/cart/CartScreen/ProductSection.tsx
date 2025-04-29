@@ -4,8 +4,6 @@ import { CartItem, useCartContext } from "src/context/CartContext";
 import CartItemCard from "./CartItemCard";
 import useColorTheme from "src/hooks/useColorTheme";
 import logger from "src/utils/logger";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { CartStackParamList } from "src/navigation/CartStackNavigator";
 import { formatPrice } from "src/utils/utils";
 
 function calculatePrice(item: CartItem) {
@@ -27,9 +25,7 @@ function calculatePrice(item: CartItem) {
   return price * item.count;
 }
 
-type ProductSectionProps = { navigation: NativeStackNavigationProp<CartStackParamList, "CartScreen"> };
-
-export default function ProductSection({ navigation }: ProductSectionProps) {
+export default function ProductSection() {
   logger.render("ProductSection");
 
   const colorTheme = useColorTheme();
@@ -41,7 +37,7 @@ export default function ProductSection({ navigation }: ProductSectionProps) {
   return (
     <>
       {cart.map((cartItem, index) => (
-        <CartItemCard key={cartItem.id} navigation={navigation} cartItem={cartItem} price={prices[index]} />
+        <CartItemCard key={cartItem.id} cartItem={cartItem} price={prices[index]} />
       ))}
       <View style={styles.totalPriceContainerContainer}>
         <View style={[styles.totalPriceContainer, { backgroundColor: colorTheme.background.accent }]}>

@@ -11,15 +11,18 @@ import logger from "src/utils/logger";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
 import { formatPrice } from "src/utils/utils";
+import { useNavigation } from "@react-navigation/native";
 
+type NavigationProps = NativeStackNavigationProp<CartStackParamList, "CartScreen">;
 type CartItemCardProps = {
   cartItem: CartItem;
   price: number;
-} & { navigation: NativeStackNavigationProp<CartStackParamList, "CartScreen"> };
+};
 
-export default function CartItemCard({ navigation, cartItem, price }: CartItemCardProps) {
+export default function CartItemCard({ cartItem, price }: CartItemCardProps) {
   logger.render("CartItemCard");
 
+  const navigation = useNavigation<NavigationProps>();
   const image = useSingleImage(cartItem.product.imageName);
   const colorTheme = useColorTheme();
   const { changeCartItemCount } = useCartContext();
