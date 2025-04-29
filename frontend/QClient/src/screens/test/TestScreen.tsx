@@ -3,12 +3,23 @@ import React, { Fragment, startTransition, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GoBackButtonSvg from "src/components/svg/GoBackButtonSvg";
 import { useQuery } from "@tanstack/react-query";
-import api from "src/api";
 import { useImageContext } from "src/context/ImageContext";
 import * as FileSystem from "expo-file-system";
 import useProductsQuery from "src/api/hooks/useProductsQuery";
 import { ImageFile, imageOrDefault, ValidImageFile } from "src/utils/files";
 import logger from "src/utils/logger";
+import { api } from "src/api";
+
+const fetchImageRefetchCheck = {
+  queryFn: async (doImageRefetch: "yes" | "no") =>
+    (await api.axios.get(`/image/changes/${doImageRefetch}`)).data as boolean,
+  queryKey: () => null,
+};
+
+const fetchImages = {
+  queryFn: async () => (await api.axios.get("/image/all")).data as ValidImageFile[],
+  queryKey: () => ["images"],
+};
 
 export default function TestScreen() {
   logger.render("TestScreen");
@@ -19,8 +30,8 @@ export default function TestScreen() {
 
   const newImagesQuery = useQuery<ImageFile[], Error>({
     queryFn: async () => {
-      if (await api.fetchImageRefetchCheck.queryFn("yes")) {
-        return api.fetchImages.queryFn();
+      if (await fetchImageRefetchCheck.queryFn("yes")) {
+        return fetchImages.queryFn();
       }
       return [];
     },
