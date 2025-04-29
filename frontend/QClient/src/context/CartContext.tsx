@@ -97,8 +97,8 @@ export function CartContextProvider({ children }: { children: ReactNode }) {
   );
 
   const emptyCart = useCallback(() => {
-    setCart(() => []);
-  }, [setCart]);
+    setCart([]);
+  }, []);
 
   return (
     <CartContext.Provider

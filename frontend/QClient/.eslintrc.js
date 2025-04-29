@@ -24,7 +24,7 @@ module.exports = {
       "warn",
       {
         printWidth: 110,
-        endOfLine: "lf",
+        endOfLine: "crlf",
         trailingComma: "es5",
       },
     ],

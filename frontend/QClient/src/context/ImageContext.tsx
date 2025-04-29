@@ -59,7 +59,7 @@ export function ImageContextProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const invalidateImageCache = useCallback(() => {
-    setContextImages(() => []);
+    setContextImages([]);
   }, []);
 
   return (

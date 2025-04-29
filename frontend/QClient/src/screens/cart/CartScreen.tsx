@@ -3,7 +3,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import useColorTheme from "src/hooks/useColorTheme";
 import ProductSection from "src/components/cart/CartScreen/ProductSection";
-import api from "src/api";
 import { useCartContext } from "src/context/CartContext";
 import { showToast } from "src/utils/toast";
 import { PlacedOrder } from "src/api/types/Order";
@@ -13,6 +12,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
 import ScreenTitle from "src/components/shared/ScreenTitle";
+import { api } from "src/api";
 
 type CartScreenProps = { navigation: NativeStackNavigationProp<CartStackParamList, "CartScreen"> };
 
@@ -31,7 +31,7 @@ export default function CartScreen({ navigation }: CartScreenProps) {
       return;
     }
 
-    setSendingOrder(() => true);
+    setSendingOrder(true);
 
     const order: PlacedOrder = {
       items: cart.map((cartItem) => ({
@@ -42,8 +42,8 @@ export default function CartScreen({ navigation }: CartScreenProps) {
       additionalNotes: null,
     };
 
-    api
-      .sendOrder(order)
+    api.axios
+      .post("/order/place", order)
       .then((res) => {
         if (res.status === 200 || res.status === 201) {
           emptyCart();
@@ -57,7 +57,7 @@ export default function CartScreen({ navigation }: CartScreenProps) {
         logger.error("Error sending order:", error.response.data);
       })
       .finally(() => {
-        setSendingOrder(() => false);
+        setSendingOrder(false);
       });
   }
 

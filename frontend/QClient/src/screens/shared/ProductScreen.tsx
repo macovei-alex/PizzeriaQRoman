@@ -45,7 +45,7 @@ export default function ProductScreen({ route }: ProductScreenProps) {
   // const handleScreenFocus = useCallback(() => {
   //   console.log("focus");
   //   if (cartItem) {
-  //     setCartItemOptions(() => cartItem.options);
+  //     setCartItemOptions(cartItem.options);
   //   }
   // }, [cartItem]);
 
@@ -67,7 +67,7 @@ export default function ProductScreen({ route }: ProductScreenProps) {
   // and then another product doesn't refresh the UI state with the correct options.
   useEffect(() => {
     if (cartItem && !equal(cartItem.options, cartItemOptions)) {
-      setCartItemOptions(() => cartItem.options);
+      setCartItemOptions(cartItem.options);
     }
   }, [cartItem, cartItemOptions]);
 

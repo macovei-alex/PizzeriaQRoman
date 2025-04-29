@@ -48,7 +48,7 @@ export default function TestScreen() {
       try {
         await imageContext.saveImages(imagesToSave);
         const loaded = await imageContext.getImages(imageNames);
-        setImages(() => loaded);
+        setImages(loaded);
       } catch (error) {
         logger.error(`Error processing images: ${error}`);
       }

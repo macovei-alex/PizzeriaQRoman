@@ -45,8 +45,8 @@ export default function MenuScreen({ navigation }: MenuScreenProps) {
     // Extracting data in layout is a MUST because the event is a synthetic event (event pooling)
     // and event.nativeEvent will be set to null afterwards.
     const { layout } = event.nativeEvent;
-    setCategoryPositions((prevPositions) => {
-      return { ...prevPositions, [categoryId]: layout.y };
+    setCategoryPositions((prev) => {
+      return { ...prev, [categoryId]: layout.y };
     });
   }
 

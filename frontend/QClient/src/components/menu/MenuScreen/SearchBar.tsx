@@ -22,7 +22,7 @@ export default function SearchBar({ placeholder, onSearch }: SearchBarProps) {
         style={styles.textInput}
         placeholder={placeholder}
         value={text}
-        onChangeText={(newText) => setText(() => newText)}
+        onChangeText={(newText) => setText(newText)}
         onSubmitEditing={() => {
           onSearch(text);
         }}
