@@ -5,24 +5,25 @@ import OrderCard from "src/components/profile/order-history/OrderCard";
 import ScreenTitle from "src/components/shared/ScreenTitle";
 import useOrderHistoryQuery from "src/api/hooks/useOrderHistoryQuery";
 import logger from "src/utils/logger";
+import ErrorComponent from "src/components/shared/ErrorComponent";
 
 export default function OrderHistoryScreen() {
   logger.render("OrderHistoryScreen");
 
   const ordersQuery = useOrderHistoryQuery();
 
-  if (ordersQuery.isLoading || !ordersQuery.data) {
+  if (ordersQuery.isLoading) {
     return <Text>Loading...</Text>;
   }
   if (ordersQuery.isError) {
-    return <Text>Error: {ordersQuery.error.message}</Text>;
+    return <ErrorComponent onRetry={ordersQuery.refetch} />;
   }
 
   return (
     <SafeAreaView>
       <ScreenTitle title="Istoricul comenzilor" />
       <ScrollView style={styles.scrollView}>
-        {ordersQuery.data.map((order) => (
+        {ordersQuery.data?.map((order) => (
           <OrderCard key={order.id} order={order} containerStyle={styles.orderCardContainer} />
         ))}
       </ScrollView>

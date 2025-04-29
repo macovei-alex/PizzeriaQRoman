@@ -9,6 +9,7 @@ import useProductsQuery from "src/api/hooks/useProductsQuery";
 import { ImageFile, imageOrDefault, ValidImageFile } from "src/utils/files";
 import logger from "src/utils/logger";
 import { api } from "src/api";
+import ErrorComponent from "src/components/shared/ErrorComponent";
 
 const fetchImageRefetchCheck = {
   queryFn: async (doImageRefetch: "yes" | "no") =>
@@ -69,11 +70,11 @@ export default function TestScreen() {
     });
   }
 
-  if (newImagesQuery.isFetching) {
+  if (newImagesQuery.isLoading) {
     return <Text>Loading new images from server...</Text>;
   }
   if (newImagesQuery.isError) {
-    return <Text>Error: {newImagesQuery.error.message}</Text>;
+    return <ErrorComponent onRetry={newImagesQuery.refetch} />;
   }
   if (images.length === 0) {
     return <Text>Loading images from disk...</Text>;

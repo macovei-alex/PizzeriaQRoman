@@ -4,7 +4,6 @@ import LoginScreen from "src/screens/login/LoginScreen";
 
 export type LoginStackParamList = {
   LoginScreen: undefined;
-  // ProductScreen: { productId: string; imageName: string };
 };
 
 const LoginStack = createNativeStackNavigator<LoginStackParamList>();

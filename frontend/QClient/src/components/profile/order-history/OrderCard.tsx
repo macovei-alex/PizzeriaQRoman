@@ -6,6 +6,7 @@ import useColorTheme from "src/hooks/useColorTheme";
 import useProductsQuery from "src/api/hooks/useProductsQuery";
 import logger from "src/utils/logger";
 import { formatDate } from "src/utils/utils";
+import ErrorComponent from "src/components/shared/ErrorComponent";
 
 const maxItemsCount = 3;
 
@@ -36,11 +37,11 @@ export default function OrderCard({ order, containerStyle }: OrderCardProps) {
     }[];
   }, [productsQuery, order]);
 
-  if (productsQuery.isLoading || !productsQuery.data) {
+  if (productsQuery.isLoading) {
     return <Text>Loading...</Text>;
   }
   if (productsQuery.isError) {
-    return <Text>Error: {productsQuery.error.message}</Text>;
+    return <ErrorComponent onRetry={productsQuery.refetch} />;
   }
 
   return (

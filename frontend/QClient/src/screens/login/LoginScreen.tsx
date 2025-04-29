@@ -25,7 +25,7 @@ export default function LoginScreen() {
   const authContext = useAuthContext();
 
   const logoOpacityAnim = useRef(new Animated.Value(0)).current;
-  const bottomSheetTranslationAnim = useRef(new Animated.Value(300)).current;
+  const bottomSheetTranslationAnim = useRef(new Animated.Value(350)).current;
   const backgroundScaleAnim = useRef(new Animated.Value(1.8)).current;
   const backgroundImageRotationAnim = useRef(new Animated.Value(30)).current;
 
@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
     resizeMode: "stretch",
   },
   bottomSheet: {
+    position: "absolute",
     bottom: 0,
     width: "100%",
     paddingVertical: 24,
@@ -149,7 +150,8 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     paddingVertical: 14,
     paddingHorizontal: 40,
-    marginVertical: 8,
+    marginTop: 8,
+    marginBottom: 24,
     ...Platform.select({
       android: {
         elevation: 2,

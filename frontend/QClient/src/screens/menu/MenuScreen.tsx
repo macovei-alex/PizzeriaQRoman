@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { LayoutChangeEvent, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { LayoutChangeEvent, ScrollView, View } from "react-native";
 import useScrollRef from "src/hooks/useScrollRef";
 import LogoSection from "src/components/menu/MenuScreen/LogoSection";
 import HorizontalCategorySection from "src/components/menu/MenuScreen/HorizontalCategorySection";
@@ -13,32 +13,26 @@ import { Product } from "src/api/types/Product";
 import logger from "src/utils/logger";
 import MenuSkeletonLoader from "src/components/menu/MenuScreen/MenuSkeletonLoader";
 import useColorTheme from "src/hooks/useColorTheme";
-import GoBackButtonSvg from "src/components/svg/GoBackButtonSvg";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { MenuStackParamList } from "src/navigation/MenuStackNavigator";
-import { useNavigation } from "@react-navigation/native";
+import ErrorComponent from "../../components/shared/ErrorComponent";
 
 type ProductSplit = {
   category: Category;
   products: Product[];
 };
 
-type NavigationProps = NativeStackNavigationProp<MenuStackParamList, "MenuScreen">;
-
 export default function MenuScreen() {
   logger.render("MenuScreen");
 
-  const navigation = useNavigation<NavigationProps>();
   const colorTheme = useColorTheme();
   const { scrollRef, scrollToPos } = useScrollRef();
   const [categoryPositions, setCategoryPositions] = useState<Record<CategoryId, number>>({});
 
-  const productQuery = useProductsQuery();
+  const productsQuery = useProductsQuery();
   const categoryQuery = useCategoriesQuery();
 
   const imageNames = useMemo(
-    () => productQuery.data?.map((product) => product.imageName) || [],
-    [productQuery.data]
+    () => productsQuery.data?.map((product) => product.imageName) || [],
+    [productsQuery.data]
   );
   const images = useImages(imageNames);
 
@@ -61,14 +55,14 @@ export default function MenuScreen() {
 
   // Split products by category
   const productsPerCategory = useMemo(() => {
-    if (!productQuery.data || !categoryQuery.data) {
+    if (!productsQuery.data || !categoryQuery.data) {
       return [];
     }
 
     const productsSplit: ProductSplit[] = [];
     for (const category of categoryQuery.data) {
       const newProductSplit: ProductSplit = { category: category, products: [] };
-      for (const product of productQuery.data) {
+      for (const product of productsQuery.data) {
         if (product.categoryId === category.id) {
           newProductSplit.products.push(product);
         }
@@ -76,27 +70,26 @@ export default function MenuScreen() {
       productsSplit.push(newProductSplit);
     }
     return productsSplit;
-  }, [productQuery.data, categoryQuery.data]);
+  }, [productsQuery.data, categoryQuery.data]);
 
-  if (productQuery.isLoading || categoryQuery.isLoading) {
+  if (productsQuery.isLoading || categoryQuery.isLoading) {
     return <MenuSkeletonLoader />;
   }
-  if (productQuery.isError || categoryQuery.isError) {
-    return <Text>Error: {productQuery.error?.message || categoryQuery.error?.message}</Text>;
+  if (productsQuery.isError || categoryQuery.isError) {
+    return (
+      <ErrorComponent
+        onRetry={() => {
+          productsQuery.refetch();
+          categoryQuery.refetch();
+        }}
+      />
+    );
   }
 
   return (
     <SafeAreaView style={{ backgroundColor: colorTheme.background.primary }}>
       <ScrollView ref={scrollRef}>
         <LogoSection />
-
-        {/* For testing purposes */}
-        <TouchableOpacity
-          style={{ position: "absolute", top: 20, left: 20, width: 38, height: 38 }}
-          onPress={() => navigation.navigate("SkeletonLoaderTestScreen")}
-        >
-          <GoBackButtonSvg />
-        </TouchableOpacity>
 
         <HorizontalCategorySection
           categories={categoryQuery.data as Category[]}

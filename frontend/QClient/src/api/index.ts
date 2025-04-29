@@ -5,6 +5,6 @@ export const api = {
   axios: axios.create({
     baseURL: ENV.EXPO_PUBLIC_API_BASE_URL,
     withCredentials: false,
-    timeout: 2500,
+    timeout: 5000,
   }),
 };

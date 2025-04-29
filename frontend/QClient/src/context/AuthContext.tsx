@@ -5,6 +5,7 @@ import React, {
   useContext,
   useLayoutEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { api } from "src/api";
@@ -45,7 +46,6 @@ type AuthContextType = {
   isError: boolean;
   login: () => Promise<void>;
   logout: () => Promise<void>;
-  tryRefreshTokens: () => Promise<void>;
 };
 
 const discovery = {
@@ -53,7 +53,7 @@ const discovery = {
   tokenEndpoint: `${ENV.EXPO_PUBLIC_KEYCLOAK_REALM_URL}/protocol/openid-connect/token`,
 };
 
-export const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType | null>(null);
 
 function extractAccountClaims(idToken: string): AccountClaims {
   try {
@@ -90,6 +90,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     },
     discovery
   );
+  const tokenRefreshSharedResult = useRef<Promise<string | null> | null>(null);
   const isAuthenticated = useMemo(() => !!accessToken, [accessToken]);
   const isError = useMemo(() => error !== null, [error]);
 
@@ -175,23 +176,24 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     }
   }, [request, promptAsync, setAccountInfo]);
 
-  const logout = useCallback(() => {
-    axios.post(
-      `${ENV.EXPO_PUBLIC_KEYCLOAK_REALM_URL}/protocol/openid-connect/logout`,
-      {
-        client_id: ENV.EXPO_PUBLIC_KEYCLOAK_CLIENT_ID,
-        refresh_token: refreshToken,
-      },
-      {
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      }
-    );
-    removeAccountInfo();
-    return Promise.resolve();
+  const logout = useCallback(async () => {
+    await Promise.all([
+      axios.post(
+        `${ENV.EXPO_PUBLIC_KEYCLOAK_REALM_URL}/protocol/openid-connect/logout`,
+        {
+          client_id: ENV.EXPO_PUBLIC_KEYCLOAK_CLIENT_ID,
+          refresh_token: refreshToken,
+        },
+        {
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        }
+      ),
+      removeAccountInfo(),
+    ]);
   }, [removeAccountInfo, refreshToken]);
 
   const tryRefreshTokens = useCallback(async () => {
-    if (!refreshToken) return;
+    if (!refreshToken) return null;
     try {
       const response = await axios.post(
         `${ENV.EXPO_PUBLIC_KEYCLOAK_REALM_URL}/protocol/openid-connect/token`,
@@ -212,43 +214,47 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
         refresh: response.data.refresh_token,
         acc: extractAccountClaims(response.data.id_token),
       });
+      return response.data.access_token as string;
     } catch (error) {
       setError("Something went wrong");
-      logger.warn("Access token refresh failed: ", error);
+      logger.warn("Access token refresh failed:", error);
       await removeAccountInfo();
+      return null;
     }
   }, [refreshToken, setAccountInfo, removeAccountInfo]);
 
   useLayoutEffect(() => {
-    const resInterceptorId = api.axios.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-      config.headers.Authorization = accessToken ? `Bearer ${accessToken}` : config.headers.Authorization;
+    const interceptorId = api.axios.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+      if (!(config as any)._retry) {
+        config.headers.Authorization = accessToken ? `Bearer ${accessToken}` : config.headers.Authorization;
+      }
       return config;
     });
-    return () => {
-      api.axios.interceptors.request.eject(resInterceptorId);
-    };
+    return () => api.axios.interceptors.request.eject(interceptorId);
   }, [accessToken]);
 
   useLayoutEffect(() => {
-    const responseInterceptorId = api.axios.interceptors.response.use(
+    const interceptorId = api.axios.interceptors.response.use(
       (response) => response,
       async (error: AxiosError) => {
         const fullUrl = (error.config?.baseURL ?? "") + (error.config?.url ?? "");
-        if (
-          !error.config ||
-          fullUrl === `${ENV.EXPO_PUBLIC_KEYCLOAK_REALM_URL}/protocol/openid-connect/token`
-        ) {
+        const tokenUrl = `${ENV.EXPO_PUBLIC_KEYCLOAK_REALM_URL}/protocol/openid-connect/token`;
+        if (!error.config || fullUrl === tokenUrl) {
           return Promise.reject(error);
         }
-        const originalRequest = error.config;
-        if (
-          error.response?.status === axios.HttpStatusCode.Unauthorized &&
-          !(originalRequest as any)._retry
-        ) {
-          (originalRequest as any)._retry = true;
-          await tryRefreshTokens();
-          if (isAuthenticated) {
-            originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+
+        const originalRequest = error.config as typeof error.config & { _retry?: boolean };
+        if (error.response?.status === axios.HttpStatusCode.Unauthorized && !originalRequest._retry) {
+          originalRequest._retry = true;
+
+          if (!tokenRefreshSharedResult.current) {
+            tokenRefreshSharedResult.current = tryRefreshTokens();
+          }
+          const newAccessToken = await tokenRefreshSharedResult.current;
+          tokenRefreshSharedResult.current = null;
+
+          if (newAccessToken) {
+            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             return api.axios(originalRequest);
           }
         }
@@ -256,10 +262,8 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
       }
     );
 
-    return () => {
-      api.axios.interceptors.response.eject(responseInterceptorId);
-    };
-  }, [accessToken, setAccessToken, isAuthenticated, tryRefreshTokens]);
+    return () => api.axios.interceptors.response.eject(interceptorId);
+  }, [tryRefreshTokens]);
 
   useLayoutEffect(() => {
     const accessToken = SecureStore.getItem("accessToken");
@@ -288,7 +292,6 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
         isError,
         login,
         logout,
-        tryRefreshTokens,
       }}
     >
       {children}
