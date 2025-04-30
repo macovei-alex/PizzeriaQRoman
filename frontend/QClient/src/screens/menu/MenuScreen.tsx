@@ -5,7 +5,6 @@ import useScrollRef from "src/hooks/useScrollRef";
 import LogoSection from "src/components/menu/MenuScreen/LogoSection";
 import HorizontalCategorySection from "src/components/menu/MenuScreen/HorizontalCategorySection";
 import VerticalCategorySection from "src/components/menu/MenuScreen/VerticalCategorySection";
-import useImages from "src/hooks/useImages";
 import useProductsQuery from "src/api/hooks/useProductsQuery";
 import useCategoriesQuery from "src/api/hooks/useCategoriesQuery";
 import { Category, CategoryId } from "src/api/types/Category";
@@ -29,12 +28,6 @@ export default function MenuScreen() {
 
   const productsQuery = useProductsQuery();
   const categoryQuery = useCategoriesQuery();
-
-  const imageNames = useMemo(
-    () => productsQuery.data?.map((product) => product.imageName) || [],
-    [productsQuery.data]
-  );
-  const images = useImages(imageNames);
 
   // Save the position of each category for the scroll to position from the horizontal menu
   function updateCategoryLayoutPosition(categoryId: CategoryId, event: LayoutChangeEvent) {
@@ -102,7 +95,6 @@ export default function MenuScreen() {
               key={category.id}
               category={category}
               products={products}
-              productImages={images}
               onLayout={updateCategoryLayoutPosition}
             />
           ))}

@@ -1,12 +1,13 @@
-import React, { createContext, ReactNode, useCallback, useContext, useState } from "react";
+import React, { createContext, ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { api } from "src/api";
 import { ImageFile, loadSingleImageFromFile, saveImagesToFiles, ValidImageFile } from "src/utils/files";
 import logger from "src/utils/logger";
+import { useAuthContext } from "./AuthContext";
 
 type ImageContextType = {
   getSingleImage: (imageName: string) => Promise<ImageFile>;
-  getImages: (imageNames: string[]) => Promise<ImageFile[]>;
-  saveImages: (images: ValidImageFile[]) => Promise<boolean>;
-  invalidateImageCache: () => void;
+  getImages: (imageNames: string[]) => Promise<PromiseSettledResult<ImageFile>[]>;
+  refetchImages: () => Promise<void>;
 };
 
 const ImageContext = createContext<ImageContextType | null>(null);
@@ -20,14 +21,37 @@ export function useImageContext() {
 export function ImageContextProvider({ children }: { children: ReactNode }) {
   logger.render("ImageContextProvider");
 
+  const authContext = useAuthContext();
   const [contextImages, setContextImages] = useState<ImageFile[]>([]);
+
+  const refetchImages = useCallback(async () => {
+    let newImages: ValidImageFile[] = [];
+    try {
+      newImages = (await api.axios.get<ValidImageFile[]>("/image/all")).data;
+    } catch (error) {
+      logger.error(`Error fetching images: ${error}`);
+      return;
+    }
+
+    if (newImages.length === 0) return;
+
+    setContextImages((prev) => {
+      const newImageNames = newImages.map((img) => img.name);
+      const existingImages = prev.filter((img) => !newImageNames.includes(img.name));
+      return [...existingImages, ...newImages];
+    });
+
+    const errors = await saveImagesToFiles(newImages);
+    errors.forEach((error) => {
+      logger.error(`Error saving images: ${error}`);
+    });
+  }, []);
 
   const getSingleImage = useCallback(
     async (imageName: string) => {
       const found = contextImages.find((img) => img.name === imageName);
-      if (found) {
-        return found;
-      }
+      if (found) return found;
+
       const newImage = await loadSingleImageFromFile(imageName);
       setContextImages((prev) => {
         const found = prev.find((img) => img.name === newImage.name);
@@ -49,21 +73,34 @@ export function ImageContextProvider({ children }: { children: ReactNode }) {
       for (const imageName of imageNames) {
         imagePromises.push(getSingleImage(imageName));
       }
-      return Promise.all(imagePromises);
+      return Promise.allSettled(imagePromises);
     },
     [getSingleImage]
   );
 
-  const saveImages = useCallback(async (images: ValidImageFile[]) => {
-    return saveImagesToFiles(images);
-  }, []);
+  const firstImageChangesState = useRef(false);
 
-  const invalidateImageCache = useCallback(() => {
-    setContextImages([]);
-  }, []);
+  useEffect(() => {
+    if (!authContext.accessToken) return;
+    if (firstImageChangesState.current) return;
+    firstImageChangesState.current = true;
+
+    const abortController = new AbortController();
+    api.axios
+      .get<boolean>("/image/changes/yes", { signal: abortController.signal })
+      .then((res) => {
+        if (typeof res.data !== "boolean") throw new Error(`Invalid response: ${res.data}`);
+        if (res.data) {
+          refetchImages();
+        }
+      })
+      .catch((error) => logger.error(`Error fetching image changes: ${error}`));
+
+    return () => abortController.abort();
+  }, [refetchImages, authContext.accessToken]);
 
   return (
-    <ImageContext.Provider value={{ getSingleImage, getImages, saveImages, invalidateImageCache }}>
+    <ImageContext.Provider value={{ getSingleImage, getImages, refetchImages }}>
       {children}
     </ImageContext.Provider>
   );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { StyleSheet } from "react-native";
 import useColorTheme from "src/hooks/useColorTheme";
@@ -9,22 +9,26 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { MenuStackParamList } from "src/navigation/MenuStackNavigator";
 import { formatPrice } from "src/utils/utils";
 import { useNavigation } from "@react-navigation/native";
+import { useImageContext } from "src/context/ImageContext";
 
 type NavigationProps = NativeStackNavigationProp<MenuStackParamList, "MenuScreen">;
 type ProductCardProps = {
   product: Product;
-  productImage: ImageFile;
 };
 
-export default function ProductCard({ product, productImage }: ProductCardProps) {
+export default function ProductCard({ product }: ProductCardProps) {
   logger.render("ProductCard");
 
   const navigation = useNavigation<NavigationProps>();
   const colorTheme = useColorTheme();
+  const imageContext = useImageContext();
+  const [image, setImage] = useState<ImageFile | null>(null);
+
+  imageContext.getSingleImage(product.imageName).then((img) => setImage(img));
 
   return (
     <View style={[styles.container, { backgroundColor: colorTheme.background.card }]}>
-      <Image source={imageOrDefault(productImage)} style={styles.image} />
+      <Image source={imageOrDefault(image)} style={styles.image} />
       <View style={styles.infoSection}>
         <View style={styles.titleContainer}>
           <Text style={[styles.titleText, { color: colorTheme.text.primary }]}>{product.name}</Text>

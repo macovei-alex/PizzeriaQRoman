@@ -225,7 +225,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
 
   useLayoutEffect(() => {
     const interceptorId = api.axios.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-      if (!(config as any)._retry) {
+      if (!(config as typeof config & { _retry?: boolean })._retry) {
         config.headers.Authorization = accessToken ? `Bearer ${accessToken}` : config.headers.Authorization;
       }
       return config;

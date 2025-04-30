@@ -1,26 +1,11 @@
 import { View, StyleSheet, ScrollView, Text, Image, TouchableOpacity } from "react-native";
-import React, { Fragment, startTransition, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GoBackButtonSvg from "src/components/svg/GoBackButtonSvg";
-import { useQuery } from "@tanstack/react-query";
 import { useImageContext } from "src/context/ImageContext";
-import * as FileSystem from "expo-file-system";
 import useProductsQuery from "src/api/hooks/useProductsQuery";
-import { ImageFile, imageOrDefault, ValidImageFile } from "src/utils/files";
+import { ImageFile, imageOrDefault } from "src/utils/files";
 import logger from "src/utils/logger";
-import { api } from "src/api";
-import ErrorComponent from "src/components/shared/ErrorComponent";
-
-const fetchImageRefetchCheck = {
-  queryFn: async (doImageRefetch: "yes" | "no") =>
-    (await api.axios.get(`/image/changes/${doImageRefetch}`)).data as boolean,
-  queryKey: () => null,
-};
-
-const fetchImages = {
-  queryFn: async () => (await api.axios.get("/image/all")).data as ValidImageFile[],
-  queryKey: () => ["images"],
-};
 
 export default function TestScreen() {
   logger.render("TestScreen");
@@ -29,60 +14,18 @@ export default function TestScreen() {
   const productsQuery = useProductsQuery();
   const [images, setImages] = useState<ImageFile[]>([]);
 
-  const newImagesQuery = useQuery<ImageFile[], Error>({
-    queryFn: async () => {
-      if (await fetchImageRefetchCheck.queryFn("yes")) {
-        return fetchImages.queryFn();
-      }
-      return [];
-    },
-    queryKey: ["test-images"],
-  });
-
   useEffect(() => {
-    if (!newImagesQuery.data || !productsQuery.data || newImagesQuery.isFetching) return;
-
-    const imageNames = newImagesQuery.data.map((img) => img.name);
-    const imagesToSave = newImagesQuery.data.filter((img) => !!img.data) as ValidImageFile[];
-
-    async function processImages() {
-      try {
-        await imageContext.saveImages(imagesToSave);
-        const loaded = await imageContext.getImages(imageNames);
-        setImages(loaded);
-      } catch (error) {
-        logger.error(`Error processing images: ${error}`);
-      }
-    }
-
-    processImages();
-  }, [newImagesQuery.data, productsQuery.data, newImagesQuery.isFetching, imageContext]);
-
-  async function deleteImages() {
-    let promises = [];
-    for (const image of images) {
-      promises.push(FileSystem.deleteAsync(FileSystem.documentDirectory + image.name));
-    }
-    await Promise.all(promises);
-    startTransition(() => {
-      newImagesQuery.refetch();
-      imageContext.invalidateImageCache();
-    });
-  }
-
-  if (newImagesQuery.isLoading) {
-    return <Text>Loading new images from server...</Text>;
-  }
-  if (newImagesQuery.isError) {
-    return <ErrorComponent onRetry={newImagesQuery.refetch} />;
-  }
-  if (images.length === 0) {
-    return <Text>Loading images from disk...</Text>;
-  }
+    imageContext
+      .getImages(productsQuery.data?.map((product) => product.imageName) ?? [])
+      .then((images) => setImages(images.filter((img) => img.status === "fulfilled").map((img) => img.value)))
+      .catch((error) => {
+        logger.error(`Error fetching images: ${error}`);
+      });
+  }, [productsQuery.data, imageContext]);
 
   return (
     <SafeAreaView>
-      <TouchableOpacity style={{ backgroundColor: "red" }} onPress={deleteImages}>
+      <TouchableOpacity style={{ backgroundColor: "red" }} onPress={imageContext.refetchImages}>
         <Text style={{ color: "white" }}>Delete images from disk and refetch them</Text>
       </TouchableOpacity>
       <ScrollView>
