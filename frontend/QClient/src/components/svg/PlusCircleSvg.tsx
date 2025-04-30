@@ -1,17 +1,20 @@
 import React from "react";
-import Svg, { Line, Rect } from "react-native-svg";
+import Svg, { Circle, Line } from "react-native-svg";
 import { StyleProp, ViewStyle } from "react-native";
+import useColorTheme from "src/hooks/useColorTheme";
 
 type PlusCircleSvgProps = {
   style?: StyleProp<ViewStyle>;
 };
 
 export default function PlusCircleSvg({ style }: PlusCircleSvgProps) {
+  const colorTheme = useColorTheme();
+
   return (
-    <Svg style={style} viewBox="0 0 36 38" fill="none">
-      <Rect x="0.460205" y="0.652374" width="34.6559" height="36.3861" rx="17.3279" fill="#428820" />
-      <Line x1="18.3306" y1="8" x2="18.3306" y2="28.992" stroke="white" stroke-width="2" />
-      <Line x1="8" y1="18.1957" x2="27.9938" y2="18.1957" stroke="white" stroke-width="2" />
+    <Svg style={style} viewBox="0 0 100 100" fill="none">
+      <Circle x="50" y="50" r="50" fill={colorTheme.background.success} />
+      <Line x1="50" y1="25" x2="50" y2="75" stroke="white" strokeWidth="7" />
+      <Line x1="25" y1="50" x2="75" y2="50" stroke="white" strokeWidth="7" />
     </Svg>
   );
 }

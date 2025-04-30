@@ -1,31 +1,25 @@
-import Svg, { Circle, Path } from "react-native-svg";
+import Svg, { Circle, Line } from "react-native-svg";
 import React from "react";
-import { ColorValue, StyleProp, ViewStyle } from "react-native";
+import { StyleProp, ViewStyle } from "react-native";
+import useColorTheme from "src/hooks/useColorTheme";
 
 type TickCheckboxSvgProps = {
   style?: StyleProp<ViewStyle>;
-  checkStroke?: ColorValue;
-  checkedFill?: ColorValue;
-  uncheckedFill?: ColorValue;
   checked: boolean;
 };
 
-export default function TickCheckboxSvg({
-  style,
-  checkStroke,
-  checkedFill,
-  uncheckedFill,
-  checked,
-}: TickCheckboxSvgProps) {
-  checkStroke = checkStroke ?? "white";
-  checkedFill = checkedFill ?? "#428820";
-  uncheckedFill = uncheckedFill ?? "white";
+export default function TickCheckboxSvg({ style, checked }: TickCheckboxSvgProps) {
+  const colorTheme = useColorTheme();
 
   return (
-    <Svg style={style} viewBox="0 0 30 30" fill="none">
-      <Circle cx="15" cy="15" r="15" fill={checked ? checkedFill : uncheckedFill} />
-      {checked && <Path d="M8.00007 16.49L14.5012 20.8129" stroke={checkStroke} stroke-width="2" />}
-      {checked && <Path d="M14.0151 21.3223L20.4753 9.00001" stroke={checkStroke} stroke-width="2" />}
+    <Svg style={style} viewBox="0 0 100 100" fill="none">
+      <Circle cx="50" cy="50" r="50" fill={checked ? colorTheme.background.success : "none"} />
+      {checked && (
+        <>
+          <Line x1="25" y1="50" x2="48" y2="72" stroke={colorTheme.text.success} strokeWidth="7" />
+          <Line x1="48" y1="72" x2="70" y2="28" stroke={colorTheme.text.success} strokeWidth="7" />
+        </>
+      )}
     </Svg>
   );
 }

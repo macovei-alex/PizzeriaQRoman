@@ -1,7 +1,7 @@
 import React from "react";
 import { ScrollView, StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import OrderCard from "src/components/profile/order-history/OrderCard";
+import OrderCard from "src/components/profile/OrderHistoryScreen/OrderCard";
 import ScreenTitle from "src/components/shared/ScreenTitle";
 import useOrderHistoryQuery from "src/api/hooks/useOrderHistoryQuery";
 import logger from "src/utils/logger";
