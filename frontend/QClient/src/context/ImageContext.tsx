@@ -3,6 +3,7 @@ import { api } from "src/api";
 import { ImageFile, loadSingleImageFromFile, saveImagesToFiles, ValidImageFile } from "src/utils/files";
 import logger from "src/utils/logger";
 import { useAuthContext } from "./AuthContext";
+import { CanceledError } from "axios";
 
 type ImageContextType = {
   getSingleImage: (imageName: string) => Promise<ImageFile>;
@@ -94,7 +95,11 @@ export function ImageContextProvider({ children }: { children: ReactNode }) {
           refetchImages();
         }
       })
-      .catch((error) => logger.error(`Error fetching image changes: ${error}`));
+      .catch((error) => {
+        if (!(error instanceof CanceledError)) {
+          logger.error(`Error fetching image changes: ${error}`);
+        }
+      });
 
     return () => abortController.abort();
   }, [refetchImages, authContext.accessToken]);
