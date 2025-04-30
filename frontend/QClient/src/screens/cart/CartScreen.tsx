@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import useColorTheme from "src/hooks/useColorTheme";
 import ProductSection from "src/components/cart/CartScreen/ProductSection";
 import { useCartContext } from "src/context/CartContext";
@@ -64,7 +64,12 @@ export default function CartScreen() {
   }
 
   if (sendingOrder) {
-    return <Text>Sending order...</Text>;
+    return (
+      <SafeAreaView style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>Sending Order</Text>
+        <ActivityIndicator size={70} color={colorTheme.background.accent} />
+      </SafeAreaView>
+    );
   }
 
   return (
@@ -88,6 +93,15 @@ export default function CartScreen() {
 }
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  loadingText: {
+    fontSize: 24,
+    textAlign: "center",
+    marginBottom: 20,
+  },
   titleScreenContainer: {
     marginBottom: 20,
   },

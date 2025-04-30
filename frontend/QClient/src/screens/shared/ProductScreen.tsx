@@ -16,6 +16,7 @@ import { CartStackParamList } from "src/navigation/CartStackNavigator";
 import { MenuStackParamList } from "src/navigation/MenuStackNavigator";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import equal from "fast-deep-equal";
+import ErrorComponent from "src/components/shared/ErrorComponent";
 
 type RouteProps =
   | RouteProp<MenuStackParamList, "ProductScreen">
@@ -33,9 +34,7 @@ export default function ProductScreen() {
   const { cart, addCartItem, changeCartItemOptions } = useCartContext();
 
   const cartItem = cart.find((item) => item.id === Number(cartItemId));
-  if (cartItemId && !cartItem) {
-    throw new Error(`Cart item not found for id ( ${cartItemId} )`);
-  }
+  if (cartItemId && !cartItem) throw new Error(`Cart item not found for id ( ${cartItemId} )`);
 
   const productQuery = useProductWithOptionsQuery(Number(productId));
   const image = useSingleImage(imageName);
@@ -76,24 +75,19 @@ export default function ProductScreen() {
     return <Text>Loading...</Text>;
   }
   if (productQuery.isError) {
-    return <Text>Error: {productQuery.error.message}</Text>;
+    return <ErrorComponent onRetry={productQuery.refetch} />;
   }
 
   const product = productQuery.data as ProductWithOptions;
 
   function handleOptionChange(optionListId: OptionListId, optionId: OptionId, newCount: number) {
     const optionList = product.optionLists.find((optionList) => optionList.id === optionListId);
-    if (!optionList) {
-      throw new Error(`Option list not found: ${optionListId}`);
-    }
-    const option = optionList.options.find((option) => option.id === optionId);
-    if (!option) {
-      throw new Error(`Option not found: ${optionId}`);
-    }
+    if (!optionList) throw new Error(`Option list not found: ${optionListId}`);
 
-    if (newCount < 0 || newCount > option.maxCount) {
-      throw new Error(`Invalid option count: ${newCount}`);
-    }
+    const option = optionList.options.find((option) => option.id === optionId);
+    if (!option) throw new Error(`Option not found: ${optionId}`);
+
+    if (newCount < 0 || newCount > option.maxCount) throw new Error(`Invalid option count: ${newCount}`);
 
     const choiceCount = Object.values(cartItemOptions[optionListId] || {}).reduce(
       (acc, count) => acc + (count !== 0 ? 1 : 0),
@@ -105,22 +99,16 @@ export default function ProductScreen() {
     }
 
     setCartItemOptions((prev) => {
-      if (!!prev[optionListId] && newCount === prev[optionListId][optionId]) {
-        return prev;
-      }
+      if (!!prev[optionListId] && newCount === prev[optionListId][optionId]) return prev;
+
       const newOptionCounts = { ...prev[optionListId], [optionId]: newCount };
-      if (newCount === 0) {
-        delete newOptionCounts[optionId];
-      }
+      if (newCount === 0) delete newOptionCounts[optionId];
+
       const newOptions = { ...prev, [optionListId]: newOptionCounts };
-      if (Object.keys(newOptionCounts).length === 0) {
-        delete newOptions[optionListId];
-      }
+      if (Object.keys(newOptionCounts).length === 0) delete newOptions[optionListId];
 
       // TODO: Improve performance by not refreshing the cart every time.
-      if (cartItem) {
-        changeCartItemOptions(Number(cartItem.id), newOptions);
-      }
+      if (cartItem) changeCartItemOptions(Number(cartItem.id), newOptions);
 
       return newOptions;
     });
