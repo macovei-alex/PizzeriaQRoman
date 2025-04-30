@@ -29,24 +29,29 @@ export default function OptionCard({ option, currentCount, onOptionChange }: Opt
     <View style={styles.container}>
       {option.maxCount === 1 ? (
         <TouchableOpacity
-          style={[styles.checkboxContainer, { borderColor: colorTheme.text.primary }]}
+          style={[styles.svgContainer, { borderColor: colorTheme.text.primary }]}
+          activeOpacity={0.8}
           onPress={() => onOptionChange(option.id, currentCount === 1 ? 0 : 1)}
         >
-          <TickCheckboxSvg checked={currentCount === 1} style={styles.checkbox} />
+          <TickCheckboxSvg checked={currentCount === 1} style={styles.svg} />
         </TouchableOpacity>
       ) : (
         <>
           <TouchableOpacity
-            style={[styles.checkboxContainer, { borderColor: colorTheme.text.primary }]}
+            style={[styles.svgContainer, { borderColor: colorTheme.text.primary }]}
+            disabled={currentCount === option.maxCount}
+            activeOpacity={0.8}
             onPress={() => onOptionChange(option.id, currentCount + 1)}
           >
-            <PlusCircleSvg style={styles.checkbox} />
+            <PlusCircleSvg style={styles.svg} disabled={currentCount === option.maxCount} />
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.checkboxContainer, { borderColor: colorTheme.text.primary }]}
-            onPress={() => onOptionChange(option.id, currentCount + 1)}
+            style={[styles.svgContainer, { borderColor: colorTheme.text.primary }]}
+            disabled={currentCount === 0}
+            activeOpacity={0.8}
+            onPress={() => onOptionChange(option.id, currentCount - 1)}
           >
-            <MinusCircleSvg style={styles.checkbox} />
+            <MinusCircleSvg style={styles.svg} disabled={currentCount === 0} />
           </TouchableOpacity>
         </>
       )}
@@ -66,10 +71,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginVertical: 6,
   },
-  checkboxContainer: {
+  svgContainer: {
     marginRight: 12,
   },
-  checkbox: {
+  svg: {
     width: 30,
     height: 30,
   },
