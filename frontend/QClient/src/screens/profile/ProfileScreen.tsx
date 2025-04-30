@@ -4,10 +4,13 @@ import React, { Button } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuthContext } from "src/context/AuthContext";
 import { ProfileStackParamList } from "src/navigation/ProfileStackNavigator";
+import logger from "src/utils/logger";
 
 type NavigationProps = NativeStackNavigationProp<ProfileStackParamList, "ProfileScreen">;
 
 export default function ProfileScreen() {
+  logger.render("ProfileScreen");
+
   const authContext = useAuthContext();
   const navigation = useNavigation<NavigationProps>();
 

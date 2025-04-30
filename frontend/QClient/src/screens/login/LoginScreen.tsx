@@ -14,6 +14,7 @@ import useColorTheme from "src/hooks/useColorTheme";
 import { useAuthContext } from "src/context/AuthContext";
 import { images } from "src/constants";
 import * as WebBrowser from "expo-web-browser";
+import logger from "src/utils/logger";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -21,6 +22,8 @@ const AnimatedLogo = Animated.createAnimatedComponent(Image);
 const AnimatedImageBackground = Animated.createAnimatedComponent(ImageBackground);
 
 export default function LoginScreen() {
+  logger.render("LoginScreen");
+
   const colorTheme = useColorTheme();
   const authContext = useAuthContext();
 
