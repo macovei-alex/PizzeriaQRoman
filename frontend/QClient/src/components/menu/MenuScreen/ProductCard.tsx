@@ -34,7 +34,7 @@ export default function ProductCard({ product, productImage }: ProductCardProps)
         </View>
         <View style={styles.priceContainer}>
           <Text style={[styles.priceText, { color: colorTheme.text.primary }]}>
-            {`${formatPrice(product.price)} RON`}
+            {formatPrice(product.price)}
           </Text>
         </View>
         <TouchableOpacity
