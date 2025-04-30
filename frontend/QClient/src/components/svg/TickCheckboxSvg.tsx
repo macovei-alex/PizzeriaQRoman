@@ -13,7 +13,13 @@ export default function TickCheckboxSvg({ style, checked }: TickCheckboxSvgProps
 
   return (
     <Svg style={style} viewBox="0 0 100 100" fill="none">
-      <Circle cx="50" cy="50" r="50" fill={checked ? colorTheme.background.success : "none"} />
+      <Circle
+        cx="50"
+        cy="50"
+        r="50"
+        fill={checked ? colorTheme.background.success : "none"}
+        stroke={!checked ? colorTheme.text.primary : undefined}
+      />
       {checked && (
         <>
           <Line x1="25" y1="50" x2="48" y2="72" stroke={colorTheme.text.success} strokeWidth="7" />
