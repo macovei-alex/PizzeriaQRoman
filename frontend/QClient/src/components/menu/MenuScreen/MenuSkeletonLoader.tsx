@@ -1,36 +1,84 @@
-import React from "react";
 import useColorTheme from "src/hooks/useColorTheme";
-import { StyleSheet, View } from "react-native";
+import { Animated, Easing, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import React, { useEffect, useRef } from "react";
 import logger from "src/utils/logger";
 
-export default function MenuSkeletonLoader() {
-  logger.render("MenuSkeletonLoader");
+const opacityAnimParams = { min: 0.5, max: 1, duration: 500 };
+
+export default function AnimatedMenuSkeletonLoader() {
+  logger.render("AnimatedMenuSkeletonLoader");
 
   const colorTheme = useColorTheme();
+  const opacityAnim = useRef(new Animated.Value(opacityAnimParams.min)).current;
+
+  useEffect(() => {
+    const pulse = Animated.loop(
+      Animated.sequence([
+        Animated.timing(opacityAnim, {
+          toValue: opacityAnimParams.max,
+          duration: opacityAnimParams.duration,
+          useNativeDriver: true,
+          easing: Easing.inOut(Easing.ease),
+        }),
+        Animated.timing(opacityAnim, {
+          toValue: opacityAnimParams.min,
+          duration: opacityAnimParams.duration,
+          useNativeDriver: true,
+          easing: Easing.inOut(Easing.ease),
+        }),
+      ])
+    );
+    pulse.start();
+
+    return () => pulse.stop();
+  }, [opacityAnim]);
 
   return (
     <SafeAreaView style={{ backgroundColor: colorTheme.background.primary }}>
-      <View style={[styles.logoSection, { backgroundColor: colorTheme.background.card }]} />
+      <Animated.View
+        style={[styles.logoSection, { backgroundColor: colorTheme.background.card, opacity: opacityAnim }]}
+      />
       <View style={[styles.horizontalCategorySection]}>
         {Array.from({ length: 3 }).map((_, index) => {
           return (
-            <View
+            <Animated.View
               key={index}
-              style={[styles.horizontalCategory, { backgroundColor: colorTheme.background.card }]}
+              style={[
+                styles.horizontalCategory,
+                { backgroundColor: colorTheme.background.card, opacity: opacityAnim },
+              ]}
             />
           );
         })}
       </View>
 
-      <View style={[styles.searchBar, { backgroundColor: colorTheme.background.card }]} />
+      <Animated.View
+        style={[styles.searchBar, { backgroundColor: colorTheme.background.card, opacity: opacityAnim }]}
+      />
 
-      <View style={[styles.verticalCategoryText, { backgroundColor: colorTheme.background.card }]} />
+      <Animated.View
+        style={[
+          styles.verticalCategoryText,
+          { backgroundColor: colorTheme.background.card, opacity: opacityAnim },
+        ]}
+      />
 
       {Array.from({ length: 2 }).map((_, index) => (
-        <View key={index} style={[styles.productContainer, { backgroundColor: colorTheme.background.card }]}>
-          <View style={[styles.productImage, { backgroundColor: colorTheme.background.onCard }]} />
-        </View>
+        <Animated.View
+          key={index}
+          style={[
+            styles.productContainer,
+            { backgroundColor: colorTheme.background.card, opacity: opacityAnim },
+          ]}
+        >
+          <Animated.View
+            style={[
+              styles.productImage,
+              { backgroundColor: colorTheme.background.onCard, opacity: opacityAnim },
+            ]}
+          />
+        </Animated.View>
       ))}
     </SafeAreaView>
   );

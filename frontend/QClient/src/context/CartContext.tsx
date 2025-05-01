@@ -57,18 +57,17 @@ export function CartContextProvider({ children }: { children: ReactNode }) {
   const changeCartItemCount = useCallback(
     (cartItemId: CartItemId, increment: number) => {
       const item = cart.find((item) => item.id === cartItemId);
-      if (!item) {
-        throw new Error(`Item ( ${cartItemId} ) not found in cart`);
-      }
+      if (!item) throw new Error(`Item ( ${cartItemId} ) not found in cart`);
+      if (item.count + increment < 0) throw new Error("Item count cannot be negative");
 
       item.count += increment;
-      if (item.count <= 0) {
+      if (item.count === 0) {
         setCart((prev) => {
           const newCart = prev.filter((item) => item.id !== cartItemId);
           logCart(newCart);
           return newCart;
         });
-      } else {
+      } else if (item.count > 0) {
         setCart((prev) => {
           const newCart = [...prev];
           logCart(newCart);
@@ -82,9 +81,7 @@ export function CartContextProvider({ children }: { children: ReactNode }) {
   const changeCartItemOptions = useCallback(
     (cartItemId: number, options: CartItemOptions) => {
       const item = cart.find((item) => item.id === cartItemId);
-      if (!item) {
-        throw new Error(`Item ( ${cartItemId} ) not found in cart`);
-      }
+      if (!item) throw new Error(`Item ( ${cartItemId} ) not found in cart`);
 
       item.options = options;
       setCart((prev) => {

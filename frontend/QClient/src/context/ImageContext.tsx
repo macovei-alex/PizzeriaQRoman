@@ -84,12 +84,12 @@ export function ImageContextProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!authContext.accessToken) return;
     if (firstImageChangesState.current) return;
-    firstImageChangesState.current = true;
 
     const abortController = new AbortController();
     api.axios
       .get<boolean>("/image/changes/yes", { signal: abortController.signal })
       .then((res) => {
+        firstImageChangesState.current = true;
         if (typeof res.data !== "boolean") throw new Error(`Invalid response: ${res.data}`);
         if (res.data) {
           refetchImages();
