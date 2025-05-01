@@ -33,30 +33,35 @@ export default function LoginScreen() {
   const backgroundImageRotationAnim = useRef(new Animated.Value(30)).current;
 
   useEffect(() => {
-    Animated.timing(bottomSheetTranslationAnim, {
-      toValue: 0,
-      duration: 1200,
-      useNativeDriver: true,
-      easing: Easing.out(Easing.cubic),
-    }).start();
-    Animated.timing(logoOpacityAnim, {
-      toValue: 0.88,
-      duration: 1200,
-      useNativeDriver: true,
-      easing: Easing.in(Easing.cubic),
-    }).start();
-    Animated.timing(backgroundScaleAnim, {
-      toValue: 1.2,
-      duration: 1200,
-      useNativeDriver: true,
-      easing: Easing.inOut(Easing.cubic),
-    }).start();
-    Animated.timing(backgroundImageRotationAnim, {
-      toValue: 0,
-      duration: 1200,
-      useNativeDriver: true,
-      easing: Easing.inOut(Easing.cubic),
-    }).start();
+    const animations = [
+      Animated.timing(bottomSheetTranslationAnim, {
+        toValue: 0,
+        duration: 1200,
+        useNativeDriver: true,
+        easing: Easing.out(Easing.cubic),
+      }),
+      Animated.timing(logoOpacityAnim, {
+        toValue: 0.88,
+        duration: 1200,
+        useNativeDriver: true,
+        easing: Easing.in(Easing.cubic),
+      }),
+      Animated.timing(backgroundScaleAnim, {
+        toValue: 1.2,
+        duration: 1200,
+        useNativeDriver: true,
+        easing: Easing.inOut(Easing.cubic),
+      }),
+      Animated.timing(backgroundImageRotationAnim, {
+        toValue: 0,
+        duration: 1200,
+        useNativeDriver: true,
+        easing: Easing.inOut(Easing.cubic),
+      }),
+    ];
+    animations.forEach((animation) => animation.start());
+
+    return () => animations.forEach((animation) => animation.stop());
   }, [bottomSheetTranslationAnim, logoOpacityAnim, backgroundScaleAnim, backgroundImageRotationAnim]);
 
   const backgroundImageRotation = backgroundImageRotationAnim.interpolate({
@@ -95,6 +100,7 @@ export default function LoginScreen() {
         >
           <Text style={[styles.subText, { color: colorTheme.text.primary }]}>Bine ați venit!</Text>
 
+          {/* sign in button */}
           <TouchableOpacity
             onPress={authContext.login}
             style={[styles.button, { backgroundColor: colorTheme.background.onCard }]}

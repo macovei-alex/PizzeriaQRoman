@@ -13,6 +13,7 @@ import logger from "src/utils/logger";
 import MenuSkeletonLoader from "src/components/menu/MenuScreen/MenuSkeletonLoader";
 import useColorTheme from "src/hooks/useColorTheme";
 import ErrorComponent from "../../components/shared/ErrorComponent";
+import { useImageContext } from "src/context/ImageContext";
 
 type ProductSplit = {
   category: Category;
@@ -23,11 +24,11 @@ export default function MenuScreen() {
   logger.render("MenuScreen");
 
   const colorTheme = useColorTheme();
-  const { scrollRef, scrollToPos } = useScrollRef();
-  const [categoryPositions, setCategoryPositions] = useState<Record<CategoryId, number>>({});
-
+  const imageContext = useImageContext();
   const productsQuery = useProductsQuery();
   const categoryQuery = useCategoriesQuery();
+  const { scrollRef, scrollToPos } = useScrollRef();
+  const [categoryPositions, setCategoryPositions] = useState<Record<CategoryId, number>>({});
 
   // Save the position of each category for the scroll to position from the horizontal menu
   function updateCategoryLayoutPosition(categoryId: CategoryId, event: LayoutChangeEvent) {
@@ -65,15 +66,14 @@ export default function MenuScreen() {
     return productsSplit;
   }, [productsQuery.data, categoryQuery.data]);
 
-  if (productsQuery.isLoading || categoryQuery.isLoading) {
-    return <MenuSkeletonLoader />;
-  }
+  if (productsQuery.isLoading || categoryQuery.isLoading) return <MenuSkeletonLoader />;
   if (productsQuery.isError || categoryQuery.isError) {
     return (
       <ErrorComponent
         onRetry={() => {
           productsQuery.refetch();
           categoryQuery.refetch();
+          imageContext.refetchImages();
         }}
       />
     );

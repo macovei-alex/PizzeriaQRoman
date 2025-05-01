@@ -6,8 +6,8 @@ import logger from "src/utils/logger";
 
 const opacityAnimParams = { min: 0.5, max: 1, duration: 500 };
 
-export default function AnimatedMenuSkeletonLoader() {
-  logger.render("AnimatedMenuSkeletonLoader");
+export default function MenuSkeletonLoader() {
+  logger.render("MenuSkeletonLoader");
 
   const colorTheme = useColorTheme();
   const opacityAnim = useRef(new Animated.Value(opacityAnimParams.min)).current;
