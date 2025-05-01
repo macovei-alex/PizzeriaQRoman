@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LayoutChangeEvent, ScrollView, View } from "react-native";
 import useScrollRef from "src/hooks/useScrollRef";
@@ -31,27 +31,26 @@ export default function MenuScreen() {
   const [categoryPositions, setCategoryPositions] = useState<Record<CategoryId, number>>({});
 
   // Save the position of each category for the scroll to position from the horizontal menu
-  function updateCategoryLayoutPosition(categoryId: CategoryId, event: LayoutChangeEvent) {
+  const updateCategoryLayoutPosition = useCallback((categoryId: CategoryId, event: LayoutChangeEvent) => {
     // Extracting data in layout is a MUST because the event is a synthetic event (event pooling)
     // and event.nativeEvent will be set to null afterwards.
     const { layout } = event.nativeEvent;
     setCategoryPositions((prev) => {
       return { ...prev, [categoryId]: layout.y };
     });
-  }
+  }, []);
 
-  function scrollToCategoryId(categoryId: CategoryId) {
-    const pos = categoryPositions[categoryId];
-    if (pos) {
-      scrollToPos({ y: pos });
-    }
-  }
+  const scrollToCategoryId = useCallback(
+    (categoryId: CategoryId) => {
+      const pos = categoryPositions[categoryId];
+      if (pos) scrollToPos({ y: pos });
+    },
+    [categoryPositions, scrollToPos]
+  );
 
   // Split products by category
   const productsPerCategory = useMemo(() => {
-    if (!productsQuery.data || !categoryQuery.data) {
-      return [];
-    }
+    if (!productsQuery.data || !categoryQuery.data) return [];
 
     const productsSplit: ProductSplit[] = [];
     for (const category of categoryQuery.data) {
@@ -84,10 +83,7 @@ export default function MenuScreen() {
       <ScrollView ref={scrollRef}>
         <LogoSection />
 
-        <HorizontalCategorySection
-          categories={categoryQuery.data as Category[]}
-          onCategoryPress={scrollToCategoryId}
-        />
+        <HorizontalCategorySection categories={categoryQuery.data!} onCategoryPress={scrollToCategoryId} />
 
         <View>
           {productsPerCategory.map(({ category, products }) => (
