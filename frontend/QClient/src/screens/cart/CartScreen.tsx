@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import useColorTheme from "src/hooks/useColorTheme";
 import ProductSection from "src/components/cart/CartScreen/ProductSection";
 import { useCartContext } from "src/context/CartContext";
@@ -11,9 +11,10 @@ import { convertCartItemOptions } from "src/utils/convertions";
 import { useQueryClient } from "@tanstack/react-query";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
-import ScreenTitle from "src/components/shared/ScreenTitle";
+import ScreenTitle from "src/components/shared/generic/ScreenTitle";
 import { api } from "src/api";
 import { useNavigation } from "@react-navigation/native";
+import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
 
 type NavigationProps = NativeStackNavigationProp<CartStackParamList, "CartScreen">;
 
@@ -63,14 +64,7 @@ export default function CartScreen() {
       });
   }
 
-  if (sendingOrder) {
-    return (
-      <SafeAreaView style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Sending Order</Text>
-        <ActivityIndicator size={70} color={colorTheme.background.accent} />
-      </SafeAreaView>
-    );
-  }
+  if (sendingOrder) return <ScreenActivityIndicator text="Se trimite comanda..." />;
 
   return (
     <SafeAreaView>
@@ -93,15 +87,6 @@ export default function CartScreen() {
 }
 
 const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  loadingText: {
-    fontSize: 24,
-    textAlign: "center",
-    marginBottom: 20,
-  },
   titleScreenContainer: {
     marginBottom: 20,
   },

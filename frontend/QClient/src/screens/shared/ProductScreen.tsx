@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OptionList from "src/components/shared/ProductScreen/OptionListCard";
@@ -9,14 +9,14 @@ import TitleSection from "src/components/shared/ProductScreen/TitleSection";
 import { CartItemOptions, useCartContext } from "src/context/CartContext";
 import useSingleImage from "src/hooks/useSingleImage";
 import useProductWithOptionsQuery from "src/api/hooks/useProductWithOptionsQuery";
-import { showToast } from "src/utils/toast";
-import { OptionId, OptionListId, ProductWithOptions } from "src/api/types/Product";
+import { ProductWithOptions } from "src/api/types/Product";
 import logger from "src/utils/logger";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
 import { MenuStackParamList } from "src/navigation/MenuStackNavigator";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import equal from "fast-deep-equal";
-import ErrorComponent from "src/components/shared/ErrorComponent";
+import ErrorComponent from "src/components/shared/generic/ErrorComponent";
+import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
 
 type RouteProps =
   | RouteProp<MenuStackParamList, "ProductScreen">
@@ -40,79 +40,16 @@ export default function ProductScreen() {
   const image = useSingleImage(imageName);
   const [cartItemOptions, setCartItemOptions] = useState<CartItemOptions>(cartItem?.options ?? {});
 
-  // Update the cached UI state. Prevents a bug where pressing a cart item, then the cart icon
-  // and then another product doesn't reload the UI with the correct options.
-  // const handleScreenFocus = useCallback(() => {
-  //   console.log("focus");
-  //   if (cartItem) {
-  //     setCartItemOptions(cartItem.options);
-  //   }
-  // }, [cartItem]);
-
-  // Update the cart item options only when the screen is blurred for performance reasons
-  // since the cart is in a context.
-  // const handleScreenBlur = useCallback(() => {
-  //   console.log("blur");
-  //   if (!cartItem) {
-  //     return;
-  //   }
-  //   if (equal(cartItem.options, cartItemOptions)) {
-  //     return;
-  //   }
-  //   showToast("Opțiuni actualizate");
-  //   changeCartItemOptions(cartItem.id, cartItemOptions);
-  // }, [cartItem, cartItemOptions, changeCartItemOptions]);
-
-  // Update the cached UI state. Prevents a bug where pressing a cart item, then the cart icon
-  // and then another product doesn't refresh the UI state with the correct options.
   useEffect(() => {
     if (cartItem && !equal(cartItem.options, cartItemOptions)) {
-      setCartItemOptions(cartItem.options);
+      changeCartItemOptions(cartItem.id, cartItemOptions);
     }
-  }, [cartItem, cartItemOptions]);
+  }, [cartItem, cartItemOptions, changeCartItemOptions]);
 
-  if (productQuery.isLoading || !image) {
-    return <Text>Loading...</Text>;
-  }
-  if (productQuery.isError) {
-    return <ErrorComponent onRetry={productQuery.refetch} />;
-  }
+  const product = useMemo(() => productQuery.data as ProductWithOptions, [productQuery.data]);
 
-  const product = productQuery.data as ProductWithOptions;
-
-  function handleOptionChange(optionListId: OptionListId, optionId: OptionId, newCount: number) {
-    const optionList = product.optionLists.find((optionList) => optionList.id === optionListId);
-    if (!optionList) throw new Error(`Option list not found: ${optionListId}`);
-
-    const option = optionList.options.find((option) => option.id === optionId);
-    if (!option) throw new Error(`Option not found: ${optionId}`);
-
-    if (newCount < 0 || newCount > option.maxCount) throw new Error(`Invalid option count: ${newCount}`);
-
-    const choiceCount = Object.values(cartItemOptions[optionListId] || {}).reduce(
-      (acc, count) => acc + (count !== 0 ? 1 : 0),
-      0
-    );
-    if (choiceCount === optionList.maxChoices && (cartItemOptions[optionListId][optionId] ?? 0) === 0) {
-      showToast(`Poți alege maxim ${optionList.maxChoices} opțiuni din această listă`);
-      return;
-    }
-
-    setCartItemOptions((prev) => {
-      if (!!prev[optionListId] && newCount === prev[optionListId][optionId]) return prev;
-
-      const newOptionCounts = { ...prev[optionListId], [optionId]: newCount };
-      if (newCount === 0) delete newOptionCounts[optionId];
-
-      const newOptions = { ...prev, [optionListId]: newOptionCounts };
-      if (Object.keys(newOptionCounts).length === 0) delete newOptions[optionListId];
-
-      // TODO: Improve performance by not refreshing the cart every time.
-      if (cartItem) changeCartItemOptions(Number(cartItem.id), newOptions);
-
-      return newOptions;
-    });
-  }
+  if (productQuery.isLoading || !image) return <ScreenActivityIndicator text="" />;
+  if (productQuery.isError) return <ErrorComponent onRetry={productQuery.refetch} />;
 
   return (
     <SafeAreaView>
@@ -124,8 +61,8 @@ export default function ProductScreen() {
             <HorizontalLine style={[styles.horizontalLine, { backgroundColor: colorTheme.text.secondary }]} />
             <OptionList
               optionList={optionList}
-              currentOptionCounts={cartItemOptions[optionList.id] || {}}
-              onOptionChange={handleOptionChange}
+              currentOptions={cartItemOptions[optionList.id] || {}}
+              setCartItemOptions={setCartItemOptions}
             />
           </Fragment>
         ))}

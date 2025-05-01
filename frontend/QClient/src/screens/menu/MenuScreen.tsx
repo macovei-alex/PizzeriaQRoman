@@ -12,7 +12,7 @@ import { Product } from "src/api/types/Product";
 import logger from "src/utils/logger";
 import MenuSkeletonLoader from "src/components/menu/MenuScreen/MenuSkeletonLoader";
 import useColorTheme from "src/hooks/useColorTheme";
-import ErrorComponent from "../../components/shared/ErrorComponent";
+import ErrorComponent from "../../components/shared/generic/ErrorComponent";
 import { useImageContext } from "src/context/ImageContext";
 
 type ProductSplit = {

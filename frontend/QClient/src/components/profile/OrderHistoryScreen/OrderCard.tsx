@@ -6,7 +6,7 @@ import useColorTheme from "src/hooks/useColorTheme";
 import useProductsQuery from "src/api/hooks/useProductsQuery";
 import logger from "src/utils/logger";
 import { formatDate } from "src/utils/utils";
-import ErrorComponent from "src/components/shared/ErrorComponent";
+import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 
 const maxItemsCount = 3;
 

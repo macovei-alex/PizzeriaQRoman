@@ -2,10 +2,10 @@ import React from "react";
 import { ScrollView, StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OrderCard from "src/components/profile/OrderHistoryScreen/OrderCard";
-import ScreenTitle from "src/components/shared/ScreenTitle";
+import ScreenTitle from "src/components/shared/generic/ScreenTitle";
 import useOrderHistoryQuery from "src/api/hooks/useOrderHistoryQuery";
 import logger from "src/utils/logger";
-import ErrorComponent from "src/components/shared/ErrorComponent";
+import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 
 export default function OrderHistoryScreen() {
   logger.render("OrderHistoryScreen");
