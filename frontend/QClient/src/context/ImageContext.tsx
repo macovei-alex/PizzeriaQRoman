@@ -82,16 +82,16 @@ export function ImageContextProvider({ children }: { children: ReactNode }) {
   const firstImageChangesState = useRef(false);
 
   useEffect(() => {
-    if (!authContext.accessToken) return;
+    if (!authContext.isAuthenticated) return;
     if (firstImageChangesState.current) return;
 
     const abortController = new AbortController();
     api.axios
       .get<boolean>("/image/changes/yes", { signal: abortController.signal })
       .then((res) => {
-        firstImageChangesState.current = true;
         if (typeof res.data !== "boolean") throw new Error(`Invalid response: ${res.data}`);
         if (res.data) {
+          firstImageChangesState.current = true;
           refetchImages();
         }
       })
@@ -102,7 +102,7 @@ export function ImageContextProvider({ children }: { children: ReactNode }) {
       });
 
     return () => abortController.abort();
-  }, [refetchImages, authContext.accessToken]);
+  }, [refetchImages, authContext]);
 
   return (
     <ImageContext.Provider value={{ getSingleImage, getImages, refetchImages }}>

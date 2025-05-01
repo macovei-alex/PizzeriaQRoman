@@ -42,8 +42,6 @@ type AuthContextType = {
   refreshToken: string | null | undefined;
   account: AccountClaims | null;
   isAuthenticated: boolean;
-  error: string | null;
-  isError: boolean;
   login: () => Promise<void>;
   logout: () => Promise<void>;
 };
@@ -72,10 +70,11 @@ export function useAuthContext() {
 }
 
 export function AuthContextProvider({ children }: { children: ReactNode }) {
+  logger.render("AuthContextProvider");
+
   const [accessToken, setAccessToken] = useState<string | null | undefined>(undefined);
   const [refreshToken, setRefreshToken] = useState<string | null | undefined>(undefined);
   const [account, setAccount] = useState<AccountClaims | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [request, , promptAsync] = AuthSession.useAuthRequest(
     {
       clientId: ENV.EXPO_PUBLIC_KEYCLOAK_CLIENT_ID,
@@ -90,59 +89,42 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     },
     discovery
   );
-  const tokenRefreshSharedResult = useRef<Promise<string | null> | null>(null);
-  const isAuthenticated = useMemo(() => !!accessToken, [accessToken]);
-  const isError = useMemo(() => error !== null, [error]);
+  const tokenRefreshSharedPromise = useRef<Promise<string | null> | null>(null);
+  const isAuthenticated = useMemo(() => {
+    if (!refreshToken) return false;
+    const payload = JSON.parse(atob(refreshToken.split(".")[1]));
+    if (!payload.exp) return false;
+    const exp = payload.exp * 1000;
+    return Date.now() < exp;
+  }, [refreshToken]);
 
-  const setAccessTokenWrapper = useCallback(async (val: typeof accessToken) => {
+  const saveAccessToken = useCallback(async (val: typeof accessToken) => {
     setAccessToken(val);
-    if (val) {
-      SecureStore.setItemAsync("accessToken", val);
-    } else {
-      await SecureStore.deleteItemAsync("accessToken");
-    }
+    return val ? SecureStore.setItemAsync("accessToken", val) : SecureStore.deleteItemAsync("accessToken");
   }, []);
 
-  const setRefreshTokenWrapper = useCallback(async (val: typeof refreshToken) => {
+  const saveRefreshToken = useCallback(async (val: typeof refreshToken) => {
     setRefreshToken(val);
-    if (val) {
-      SecureStore.setItem("refreshToken", val);
-    } else {
-      await SecureStore.deleteItemAsync("refreshToken");
-    }
+    return val ? SecureStore.setItemAsync("refreshToken", val) : SecureStore.deleteItemAsync("refreshToken");
   }, []);
 
-  const setAccountWrapper = useCallback(async (val: typeof account) => {
+  const saveAccount = useCallback(async (val: typeof account) => {
     setAccount(val);
-    if (val) {
-      SecureStore.setItem("account", JSON.stringify(val));
-    } else {
-      await SecureStore.deleteItemAsync("account");
-    }
+    return val
+      ? SecureStore.setItemAsync("account", JSON.stringify(val))
+      : SecureStore.deleteItemAsync("account");
   }, []);
 
-  const setAccountInfo = useCallback(
-    async ({
-      access,
-      refresh,
-      acc,
-    }: {
-      access: typeof accessToken;
-      refresh: typeof refreshToken;
-      acc: typeof account;
-    }) => {
-      await Promise.all([
-        setAccessTokenWrapper(access),
-        setRefreshTokenWrapper(refresh),
-        setAccountWrapper(acc),
-      ]);
+  const saveAccountInfo = useCallback(
+    async (access: typeof accessToken, refresh: typeof refreshToken, acc: typeof account) => {
+      return Promise.all([saveAccessToken(access), saveRefreshToken(refresh), saveAccount(acc)]);
     },
-    [setAccessTokenWrapper, setRefreshTokenWrapper, setAccountWrapper]
+    [saveAccessToken, saveRefreshToken, saveAccount]
   );
 
   const removeAccountInfo = useCallback(async () => {
-    await Promise.all([setAccessTokenWrapper(null), setRefreshTokenWrapper(null), setAccountWrapper(null)]);
-  }, [setAccessTokenWrapper, setRefreshTokenWrapper, setAccountWrapper]);
+    return Promise.all([saveAccessToken(null), saveRefreshToken(null), saveAccount(null)]);
+  }, [saveAccessToken, saveRefreshToken, saveAccount]);
 
   const login = useCallback(async () => {
     if (!request) return;
@@ -162,19 +144,18 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
         );
         if (!responseTokens?.refreshToken) throw new Error("Missing refresh token in response");
         if (!responseTokens?.idToken) throw new Error("Missing id token in response");
-        await setAccountInfo({
-          access: responseTokens.accessToken,
-          refresh: responseTokens.refreshToken,
-          acc: extractAccountClaims(responseTokens.idToken),
-        });
+        await saveAccountInfo(
+          responseTokens.accessToken,
+          responseTokens.refreshToken,
+          extractAccountClaims(responseTokens.idToken)
+        );
       } else {
         throw new Error("Bad response type");
       }
     } catch (error) {
       logger.error("Login failed: ", error);
-      setError("Something went wrong");
     }
-  }, [request, promptAsync, setAccountInfo]);
+  }, [request, promptAsync, saveAccountInfo]);
 
   const logout = useCallback(async () => {
     await Promise.all([
@@ -209,19 +190,18 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
       if (!response.data.access_token) throw new Error("Missing access token in response");
       if (!response.data.refresh_token) throw new Error("Missing refresh token in response");
       if (!response.data.id_token) throw new Error("Missing id token in response");
-      await setAccountInfo({
-        access: response.data.access_token,
-        refresh: response.data.refresh_token,
-        acc: extractAccountClaims(response.data.id_token),
-      });
+      await saveAccountInfo(
+        response.data.access_token,
+        response.data.refresh_token,
+        extractAccountClaims(response.data.id_token)
+      );
       return response.data.access_token as string;
     } catch (error) {
-      setError("Something went wrong");
       logger.warn("Access token refresh failed:", error);
-      await removeAccountInfo();
+      removeAccountInfo();
       return null;
     }
-  }, [refreshToken, setAccountInfo, removeAccountInfo]);
+  }, [refreshToken, saveAccountInfo, removeAccountInfo]);
 
   useLayoutEffect(() => {
     const interceptorId = api.axios.interceptors.request.use((config: InternalAxiosRequestConfig) => {
@@ -244,19 +224,21 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
         }
 
         const originalRequest = error.config as typeof error.config & { _retry?: boolean };
-        if (error.response?.status === axios.HttpStatusCode.Unauthorized && !originalRequest._retry) {
-          originalRequest._retry = true;
+        if (error.response?.status !== axios.HttpStatusCode.Unauthorized || originalRequest._retry) {
+          return Promise.reject(error);
+        }
 
-          if (!tokenRefreshSharedResult.current) {
-            tokenRefreshSharedResult.current = tryRefreshTokens();
-          }
-          const newAccessToken = await tokenRefreshSharedResult.current;
-          tokenRefreshSharedResult.current = null;
+        originalRequest._retry = true;
 
-          if (newAccessToken) {
-            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-            return api.axios(originalRequest);
-          }
+        if (!tokenRefreshSharedPromise.current) {
+          tokenRefreshSharedPromise.current = tryRefreshTokens();
+        }
+        const newAccessToken = await tokenRefreshSharedPromise.current;
+        tokenRefreshSharedPromise.current = null;
+
+        if (newAccessToken) {
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          return api.axios(originalRequest);
         }
         return Promise.reject(error);
       }
@@ -288,8 +270,6 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
         refreshToken,
         account,
         isAuthenticated,
-        error,
-        isError,
         login,
         logout,
       }}
