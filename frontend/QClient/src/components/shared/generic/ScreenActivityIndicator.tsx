@@ -11,8 +11,8 @@ export default function ScreenActivityIndicator({ text }: Props) {
   const colorTheme = useColorTheme();
 
   return (
-    <SafeAreaView style={styles.loadingContainer}>
-      <Text style={styles.loadingText}>{text}</Text>
+    <SafeAreaView style={[styles.loadingContainer, { backgroundColor: colorTheme.background.primary }]}>
+      <Text style={[styles.loadingText, { color: colorTheme.text.primary }]}>{text}</Text>
       <ActivityIndicator size={70} color={colorTheme.background.accent} />
     </SafeAreaView>
   );
