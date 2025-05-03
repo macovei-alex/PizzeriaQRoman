@@ -1,27 +1,35 @@
-import React, { useMemo } from "react";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useCallback, useState } from "react";
+import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import useAddressesQuery from "src/api/hooks/useAddressesQuery";
+import { Address } from "src/api/types/Address";
+import ModalForm from "src/components/profile/AddressesScreen/ModalForm";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
 import ScreenTitle from "src/components/shared/generic/ScreenTitle";
 import useColorTheme from "src/hooks/useColorTheme";
 
+export type NewAddress = Omit<Address, "id" | "addressType" | "primary" | "floor"> & { floor: string };
+
+export const emptyModalState: NewAddress = {
+  city: "",
+  street: "",
+  streetNumber: "",
+  block: "",
+  floor: "",
+  apartment: "",
+} as const;
+
 export default function AddressesScreen() {
   const colorTheme = useColorTheme();
   const addressesQuery = useAddressesQuery();
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [initialModalState, setInitialModalState] = useState(emptyModalState);
 
-  const addressesStrings = useMemo(() => {
-    if (!addressesQuery.data) return [];
-    return addressesQuery.data.map((address) => {
-      return {
-        id: address.id,
-        city: address.city,
-        street: `${address.street} nr. ${address.streetNumber}`,
-        block: `Bloc ${address.block}, et. ${address.floor}, ap. ${address.apartment}`,
-      };
-    });
-  }, [addressesQuery.data]);
+  const closeModal = useCallback(() => setModalVisible(false), []);
+  const onModalSubmit = useCallback((address: NewAddress) => {
+    console.log(address);
+  }, []);
 
   if (addressesQuery.isLoading) return <ScreenActivityIndicator text="Se încarcă adresele" />;
   if (addressesQuery.isError) return <ErrorComponent onRetry={() => addressesQuery.refetch()} />;
@@ -29,21 +37,41 @@ export default function AddressesScreen() {
   return (
     <SafeAreaView style={[styles.contaier, { backgroundColor: colorTheme.background.primary }]}>
       <ScreenTitle title="Adresele mele" containerStyle={styles.screenTitle} />
+
+      {/* Addresses */}
       <ScrollView style={styles.addressesContainer}>
-        {addressesStrings.map((address) => (
-          <View
+        {addressesQuery.data!.map((address) => (
+          <TouchableOpacity
             key={address.id}
+            onPress={() => {
+              setModalVisible(true);
+              setInitialModalState({ ...address, floor: address.floor.toString() });
+            }}
             style={[styles.addressCard, { backgroundColor: colorTheme.background.card }]}
           >
             <Text style={styles.addressText}>Localitatea: {address.city}</Text>
-            <Text style={styles.addressText}>Strada: {address.street}</Text>
-            <Text style={styles.addressText}>Blocul: {address.block}</Text>
-          </View>
+            <Text style={styles.addressText}>Strada: {`${address.street} nr. ${address.streetNumber}`}</Text>
+            <Text style={styles.addressText}>
+              Blocul: {`Bloc ${address.block}, et. ${address.floor}, ap. ${address.apartment}`}
+            </Text>
+          </TouchableOpacity>
         ))}
       </ScrollView>
-      <TouchableOpacity style={[styles.newAddressButton, { backgroundColor: colorTheme.background.accent }]}>
+
+      {/* New address button */}
+      <TouchableOpacity
+        style={[styles.newAddressButton, { backgroundColor: colorTheme.background.accent }]}
+        onPress={() => {
+          setModalVisible(true);
+          setInitialModalState(emptyModalState);
+        }}
+      >
         <Text style={[styles.newAddressText, { color: colorTheme.text.onAccent }]}>Adaugă o adresă nouă</Text>
       </TouchableOpacity>
+
+      {isModalVisible && (
+        <ModalForm initialState={initialModalState} closeModal={closeModal} onSubmit={onModalSubmit} />
+      )}
     </SafeAreaView>
   );
 }
