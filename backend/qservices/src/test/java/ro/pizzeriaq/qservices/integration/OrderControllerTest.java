@@ -40,6 +40,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ro.pizzeriaq.qservices.utils.Utils.withDynamicMockUser;
 
 
 @SpringBootTest
@@ -82,15 +83,6 @@ public class OrderControllerTest {
 	}
 
 
-	private void withDynamicMockUser(ThrowingRunnable runnable) throws Exception {
-		var account = accountRepository.findAll().get(0);
-		var auth = new UsernamePasswordAuthenticationToken(account.getId(), "unchecked-password", List.of());
-		SecurityContextHolder.getContext().setAuthentication(auth);
-		runnable.run();
-		SecurityContextHolder.clearContext();
-	}
-
-
 	@BeforeAll
 	void setUp() {
 		logger.info("Environment: {}", environment);
@@ -124,7 +116,7 @@ public class OrderControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
+	@WithMockUser
 	void badPayload1() throws Exception {
 		mockMvc.perform(constructDefaultPostRequest())
 				.andExpect(status().isInternalServerError());
@@ -242,7 +234,7 @@ public class OrderControllerTest {
 
 	@Test
 	void goodPayload1() throws Exception {
-		withDynamicMockUser(() -> {
+		withDynamicMockUser(accountRepository, () -> {
 			var accountId = SecurityContextHolder.getContext().getAuthentication().getName();
 			var address = addressRepository.findAllByAccountId(UUID.fromString(accountId)).get(0);
 			var products = productService.getProducts().stream().limit(2).toList();
@@ -283,7 +275,7 @@ public class OrderControllerTest {
 
 	@Test
 	void goodPayload2() throws Exception {
-		withDynamicMockUser(() -> {
+		withDynamicMockUser(accountRepository, () -> {
 			var accountId = SecurityContextHolder.getContext().getAuthentication().getName();
 			var address = addressRepository.findAllByAccountId(UUID.fromString(accountId)).get(0);
 			var products = productService.getProducts();
@@ -321,7 +313,7 @@ public class OrderControllerTest {
 
 	@Test
 	void goodPayload3() throws Exception {
-		withDynamicMockUser(() -> {
+		withDynamicMockUser(accountRepository, () -> {
 			var accountId = SecurityContextHolder.getContext().getAuthentication().getName();
 			var address = addressRepository.findAllByAccountId(UUID.fromString(accountId)).get(0);
 			var products = productService.getProducts().stream()
@@ -386,7 +378,7 @@ public class OrderControllerTest {
 
 	@Test
 	void goodPayload4() throws Exception {
-		withDynamicMockUser(() -> {
+		withDynamicMockUser(accountRepository, () -> {
 			var accountId = SecurityContextHolder.getContext().getAuthentication().getName();
 			var address = addressRepository.findAllByAccountId(UUID.fromString(accountId)).get(0);
 			var products = productService.getProducts().stream()
