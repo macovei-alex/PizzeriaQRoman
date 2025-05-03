@@ -2,18 +2,17 @@ package ro.pizzeriaq.qservices.service;
 
 
 import lombok.AllArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.pizzeriaq.qservices.data.entity.*;
 import ro.pizzeriaq.qservices.data.model.KeycloakUser;
 import ro.pizzeriaq.qservices.data.repository.*;
-import ro.pizzeriaq.qservices.exceptions.KeycloakException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -24,6 +23,8 @@ public class EntityInitializerService {
 	private final ProductCategoryRepository categoryRepository;
 	private final OptionListRepository optionListRepository;
 	private final OptionRepository optionRepository;
+	private final AddressTypeRepository addressTypeRepository;
+	private final AddressRepository addressRepository;
 	private final AccountRepository accountRepository;
 	private final OrderRepository orderRepository;
 	private final OrderItemRepository orderItemRepository;
@@ -51,6 +52,8 @@ public class EntityInitializerService {
 		optionListRepository.deleteAll();
 		optionRepository.deleteAll();
 		orderRepository.deleteAll();
+		addressRepository.deleteAll();
+		addressTypeRepository.deleteAll();
 		accountRepository.deleteAll();
 
 		orderItemRepository.flush();
@@ -59,6 +62,8 @@ public class EntityInitializerService {
 		optionListRepository.flush();
 		optionRepository.flush();
 		orderRepository.flush();
+		addressRepository.flush();
+		addressTypeRepository.flush();
 		accountRepository.flush();
 	}
 
@@ -293,6 +298,7 @@ public class EntityInitializerService {
 	@Transactional
 	public void addAccounts() {
 		var keycloakUsers = keycloakService.getUsers();
+		keycloakUsers.sort(Comparator.comparing(KeycloakUser::getCreatedTimestamp));
 		if (keycloakUsers.size() < 2) {
 			throw new RuntimeException("Not enough users in Keycloak: a minimum of 2 users required");
 		}
@@ -304,7 +310,7 @@ public class EntityInitializerService {
 				.email(user.getEmail())
 				.isEmailVerified(user.isEmailVerified())
 				.phoneNumber("0722 222 222")
-				.createdAt(LocalDateTime.ofEpochSecond(user.getCreatedTimestamp() / 1000, 0, ZoneOffset.ofHours(0)))
+				.createdAt(LocalDateTime.ofEpochSecond(user.getCreatedTimestamp() / 1000, 0, ZoneOffset.UTC))
 				.build());
 
 		user = keycloakUsers.get(1);
@@ -313,10 +319,44 @@ public class EntityInitializerService {
 				.email(user.getEmail())
 				.isEmailVerified(user.isEmailVerified())
 				.phoneNumber("0733 333 333")
-				.createdAt(LocalDateTime.ofEpochSecond(user.getCreatedTimestamp() / 1000, 0, ZoneOffset.ofTotalSeconds(0)))
+				.createdAt(LocalDateTime.ofEpochSecond(user.getCreatedTimestamp() / 1000, 0, ZoneOffset.UTC))
 				.build());
 
 		accountRepository.saveAll(accounts);
+
+		List<AddressType> addressTypes = new ArrayList<>();
+		addressTypes.add(AddressType.builder()
+				.name("home")
+				.build());
+		addressTypes.add(AddressType.builder()
+				.name("work")
+				.build());
+		addressTypes = addressTypeRepository.saveAll(addressTypes);
+
+		List<Address> addresses = new ArrayList<>();
+		addresses.add(Address.builder()
+				.account(accounts.get(0))
+				.addressType(addressTypes.get(0))
+				.city("Romania")
+				.street("Strada scurta")
+				.streetNumber("1")
+				.block("K1")
+				.floor(2)
+				.apartment("20")
+				.isPrimary(true)
+				.build());
+		addresses.add(Address.builder()
+				.account(accounts.get(0))
+				.addressType(addressTypes.get(1))
+				.city("Oras cu un nume foarte lung")
+				.street("Strada cu un nume foarte lung de test pentru UI")
+				.streetNumber("553")
+				.block("AB1")
+				.floor(10)
+				.apartment("68")
+				.isPrimary(false)
+				.build());
+		addressRepository.saveAll(addresses);
 	}
 
 
@@ -328,6 +368,7 @@ public class EntityInitializerService {
 
 		orders.add(Order.builder()
 				.account(accounts.get(0))
+				.address(accounts.get(0).getAddresses().get(0))
 				.orderItems(new ArrayList<>())
 				.orderStatus(OrderStatus.RECEIVED)
 				.estimatedPreparationTime(30)
@@ -340,6 +381,7 @@ public class EntityInitializerService {
 
 		orders.add(Order.builder()
 				.account(accounts.get(0))
+				.address(accounts.get(0).getAddresses().get(0))
 				.orderItems(new ArrayList<>())
 				.orderStatus(OrderStatus.IN_PREPARATION)
 				.estimatedPreparationTime(45)

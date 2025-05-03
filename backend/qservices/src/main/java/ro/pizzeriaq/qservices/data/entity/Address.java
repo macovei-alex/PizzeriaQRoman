@@ -3,6 +3,8 @@ package ro.pizzeriaq.qservices.data.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,6 +20,10 @@ public class Address {
 	@ManyToOne
 	@JoinColumn(name = "id_account", nullable = false)
 	private Account account;
+
+
+	@OneToMany(mappedBy = "address")
+	private List<Order> orders;
 
 
 	@ManyToOne

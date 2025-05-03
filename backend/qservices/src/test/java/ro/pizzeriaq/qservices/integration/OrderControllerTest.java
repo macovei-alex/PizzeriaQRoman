@@ -12,20 +12,27 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.transaction.annotation.Transactional;
 import ro.pizzeriaq.qservices.data.entity.OrderStatus;
+import ro.pizzeriaq.qservices.data.repository.AccountRepository;
+import ro.pizzeriaq.qservices.data.repository.AddressRepository;
 import ro.pizzeriaq.qservices.service.DTO.OptionListDTO;
 import ro.pizzeriaq.qservices.service.DTO.PlacedOrderDTO;
 import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
 import ro.pizzeriaq.qservices.service.EntityInitializerService;
 import ro.pizzeriaq.qservices.service.OrderService;
 import ro.pizzeriaq.qservices.service.ProductService;
+import ro.pizzeriaq.qservices.utils.ThrowingRunnable;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,20 +58,13 @@ public class OrderControllerTest {
 	private String environment;
 
 
-	@Autowired
-	private EntityInitializerService entityInitializerService;
-
-	@Autowired
-	private ProductService productService;
-
-	@Autowired
-	private MockMvc mockMvc;
-
-	@Autowired
-	private ObjectMapper objectMapper;
-
-	@Autowired
-	private OrderService orderService;
+	@Autowired private EntityInitializerService entityInitializerService;
+	@Autowired private ProductService productService;
+	@Autowired private MockMvc mockMvc;
+	@Autowired private ObjectMapper objectMapper;
+	@Autowired private OrderService orderService;
+	@Autowired private AccountRepository accountRepository;
+	@Autowired private AddressRepository addressRepository;
 
 
 	private MockHttpServletRequestBuilder constructDefaultPostRequest() {
@@ -79,6 +79,15 @@ public class OrderControllerTest {
 				.contextPath(contextPath)
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON);
+	}
+
+
+	private void withDynamicMockUser(ThrowingRunnable runnable) throws Exception {
+		var account = accountRepository.findAll().get(0);
+		var auth = new UsernamePasswordAuthenticationToken(account.getId(), "unchecked-password", List.of());
+		SecurityContextHolder.getContext().setAuthentication(auth);
+		runnable.run();
+		SecurityContextHolder.clearContext();
 	}
 
 
@@ -232,203 +241,221 @@ public class OrderControllerTest {
 	}
 
 	@Test
-	@WithMockUser
 	void goodPayload1() throws Exception {
-		var products = productService.getProducts().stream().limit(2).toList();
+		withDynamicMockUser(() -> {
+			var accountId = SecurityContextHolder.getContext().getAuthentication().getName();
+			var address = addressRepository.findAllByAccountId(UUID.fromString(accountId)).get(0);
+			var products = productService.getProducts().stream().limit(2).toList();
 
-		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
-				.items(products.stream()
-						.map((p) -> PlacedOrderDTO.Item.builder()
-								.productId(p.getId())
-								.count(2)
-								.optionLists(List.of())
-								.build()
-						).toList()
-				)
-				.build();
+			assertThat(address).isNotNull();
 
-		var historyOrders = orderService.getOrdersHistory();
+			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+					.addressId(address.getId())
+					.items(products.stream()
+							.map((p) -> PlacedOrderDTO.Item.builder()
+									.productId(p.getId())
+									.count(2)
+									.optionLists(List.of())
+									.build()
+							).toList()
+					)
+					.build();
 
-		BigDecimal expectedPrice = products.stream()
-				.map(ProductDTO::getPrice)
-				.reduce(BigDecimal.ZERO, (acc, price) -> acc.add(price.multiply(BigDecimal.valueOf(2))));
+			var historyOrders = orderService.getOrdersHistory();
 
-		mockMvc.perform(constructDefaultPostRequest()
-						.content(objectMapper.writeValueAsString(placedOrderDTO)))
-				.andExpect(status().isOk());
+			BigDecimal expectedPrice = products.stream()
+					.map(ProductDTO::getPrice)
+					.reduce(BigDecimal.ZERO, (acc, price) -> acc.add(price.multiply(BigDecimal.valueOf(2))));
 
-		mockMvc.perform(constructDefaultGetRequest())
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray())
-				.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
-				.andExpect(jsonPath("$[0].totalPrice").value(expectedPrice.floatValue()))
-				.andExpect(jsonPath("$[0].totalPriceWithDiscount").value(expectedPrice.floatValue()))
-				.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
+			mockMvc.perform(constructDefaultPostRequest()
+							.content(objectMapper.writeValueAsString(placedOrderDTO)))
+					.andExpect(status().isOk());
+
+			mockMvc.perform(constructDefaultGetRequest())
+					.andExpect(status().isOk())
+					.andExpect(jsonPath("$").isArray())
+					.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
+					.andExpect(jsonPath("$[0].totalPrice").value(expectedPrice.floatValue()))
+					.andExpect(jsonPath("$[0].totalPriceWithDiscount").value(expectedPrice.floatValue()))
+					.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
+		});
 	}
 
 	@Test
-	@WithMockUser
 	void goodPayload2() throws Exception {
-		var products = productService.getProducts();
+		withDynamicMockUser(() -> {
+			var accountId = SecurityContextHolder.getContext().getAuthentication().getName();
+			var address = addressRepository.findAllByAccountId(UUID.fromString(accountId)).get(0);
+			var products = productService.getProducts();
 
-		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
-				.items(products.stream()
-						.map(product -> PlacedOrderDTO.Item.builder()
-								.productId(product.getId())
-								.count(10)
-								.optionLists(List.of())
-								.build())
-						.toList())
-				.build();
+			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+					.addressId(address.getId())
+					.items(products.stream()
+							.map(product -> PlacedOrderDTO.Item.builder()
+									.productId(product.getId())
+									.count(10)
+									.optionLists(List.of())
+									.build())
+							.toList())
+					.build();
 
-		BigDecimal expectedPrice = products.stream()
-				.map(ProductDTO::getPrice)
-				.reduce(BigDecimal.ZERO, (acc, price) -> acc.add(price.multiply(BigDecimal.valueOf(10))));
+			BigDecimal expectedPrice = products.stream()
+					.map(ProductDTO::getPrice)
+					.reduce(BigDecimal.ZERO, (acc, price) -> acc.add(price.multiply(BigDecimal.valueOf(10))));
 
-		var historyOrders = orderService.getOrdersHistory();
+			var historyOrders = orderService.getOrdersHistory();
 
-		mockMvc.perform(constructDefaultPostRequest()
-						.content(objectMapper.writeValueAsString(placedOrderDTO)))
-				.andExpect(status().isOk());
+			mockMvc.perform(constructDefaultPostRequest()
+							.content(objectMapper.writeValueAsString(placedOrderDTO)))
+					.andExpect(status().isOk());
 
-		mockMvc.perform(constructDefaultGetRequest())
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray())
-				.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
-				.andExpect(jsonPath("$[0].totalPrice").value(expectedPrice.floatValue()))
-				.andExpect(jsonPath("$[0].totalPriceWithDiscount").value(expectedPrice.floatValue()))
-				.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
+			mockMvc.perform(constructDefaultGetRequest())
+					.andExpect(status().isOk())
+					.andExpect(jsonPath("$").isArray())
+					.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
+					.andExpect(jsonPath("$[0].totalPrice").value(expectedPrice.floatValue()))
+					.andExpect(jsonPath("$[0].totalPriceWithDiscount").value(expectedPrice.floatValue()))
+					.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
+		});
 	}
 
 	@Test
-	@WithMockUser
 	void goodPayload3() throws Exception {
-		var products = productService.getProducts().stream()
-				.map((product) -> productService.getProduct(product.getId()).orElseThrow())
-				.limit(5)
-				.toList();
+		withDynamicMockUser(() -> {
+			var accountId = SecurityContextHolder.getContext().getAuthentication().getName();
+			var address = addressRepository.findAllByAccountId(UUID.fromString(accountId)).get(0);
+			var products = productService.getProducts().stream()
+					.map((product) -> productService.getProduct(product.getId()).orElseThrow())
+					.limit(5)
+					.toList();
 
-		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
-				.items(products.stream()
-						.map(product -> {
-							var orderItem = PlacedOrderDTO.Item.builder()
-									.productId(product.getId())
-									.count(3)
-									.optionLists(List.of())
-									.build();
+			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+					.addressId(address.getId())
+					.items(products.stream()
+							.map(product -> {
+								var orderItem = PlacedOrderDTO.Item.builder()
+										.productId(product.getId())
+										.count(3)
+										.optionLists(List.of())
+										.build();
 
-							if (product.getOptionLists().isEmpty()) {
+								if (product.getOptionLists().isEmpty()) {
+									return orderItem;
+								}
+
+								OptionListDTO optionList = product.getOptionLists().get(0);
+								PlacedOrderDTO.Item.OptionList optionListDTO = PlacedOrderDTO.Item.OptionList.builder()
+										.optionListId(optionList.getId())
+										.options(List.of(
+												PlacedOrderDTO.Item.OptionList.Option.builder()
+														.optionId(optionList.getOptions().get(0).getId())
+														.count(1)
+														.build()
+										))
+										.build();
+
+								orderItem.setOptionLists(List.of(optionListDTO));
 								return orderItem;
-							}
+							})
+							.toList())
+					.build();
 
-							OptionListDTO optionList = product.getOptionLists().get(0);
-							PlacedOrderDTO.Item.OptionList optionListDTO = PlacedOrderDTO.Item.OptionList.builder()
-									.optionListId(optionList.getId())
-									.options(List.of(
-											PlacedOrderDTO.Item.OptionList.Option.builder()
-													.optionId(optionList.getOptions().get(0).getId())
-													.count(1)
-													.build()
-									))
-									.build();
+			BigDecimal expectedPrice = products.stream()
+					.map((product) -> product.getPrice()
+							.add(!product.getOptionLists().isEmpty()
+									? product.getOptionLists().get(0).getOptions().get(0).getPrice()
+									: BigDecimal.ZERO)
+							.multiply(BigDecimal.valueOf(3)))
+					.reduce(BigDecimal.ZERO, BigDecimal::add);
 
-							orderItem.setOptionLists(List.of(optionListDTO));
-							return orderItem;
-						})
-						.toList())
-				.build();
+			var historyOrders = orderService.getOrdersHistory();
 
-		BigDecimal expectedPrice = products.stream()
-				.map((product) -> product.getPrice()
-						.add(!product.getOptionLists().isEmpty()
-								? product.getOptionLists().get(0).getOptions().get(0).getPrice()
-								: BigDecimal.ZERO)
-						.multiply(BigDecimal.valueOf(3)))
-				.reduce(BigDecimal.ZERO, BigDecimal::add);
+			mockMvc.perform(constructDefaultPostRequest()
+							.content(objectMapper.writeValueAsString(placedOrderDTO)))
+					.andExpect(status().isOk());
 
-		var historyOrders = orderService.getOrdersHistory();
-
-		mockMvc.perform(constructDefaultPostRequest()
-						.content(objectMapper.writeValueAsString(placedOrderDTO)))
-				.andExpect(status().isOk());
-
-		mockMvc.perform(constructDefaultGetRequest())
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray())
-				.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
-				.andExpect(jsonPath("$[0].totalPrice").value(expectedPrice.floatValue()))
-				.andExpect(jsonPath("$[0].totalPriceWithDiscount").value(expectedPrice.floatValue()))
-				.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
+			mockMvc.perform(constructDefaultGetRequest())
+					.andExpect(status().isOk())
+					.andExpect(jsonPath("$").isArray())
+					.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
+					.andExpect(jsonPath("$[0].totalPrice").value(expectedPrice.floatValue()))
+					.andExpect(jsonPath("$[0].totalPriceWithDiscount").value(expectedPrice.floatValue()))
+					.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
+		});
 	}
 
 	@Test
-	@WithMockUser
 	void goodPayload4() throws Exception {
-		var products = productService.getProducts().stream()
-				.map((product) -> productService.getProduct(product.getId()).orElseThrow())
-				.limit(5)
-				.toList();
+		withDynamicMockUser(() -> {
+			var accountId = SecurityContextHolder.getContext().getAuthentication().getName();
+			var address = addressRepository.findAllByAccountId(UUID.fromString(accountId)).get(0);
+			var products = productService.getProducts().stream()
+					.map((product) -> productService.getProduct(product.getId()).orElseThrow())
+					.limit(5)
+					.toList();
 
-		AtomicInteger optionCounter = new AtomicInteger(0);
+			AtomicInteger optionCounter = new AtomicInteger(0);
 
-		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
-				.items(products.stream()
-						.map(product -> {
-							var orderItem = PlacedOrderDTO.Item.builder()
-									.productId(product.getId())
-									.count(optionCounter.incrementAndGet())
-									.optionLists(List.of())
-									.build();
+			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+					.addressId(address.getId())
+					.items(products.stream()
+							.map(product -> {
+								var orderItem = PlacedOrderDTO.Item.builder()
+										.productId(product.getId())
+										.count(optionCounter.incrementAndGet())
+										.optionLists(List.of())
+										.build();
 
-							if (product.getOptionLists().isEmpty()) {
+								if (product.getOptionLists().isEmpty()) {
+									return orderItem;
+								}
+
+								OptionListDTO optionList = product.getOptionLists().get(0);
+								OptionListDTO.Option option = optionList.getOptions().get(0);
+
+								PlacedOrderDTO.Item.OptionList optionListDTO = PlacedOrderDTO.Item.OptionList.builder()
+										.optionListId(optionList.getId())
+										.options(List.of(
+												PlacedOrderDTO.Item.OptionList.Option.builder()
+														.optionId(option.getId())
+														.count(option.getMaxCount())
+														.build()
+										))
+										.build();
+
+								orderItem.setOptionLists(List.of(optionListDTO));
 								return orderItem;
-							}
+							})
+							.toList())
+					.build();
 
-							OptionListDTO optionList = product.getOptionLists().get(0);
-							OptionListDTO.Option option = optionList.getOptions().get(0);
+			optionCounter.set(0);
 
-							PlacedOrderDTO.Item.OptionList optionListDTO = PlacedOrderDTO.Item.OptionList.builder()
-									.optionListId(optionList.getId())
-									.options(List.of(
-											PlacedOrderDTO.Item.OptionList.Option.builder()
-													.optionId(option.getId())
-													.count(option.getMaxCount())
-													.build()
-									))
-									.build();
+			BigDecimal expectedPrice = products.stream()
+					.map((product) -> {
+						OptionListDTO.Option option = !product.getOptionLists().isEmpty()
+								? product.getOptionLists().get(0).getOptions().get(0)
+								: OptionListDTO.Option.builder().price(BigDecimal.ZERO).maxCount(1).build();
+						System.out.println("Product: " + product.getName() + " Option: " + option.getName());
+						return product.getPrice()
+								.add(option.getPrice().multiply(BigDecimal.valueOf(option.getMaxCount())))
+								.multiply(BigDecimal.valueOf(optionCounter.incrementAndGet()));
+					})
+					.reduce(BigDecimal.ZERO, BigDecimal::add);
 
-							orderItem.setOptionLists(List.of(optionListDTO));
-							return orderItem;
-						})
-						.toList())
-				.build();
+			var historyOrders = orderService.getOrdersHistory();
 
-		optionCounter.set(0);
+			mockMvc.perform(constructDefaultPostRequest()
+							.content(objectMapper.writeValueAsString(placedOrderDTO)))
+					.andExpect(status().isOk());
 
-		BigDecimal expectedPrice = products.stream()
-				.map((product) -> {
-					OptionListDTO.Option option = !product.getOptionLists().isEmpty()
-							? product.getOptionLists().get(0).getOptions().get(0)
-							: OptionListDTO.Option.builder().price(BigDecimal.ZERO).maxCount(1).build();
-					System.out.println("Product: " + product.getName() + " Option: " + option.getName());
-					return product.getPrice()
-							.add(option.getPrice().multiply(BigDecimal.valueOf(option.getMaxCount())))
-							.multiply(BigDecimal.valueOf(optionCounter.incrementAndGet()));
-				})
-				.reduce(BigDecimal.ZERO, BigDecimal::add);
-
-		var historyOrders = orderService.getOrdersHistory();
-
-		mockMvc.perform(constructDefaultPostRequest()
-						.content(objectMapper.writeValueAsString(placedOrderDTO)))
-				.andExpect(status().isOk());
-
-		mockMvc.perform(constructDefaultGetRequest())
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$").isArray())
-				.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
-				.andExpect(jsonPath("$[0].totalPrice").value(expectedPrice.floatValue()))
-				.andExpect(jsonPath("$[0].totalPriceWithDiscount").value(expectedPrice.floatValue()))
-				.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
+			mockMvc.perform(constructDefaultGetRequest())
+					.andExpect(status().isOk())
+					.andExpect(jsonPath("$").isArray())
+					.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
+					.andExpect(jsonPath("$[0].totalPrice").value(expectedPrice.floatValue()))
+					.andExpect(jsonPath("$[0].totalPriceWithDiscount").value(expectedPrice.floatValue()))
+					.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
+		});
 	}
 }

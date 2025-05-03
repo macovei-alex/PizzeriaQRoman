@@ -12,6 +12,7 @@ export type PlacedOrderOptionList = {
 };
 
 export type PlacedOrder = {
+  addressId: string;
   items: {
     productId: ProductId;
     count: number;

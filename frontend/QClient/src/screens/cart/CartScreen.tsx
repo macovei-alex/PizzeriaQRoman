@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import useColorTheme from "src/hooks/useColorTheme";
@@ -15,6 +15,10 @@ import ScreenTitle from "src/components/shared/generic/ScreenTitle";
 import { api } from "src/api";
 import { useNavigation } from "@react-navigation/native";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
+import AdditionalInfoSection, {
+  AdditionalInfoSectionHandle,
+} from "src/components/cart/CartScreen/AdditionalInfoSection";
+import useAddressesQuery from "src/api/hooks/useAddressesQuery";
 
 type NavigationProps = NativeStackNavigationProp<CartStackParamList, "CartScreen">;
 
@@ -25,24 +29,30 @@ export default function CartScreen() {
   const colorTheme = useColorTheme();
   const { cart, emptyCart } = useCartContext();
   const queryClient = useQueryClient();
-
+  const addressQuery = useAddressesQuery();
   const [sendingOrder, setSendingOrder] = useState(false);
+  const additionalSectionRef = useRef<AdditionalInfoSectionHandle>(null);
 
   function sendOrder() {
     if (cart.length === 0) {
       showToast("Coșul este gol");
       return;
     }
+    if (!additionalSectionRef.current?.getAddress()) {
+      showToast("Selectați o adresă de livrare");
+      return;
+    }
 
     setSendingOrder(true);
 
     const order: PlacedOrder = {
+      addressId: additionalSectionRef.current.getAddress()!.id,
       items: cart.map((cartItem) => ({
         productId: cartItem.product.id,
         count: cartItem.count,
         optionLists: convertCartItemOptions(cartItem.options),
       })),
-      additionalNotes: null,
+      additionalNotes: additionalSectionRef.current.getAdditionalNotes(),
     };
 
     api.axios
@@ -65,13 +75,16 @@ export default function CartScreen() {
   }
 
   if (sendingOrder) return <ScreenActivityIndicator text="Se trimite comanda..." />;
+  if (addressQuery.isLoading) return <ScreenActivityIndicator text="Se încarcă adresele..." />;
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ backgroundColor: colorTheme.background.primary }}>
       <ScrollView>
         <ScreenTitle title={"Comanda mea"} containerStyle={styles.titleScreenContainer} />
 
         <ProductSection />
+
+        <AdditionalInfoSection addresses={addressQuery.data!} ref={additionalSectionRef} />
 
         <View style={styles.sendOrderContainer}>
           <TouchableOpacity
@@ -93,6 +106,7 @@ const styles = StyleSheet.create({
   sendOrderContainer: {
     alignItems: "center",
     marginTop: 40,
+    marginBottom: 20,
   },
   sendOrderButton: {
     paddingHorizontal: 52,

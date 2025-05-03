@@ -13,6 +13,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -22,14 +24,16 @@ public class OrderService {
 	private final OrderRepository orderRepository;
 	private final OrderItemRepository orderItemRepository;
 	private final ProductRepository productRepository;
-	private final AccountRepository accountRepository;
 	private final OrderItem_OptionList_OptionRepository orderItemOptionListOptionRepository;
+	private final AddressRepository addressRepository;
+	private final AccountRepository accountRepository;
 
 
 	@Transactional
-	public void placeOrder(PlacedOrderDTO placedOrderDTO) throws IllegalArgumentException {
-		List<Product> products = productRepository.findAll();
-		Account account = accountRepository.findAll().getFirst();
+	public void placeOrder(PlacedOrderDTO placedOrderDTO, UUID accountId) throws IllegalArgumentException {
+		var account = accountRepository.findById(accountId)
+				.orElseThrow(() -> new IllegalArgumentException("Account not found for ID: " + accountId));
+		var products = productRepository.findAll();
 
 		Order order = generateOrder(placedOrderDTO, products, account);
 
@@ -39,7 +43,16 @@ public class OrderService {
 	}
 
 
-	private void validateOrder(PlacedOrderDTO placedOrderDTO, List<Product> products) throws IllegalArgumentException {
+	private void validateOrder(PlacedOrderDTO placedOrderDTO, List<Product> products, Account account)
+			throws IllegalArgumentException {
+		if (account.getAddresses().stream()
+				.filter(a -> Objects.equals(a.getId(), placedOrderDTO.getAddressId()))
+				.findFirst()
+				.isEmpty()
+		) {
+			throw new IllegalArgumentException("Address not found for ID: " + placedOrderDTO.getAddressId());
+		}
+
 		for (PlacedOrderDTO.Item orderItem : placedOrderDTO.getItems()) {
 			Product product = products.stream()
 					.filter(p -> p.getId() == orderItem.getProductId())
@@ -112,11 +125,14 @@ public class OrderService {
 	private Order generateOrder(PlacedOrderDTO placedOrderDTO, List<Product> products, Account account)
 			throws IllegalArgumentException {
 
-		validateOrder(placedOrderDTO, products);
+		validateOrder(placedOrderDTO, products, account);
+
+		var address = addressRepository.findById(placedOrderDTO.getAddressId()).orElseThrow();
 
 		Order order = Order.builder()
 				.id(null)
 				.account(account)
+				.address(address)
 				.orderItems(new ArrayList<>())
 				.orderStatus(OrderStatus.RECEIVED)
 				.estimatedPreparationTime(null)

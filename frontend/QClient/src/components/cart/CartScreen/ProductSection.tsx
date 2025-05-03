@@ -59,9 +59,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     paddingVertical: 16,
     borderRadius: 18,
+    marginVertical: 16,
   },
   totalPriceText: {
-    fontSize: 17,
+    fontSize: 18,
     fontWeight: "bold",
   },
 });

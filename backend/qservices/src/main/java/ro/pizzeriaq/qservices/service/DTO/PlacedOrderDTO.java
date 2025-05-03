@@ -14,6 +14,8 @@ public class PlacedOrderDTO {
 
 	private String additionalNotes;
 
+	private int addressId;
+
 	@Valid
 	@NotEmpty(message = "The list of items in an order cannot be null or empty")
 	private List<Item> items;

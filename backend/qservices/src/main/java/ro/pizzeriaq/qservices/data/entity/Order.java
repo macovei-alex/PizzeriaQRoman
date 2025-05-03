@@ -27,6 +27,11 @@ public class Order {
 
 
 	@ManyToOne
+	@JoinColumn(name = "id_address", nullable = false)
+	private Address address;
+
+
+	@ManyToOne
 	@JoinColumn(name = "id_coupon", nullable = true)
 	private Coupon coupon;
 

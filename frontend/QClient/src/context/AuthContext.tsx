@@ -18,6 +18,7 @@ import * as SecureStore from "expo-secure-store";
 
 const AccountClaimsSchema = z
   .object({
+    sub: z.string(),
     email: z.string().email(),
     email_verified: z
       .boolean()
@@ -27,8 +28,9 @@ const AccountClaimsSchema = z
     family_name: z.string(),
   })
   .passthrough()
-  .transform(({ email, email_verified, given_name, family_name, ...rest }) => ({
+  .transform(({ sub, email, email_verified, given_name, family_name, ...rest }) => ({
     ...rest,
+    id: sub,
     email,
     emailVerified: email_verified,
     givenName: given_name,
