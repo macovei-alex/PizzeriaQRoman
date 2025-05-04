@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   subtitleContainer: {
-    width: "100%",
+    marginHorizontal: 8,
     alignItems: "center",
   },
   subtitleText: {

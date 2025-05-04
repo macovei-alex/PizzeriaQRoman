@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { StyleSheet } from "react-native";
 import useColorTheme from "src/hooks/useColorTheme";
@@ -22,23 +22,30 @@ export default function ProductCard({ product }: ProductCardProps) {
   const navigation = useNavigation<NavigationProps>();
   const colorTheme = useColorTheme();
   const image = useSingleImage(product.imageName);
-  const actualImage = useMemo(() => imageOrDefault(image), [image]);
 
   return (
     <View style={[styles.container, { backgroundColor: colorTheme.background.card }]}>
-      <Image source={actualImage} style={styles.image} />
+      <Image source={imageOrDefault(image)} style={styles.image} />
+
       <View style={styles.infoSection}>
+        {/* title */}
         <View style={styles.titleContainer}>
           <Text style={[styles.titleText, { color: colorTheme.text.primary }]}>{product.name}</Text>
         </View>
+
+        {/* subtitle */}
         <View style={styles.subtitleContainer}>
-          <Text style={[styles.subtitleText, { color: colorTheme.text.primary }]}>{product.subtitle}</Text>
+          <Text style={{ color: colorTheme.text.primary }}>{product.subtitle}</Text>
         </View>
+
+        {/* price */}
         <View style={styles.priceContainer}>
           <Text style={[styles.priceText, { color: colorTheme.text.primary }]}>
             {formatPrice(product.price)}
           </Text>
         </View>
+
+        {/* info button */}
         <TouchableOpacity
           testID={product.name === "Pizza Capriciosa" ? "info-button-capriciosa" : undefined}
           style={[styles.infoButtonContainer, { backgroundColor: colorTheme.background.accent }]}
@@ -73,6 +80,7 @@ const styles = StyleSheet.create({
   infoSection: {
     padding: 12,
     flexGrow: 1,
+    flexShrink: 1,
   },
   titleContainer: {
     alignItems: "center",
@@ -85,7 +93,6 @@ const styles = StyleSheet.create({
   subtitleContainer: {
     alignItems: "center",
   },
-  subtitleText: {},
   priceContainer: {
     alignItems: "flex-end",
     justifyContent: "flex-end",
@@ -93,6 +100,7 @@ const styles = StyleSheet.create({
   },
   priceText: {
     fontSize: 18,
+    fontWeight: "bold",
   },
   infoButtonContainer: {
     alignItems: "center",
@@ -103,5 +111,7 @@ const styles = StyleSheet.create({
     marginLeft: 16,
     marginRight: -16,
   },
-  infoButtonText: {},
+  infoButtonText: {
+    fontSize: 16,
+  },
 });

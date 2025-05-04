@@ -115,10 +115,10 @@ export default function CartItemCard({ cartItem, price }: CartItemCardProps) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    gap: "5%",
+    gap: 16,
     margin: 8,
     padding: 12,
-    borderRadius: 12,
+    borderRadius: 16,
   },
   imageContainer: {
     width: "25%",
@@ -128,7 +128,8 @@ const styles = StyleSheet.create({
     borderRadius: 9999,
   },
   infoSectionContainer: {
-    width: "70%",
+    flexGrow: 1,
+    flexShrink: 1,
   },
   productNameText: {
     fontSize: 20,
