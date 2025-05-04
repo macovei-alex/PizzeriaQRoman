@@ -11,6 +11,7 @@ import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivit
 import ScreenTitle from "src/components/shared/generic/ScreenTitle";
 import { useAuthContext } from "src/context/AuthContext";
 import useColorTheme from "src/hooks/useColorTheme";
+import logger from "src/utils/logger";
 
 export const emptyModalState: NewAddress = {
   id: 0,
@@ -35,12 +36,10 @@ export default function AddressesScreen() {
       try {
         const httpMethod = address.id === 0 ? "POST" : "PUT";
         const url = `/accounts/${authContext.account?.id}/addresses${httpMethod === "PUT" ? `/${address.id}` : ""}`;
-        const newAddress = (await api.axios.request<Address>({ method: httpMethod, url: url, data: address }))
-          .data;
-        console.log(newAddress);
+        await api.axios.request<Address>({ method: httpMethod, url: url, data: address });
         await addressesQuery.refetch();
       } catch (error) {
-        console.error(error);
+        logger.error(error);
       }
     },
     [authContext.account?.id, addressesQuery]

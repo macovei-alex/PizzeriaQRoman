@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import useColorTheme from "src/hooks/useColorTheme";
 import TickCheckboxSvg from "src/components/svg/TickCheckboxSvg";
@@ -19,11 +19,9 @@ export default function OptionCard({ option, currentCount, onOptionChange }: Opt
 
   const colorTheme = useColorTheme();
 
-  const optionDisplayedPrice = useMemo(() => {
-    if (option.price === 0) return 0;
-    if (currentCount > 0) return option.price * currentCount;
-    return option.price;
-  }, [currentCount, option.price]);
+  const displayCount = currentCount + (currentCount === 0 ? 1 : 0);
+  const shouldDisplayPrice = option.price > 0;
+  const priceToDisplay = displayCount * option.price;
 
   return (
     <View style={styles.container}>
@@ -37,14 +35,7 @@ export default function OptionCard({ option, currentCount, onOptionChange }: Opt
         </TouchableOpacity>
       ) : (
         <>
-          <TouchableOpacity
-            style={[styles.svgContainer, { borderColor: colorTheme.text.primary }]}
-            disabled={currentCount === option.maxCount}
-            activeOpacity={0.8}
-            onPress={() => onOptionChange(option.id, currentCount + 1)}
-          >
-            <PlusCircleSvg style={styles.svg} disabled={currentCount === option.maxCount} />
-          </TouchableOpacity>
+          {/* minus */}
           <TouchableOpacity
             style={[styles.svgContainer, { borderColor: colorTheme.text.primary }]}
             disabled={currentCount === 0}
@@ -53,12 +44,27 @@ export default function OptionCard({ option, currentCount, onOptionChange }: Opt
           >
             <MinusCircleSvg style={styles.svg} disabled={currentCount === 0} />
           </TouchableOpacity>
+
+          {/* option count text */}
+          <Text style={styles.optionCountText}>{currentCount}</Text>
+
+          {/* plus */}
+          <TouchableOpacity
+            style={[styles.svgContainer, { borderColor: colorTheme.text.primary }]}
+            disabled={currentCount === option.maxCount}
+            activeOpacity={0.8}
+            onPress={() => onOptionChange(option.id, currentCount + 1)}
+          >
+            <PlusCircleSvg style={styles.svg} disabled={currentCount === option.maxCount} />
+          </TouchableOpacity>
         </>
       )}
-      <Text style={[styles.optionNameText, { color: colorTheme.text.primary }]}>{option.name}</Text>
-      {optionDisplayedPrice > 0 && (
+      <Text style={[styles.optionNameText, { color: colorTheme.text.primary }]} numberOfLines={2}>
+        {option.name}
+      </Text>
+      {shouldDisplayPrice && (
         <Text style={[styles.priceText, { color: colorTheme.text.accent }]}>
-          +{formatPrice(optionDisplayedPrice)}
+          +{formatPrice(priceToDisplay)}
         </Text>
       )}
     </View>
@@ -72,7 +78,7 @@ const styles = StyleSheet.create({
     marginVertical: 6,
   },
   svgContainer: {
-    marginRight: 12,
+    marginRight: 6,
   },
   svg: {
     width: 30,
@@ -81,9 +87,15 @@ const styles = StyleSheet.create({
   optionNameText: {
     fontSize: 16,
     flexGrow: 1,
+    flexShrink: 1,
+  },
+  optionCountText: {
+    fontSize: 16,
+    marginRight: 6,
   },
   priceText: {
     fontSize: 14,
     fontWeight: "bold",
+    flexShrink: 0,
   },
 });
