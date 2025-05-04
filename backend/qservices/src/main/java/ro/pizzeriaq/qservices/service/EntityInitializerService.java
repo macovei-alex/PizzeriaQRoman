@@ -298,7 +298,7 @@ public class EntityInitializerService {
 	@Transactional
 	public void addAccounts() {
 		var keycloakUsers = keycloakService.getUsers();
-		keycloakUsers.sort(Comparator.comparing(KeycloakUser::getCreatedTimestamp));
+		keycloakUsers.sort(Comparator.comparing(KeycloakUser::createdTimestamp));
 		if (keycloakUsers.size() < 2) {
 			throw new RuntimeException("Not enough users in Keycloak: a minimum of 2 users required");
 		}
@@ -306,20 +306,20 @@ public class EntityInitializerService {
 		List<Account> accounts = new ArrayList<>();
 		var user = keycloakUsers.get(0);
 		accounts.add(Account.builder()
-				.id(user.getId())
-				.email(user.getEmail())
-				.isEmailVerified(user.isEmailVerified())
+				.id(user.id())
+				.email(user.email())
+				.isEmailVerified(user.emailVerified())
 				.phoneNumber("0722 222 222")
-				.createdAt(LocalDateTime.ofEpochSecond(user.getCreatedTimestamp() / 1000, 0, ZoneOffset.UTC))
+				.createdAt(LocalDateTime.ofEpochSecond(user.createdTimestamp() / 1000, 0, ZoneOffset.UTC))
 				.build());
 
 		user = keycloakUsers.get(1);
 		accounts.add(Account.builder()
-				.id(user.getId())
-				.email(user.getEmail())
-				.isEmailVerified(user.isEmailVerified())
+				.id(user.id())
+				.email(user.email())
+				.isEmailVerified(user.emailVerified())
 				.phoneNumber("0733 333 333")
-				.createdAt(LocalDateTime.ofEpochSecond(user.getCreatedTimestamp() / 1000, 0, ZoneOffset.UTC))
+				.createdAt(user.createdTimestampDate())
 				.build());
 
 		accountRepository.saveAll(accounts);

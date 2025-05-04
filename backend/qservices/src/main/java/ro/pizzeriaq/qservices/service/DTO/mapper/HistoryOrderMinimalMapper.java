@@ -1,11 +1,11 @@
 package ro.pizzeriaq.qservices.service.DTO.mapper;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ro.pizzeriaq.qservices.data.entity.Order;
 import ro.pizzeriaq.qservices.data.entity.OrderItem;
 import ro.pizzeriaq.qservices.service.DTO.HistoryOrderMinimalDTO;
 
-@Service
+@Component
 public class HistoryOrderMinimalMapper {
 
 

@@ -1,33 +1,49 @@
 package ro.pizzeriaq.qservices.data.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
-@AllArgsConstructor
-@Getter
-public class KeycloakUser {
-
-	private UUID id;
-	private String username;
-	private String firstName;
-	private String lastName;
-	private String email;
-	private boolean emailVerified;
-	private long createdTimestamp;
-	private boolean enabled;
-	private boolean totp;
-	private String[] disableableCredentialTypes;
-	private String[] requiredActions;
-	private int notBefore;
-	private Access access;
-
-
-	@AllArgsConstructor
-	@Getter
-	public static class Access {
-		private boolean manage;
+public record KeycloakUser(
+		UUID id,
+		String username,
+		String firstName,
+		String lastName,
+		String email,
+		boolean emailVerified,
+		long createdTimestamp,
+		boolean enabled,
+		boolean totp,
+		String[] disableableCredentialTypes,
+		String[] requiredActions,
+		int notBefore,
+		Access access
+) {
+	public record Access(boolean manage) {
 	}
 
+
+	public LocalDateTime createdTimestampDate() {
+		return LocalDateTime.ofEpochSecond(createdTimestamp / 1000, 0, ZoneOffset.UTC);
+	}
+
+
+	@Override
+	public String toString() {
+		return "KeycloakUser{" +
+				"id=" + id +
+				", username='" + username + '\'' +
+				", firstName='" + firstName + '\'' +
+				", lastName='" + lastName + '\'' +
+				", email='" + email + '\'' +
+				", emailVerified=" + emailVerified +
+				", createdTimestamp=" + createdTimestamp +
+				", enabled=" + enabled +
+				", totp=" + totp +
+				", disableableCredentialTypes=" + String.join(", ", disableableCredentialTypes) +
+				", requiredActions=" + String.join(", ", requiredActions) +
+				", notBefore=" + notBefore +
+				", access=Access{manage=" + access.manage() +
+				"}}";
+	}
 }

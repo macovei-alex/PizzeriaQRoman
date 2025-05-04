@@ -16,7 +16,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import ro.pizzeriaq.qservices.data.entity.OrderStatus;
-import ro.pizzeriaq.qservices.data.repository.AccountRepository;
 import ro.pizzeriaq.qservices.data.repository.AddressRepository;
 import ro.pizzeriaq.qservices.service.DTO.OptionListDTO;
 import ro.pizzeriaq.qservices.service.DTO.PlacedOrderDTO;
@@ -24,6 +23,7 @@ import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
 import ro.pizzeriaq.qservices.service.EntityInitializerService;
 import ro.pizzeriaq.qservices.service.OrderService;
 import ro.pizzeriaq.qservices.service.ProductService;
+import ro.pizzeriaq.qservices.utils.TestUtilsService;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -35,7 +35,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ro.pizzeriaq.qservices.utils.Utils.withDynamicMockUser;
 
 
 @SpringBootTest
@@ -64,9 +63,9 @@ public class OrderControllerTest {
 	@Autowired
 	private OrderService orderService;
 	@Autowired
-	private AccountRepository accountRepository;
-	@Autowired
 	private AddressRepository addressRepository;
+	@Autowired
+	private TestUtilsService testUtilsService;
 
 
 	private MockHttpServletRequestBuilder constructDefaultPostRequest(UUID accountId) {
@@ -117,7 +116,7 @@ public class OrderControllerTest {
 
 	@Test
 	void badPayload1() throws Exception {
-		withDynamicMockUser(accountRepository, (accountId) ->
+		testUtilsService.withDynamicMockUser((accountId) ->
 				mockMvc.perform(constructDefaultPostRequest(accountId))
 						.andExpect(status().isInternalServerError())
 		);
@@ -125,7 +124,7 @@ public class OrderControllerTest {
 
 	@Test
 	void badPayload2() throws Exception {
-		withDynamicMockUser(accountRepository, (accountId) ->
+		testUtilsService.withDynamicMockUser((accountId) ->
 				mockMvc.perform(constructDefaultPostRequest(accountId)
 								.content(""))
 						.andExpect(status().isInternalServerError())
@@ -134,7 +133,7 @@ public class OrderControllerTest {
 
 	@Test
 	void badPayload3() throws Exception {
-		withDynamicMockUser(accountRepository, (accountId) ->
+		testUtilsService.withDynamicMockUser((accountId) ->
 				mockMvc.perform(constructDefaultPostRequest(accountId)
 								.content("{}"))
 						.andExpect(status().isBadRequest())
@@ -143,7 +142,7 @@ public class OrderControllerTest {
 
 	@Test
 	void badPayload4() throws Exception {
-		withDynamicMockUser(accountRepository, (accountId) ->
+		testUtilsService.withDynamicMockUser((accountId) ->
 				mockMvc.perform(constructDefaultPostRequest(accountId)
 								.content("{\"nonexistentField\":  null}"))
 						.andExpect(status().isBadRequest())
@@ -152,7 +151,7 @@ public class OrderControllerTest {
 
 	@Test
 	void badPayloadValidation1() throws Exception {
-		withDynamicMockUser(accountRepository, (accountId) -> {
+		testUtilsService.withDynamicMockUser((accountId) -> {
 			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
 					.build();
 
@@ -164,7 +163,7 @@ public class OrderControllerTest {
 
 	@Test
 	void badPayloadValidation2() throws Exception {
-		withDynamicMockUser(accountRepository, (accountId) -> {
+		testUtilsService.withDynamicMockUser((accountId) -> {
 			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
 					.items(List.of())
 					.build();
@@ -178,7 +177,7 @@ public class OrderControllerTest {
 
 	@Test
 	void badPayloadValidation3() throws Exception {
-		withDynamicMockUser(accountRepository, (accountId) -> {
+		testUtilsService.withDynamicMockUser((accountId) -> {
 			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
 					.items(List.of(
 							PlacedOrderDTO.Item.builder().productId(0).count(1).optionLists(List.of()).build()))
@@ -193,7 +192,7 @@ public class OrderControllerTest {
 
 	@Test
 	void badPayloadValidation4() throws Exception {
-		withDynamicMockUser(accountRepository, (accountId) -> {
+		testUtilsService.withDynamicMockUser((accountId) -> {
 			var productId = productService.getProducts().stream().findFirst().orElseThrow().getId();
 
 			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
@@ -210,7 +209,7 @@ public class OrderControllerTest {
 
 	@Test
 	void badPayloadValidation5() throws Exception {
-		withDynamicMockUser(accountRepository, (accountId) -> {
+		testUtilsService.withDynamicMockUser((accountId) -> {
 			var productId = productService.getProducts().stream().findFirst().orElseThrow().getId();
 
 			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
@@ -228,7 +227,7 @@ public class OrderControllerTest {
 
 	@Test
 	void badPayloadDBValues() throws Exception {
-		withDynamicMockUser(accountRepository, (accountId) -> {
+		testUtilsService.withDynamicMockUser((accountId) -> {
 			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
 					.items(List.of(
 							PlacedOrderDTO.Item.builder().productId(Integer.MAX_VALUE).count(1).optionLists(List.of()).build()
@@ -243,7 +242,7 @@ public class OrderControllerTest {
 
 	@Test
 	void goodPayload1() throws Exception {
-		withDynamicMockUser(accountRepository, (accountId) -> {
+		testUtilsService.withDynamicMockUser((accountId) -> {
 			var address = addressRepository.findAllByAccountId(accountId).get(0);
 			var products = productService.getProducts().stream().limit(2).toList();
 
@@ -283,7 +282,7 @@ public class OrderControllerTest {
 
 	@Test
 	void goodPayload2() throws Exception {
-		withDynamicMockUser(accountRepository, (accountId) -> {
+		testUtilsService.withDynamicMockUser((accountId) -> {
 			var address = addressRepository.findAllByAccountId(accountId).get(0);
 			var products = productService.getProducts();
 
@@ -320,7 +319,7 @@ public class OrderControllerTest {
 
 	@Test
 	void goodPayload3() throws Exception {
-		withDynamicMockUser(accountRepository, (accountId) -> {
+		testUtilsService.withDynamicMockUser((accountId) -> {
 			var address = addressRepository.findAllByAccountId(accountId).get(0);
 			var products = productService.getProducts().stream()
 					.map((product) -> productService.getProduct(product.getId()).orElseThrow())
@@ -384,7 +383,7 @@ public class OrderControllerTest {
 
 	@Test
 	void goodPayload4() throws Exception {
-		withDynamicMockUser(accountRepository, (accountId) -> {
+		testUtilsService.withDynamicMockUser((accountId) -> {
 			var address = addressRepository.findAllByAccountId(accountId).get(0);
 			var products = productService.getProducts().stream()
 					.map((product) -> productService.getProduct(product.getId()).orElseThrow())

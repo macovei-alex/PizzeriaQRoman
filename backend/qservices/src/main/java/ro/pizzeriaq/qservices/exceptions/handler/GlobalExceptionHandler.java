@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import ro.pizzeriaq.qservices.exceptions.KeycloakException;
+import ro.pizzeriaq.qservices.exceptions.PhoneNumberMissingException;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -64,6 +65,13 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<String> handleNoResourceFoundException(NoResourceFoundException e) {
 		logger.error("Resource not found", e);
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+	}
+
+
+	@ExceptionHandler(PhoneNumberMissingException.class)
+	public ResponseEntity<String> handlePhoneNumberMissingException(PhoneNumberMissingException e) {
+		logger.error("Phone number missing", e);
+		return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
 	}
 
 

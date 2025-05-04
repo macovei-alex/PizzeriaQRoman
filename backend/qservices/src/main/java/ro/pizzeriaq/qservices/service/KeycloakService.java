@@ -12,6 +12,7 @@ import ro.pizzeriaq.qservices.data.model.KeycloakUser;
 import ro.pizzeriaq.qservices.exceptions.KeycloakException;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class KeycloakService {
@@ -45,7 +46,7 @@ public class KeycloakService {
 	public List<KeycloakUser> getUsers() {
 		var authorizedClient = authorizedClientManager.authorize(createClientAuthorizeRequest());
 		if (authorizedClient == null) {
-			throw new RuntimeException("Failed to authorize client");
+			throw new KeycloakException("Failed to authorize client");
 		}
 
 		try {
@@ -57,6 +58,25 @@ public class KeycloakService {
 					});
 		} catch (RestClientException ex) {
 			throw new KeycloakException("Failed to get users or parse response", ex);
+		}
+	}
+
+
+	public KeycloakUser getUser(UUID id) {
+		var authorizedClient = authorizedClientManager.authorize(createClientAuthorizeRequest());
+		if (authorizedClient == null) {
+			throw new KeycloakException("Failed to authorize client");
+		}
+
+		try {
+			return this.restClient.get()
+					.uri("/admin/realms/%s/users/%s".formatted(keycloakRealm, id))
+					.header(HttpHeaders.AUTHORIZATION, "Bearer " + authorizedClient.getAccessToken().getTokenValue())
+					.retrieve()
+					.body(new ParameterizedTypeReference<>() {
+					});
+		} catch (RestClientException ex) {
+			throw new KeycloakException("Failed to get user ( %s ) or parse response".formatted(id), ex);
 		}
 	}
 

@@ -1,20 +1,22 @@
 package ro.pizzeriaq.qservices.integration;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import ro.pizzeriaq.qservices.service.EntityInitializerService;
 import ro.pizzeriaq.qservices.service.ProductCategoryService;
+import ro.pizzeriaq.qservices.utils.TestUtilsService;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -36,18 +38,17 @@ public class ProductCategoryControllerTest {
 
 	@Autowired
 	private EntityInitializerService entityInitializerService;
-
 	@Autowired
 	private MockMvc mockMvc;
-
 	@Autowired
 	private ProductCategoryService productCategoryService;
+	@Autowired
+	private TestUtilsService testUtilsService;
 
 
 	@BeforeAll
 	void setup() {
 		logger.info("Environment: {}", environment);
-
 		EntityInitializerService.reInitializeEntities(entityInitializerService);
 	}
 
@@ -74,10 +75,11 @@ public class ProductCategoryControllerTest {
 	}
 
 	@Test
-	@WithMockUser
 	void getCategories() throws Exception {
-		mockMvc.perform(get(contextPath + "/categories")
-						.contextPath(contextPath))
-				.andExpect(status().isOk());
+		testUtilsService.withDynamicMockUser((_) -> {
+			mockMvc.perform(get(contextPath + "/categories")
+							.contextPath(contextPath))
+					.andExpect(status().isOk());
+		});
 	}
 }

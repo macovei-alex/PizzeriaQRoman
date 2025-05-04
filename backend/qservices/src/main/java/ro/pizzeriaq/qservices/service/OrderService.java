@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.pizzeriaq.qservices.data.entity.*;
 import ro.pizzeriaq.qservices.data.repository.*;
+import ro.pizzeriaq.qservices.exceptions.PhoneNumberMissingException;
 import ro.pizzeriaq.qservices.service.DTO.HistoryOrderMinimalDTO;
 import ro.pizzeriaq.qservices.service.DTO.PlacedOrderDTO;
 import ro.pizzeriaq.qservices.service.DTO.mapper.HistoryOrderMinimalMapper;
@@ -32,7 +33,11 @@ public class OrderService {
 	@Transactional
 	public void placeOrder(PlacedOrderDTO placedOrderDTO, UUID accountId) throws IllegalArgumentException {
 		var account = accountRepository.findById(accountId)
-				.orElseThrow(() -> new IllegalArgumentException("Account not found for ID: " + accountId));
+				.orElseThrow(() -> new IllegalArgumentException("Account not found for ID:" + accountId));
+		if (account.getPhoneNumber() == null || account.getPhoneNumber().isEmpty()) {
+			throw new PhoneNumberMissingException(accountId);
+		}
+
 		var products = productRepository.findAll();
 
 		Order order = generateOrder(placedOrderDTO, products, account);

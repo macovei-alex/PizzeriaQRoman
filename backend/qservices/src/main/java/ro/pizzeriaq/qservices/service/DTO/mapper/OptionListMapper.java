@@ -1,11 +1,11 @@
 package ro.pizzeriaq.qservices.service.DTO.mapper;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ro.pizzeriaq.qservices.data.entity.Option;
 import ro.pizzeriaq.qservices.data.entity.OptionList;
 import ro.pizzeriaq.qservices.service.DTO.OptionListDTO;
 
-@Service
+@Component
 public class OptionListMapper {
 
 	public OptionListDTO fromEntity(OptionList optionList) {

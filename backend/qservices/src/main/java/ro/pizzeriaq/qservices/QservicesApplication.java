@@ -8,7 +8,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
-import org.springframework.web.filter.AbstractRequestLoggingFilter;
 import ro.pizzeriaq.qservices.service.EntityInitializerService;
 
 
@@ -41,16 +40,4 @@ public class QservicesApplication {
 		};
 	}
 
-
-	@Bean
-	public AbstractRequestLoggingFilter requestLoggingFilter() {
-		var loggingFilter = new CustomRequestLoggingFilter();
-		loggingFilter.setBeforeMessagePrefix("");
-		loggingFilter.setIncludeQueryString(true);
-		loggingFilter.setIncludeHeaders(true);
-		loggingFilter.setIncludePayload(true);
-		loggingFilter.setIncludeClientInfo(true);
-		loggingFilter.setMaxPayloadLength(10000);
-		return loggingFilter;
-	}
 }

@@ -1,10 +1,10 @@
 package ro.pizzeriaq.qservices.service.DTO.mapper;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ro.pizzeriaq.qservices.data.entity.ProductCategory;
 import ro.pizzeriaq.qservices.service.DTO.ProductCategoryDTO;
 
-@Service
+@Component
 public class ProductCategoryMapper {
 
 
