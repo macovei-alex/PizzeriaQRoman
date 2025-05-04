@@ -1,17 +1,19 @@
 import React, { useCallback, useState } from "react";
-import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { api } from "src/api";
 import useAddressesQuery from "src/api/hooks/useAddressesQuery";
 import { Address } from "src/api/types/Address";
 import ModalForm from "src/components/profile/AddressesScreen/ModalForm";
+import { NewAddress } from "src/components/profile/AddressesScreen/types/NewAddress";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
 import ScreenTitle from "src/components/shared/generic/ScreenTitle";
+import { useAuthContext } from "src/context/AuthContext";
 import useColorTheme from "src/hooks/useColorTheme";
 
-export type NewAddress = Omit<Address, "id" | "addressType" | "primary" | "floor"> & { floor: string };
-
 export const emptyModalState: NewAddress = {
+  id: 0,
   city: "",
   street: "",
   streetNumber: "",
@@ -22,16 +24,58 @@ export const emptyModalState: NewAddress = {
 
 export default function AddressesScreen() {
   const colorTheme = useColorTheme();
+  const authContext = useAuthContext();
   const addressesQuery = useAddressesQuery();
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [modalEditState, setModalEditState] = useState<"closed" | "add" | "edit">("closed");
   const [initialModalState, setInitialModalState] = useState(emptyModalState);
+  const onModalSubmit = useCallback(
+    async (address: NewAddress | null) => {
+      setModalEditState("closed");
+      if (!address) return;
+      try {
+        const httpMethod = address.id === 0 ? "POST" : "PUT";
+        const url = `/account/${authContext.account?.id}/address${httpMethod === "PUT" ? `/${address.id}` : ""}`;
+        const newAddress = (await api.axios.request<Address>({ method: httpMethod, url: url, data: address }))
+          .data;
+        console.log(newAddress);
+        await addressesQuery.refetch();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [authContext.account?.id, addressesQuery]
+  );
 
-  const closeModal = useCallback(() => setModalVisible(false), []);
-  const onModalSubmit = useCallback((address: NewAddress) => {
-    console.log(address);
-  }, []);
+  const showDeleteAddressDialog = useCallback(
+    async (addressId: number) => {
+      const deleteAddress = async () => {
+        try {
+          await api.axios.delete(`/account/${authContext.account?.id}/address/${addressId}`);
+          await addressesQuery.refetch();
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      Alert.alert(
+        "Confirmare",
+        "Doriți să ștergeți adresa?",
+        [
+          {
+            text: "Anulează",
+            style: "cancel",
+          },
+          {
+            text: "Confirmă",
+            onPress: deleteAddress,
+          },
+        ],
+        { cancelable: false }
+      );
+    },
+    [authContext.account?.id, addressesQuery]
+  );
 
-  if (addressesQuery.isLoading) return <ScreenActivityIndicator text="Se încarcă adresele" />;
+  if (addressesQuery.isFetching) return <ScreenActivityIndicator text="Se încarcă adresele" />;
   if (addressesQuery.isError) return <ErrorComponent onRetry={() => addressesQuery.refetch()} />;
 
   return (
@@ -44,9 +88,10 @@ export default function AddressesScreen() {
           <TouchableOpacity
             key={address.id}
             onPress={() => {
-              setModalVisible(true);
+              setModalEditState("edit");
               setInitialModalState({ ...address, floor: address.floor.toString() });
             }}
+            onLongPress={() => showDeleteAddressDialog(address.id)}
             style={[styles.addressCard, { backgroundColor: colorTheme.background.card }]}
           >
             <Text style={styles.addressText}>Localitatea: {address.city}</Text>
@@ -62,15 +107,19 @@ export default function AddressesScreen() {
       <TouchableOpacity
         style={[styles.newAddressButton, { backgroundColor: colorTheme.background.accent }]}
         onPress={() => {
-          setModalVisible(true);
+          setModalEditState("add");
           setInitialModalState(emptyModalState);
         }}
       >
         <Text style={[styles.newAddressText, { color: colorTheme.text.onAccent }]}>Adaugă o adresă nouă</Text>
       </TouchableOpacity>
 
-      {isModalVisible && (
-        <ModalForm initialState={initialModalState} closeModal={closeModal} onSubmit={onModalSubmit} />
+      {modalEditState !== "closed" && (
+        <ModalForm
+          modalEditState={modalEditState}
+          initialState={initialModalState}
+          onSubmit={onModalSubmit}
+        />
       )}
     </SafeAreaView>
   );

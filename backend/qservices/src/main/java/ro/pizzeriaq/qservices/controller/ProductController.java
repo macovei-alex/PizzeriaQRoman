@@ -29,23 +29,8 @@ public class ProductController {
 
 
 	@GetMapping("/{id}")
-	public ResponseEntity<?> getProduct(@PathVariable String id) {
-		int idInt;
-		try {
-			idInt = Integer.parseInt(id);
-		} catch (NumberFormatException e) {
-			return ResponseEntity
-					.status(HttpStatus.BAD_REQUEST)
-					.body("Invalid ID format: " + id);
-		}
-
-		Optional<ProductWithOptionsDTO> product = service.getProduct(idInt);
-		if (product.isEmpty()) {
-			return ResponseEntity
-					.status(HttpStatus.NO_CONTENT)
-					.body("Product not found for ID: " + idInt);
-		}
-
-		return ResponseEntity.ok(product.get());
+	public ResponseEntity<ProductWithOptionsDTO> getProduct(@PathVariable int id) {
+		Optional<ProductWithOptionsDTO> product = service.getProduct(id);
+		return product.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
 	}
 }

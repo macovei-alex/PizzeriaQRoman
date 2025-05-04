@@ -8,7 +8,7 @@ export default function useAddressesQuery() {
 
   return useQuery<Address[], Error>({
     queryFn: async () => {
-      return (await api.axios.get<Address[]>(`/account/${authContext.account?.id}/address/all`)).data;
+      return (await api.axios.get<Address[]>(`/account/${authContext.account?.id}/address`)).data;
     },
     queryKey: ["addresses"],
   });

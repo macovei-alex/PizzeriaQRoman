@@ -8,6 +8,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import ro.pizzeriaq.qservices.exceptions.KeycloakException;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -20,21 +22,16 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<String> handleGeneralException(Exception e) {
-		logger.error("Unexpected error: {}", e.getMessage());
-
-		return ResponseEntity
-				.status(HttpStatus.INTERNAL_SERVER_ERROR)
+		logger.error("Unexpected error", e);
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 				.body("An unexpected error occurred: " + e.getMessage());
 	}
 
 
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
-		logger.error("Illegal argument exception: {}", e.getMessage());
-
-		return ResponseEntity
-				.status(HttpStatus.BAD_REQUEST)
-				.body(e.getMessage());
+		logger.error("Illegal argument exception", e);
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 	}
 
 
@@ -43,12 +40,24 @@ public class GlobalExceptionHandler {
 		Map<String, String> errors = e.getBindingResult().getFieldErrors().stream()
 				.collect(Collectors.toMap(FieldError::getField, (field) -> messageOrDefault(field.getDefaultMessage())));
 
-		logger.error("Invalid data received: {}", errors);
-
-		return ResponseEntity
-				.status(HttpStatus.BAD_REQUEST)
-				.body(errors);
+		logger.error("Invalid data received", e);
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
 	}
+
+
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	public ResponseEntity<String> handleInvalidData(MethodArgumentTypeMismatchException e) {
+		logger.error("Invalid data received", e);
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+	}
+
+
+	@ExceptionHandler(KeycloakException.class)
+	public ResponseEntity<String> handleKeycloakException(KeycloakException e) {
+		logger.error("Keycloak error", e);
+		return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(e.getMessage());
+	}
+
 
 	private String messageOrDefault(String message) {
 		if (message == null || message.isEmpty() || message.isBlank()) {
