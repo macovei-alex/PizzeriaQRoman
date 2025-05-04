@@ -75,12 +75,12 @@ class ProductControllerTest {
 
 	@Test
 	void unauthorizedAccess() throws Exception {
-		mockMvc.perform(get(contextPath + "/product/all")
+		mockMvc.perform(get(contextPath + "/products")
 						.contextPath(contextPath)
 						.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized());
 
-		mockMvc.perform(get(contextPath + "/product/{id}", 1)
+		mockMvc.perform(get(contextPath + "/products/{id}", 1)
 						.contextPath(contextPath)
 						.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized());
@@ -89,7 +89,7 @@ class ProductControllerTest {
 	@Test
 	@WithMockUser
 	void getAllProducts() throws Exception {
-		mockMvc.perform(get(contextPath + "/product/all")
+		mockMvc.perform(get(contextPath + "/products")
 						.contextPath(contextPath)
 						.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -101,7 +101,7 @@ class ProductControllerTest {
 	@Test
 	@WithMockUser
 	void getNonexistentProduct() throws Exception {
-		mockMvc.perform(get(contextPath + "/product/{id}", Integer.MAX_VALUE)
+		mockMvc.perform(get(contextPath + "/products/{id}", Integer.MAX_VALUE)
 						.contextPath(contextPath)
 						.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNoContent());
@@ -110,7 +110,7 @@ class ProductControllerTest {
 	@Test
 	@WithMockUser
 	void getProductWithWrongRoute() throws Exception {
-		mockMvc.perform(get(contextPath + "/product/invalid")
+		mockMvc.perform(get(contextPath + "/products/invalid")
 						.contextPath(contextPath)
 						.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest());
@@ -127,7 +127,7 @@ class ProductControllerTest {
 				.getId();
 		var product = productService.getProduct(productId).orElseThrow();
 
-		mockMvc.perform(get(contextPath + "/product/{id}", product.getId())
+		mockMvc.perform(get(contextPath + "/products/{id}", product.getId())
 						.contextPath(contextPath)
 						.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -149,7 +149,7 @@ class ProductControllerTest {
 				.getId();
 		var product = productService.getProduct(productId).orElseThrow();
 
-		mockMvc.perform(get(contextPath + "/product/{id}", product.getId())
+		mockMvc.perform(get(contextPath + "/products/{id}", product.getId())
 						.contextPath(contextPath)
 						.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -170,7 +170,7 @@ class ProductControllerTest {
 				.getId();
 		var product = productService.getProduct(productId).orElseThrow();
 
-		mockMvc.perform(get(contextPath + "/product/{id}", product.getId())
+		mockMvc.perform(get(contextPath + "/products/{id}", product.getId())
 						.contextPath(contextPath)
 						.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -191,7 +191,7 @@ class ProductControllerTest {
 				.getId();
 		var product = productService.getProduct(productId).orElseThrow();
 
-		mockMvc.perform(get(contextPath + "/product/{id}", product.getId())
+		mockMvc.perform(get(contextPath + "/products/{id}", product.getId())
 						.contextPath(contextPath)
 						.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())

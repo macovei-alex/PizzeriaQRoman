@@ -19,6 +19,7 @@ import AdditionalInfoSection, {
   AdditionalInfoSectionHandle,
 } from "src/components/cart/CartScreen/AdditionalInfoSection";
 import useAddressesQuery from "src/api/hooks/useAddressesQuery";
+import { useAuthContext } from "src/context/AuthContext";
 
 type NavigationProps = NativeStackNavigationProp<CartStackParamList, "CartScreen">;
 
@@ -27,11 +28,14 @@ export default function CartScreen() {
 
   const navigation = useNavigation<NavigationProps>();
   const colorTheme = useColorTheme();
+  const authContext = useAuthContext();
   const { cart, emptyCart } = useCartContext();
   const queryClient = useQueryClient();
   const addressQuery = useAddressesQuery();
   const [sendingOrder, setSendingOrder] = useState(false);
   const additionalSectionRef = useRef<AdditionalInfoSectionHandle>(null);
+
+  if (!authContext.account) throw new Error("Account is not defined in CartScreen");
 
   function sendOrder() {
     if (cart.length === 0) {
@@ -56,7 +60,7 @@ export default function CartScreen() {
     };
 
     api.axios
-      .post("/order/place", order)
+      .post(`/accounts/${authContext.account!.id}/orders`, order)
       .then((res) => {
         if (res.status === 200 || res.status === 201) {
           emptyCart();

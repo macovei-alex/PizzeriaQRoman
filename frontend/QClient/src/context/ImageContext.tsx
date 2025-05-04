@@ -28,7 +28,7 @@ export function ImageContextProvider({ children }: { children: ReactNode }) {
   const refetchImages = useCallback(async () => {
     let newImages: ValidImageFile[] = [];
     try {
-      newImages = (await api.axios.get<ValidImageFile[]>("/image/all")).data;
+      newImages = (await api.axios.get<ValidImageFile[]>("/images")).data;
     } catch (error) {
       logger.error(`Error fetching images: ${error}`);
       return;
@@ -87,7 +87,7 @@ export function ImageContextProvider({ children }: { children: ReactNode }) {
 
     const abortController = new AbortController();
     api.axios
-      .get<boolean>("/image/changes/yes", { signal: abortController.signal })
+      .get<boolean>("/images/changes/yes", { signal: abortController.signal })
       .then((res) => {
         if (typeof res.data !== "boolean") throw new Error(`Invalid response: ${res.data}`);
         if (res.data) {

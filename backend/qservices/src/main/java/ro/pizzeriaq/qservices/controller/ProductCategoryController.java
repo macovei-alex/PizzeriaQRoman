@@ -10,14 +10,14 @@ import ro.pizzeriaq.qservices.service.ProductCategoryService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/categories")
 @AllArgsConstructor
 public class ProductCategoryController {
 
 	private final ProductCategoryService service;
 
 
-	@GetMapping("/all")
+	@GetMapping
 	public List<ProductCategoryDTO> getProducts() {
 		return service.getCategories();
 	}

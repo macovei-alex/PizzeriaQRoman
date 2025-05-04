@@ -15,20 +15,20 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/products")
 @AllArgsConstructor
 public class ProductController {
 
 	private final ProductService service;
 
 
-	@GetMapping("/all")
+	@GetMapping
 	public List<ProductDTO> getProducts() {
 		return service.getProducts();
 	}
 
 
-	@GetMapping("/{id}")
+	@GetMapping("{id}")
 	public ResponseEntity<ProductWithOptionsDTO> getProduct(@PathVariable int id) {
 		Optional<ProductWithOptionsDTO> product = service.getProduct(id);
 		return product.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());

@@ -15,7 +15,7 @@ import ro.pizzeriaq.qservices.service.ProductService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/image")
+@RequestMapping("/images")
 @AllArgsConstructor
 public class ImageController {
 
@@ -24,7 +24,7 @@ public class ImageController {
 	private final ProductService productService;
 
 
-	@GetMapping("/all")
+	@GetMapping
 	public List<ImageDTO> getImages() {
 		List<ProductDTO> products = productService.getProducts();
 		return products.stream()

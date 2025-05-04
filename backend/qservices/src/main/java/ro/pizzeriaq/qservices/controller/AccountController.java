@@ -8,7 +8,7 @@ import ro.pizzeriaq.qservices.service.KeycloakService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/accounts")
 @AllArgsConstructor
 public class AccountController {
 	private final KeycloakService keycloakService;

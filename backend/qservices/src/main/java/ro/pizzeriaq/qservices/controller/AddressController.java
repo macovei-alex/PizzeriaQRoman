@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/account/{accountId}/address")
+@RequestMapping("/accounts/{accountId}/addresses")
 @AllArgsConstructor
 public class AddressController {
 

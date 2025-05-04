@@ -12,13 +12,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.transaction.annotation.Transactional;
 import ro.pizzeriaq.qservices.data.entity.OrderStatus;
 import ro.pizzeriaq.qservices.data.repository.AccountRepository;
 import ro.pizzeriaq.qservices.data.repository.AddressRepository;
@@ -28,7 +24,6 @@ import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
 import ro.pizzeriaq.qservices.service.EntityInitializerService;
 import ro.pizzeriaq.qservices.service.OrderService;
 import ro.pizzeriaq.qservices.service.ProductService;
-import ro.pizzeriaq.qservices.utils.ThrowingRunnable;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -54,29 +49,35 @@ public class OrderControllerTest {
 
 	@Value("${server.servlet.context-path}")
 	private String contextPath;
-
 	@Value("${app.environment}")
 	private String environment;
 
 
-	@Autowired private EntityInitializerService entityInitializerService;
-	@Autowired private ProductService productService;
-	@Autowired private MockMvc mockMvc;
-	@Autowired private ObjectMapper objectMapper;
-	@Autowired private OrderService orderService;
-	@Autowired private AccountRepository accountRepository;
-	@Autowired private AddressRepository addressRepository;
+	@Autowired
+	private EntityInitializerService entityInitializerService;
+	@Autowired
+	private ProductService productService;
+	@Autowired
+	private MockMvc mockMvc;
+	@Autowired
+	private ObjectMapper objectMapper;
+	@Autowired
+	private OrderService orderService;
+	@Autowired
+	private AccountRepository accountRepository;
+	@Autowired
+	private AddressRepository addressRepository;
 
 
-	private MockHttpServletRequestBuilder constructDefaultPostRequest() {
-		return post(contextPath + "/order/place")
+	private MockHttpServletRequestBuilder constructDefaultPostRequest(UUID accountId) {
+		return post(contextPath + "/accounts/" + accountId + "/orders")
 				.contextPath(contextPath)
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON);
 	}
 
-	private MockHttpServletRequestBuilder constructDefaultGetRequest() {
-		return get(contextPath + "/order/history")
+	private MockHttpServletRequestBuilder constructDefaultGetRequest(UUID accountId) {
+		return get(contextPath + "/accounts/" + accountId + "/orders")
 				.contextPath(contextPath)
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON);
@@ -86,7 +87,6 @@ public class OrderControllerTest {
 	@BeforeAll
 	void setUp() {
 		logger.info("Environment: {}", environment);
-
 		EntityInitializerService.reInitializeEntities(entityInitializerService);
 	}
 
@@ -108,135 +108,143 @@ public class OrderControllerTest {
 
 	@Test
 	void unauthorizedAccess() throws Exception {
-		mockMvc.perform(constructDefaultGetRequest())
+		mockMvc.perform(constructDefaultGetRequest(UUID.randomUUID()))
 				.andExpect(status().isUnauthorized());
 
-		mockMvc.perform(constructDefaultPostRequest())
+		mockMvc.perform(constructDefaultPostRequest(UUID.randomUUID()))
 				.andExpect(status().isUnauthorized());
 	}
 
 	@Test
-	@WithMockUser
 	void badPayload1() throws Exception {
-		mockMvc.perform(constructDefaultPostRequest())
-				.andExpect(status().isInternalServerError());
+		withDynamicMockUser(accountRepository, (accountId) ->
+				mockMvc.perform(constructDefaultPostRequest(accountId))
+						.andExpect(status().isInternalServerError())
+		);
 	}
 
 	@Test
-	@WithMockUser
 	void badPayload2() throws Exception {
-		mockMvc.perform(constructDefaultPostRequest()
-						.content(""))
-				.andExpect(status().isInternalServerError());
+		withDynamicMockUser(accountRepository, (accountId) ->
+				mockMvc.perform(constructDefaultPostRequest(accountId)
+								.content(""))
+						.andExpect(status().isInternalServerError())
+		);
 	}
 
 	@Test
-	@WithMockUser
 	void badPayload3() throws Exception {
-		mockMvc.perform(constructDefaultPostRequest()
-						.content("{}"))
-				.andExpect(status().isBadRequest());
+		withDynamicMockUser(accountRepository, (accountId) ->
+				mockMvc.perform(constructDefaultPostRequest(accountId)
+								.content("{}"))
+						.andExpect(status().isBadRequest())
+		);
 	}
 
 	@Test
-	@WithMockUser
 	void badPayload4() throws Exception {
-		mockMvc.perform(constructDefaultPostRequest()
-						.content("{\"nonexistentField\":  null}"))
-				.andExpect(status().isBadRequest());
+		withDynamicMockUser(accountRepository, (accountId) ->
+				mockMvc.perform(constructDefaultPostRequest(accountId)
+								.content("{\"nonexistentField\":  null}"))
+						.andExpect(status().isBadRequest())
+		);
 	}
 
 	@Test
-	@WithMockUser
 	void badPayloadValidation1() throws Exception {
-		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
-				.items(null)
-				.build();
+		withDynamicMockUser(accountRepository, (accountId) -> {
+			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+					.build();
 
-		mockMvc.perform(constructDefaultPostRequest()
-						.content(objectMapper.writeValueAsString(placedOrderDTO)))
-				.andExpect(status().isBadRequest());
+			mockMvc.perform(constructDefaultPostRequest(accountId)
+							.content(objectMapper.writeValueAsString(placedOrderDTO)))
+					.andExpect(status().isBadRequest());
+		});
 	}
 
 	@Test
-	@WithMockUser
 	void badPayloadValidation2() throws Exception {
-		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
-				.items(List.of())
-				.build();
+		withDynamicMockUser(accountRepository, (accountId) -> {
+			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+					.items(List.of())
+					.build();
 
-		mockMvc.perform(constructDefaultPostRequest()
-						.content(objectMapper.writeValueAsString(placedOrderDTO)))
-				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.['items']").value("The list of items in an order cannot be null or empty"));
+			mockMvc.perform(constructDefaultPostRequest(accountId)
+							.content(objectMapper.writeValueAsString(placedOrderDTO)))
+					.andExpect(status().isBadRequest())
+					.andExpect(jsonPath("$.['items']").value("The list of items in an order cannot be null or empty"));
+		});
 	}
 
 	@Test
-	@WithMockUser
 	void badPayloadValidation3() throws Exception {
-		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
-				.items(List.of(
-						PlacedOrderDTO.Item.builder().productId(0).count(1).optionLists(List.of()).build()))
-				.build();
+		withDynamicMockUser(accountRepository, (accountId) -> {
+			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+					.items(List.of(
+							PlacedOrderDTO.Item.builder().productId(0).count(1).optionLists(List.of()).build()))
+					.build();
 
-		mockMvc.perform(constructDefaultPostRequest()
-						.content(objectMapper.writeValueAsString(placedOrderDTO)))
-				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.['items[0].productId']").value("You cannot order a product with the ID less than or equal to 0"));
+			mockMvc.perform(constructDefaultPostRequest(accountId)
+							.content(objectMapper.writeValueAsString(placedOrderDTO)))
+					.andExpect(status().isBadRequest())
+					.andExpect(jsonPath("$.['items[0].productId']").value("You cannot order a product with the ID less than or equal to 0"));
+		});
 	}
 
 	@Test
-	@WithMockUser
 	void badPayloadValidation4() throws Exception {
-		var productId = productService.getProducts().stream().findFirst().orElseThrow().getId();
+		withDynamicMockUser(accountRepository, (accountId) -> {
+			var productId = productService.getProducts().stream().findFirst().orElseThrow().getId();
 
-		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
-				.items(List.of(
-						PlacedOrderDTO.Item.builder().productId(productId).count(0).optionLists(List.of()).build()))
-				.build();
+			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+					.items(List.of(
+							PlacedOrderDTO.Item.builder().productId(productId).count(0).optionLists(List.of()).build()))
+					.build();
 
-		mockMvc.perform(constructDefaultPostRequest()
-						.content(objectMapper.writeValueAsString(placedOrderDTO)))
-				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.['items[0].count']").value("You cannot order an amount of items less than or equal to 0"));
+			mockMvc.perform(constructDefaultPostRequest(accountId)
+							.content(objectMapper.writeValueAsString(placedOrderDTO)))
+					.andExpect(status().isBadRequest())
+					.andExpect(jsonPath("$.['items[0].count']").value("You cannot order an amount of items less than or equal to 0"));
+		});
 	}
 
 	@Test
-	@WithMockUser
 	void badPayloadValidation5() throws Exception {
-		var productId = productService.getProducts().stream().findFirst().orElseThrow().getId();
+		withDynamicMockUser(accountRepository, (accountId) -> {
+			var productId = productService.getProducts().stream().findFirst().orElseThrow().getId();
 
-		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
-				.items(List.of(
-						PlacedOrderDTO.Item.builder().productId(productId).count(1).optionLists(null).build()
-				))
-				.build();
+			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+					.items(List.of(
+							PlacedOrderDTO.Item.builder().productId(productId).count(1).optionLists(null).build()
+					))
+					.build();
 
-		mockMvc.perform(constructDefaultPostRequest()
-						.content(objectMapper.writeValueAsString(placedOrderDTO)))
-				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.['items[0].optionLists']").value("The list of options for any item cannot be null, only empty if no options were selected"));
+			mockMvc.perform(constructDefaultPostRequest(accountId)
+							.content(objectMapper.writeValueAsString(placedOrderDTO)))
+					.andExpect(status().isBadRequest())
+					.andExpect(jsonPath("$.['items[0].optionLists']").value("The list of options for any item cannot be null, only empty if no options were selected"));
+		});
 	}
 
 	@Test
-	@WithMockUser
 	void badPayloadDBValues() throws Exception {
-		PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
-				.items(List.of(
-						PlacedOrderDTO.Item.builder().productId(Integer.MAX_VALUE).count(1).optionLists(List.of()).build()
-				))
-				.build();
+		withDynamicMockUser(accountRepository, (accountId) -> {
+			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+					.items(List.of(
+							PlacedOrderDTO.Item.builder().productId(Integer.MAX_VALUE).count(1).optionLists(List.of()).build()
+					))
+					.build();
 
-		mockMvc.perform(constructDefaultPostRequest()
-						.content(objectMapper.writeValueAsString(placedOrderDTO)))
-				.andExpect(status().isBadRequest());
+			mockMvc.perform(constructDefaultPostRequest(accountId)
+							.content(objectMapper.writeValueAsString(placedOrderDTO)))
+					.andExpect(status().isBadRequest());
+		});
 	}
 
 	@Test
 	void goodPayload1() throws Exception {
-		withDynamicMockUser(accountRepository, () -> {
-			var accountId = SecurityContextHolder.getContext().getAuthentication().getName();
-			var address = addressRepository.findAllByAccountId(UUID.fromString(accountId)).get(0);
+		withDynamicMockUser(accountRepository, (accountId) -> {
+			var address = addressRepository.findAllByAccountId(accountId).get(0);
 			var products = productService.getProducts().stream().limit(2).toList();
 
 			assertThat(address).isNotNull();
@@ -259,11 +267,11 @@ public class OrderControllerTest {
 					.map(ProductDTO::getPrice)
 					.reduce(BigDecimal.ZERO, (acc, price) -> acc.add(price.multiply(BigDecimal.valueOf(2))));
 
-			mockMvc.perform(constructDefaultPostRequest()
+			mockMvc.perform(constructDefaultPostRequest(accountId)
 							.content(objectMapper.writeValueAsString(placedOrderDTO)))
 					.andExpect(status().isOk());
 
-			mockMvc.perform(constructDefaultGetRequest())
+			mockMvc.perform(constructDefaultGetRequest(accountId))
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$").isArray())
 					.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
@@ -275,9 +283,8 @@ public class OrderControllerTest {
 
 	@Test
 	void goodPayload2() throws Exception {
-		withDynamicMockUser(accountRepository, () -> {
-			var accountId = SecurityContextHolder.getContext().getAuthentication().getName();
-			var address = addressRepository.findAllByAccountId(UUID.fromString(accountId)).get(0);
+		withDynamicMockUser(accountRepository, (accountId) -> {
+			var address = addressRepository.findAllByAccountId(accountId).get(0);
 			var products = productService.getProducts();
 
 			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
@@ -297,11 +304,11 @@ public class OrderControllerTest {
 
 			var historyOrders = orderService.getOrdersHistory();
 
-			mockMvc.perform(constructDefaultPostRequest()
+			mockMvc.perform(constructDefaultPostRequest(accountId)
 							.content(objectMapper.writeValueAsString(placedOrderDTO)))
 					.andExpect(status().isOk());
 
-			mockMvc.perform(constructDefaultGetRequest())
+			mockMvc.perform(constructDefaultGetRequest(accountId))
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$").isArray())
 					.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
@@ -313,9 +320,8 @@ public class OrderControllerTest {
 
 	@Test
 	void goodPayload3() throws Exception {
-		withDynamicMockUser(accountRepository, () -> {
-			var accountId = SecurityContextHolder.getContext().getAuthentication().getName();
-			var address = addressRepository.findAllByAccountId(UUID.fromString(accountId)).get(0);
+		withDynamicMockUser(accountRepository, (accountId) -> {
+			var address = addressRepository.findAllByAccountId(accountId).get(0);
 			var products = productService.getProducts().stream()
 					.map((product) -> productService.getProduct(product.getId()).orElseThrow())
 					.limit(5)
@@ -362,11 +368,11 @@ public class OrderControllerTest {
 
 			var historyOrders = orderService.getOrdersHistory();
 
-			mockMvc.perform(constructDefaultPostRequest()
+			mockMvc.perform(constructDefaultPostRequest(accountId)
 							.content(objectMapper.writeValueAsString(placedOrderDTO)))
 					.andExpect(status().isOk());
 
-			mockMvc.perform(constructDefaultGetRequest())
+			mockMvc.perform(constructDefaultGetRequest(accountId))
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$").isArray())
 					.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
@@ -378,9 +384,8 @@ public class OrderControllerTest {
 
 	@Test
 	void goodPayload4() throws Exception {
-		withDynamicMockUser(accountRepository, () -> {
-			var accountId = SecurityContextHolder.getContext().getAuthentication().getName();
-			var address = addressRepository.findAllByAccountId(UUID.fromString(accountId)).get(0);
+		withDynamicMockUser(accountRepository, (accountId) -> {
+			var address = addressRepository.findAllByAccountId(accountId).get(0);
 			var products = productService.getProducts().stream()
 					.map((product) -> productService.getProduct(product.getId()).orElseThrow())
 					.limit(5)
@@ -437,11 +442,11 @@ public class OrderControllerTest {
 
 			var historyOrders = orderService.getOrdersHistory();
 
-			mockMvc.perform(constructDefaultPostRequest()
+			mockMvc.perform(constructDefaultPostRequest(accountId)
 							.content(objectMapper.writeValueAsString(placedOrderDTO)))
 					.andExpect(status().isOk());
 
-			mockMvc.perform(constructDefaultGetRequest())
+			mockMvc.perform(constructDefaultGetRequest(accountId))
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$").isArray())
 					.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))

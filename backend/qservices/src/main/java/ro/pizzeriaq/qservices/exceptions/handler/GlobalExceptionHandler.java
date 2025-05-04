@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import ro.pizzeriaq.qservices.exceptions.KeycloakException;
 
 import java.util.Map;
@@ -56,6 +57,13 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<String> handleKeycloakException(KeycloakException e) {
 		logger.error("Keycloak error", e);
 		return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(e.getMessage());
+	}
+
+
+	@ExceptionHandler(NoResourceFoundException.class)
+	public ResponseEntity<String> handleNoResourceFoundException(NoResourceFoundException e) {
+		logger.error("Resource not found", e);
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 	}
 
 

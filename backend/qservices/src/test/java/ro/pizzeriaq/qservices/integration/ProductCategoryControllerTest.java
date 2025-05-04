@@ -69,14 +69,14 @@ public class ProductCategoryControllerTest {
 
 	@Test
 	void unauthorizedAccess() throws Exception {
-		mockMvc.perform(get(contextPath + "/category/all"))
+		mockMvc.perform(get(contextPath + "/categories"))
 				.andExpect(status().isUnauthorized());
 	}
 
 	@Test
 	@WithMockUser
 	void getCategories() throws Exception {
-		mockMvc.perform(get(contextPath + "/category/all")
+		mockMvc.perform(get(contextPath + "/categories")
 						.contextPath(contextPath))
 				.andExpect(status().isOk());
 	}

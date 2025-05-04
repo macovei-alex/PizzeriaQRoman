@@ -34,7 +34,7 @@ export default function AddressesScreen() {
       if (!address) return;
       try {
         const httpMethod = address.id === 0 ? "POST" : "PUT";
-        const url = `/account/${authContext.account?.id}/address${httpMethod === "PUT" ? `/${address.id}` : ""}`;
+        const url = `/accounts/${authContext.account?.id}/addresses${httpMethod === "PUT" ? `/${address.id}` : ""}`;
         const newAddress = (await api.axios.request<Address>({ method: httpMethod, url: url, data: address }))
           .data;
         console.log(newAddress);
@@ -50,7 +50,7 @@ export default function AddressesScreen() {
     async (addressId: number) => {
       const deleteAddress = async () => {
         try {
-          await api.axios.delete(`/account/${authContext.account?.id}/address/${addressId}`);
+          await api.axios.delete(`/accounts/${authContext.account?.id}/addresses/${addressId}`);
           await addressesQuery.refetch();
         } catch (error) {
           console.error(error);
