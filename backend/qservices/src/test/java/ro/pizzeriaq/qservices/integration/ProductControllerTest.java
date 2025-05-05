@@ -104,7 +104,7 @@ class ProductControllerTest {
 			mockMvc.perform(get(contextPath + "/products/{id}", Integer.MAX_VALUE)
 							.contextPath(contextPath)
 							.accept(MediaType.APPLICATION_JSON))
-					.andExpect(status().isNoContent());
+					.andExpect(status().isNotFound());
 		});
 	}
 
@@ -127,7 +127,7 @@ class ProductControllerTest {
 					.findFirst()
 					.orElseThrow()
 					.getId();
-			var product = productService.getProduct(productId).orElseThrow();
+			var product = productService.getProduct(productId);
 
 			mockMvc.perform(get(contextPath + "/products/{id}", product.getId())
 							.contextPath(contextPath)
@@ -150,7 +150,7 @@ class ProductControllerTest {
 					.findFirst()
 					.orElseThrow()
 					.getId();
-			var product = productService.getProduct(productId).orElseThrow();
+			var product = productService.getProduct(productId);
 
 			mockMvc.perform(get(contextPath + "/products/{id}", product.getId())
 							.contextPath(contextPath)
@@ -172,7 +172,7 @@ class ProductControllerTest {
 					.findFirst()
 					.orElseThrow()
 					.getId();
-			var product = productService.getProduct(productId).orElseThrow();
+			var product = productService.getProduct(productId);
 
 			mockMvc.perform(get(contextPath + "/products/{id}", product.getId())
 							.contextPath(contextPath)
@@ -194,7 +194,7 @@ class ProductControllerTest {
 					.findFirst()
 					.orElseThrow()
 					.getId();
-			var product = productService.getProduct(productId).orElseThrow();
+			var product = productService.getProduct(productId);
 
 			mockMvc.perform(get(contextPath + "/products/{id}", product.getId())
 							.contextPath(contextPath)

@@ -1,5 +1,6 @@
 package ro.pizzeriaq.qservices.exceptions.handler;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -72,6 +73,13 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<String> handlePhoneNumberMissingException(PhoneNumberMissingException e) {
 		logger.error("Phone number missing", e);
 		return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
+	}
+
+
+	@ExceptionHandler(EntityNotFoundException.class)
+	public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException e) {
+		logger.error("Entity not found", e);
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 	}
 
 

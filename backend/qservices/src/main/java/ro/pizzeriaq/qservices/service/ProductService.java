@@ -1,11 +1,11 @@
 package ro.pizzeriaq.qservices.service;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ro.pizzeriaq.qservices.data.entity.Product;
 import ro.pizzeriaq.qservices.data.repository.OptionListRepository;
 import ro.pizzeriaq.qservices.data.repository.ProductRepository;
 import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
@@ -29,21 +29,20 @@ public class ProductService {
 	private final OptionListRepository optionListRepository;
 
 
-	@Transactional
+	@Transactional(readOnly = true)
 	public List<ProductDTO> getProducts() {
-		List<Product> productEntities = productRepository.findAllCategoryPreload();
-		return productEntities.stream().map(productMapper::fromEntity).toList();
+		return productRepository.findAllCategoryPreload()
+				.stream()
+				.map(productMapper::fromEntity)
+				.toList();
 	}
 
 
-	@Transactional
-	public Optional<ProductWithOptionsDTO> getProduct(int id) {
-		var productOptional = productRepository.findByIdOptionListsPreload(id);
-		if (productOptional.isEmpty()) {
-			return Optional.empty();
-		}
+	@Transactional(readOnly = true)
+	public ProductWithOptionsDTO getProduct(int id) {
+		var product = productRepository.findByIdOptionListsPreload(id)
+				.orElseThrow(() -> new EntityNotFoundException("Product not found for ID: " + id));
 
-		var product = productOptional.get();
 		entityManager.detach(product);
 
 		if (!product.getOptionLists().isEmpty()) {
@@ -51,6 +50,6 @@ public class ProductService {
 			product.setOptionLists(optionLists);
 		}
 
-		return Optional.of(productWithOptionsMapper.fromEntity(product));
+		return productWithOptionsMapper.fromEntity(product);
 	}
 }

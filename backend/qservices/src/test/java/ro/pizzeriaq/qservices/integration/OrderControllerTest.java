@@ -322,7 +322,7 @@ public class OrderControllerTest {
 		testUtilsService.withDynamicMockUser((accountId) -> {
 			var address = addressRepository.findAllActiveByAccountId(accountId).get(0);
 			var products = productService.getProducts().stream()
-					.map((product) -> productService.getProduct(product.getId()).orElseThrow())
+					.map((product) -> productService.getProduct(product.getId()))
 					.limit(5)
 					.toList();
 
@@ -386,7 +386,7 @@ public class OrderControllerTest {
 		testUtilsService.withDynamicMockUser((accountId) -> {
 			var address = addressRepository.findAllActiveByAccountId(accountId).get(0);
 			var products = productService.getProducts().stream()
-					.map((product) -> productService.getProduct(product.getId()).orElseThrow())
+					.map((product) -> productService.getProduct(product.getId()))
 					.limit(5)
 					.toList();
 

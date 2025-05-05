@@ -2,8 +2,6 @@ package ro.pizzeriaq.qservices.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import ro.pizzeriaq.qservices.data.entity.ProductCategory;
 import ro.pizzeriaq.qservices.data.repository.ProductCategoryRepository;
 import ro.pizzeriaq.qservices.service.DTO.ProductCategoryDTO;
 import ro.pizzeriaq.qservices.service.DTO.mapper.ProductCategoryMapper;
@@ -18,9 +16,10 @@ public class ProductCategoryService {
 	private final ProductCategoryMapper productCategoryMapper;
 
 
-	@Transactional
 	public List<ProductCategoryDTO> getCategories() {
-		List<ProductCategory> productEntities = productRepository.findAllOrderBySortIdAsc();
-		return productEntities.stream().map(productCategoryMapper::fromEntity).toList();
+		return productRepository.findAllOrderBySortIdAsc()
+				.stream()
+				.map(productCategoryMapper::fromEntity)
+				.toList();
 	}
 }
