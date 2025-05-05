@@ -1,5 +1,8 @@
-import React, { useCallback, useState } from "react";
-import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { CompositeNavigationProp, RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import React, { useCallback, useLayoutEffect, useState } from "react";
+import { Alert, BackHandler, ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { api } from "src/api";
 import useAddressesQuery from "src/api/hooks/useAddressesQuery";
@@ -11,6 +14,8 @@ import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivit
 import ScreenTitle from "src/components/shared/generic/ScreenTitle";
 import { useAuthContext } from "src/context/AuthContext";
 import useColorTheme from "src/hooks/useColorTheme";
+import { ProfileStackParamList } from "src/navigation/ProfileStackNavigator";
+import { RootTabParamList } from "src/navigation/TabNavigator";
 import logger from "src/utils/logger";
 
 export const emptyModalState: NewAddress = {
@@ -23,9 +28,18 @@ export const emptyModalState: NewAddress = {
   apartment: "",
 } as const;
 
+type NavigationProps = CompositeNavigationProp<
+  NativeStackNavigationProp<ProfileStackParamList, "AddressesScreen">,
+  BottomTabNavigationProp<RootTabParamList>
+>;
+
+type RouteProps = RouteProp<ProfileStackParamList, "AddressesScreen">;
+
 export default function AddressesScreen() {
   const colorTheme = useColorTheme();
   const authContext = useAuthContext();
+  const navigation = useNavigation<NavigationProps>();
+  const route = useRoute<RouteProps>();
   const addressesQuery = useAddressesQuery();
   const [modalEditState, setModalEditState] = useState<"closed" | "add" | "edit">("closed");
   const [initialModalState, setInitialModalState] = useState(emptyModalState);
@@ -73,6 +87,22 @@ export default function AddressesScreen() {
     },
     [authContext.account?.id, addressesQuery]
   );
+
+  useLayoutEffect(() => {
+    const listener = BackHandler.addEventListener("hardwareBackPress", () => {
+      if (route.params) {
+        if (route.params.backToScreen === "CartScreen") {
+          navigation.popToTop();
+          navigation.navigate("CartStackNavigator", { screen: "CartScreen" });
+        } else {
+          throw new Error("Invalid backToScreen parameter");
+        }
+        return true;
+      }
+      return false;
+    });
+    return () => listener.remove();
+  }, [navigation, route.params]);
 
   if (addressesQuery.isFetching) return <ScreenActivityIndicator text="Se încarcă adresele" />;
   if (addressesQuery.isError) return <ErrorComponent onRetry={() => addressesQuery.refetch()} />;

@@ -7,7 +7,7 @@ import AddressesScreen from "src/screens/profile/AddressesScreen";
 export type ProfileStackParamList = {
   ProfileScreen: undefined;
   OrderHistoryScreen: undefined;
-  AddressesScreen: undefined;
+  AddressesScreen: { backToScreen: "CartScreen" } | undefined;
 };
 
 const ProfileStack = createNativeStackNavigator<ProfileStackParamList>();

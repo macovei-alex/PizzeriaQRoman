@@ -3,9 +3,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import useColorTheme from "src/hooks/useColorTheme";
 import SvgIcons from "src/components/svg/SvgIcons";
 import { StyleSheet } from "react-native";
-import MenuStackNavigator from "./MenuStackNavigator";
-import CartStackNavigator from "./CartStackNavigator";
-import ProfileStackNavigator from "./ProfileStackNavigator";
+import MenuStackNavigator, { MenuStackParamList } from "./MenuStackNavigator";
+import CartStackNavigator, { CartStackParamList } from "./CartStackNavigator";
+import ProfileStackNavigator, { ProfileStackParamList } from "./ProfileStackNavigator";
+import { NavigatorScreenParams } from "@react-navigation/native";
 
 const routeToIconMap: Readonly<Record<string, string>> = {
   MenuStackNavigator: "home",
@@ -13,6 +14,12 @@ const routeToIconMap: Readonly<Record<string, string>> = {
   ProfileStackNavigator: "profile",
   ConsoleScreen: "search",
   TestScreen: "search",
+};
+
+export type RootTabParamList = {
+  MenuStackNavigator: NavigatorScreenParams<MenuStackParamList>;
+  CartStackNavigator: NavigatorScreenParams<CartStackParamList>;
+  ProfileStackNavigator: NavigatorScreenParams<ProfileStackParamList>;
 };
 
 const Tab = createBottomTabNavigator();
