@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ro.pizzeriaq.qservices.data.cache.LRUCache;
-import ro.pizzeriaq.qservices.data.cache.SimpleLRUCache;
 import ro.pizzeriaq.qservices.data.cache.ThreadSafeLRUCache;
 import ro.pizzeriaq.qservices.service.AccountService;
 import ro.pizzeriaq.qservices.service.AuthenticationInsightsService;

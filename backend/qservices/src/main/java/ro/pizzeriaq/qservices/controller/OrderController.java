@@ -28,6 +28,6 @@ public class OrderController {
 	@GetMapping
 	public List<HistoryOrderMinimalDTO> getOrdersHistory(@PathVariable UUID accountId) {
 		// TODO: use the accountId for the order history
-		return orderService.getOrdersHistory();
+		return orderService.getOrdersHistory(accountId);
 	}
 }

@@ -260,7 +260,7 @@ public class OrderControllerTest {
 					)
 					.build();
 
-			var historyOrders = orderService.getOrdersHistory();
+			var historyOrders = orderService.getOrdersHistory(accountId);
 
 			BigDecimal expectedPrice = products.stream()
 					.map(ProductDTO::getPrice)
@@ -301,7 +301,7 @@ public class OrderControllerTest {
 					.map(ProductDTO::getPrice)
 					.reduce(BigDecimal.ZERO, (acc, price) -> acc.add(price.multiply(BigDecimal.valueOf(10))));
 
-			var historyOrders = orderService.getOrdersHistory();
+			var historyOrders = orderService.getOrdersHistory(accountId);
 
 			mockMvc.perform(constructDefaultPostRequest(accountId)
 							.content(objectMapper.writeValueAsString(placedOrderDTO)))
@@ -365,7 +365,7 @@ public class OrderControllerTest {
 							.multiply(BigDecimal.valueOf(3)))
 					.reduce(BigDecimal.ZERO, BigDecimal::add);
 
-			var historyOrders = orderService.getOrdersHistory();
+			var historyOrders = orderService.getOrdersHistory(accountId);
 
 			mockMvc.perform(constructDefaultPostRequest(accountId)
 							.content(objectMapper.writeValueAsString(placedOrderDTO)))
@@ -439,7 +439,7 @@ public class OrderControllerTest {
 					})
 					.reduce(BigDecimal.ZERO, BigDecimal::add);
 
-			var historyOrders = orderService.getOrdersHistory();
+			var historyOrders = orderService.getOrdersHistory(accountId);
 
 			mockMvc.perform(constructDefaultPostRequest(accountId)
 							.content(objectMapper.writeValueAsString(placedOrderDTO)))

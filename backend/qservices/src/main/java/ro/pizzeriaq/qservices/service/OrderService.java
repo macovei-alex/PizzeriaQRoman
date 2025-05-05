@@ -220,8 +220,8 @@ public class OrderService {
 
 
 	@Transactional(readOnly = true)
-	public List<HistoryOrderMinimalDTO> getOrdersHistory() {
-		List<Order> orders = orderRepository.findAllOrderByOrderTimestampDesc();
+	public List<HistoryOrderMinimalDTO> getOrdersHistory(UUID accountId) {
+		List<Order> orders = orderRepository.findByAccountIdOrderByOrderTimestampDesc(accountId);
 
 		return orders.stream()
 				.map(historyOrderMinimalMapper::fromEntity)
