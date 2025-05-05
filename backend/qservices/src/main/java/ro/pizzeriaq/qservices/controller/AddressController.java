@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ro.pizzeriaq.qservices.service.AccountService;
 import ro.pizzeriaq.qservices.service.AddressService;
 import ro.pizzeriaq.qservices.service.AuthenticationInsightsService;
 import ro.pizzeriaq.qservices.service.DTO.AddressDto;
@@ -21,7 +20,6 @@ public class AddressController {
 	private static final Logger logger = LoggerFactory.getLogger(AddressController.class);
 
 
-	private final AccountService accountService;
 	private final AddressService addressService;
 	private final AuthenticationInsightsService authenticationInsightsService;
 
@@ -35,7 +33,7 @@ public class AddressController {
 			);
 			return ResponseEntity.status(403).build();
 		}
-		return ResponseEntity.ok(accountService.getAddresses(accountId));
+		return ResponseEntity.ok(addressService.getAddressesForAccount(accountId));
 	}
 
 

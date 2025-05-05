@@ -10,6 +10,7 @@ import ro.pizzeriaq.qservices.data.repository.AddressTypeRepository;
 import ro.pizzeriaq.qservices.service.DTO.AddressDto;
 import ro.pizzeriaq.qservices.service.DTO.mapper.AddressMapper;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -20,6 +21,17 @@ public class AddressService {
 	private final AccountRepository accountRepository;
 	private final AddressTypeRepository addressTypeRepository;
 	private final AddressMapper addressMapper;
+
+
+	public List<AddressDto> getAddressesForAccount(UUID accountId) {
+		if (!accountRepository.existsById(accountId)) {
+			throw new EntityNotFoundException("Account not found");
+		}
+		return addressRepository.findAllActiveByAccountId(accountId)
+				.stream()
+				.map(addressMapper::fromEntity)
+				.toList();
+	}
 
 
 	public AddressDto updateAddress(int id, AddressDto address) {
