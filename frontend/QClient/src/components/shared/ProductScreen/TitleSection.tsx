@@ -58,11 +58,13 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   subtitleContainer: {
+    marginTop: -4,
     marginHorizontal: 8,
     alignItems: "center",
   },
   subtitleText: {
     fontSize: 20,
+    fontWeight: "500",
   },
   descriptionText: {
     marginTop: 20,

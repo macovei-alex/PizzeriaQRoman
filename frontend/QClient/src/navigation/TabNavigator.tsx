@@ -51,11 +51,7 @@ export default function TabNavigator() {
       })}
     >
       <Tab.Screen name="MenuStackNavigator" component={MenuStackNavigator} options={{ title: "Meniu" }} />
-      <Tab.Screen
-        name="CartStackNavigator"
-        component={CartStackNavigator}
-        options={{ title: "Coș", popToTopOnBlur: true }}
-      />
+      <Tab.Screen name="CartStackNavigator" component={CartStackNavigator} options={{ title: "Coș" }} />
       <Tab.Screen
         name="ProfileStackNavigator"
         component={ProfileStackNavigator}
