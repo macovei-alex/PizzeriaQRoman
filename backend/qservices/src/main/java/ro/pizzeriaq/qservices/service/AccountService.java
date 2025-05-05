@@ -17,7 +17,6 @@ public class AccountService {
 
 
 	public void createAccount(KeycloakUser keycloakUser) {
-		System.out.println("Creating account for user: " + keycloakUser.id());
 		var account = accountMapper.fromKeycloakUser(keycloakUser);
 		accountRepository.save(account);
 	}

@@ -24,9 +24,6 @@ public class AddressService {
 
 
 	public List<AddressDto> getAddressesForAccount(UUID accountId) {
-		if (!accountRepository.existsById(accountId)) {
-			throw new EntityNotFoundException("Account not found");
-		}
 		return addressRepository.findAllActiveByAccountId(accountId)
 				.stream()
 				.map(addressMapper::fromEntity)
