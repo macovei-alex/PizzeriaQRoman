@@ -13,7 +13,7 @@ import java.util.UUID;
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Integer> {
 
-	@Query("SELECT a FROM Address a WHERE a.account.id = :accountId AND a.isPrimary = true")
-	List<Address> findAllByAccountId(@Param("accountId") UUID accountId);
+	@Query("SELECT a FROM Address a WHERE a.account.id = :accountId AND a.isActive = true")
+	List<Address> findAllActiveByAccountId(@Param("accountId") UUID accountId);
 
 }

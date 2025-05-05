@@ -243,7 +243,7 @@ public class OrderControllerTest {
 	@Test
 	void goodPayload1() throws Exception {
 		testUtilsService.withDynamicMockUser((accountId) -> {
-			var address = addressRepository.findAllByAccountId(accountId).get(0);
+			var address = addressRepository.findAllActiveByAccountId(accountId).get(0);
 			var products = productService.getProducts().stream().limit(2).toList();
 
 			assertThat(address).isNotNull();
@@ -283,7 +283,7 @@ public class OrderControllerTest {
 	@Test
 	void goodPayload2() throws Exception {
 		testUtilsService.withDynamicMockUser((accountId) -> {
-			var address = addressRepository.findAllByAccountId(accountId).get(0);
+			var address = addressRepository.findAllActiveByAccountId(accountId).get(0);
 			var products = productService.getProducts();
 
 			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
@@ -320,7 +320,7 @@ public class OrderControllerTest {
 	@Test
 	void goodPayload3() throws Exception {
 		testUtilsService.withDynamicMockUser((accountId) -> {
-			var address = addressRepository.findAllByAccountId(accountId).get(0);
+			var address = addressRepository.findAllActiveByAccountId(accountId).get(0);
 			var products = productService.getProducts().stream()
 					.map((product) -> productService.getProduct(product.getId()).orElseThrow())
 					.limit(5)
@@ -384,7 +384,7 @@ public class OrderControllerTest {
 	@Test
 	void goodPayload4() throws Exception {
 		testUtilsService.withDynamicMockUser((accountId) -> {
-			var address = addressRepository.findAllByAccountId(accountId).get(0);
+			var address = addressRepository.findAllActiveByAccountId(accountId).get(0);
 			var products = productService.getProducts().stream()
 					.map((product) -> productService.getProduct(product.getId()).orElseThrow())
 					.limit(5)

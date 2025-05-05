@@ -2,6 +2,7 @@ package ro.pizzeriaq.qservices.data.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.List;
 
@@ -55,6 +56,11 @@ public class Address {
 	private String apartment;
 
 
-	@Column
 	private boolean isPrimary;
+
+
+	@Column(nullable = false)
+	@ColumnDefault("1")
+	@Builder.Default
+	private boolean isActive = true;
 }

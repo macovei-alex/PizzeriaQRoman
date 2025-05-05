@@ -53,6 +53,7 @@ public class AddressService {
 	public void deleteAddress(int addressId) {
 		var address = addressRepository.findById(addressId)
 				.orElseThrow(() -> new EntityNotFoundException("Address with id ( %s ) not found".formatted(addressId)));
-		addressRepository.delete(address);
+		address.setActive(false);
+		addressRepository.save(address);
 	}
 }
