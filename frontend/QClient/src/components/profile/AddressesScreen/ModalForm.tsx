@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import useColorTheme from "src/hooks/useColorTheme";
 import { NewAddress } from "./types/NewAddress";
 import { showToast } from "src/utils/toast";
+import TextInputComponent from "src/components/shared/generic/TextInput";
 
 function validateAddress(address: NewAddress): string | null {
   if (address.city.length === 0) return "Vă rugăm să introduceți localitatea";
@@ -23,7 +24,7 @@ type ModalFormProps = {
 
 export default function ModalForm({ modalEditState, initialState, onSubmit }: ModalFormProps) {
   const colorTheme = useColorTheme();
-  const [modalState, setModalState] = useState(initialState);
+  const [modalState, setModalState] = useState<NewAddress>(initialState);
 
   return (
     <Modal transparent visible animationType="slide" onRequestClose={() => onSubmit(null)}>
@@ -35,45 +36,46 @@ export default function ModalForm({ modalEditState, initialState, onSubmit }: Mo
         </Text>
 
         {/* Inputs */}
-        <TextInput
-          onChangeText={(text) => setModalState({ ...modalState, city: text })}
+        <TextInputComponent
+          label="Localitatea"
+          style={styles.input}
           value={modalState.city}
-          placeholder="Localitatea"
-          style={[styles.input, { backgroundColor: colorTheme.background.card }]}
+          onChangeText={(text) => setModalState({ ...modalState, city: text })}
         />
-        <TextInput
-          onChangeText={(text) => setModalState({ ...modalState, street: text })}
+        <TextInputComponent
+          label="Numele Străzii"
+          scrollEnabled
+          style={styles.input}
           value={modalState.street}
-          numberOfLines={2}
-          multiline
-          placeholder="Numele Străzii"
-          style={[styles.input, { backgroundColor: colorTheme.background.card }]}
+          onChangeText={(text) => setModalState({ ...modalState, street: text })}
         />
-        <TextInput
-          onChangeText={(text) => setModalState({ ...modalState, streetNumber: text })}
+        <TextInputComponent
+          label="Numărul Străzii"
+          style={styles.input}
           value={modalState.streetNumber}
-          placeholder="Numărul Străzii"
-          style={[styles.input, { backgroundColor: colorTheme.background.card }]}
+          onChangeText={(text) => setModalState({ ...modalState, streetNumber: text })}
         />
-        <TextInput
-          onChangeText={(text) => setModalState({ ...modalState, block: text })}
+        <TextInputComponent
+          label="Blocul"
+          style={styles.input}
           value={modalState.block}
-          placeholder="Blocul"
-          style={[styles.input, { backgroundColor: colorTheme.background.card }]}
+          onChangeText={(text) => setModalState({ ...modalState, block: text })}
         />
-        <TextInput
-          onChangeText={(text) => setModalState({ ...modalState, floor: text })}
-          value={modalState.floor}
-          keyboardType="numeric"
-          placeholder="Etajul"
-          style={[styles.input, { backgroundColor: colorTheme.background.card }]}
-        />
-        <TextInput
-          onChangeText={(text) => setModalState({ ...modalState, apartment: text })}
-          value={modalState.apartment}
-          placeholder="Apartamentul"
-          style={[styles.input, { backgroundColor: colorTheme.background.card }]}
-        />
+        <View style={styles.floorAndApartmentContainer}>
+          <TextInputComponent
+            label="Etajul"
+            keyboardType="numeric"
+            style={styles.input}
+            value={modalState.floor}
+            onChangeText={(text) => setModalState({ ...modalState, floor: text })}
+          />
+          <TextInputComponent
+            label="Apartamentul"
+            style={styles.input}
+            value={modalState.apartment}
+            onChangeText={(text) => setModalState({ ...modalState, apartment: text })}
+          />
+        </View>
 
         {/* Confirm button */}
         <TouchableOpacity
@@ -111,18 +113,22 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 12,
+    marginBottom: 8,
   },
   input: {
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    marginBottom: 12,
+    marginVertical: -2,
+    flexGrow: 1,
+    flexShrink: 1,
+  },
+  floorAndApartmentContainer: {
+    flexDirection: "row",
+    gap: 8,
+    justifyContent: "space-around",
+    alignItems: "center",
   },
   confirmAddressButton: {
     padding: 16,
-    marginTop: 24,
+    marginTop: 0,
     borderRadius: 24,
     alignItems: "center",
   },
