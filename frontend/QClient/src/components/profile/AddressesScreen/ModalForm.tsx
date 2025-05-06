@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import useColorTheme from "src/hooks/useColorTheme";
 import { NewAddress } from "./types/NewAddress";
 import { showToast } from "src/utils/toast";
-import TextInputComponent from "src/components/shared/generic/TextInput";
+import LabelledBorderComponent from "src/components/shared/generic/LabelledBorderComponent";
 
 function validateAddress(address: NewAddress): string | null {
   if (address.city.length === 0) return "Vă rugăm să introduceți localitatea";
@@ -36,45 +36,45 @@ export default function ModalForm({ modalEditState, initialState, onSubmit }: Mo
         </Text>
 
         {/* Inputs */}
-        <TextInputComponent
-          label="Localitatea"
-          style={styles.input}
-          value={modalState.city}
-          onChangeText={(text) => setModalState({ ...modalState, city: text })}
-        />
-        <TextInputComponent
-          label="Numele Străzii"
-          scrollEnabled
-          style={styles.input}
-          value={modalState.street}
-          onChangeText={(text) => setModalState({ ...modalState, street: text })}
-        />
-        <TextInputComponent
-          label="Numărul Străzii"
-          style={styles.input}
-          value={modalState.streetNumber}
-          onChangeText={(text) => setModalState({ ...modalState, streetNumber: text })}
-        />
-        <TextInputComponent
-          label="Blocul"
-          style={styles.input}
-          value={modalState.block}
-          onChangeText={(text) => setModalState({ ...modalState, block: text })}
-        />
+        <LabelledBorderComponent label="Localitatea">
+          <TextInput
+            value={modalState.city}
+            onChangeText={(text) => setModalState({ ...modalState, city: text })}
+          />
+        </LabelledBorderComponent>
+        <LabelledBorderComponent label="Numele Străzii">
+          <TextInput
+            scrollEnabled
+            value={modalState.street}
+            onChangeText={(text) => setModalState({ ...modalState, street: text })}
+          />
+        </LabelledBorderComponent>
+        <LabelledBorderComponent label="Numărul Străzii">
+          <TextInput
+            value={modalState.streetNumber}
+            onChangeText={(text) => setModalState({ ...modalState, streetNumber: text })}
+          />
+        </LabelledBorderComponent>
+        <LabelledBorderComponent label="Blocul">
+          <TextInput
+            value={modalState.block}
+            onChangeText={(text) => setModalState({ ...modalState, block: text })}
+          />
+        </LabelledBorderComponent>
         <View style={styles.floorAndApartmentContainer}>
-          <TextInputComponent
-            label="Etajul"
-            keyboardType="numeric"
-            style={styles.input}
-            value={modalState.floor}
-            onChangeText={(text) => setModalState({ ...modalState, floor: text })}
-          />
-          <TextInputComponent
-            label="Apartamentul"
-            style={styles.input}
-            value={modalState.apartment}
-            onChangeText={(text) => setModalState({ ...modalState, apartment: text })}
-          />
+          <LabelledBorderComponent label="Etajul" style={styles.floorAndAptLabelledBorder}>
+            <TextInput
+              keyboardType="numeric"
+              value={modalState.floor}
+              onChangeText={(text) => setModalState({ ...modalState, floor: text })}
+            />
+          </LabelledBorderComponent>
+          <LabelledBorderComponent label="Apartamentul" style={styles.floorAndAptLabelledBorder}>
+            <TextInput
+              value={modalState.apartment}
+              onChangeText={(text) => setModalState({ ...modalState, apartment: text })}
+            />
+          </LabelledBorderComponent>
         </View>
 
         {/* Confirm button */}
@@ -113,22 +113,21 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 8,
-  },
-  input: {
-    marginVertical: -2,
-    flexGrow: 1,
-    flexShrink: 1,
+    marginBottom: 4,
   },
   floorAndApartmentContainer: {
     flexDirection: "row",
-    gap: 8,
+    gap: 12,
     justifyContent: "space-around",
     alignItems: "center",
   },
+  floorAndAptLabelledBorder: {
+    flexGrow: 1,
+    flexShrink: 1,
+  },
   confirmAddressButton: {
     padding: 16,
-    marginTop: 0,
+    marginTop: 12,
     borderRadius: 24,
     alignItems: "center",
   },
