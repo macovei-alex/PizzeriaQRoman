@@ -5,7 +5,7 @@ import ProductScreen from "src/screens/shared/ProductScreen";
 
 export type MenuStackParamList = {
   MenuScreen: undefined;
-  ProductScreen: { productId: string; imageName: string };
+  ProductScreen: { productId: string };
   SkeletonLoaderTestScreen: undefined;
 };
 

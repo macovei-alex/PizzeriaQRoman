@@ -6,7 +6,7 @@ import ConfirmationScreen from "src/screens/cart/ConfirmationScreen";
 
 export type CartStackParamList = {
   CartScreen: undefined;
-  ProductScreen: { productId: string; imageName: string; cartItemId: string };
+  ProductScreen: { productId: string; cartItemId: string };
   ConfirmationScreen: undefined;
 };
 

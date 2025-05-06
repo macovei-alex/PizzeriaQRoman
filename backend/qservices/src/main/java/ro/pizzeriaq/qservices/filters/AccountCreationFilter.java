@@ -42,18 +42,20 @@ public class AccountCreationFilter extends OncePerRequestFilter {
 			@NonNull HttpServletResponse response,
 			@NonNull FilterChain filterChain
 	) throws ServletException, IOException {
-		var id = authenticationInsightsService.getAuthenticationId();
+		if (authenticationInsightsService.isAuthenticated()) {
+			var id = authenticationInsightsService.getAuthenticationId();
 
-		if (!accountIdCache.containsKey(id)) {
-			// synchronized to prevent multiple requests from creating the same account multiple times
-			// possibly add a mutex per account instead of per method in the future for a performance increase
-			synchronized (lock) {
-				if (!accountIdCache.containsKey(id) && !accountService.exists(id)) {
-					var keycloakUser = keycloakService.getUser(id);
-					accountService.createAccount(keycloakUser);
-					logger.info("Account created for user with id ( %s )".formatted(keycloakUser.id()));
+			if (!accountIdCache.containsKey(id)) {
+				// synchronized to prevent multiple requests from creating the same account multiple times
+				// possibly add a mutex per account instead of per method in the future for a performance increase
+				synchronized (lock) {
+					if (!accountIdCache.containsKey(id) && !accountService.exists(id)) {
+						var keycloakUser = keycloakService.getUser(id);
+						accountService.createAccount(keycloakUser);
+						logger.info("Account created for user with id ( %s )".formatted(keycloakUser.id()));
+					}
+					accountIdCache.put(id, null);
 				}
-				accountIdCache.put(id, null);
 			}
 		}
 

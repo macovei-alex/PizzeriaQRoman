@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ro.pizzeriaq.qservices.data.entity.Product;
 import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
-import ro.pizzeriaq.qservices.service.ImageManagementService;
+import ro.pizzeriaq.qservices.service.ImageService;
 
 @Component
 @AllArgsConstructor
@@ -14,7 +14,8 @@ public class ProductMapper {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProductMapper.class);
 
-	private final ImageManagementService imageManagementService;
+
+	private final ImageService imageService;
 
 
 	public ProductDTO fromEntity(Product product) {
@@ -22,22 +23,20 @@ public class ProductMapper {
 			return null;
 		}
 
-		ProductDTO productDto = ProductDTO.builder()
+		var imageExists = imageService.imageExists(product.getImageName());
+		if (!imageExists) {
+			logger.warn("Image not found: {}. ProductDTO will have null for image name and 0 for image version", product.getImageName());
+		}
+
+		return ProductDTO.builder()
 				.id(product.getId())
 				.name(product.getName())
 				.subtitle(product.getSubtitle())
 				.description(product.getDescription())
 				.price(product.getPrice())
-				.imageName(imageManagementService.imageExists(product.getImageName())
-						? product.getImageName()
-						: null)
+				.imageName(imageExists ? product.getImageName() : null)
+				.imageVersion(imageExists ? imageService.getImageTimestamp(product.getImageName()) : 0)
 				.categoryId(product.getCategory().getId())
 				.build();
-
-		if (productDto.getImageName() == null) {
-			logger.warn("Image not found: {}. ProductDTO will have null for image name", product.getImageName());
-		}
-
-		return productDto;
 	}
 }

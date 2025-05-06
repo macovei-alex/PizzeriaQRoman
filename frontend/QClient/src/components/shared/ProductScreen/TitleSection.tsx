@@ -1,19 +1,18 @@
 import React from "react";
-import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import GoBackButtonSvg from "src/components/svg/GoBackButtonSvg";
 import useColorTheme from "src/hooks/useColorTheme";
-import { ImageFile, imageOrDefault } from "src/utils/files";
 import { ProductWithOptions } from "src/api/types/Product";
 import logger from "src/utils/logger";
 import { useNavigation } from "@react-navigation/native";
 import { formatPrice } from "src/utils/utils";
+import RemoteImageBackground from "../generic/RemoteImageBackground";
 
 type TitleSectionProps = {
   product: ProductWithOptions;
-  productImage: ImageFile;
 };
 
-export default function TitleSection({ product, productImage }: TitleSectionProps) {
+export default function TitleSection({ product }: TitleSectionProps) {
   logger.render("TitleSection");
 
   const navigation = useNavigation();
@@ -21,11 +20,15 @@ export default function TitleSection({ product, productImage }: TitleSectionProp
 
   return (
     <>
-      <ImageBackground source={imageOrDefault(productImage)} style={styles.image}>
+      <RemoteImageBackground
+        imageName={product.imageName}
+        imageVersion={product.imageVersion}
+        style={styles.image}
+      >
         <TouchableOpacity style={styles.goBackButton} onPress={() => navigation.goBack()}>
           <GoBackButtonSvg />
         </TouchableOpacity>
-      </ImageBackground>
+      </RemoteImageBackground>
       <Text style={[styles.titleText, { color: colorTheme.text.primary }]}>{product.name}</Text>
       <View style={styles.subtitleContainer}>
         <Text style={[styles.subtitleText, { color: colorTheme.text.primary }]}>

@@ -11,7 +11,7 @@ import ro.pizzeriaq.qservices.data.entity.ProductCategory;
 import ro.pizzeriaq.qservices.service.DTO.ProductWithOptionsDTO;
 import ro.pizzeriaq.qservices.service.DTO.mapper.OptionListMapper;
 import ro.pizzeriaq.qservices.service.DTO.mapper.ProductWithOptionsMapper;
-import ro.pizzeriaq.qservices.service.ImageManagementService;
+import ro.pizzeriaq.qservices.service.ImageService;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 public class ProductWithOptionsMapperTest {
 
 	@Mock
-	private ImageManagementService imageManagementService;
+	private ImageService imageService;
 	@Mock
 	private OptionListMapper optionListMapper;
 
@@ -37,10 +37,10 @@ public class ProductWithOptionsMapperTest {
 	@BeforeEach
 	void setup() {
 		if (productWithOptionsMapper == null) {
-			productWithOptionsMapper = new ProductWithOptionsMapper(imageManagementService, optionListMapper);
+			productWithOptionsMapper = new ProductWithOptionsMapper(imageService, optionListMapper);
 		}
 		assertNotNull(productWithOptionsMapper);
-		assertNotNull(imageManagementService);
+		assertNotNull(imageService);
 		assertNotNull(optionListMapper);
 	}
 
@@ -96,7 +96,7 @@ public class ProductWithOptionsMapperTest {
 
 	@Test
 	void entityValid() {
-		when(imageManagementService.imageExists("generic-pizza.jpg"))
+		when(imageService.imageExists("generic-pizza.jpg"))
 				.thenReturn(true);
 
 		Product product = Product.builder()
@@ -126,7 +126,7 @@ public class ProductWithOptionsMapperTest {
 
 	@Test
 	void entityWithMissingImage() {
-		when(imageManagementService.imageExists("non-existent-file.jpg"))
+		when(imageService.imageExists("non-existent-file.jpg"))
 				.thenReturn(false);
 
 		Product product = Product.builder()

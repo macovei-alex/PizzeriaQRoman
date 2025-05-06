@@ -13,7 +13,6 @@ import logger from "src/utils/logger";
 import MenuSkeletonLoader from "src/components/menu/MenuScreen/MenuSkeletonLoader";
 import useColorTheme from "src/hooks/useColorTheme";
 import ErrorComponent from "../../components/shared/generic/ErrorComponent";
-import { useImageContext } from "src/context/ImageContext";
 
 type ProductSplit = {
   category: Category;
@@ -24,7 +23,6 @@ export default function MenuScreen() {
   logger.render("MenuScreen");
 
   const colorTheme = useColorTheme();
-  const imageContext = useImageContext();
   const productsQuery = useProductsQuery();
   const categoryQuery = useCategoriesQuery();
   const { scrollRef, scrollToPos } = useScrollRef();
@@ -72,7 +70,6 @@ export default function MenuScreen() {
         onRetry={() => {
           productsQuery.refetch();
           categoryQuery.refetch();
-          imageContext.refetchImages();
         }}
       />
     );

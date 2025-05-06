@@ -9,7 +9,7 @@ import ro.pizzeriaq.qservices.data.entity.Product;
 import ro.pizzeriaq.qservices.data.entity.ProductCategory;
 import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
 import ro.pizzeriaq.qservices.service.DTO.mapper.ProductMapper;
-import ro.pizzeriaq.qservices.service.ImageManagementService;
+import ro.pizzeriaq.qservices.service.ImageService;
 
 import java.math.BigDecimal;
 
@@ -20,15 +20,15 @@ import static org.mockito.Mockito.when;
 public class ProductMapperTest {
 
 	@Mock
-	private ImageManagementService imageManagementService;
+	private ImageService imageService;
 
 	private ProductMapper productMapper;
 
 
 	@BeforeEach
 	void setup() {
-		assertNotNull(imageManagementService);
-		productMapper = new ProductMapper(imageManagementService);
+		assertNotNull(imageService);
+		productMapper = new ProductMapper(imageService);
 	}
 
 
@@ -64,7 +64,7 @@ public class ProductMapperTest {
 
 	@Test
 	void entityValid() {
-		when(imageManagementService.imageExists("generic-pizza.jpg"))
+		when(imageService.imageExists("generic-pizza.jpg"))
 				.thenReturn(true);
 
 		Product product = Product.builder()
@@ -92,7 +92,7 @@ public class ProductMapperTest {
 
 	@Test
 	void entityWithMissingImage() {
-		when(imageManagementService.imageExists("non-existent-file.jpg"))
+		when(imageService.imageExists("non-existent-file.jpg"))
 				.thenReturn(false);
 
 		Product product = Product.builder()

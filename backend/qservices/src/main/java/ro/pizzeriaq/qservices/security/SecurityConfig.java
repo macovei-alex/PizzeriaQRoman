@@ -33,9 +33,10 @@ public class SecurityConfig {
 				.oauth2Client(Customizer.withDefaults())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/account/all").hasAuthority(Authorities.ADMIN.getName())
+						.requestMatchers("/accounts").hasAuthority(Authorities.ADMIN.getName())
 						.anyRequest().authenticated()
 				)
+				.anonymous(AbstractHttpConfigurer::disable)
 				.cors(AbstractHttpConfigurer::disable)
 				.csrf(AbstractHttpConfigurer::disable);
 

@@ -1,7 +1,5 @@
 import React, { useMemo } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { imageOrDefault } from "src/utils/files";
-import useSingleImage from "src/hooks/useSingleImage";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import useColorTheme from "src/hooks/useColorTheme";
 import PlusCircleSvg from "src/components/svg/PlusCircleSvg";
 import MinusCircleSvg from "src/components/svg/MinusCircleSvg";
@@ -11,6 +9,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
 import { formatPrice } from "src/utils/utils";
 import { useNavigation } from "@react-navigation/native";
+import RemoteImage from "src/components/shared/generic/RemoteImage";
 
 type NavigationProps = NativeStackNavigationProp<CartStackParamList, "CartScreen">;
 type CartItemCardProps = {
@@ -22,7 +21,6 @@ export default function CartItemCard({ cartItem, price }: CartItemCardProps) {
   logger.render("CartItemCard");
 
   const navigation = useNavigation<NavigationProps>();
-  const image = useSingleImage(cartItem.product.imageName);
   const colorTheme = useColorTheme();
   const { changeCartItemCount } = useCartContext();
 
@@ -55,12 +53,15 @@ export default function CartItemCard({ cartItem, price }: CartItemCardProps) {
         onPress={() =>
           navigation.navigate("ProductScreen", {
             productId: cartItem.product.id.toString(),
-            imageName: cartItem.product.imageName,
             cartItemId: cartItem.id.toString(),
           })
         }
       >
-        <Image source={imageOrDefault(image)} style={styles.image} />
+        <RemoteImage
+          imageName={cartItem.product.imageName}
+          imageVersion={cartItem.product.imageVersion}
+          style={styles.image}
+        />
       </TouchableOpacity>
 
       {/* info section */}

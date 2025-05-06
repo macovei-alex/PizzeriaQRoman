@@ -28,6 +28,7 @@ export type Product = {
   description: string;
   price: number;
   imageName: string;
+  imageVersion: number;
   categoryId: CategoryId;
 };
 

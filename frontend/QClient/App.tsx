@@ -3,7 +3,6 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { Platform } from "react-native";
 import useColorTheme from "src/hooks/useColorTheme";
 import { CartContextProvider } from "src/context/CartContext";
-import { ImageContextProvider } from "src/context/ImageContext";
 import Toast from "react-native-toast-message";
 import { StatusBar } from "expo-status-bar";
 import logger from "src/utils/logger";
@@ -15,7 +14,7 @@ const queryClient = new QueryClient({
     queries: {
       refetchOnWindowFocus: false,
       staleTime: 3600 * 1000,
-      gcTime: 0,
+      gcTime: 3600 * 1000,
       retry: false,
     },
   },
@@ -29,13 +28,11 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthContextProvider>
-        <ImageContextProvider>
-          <CartContextProvider>
-            <StatusBar style={colorTheme.statusBarStyle} />
-            <Navigation />
-            {Platform.OS === "ios" && <Toast />}
-          </CartContextProvider>
-        </ImageContextProvider>
+        <CartContextProvider>
+          <StatusBar style={colorTheme.statusBarStyle} />
+          <Navigation />
+          {Platform.OS === "ios" && <Toast />}
+        </CartContextProvider>
       </AuthContextProvider>
     </QueryClientProvider>
   );

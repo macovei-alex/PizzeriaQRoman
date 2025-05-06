@@ -1,15 +1,14 @@
 import React from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { StyleSheet } from "react-native";
 import useColorTheme from "src/hooks/useColorTheme";
-import { imageOrDefault } from "src/utils/files";
 import { Product } from "src/api/types/Product";
 import logger from "src/utils/logger";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { MenuStackParamList } from "src/navigation/MenuStackNavigator";
 import { formatPrice } from "src/utils/utils";
 import { useNavigation } from "@react-navigation/native";
-import useSingleImage from "src/hooks/useSingleImage";
+import RemoteImage from "src/components/shared/generic/RemoteImage";
 
 type NavigationProps = NativeStackNavigationProp<MenuStackParamList, "MenuScreen">;
 type ProductCardProps = {
@@ -21,11 +20,10 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const navigation = useNavigation<NavigationProps>();
   const colorTheme = useColorTheme();
-  const image = useSingleImage(product.imageName);
 
   return (
     <View style={[styles.container, { backgroundColor: colorTheme.background.card }]}>
-      <Image source={imageOrDefault(image)} style={styles.image} />
+      <RemoteImage imageName={product.imageName} imageVersion={product.imageVersion} style={styles.image} />
 
       <View style={styles.infoSection}>
         {/* title */}
@@ -49,12 +47,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <TouchableOpacity
           testID={product.name === "Pizza Capriciosa" ? "info-button-capriciosa" : undefined}
           style={[styles.infoButtonContainer, { backgroundColor: colorTheme.background.accent }]}
-          onPress={() => {
-            navigation.navigate("ProductScreen", {
-              productId: product.id.toString(),
-              imageName: product.imageName,
-            });
-          }}
+          onPress={() => navigation.navigate("ProductScreen", { productId: product.id.toString() })}
         >
           <Text style={[styles.infoButtonText, { color: colorTheme.text.onAccent }]}>Informații</Text>
         </TouchableOpacity>

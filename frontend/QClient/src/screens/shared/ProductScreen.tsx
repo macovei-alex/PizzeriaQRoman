@@ -7,7 +7,6 @@ import HorizontalLine from "src/components/shared/ProductScreen/HorizontalLine";
 import { Fragment } from "react";
 import TitleSection from "src/components/shared/ProductScreen/TitleSection";
 import { CartItemOptions, useCartContext } from "src/context/CartContext";
-import useSingleImage from "src/hooks/useSingleImage";
 import useProductWithOptionsQuery from "src/api/hooks/useProductWithOptionsQuery";
 import logger from "src/utils/logger";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
@@ -27,16 +26,14 @@ export default function ProductScreen() {
   const { cart, addCartItem, changeCartItemOptions } = useCartContext();
   const route = useRoute<RouteProps>();
   const productId = Number(route.params.productId);
-  const imageName = route.params.imageName;
   const cartItemId = "cartItemId" in route.params ? Number(route.params.cartItemId) : null;
   const cartItem = cartItemId ? cart.find((item) => item.id === cartItemId) : null;
   if (!!cartItemId && !cartItem) throw new Error(`Cart item not found for id ( ${cartItemId} )`);
 
   const productQuery = useProductWithOptionsQuery(productId);
-  const image = useSingleImage(imageName);
   const [cartItemOptions, setCartItemOptions] = useState<CartItemOptions>(cartItem?.options ?? {});
 
-  if (productQuery.isLoading || !image || !productQuery.data) return <ScreenActivityIndicator text="" />;
+  if (productQuery.isLoading || !productQuery.data) return <ScreenActivityIndicator text="" />;
   if (productQuery.isError) return <ErrorComponent onRetry={productQuery.refetch} />;
 
   const product = productQuery.data;
@@ -44,7 +41,7 @@ export default function ProductScreen() {
   return (
     <SafeAreaView>
       <ScrollView>
-        <TitleSection product={product} productImage={image} />
+        <TitleSection product={product} />
 
         {product.optionLists?.map((optionList) => (
           <Fragment key={optionList.id}>

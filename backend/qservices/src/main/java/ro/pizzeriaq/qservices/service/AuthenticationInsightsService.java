@@ -28,4 +28,10 @@ public class AuthenticationInsightsService {
 		return UUID.fromString(jwtId);
 	}
 
+
+	public boolean isAuthenticated() {
+		return SecurityContextHolder.getContext().getAuthentication() != null
+				&& SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
+	}
+
 }
