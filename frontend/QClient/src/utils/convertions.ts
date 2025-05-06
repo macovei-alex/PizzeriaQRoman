@@ -1,5 +1,6 @@
 import { CartItemOptions } from "src/context/CartContext";
 import { PlacedOrderOptionList } from "src/api/types/Order";
+import { ColorValue } from "react-native";
 
 export function convertCartItemOptions(cartItemOptions: CartItemOptions): PlacedOrderOptionList[] {
   return Object.entries(cartItemOptions).map(([optionListId, optionList]) => ({
@@ -9,4 +10,35 @@ export function convertCartItemOptions(cartItemOptions: CartItemOptions): Placed
       count: optionCount,
     })),
   }));
+}
+
+type RGBA = {
+  r: number;
+  g: number;
+  b: number;
+  a: number;
+};
+
+export function convertToRGBA(color: ColorValue): RGBA | null {
+  if (typeof color === "string") {
+    const hexMatch = color.match(/^#([a-fA-F0-9]{3,8})$/);
+    if (hexMatch) {
+      let hex = hexMatch[1];
+      if (hex.length === 3) {
+        hex = hex
+          .split("")
+          .map((c) => c + c)
+          .join("");
+      }
+      if (hex.length === 6) hex += "FF";
+      const intVal = parseInt(hex, 16);
+      const r = (intVal >> 24) & 255;
+      const g = (intVal >> 16) & 255;
+      const b = (intVal >> 8) & 255;
+      const a = (intVal & 255) / 255;
+      return { r, g, b, a };
+    }
+  }
+
+  return null;
 }
