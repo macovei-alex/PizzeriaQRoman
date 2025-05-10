@@ -46,70 +46,74 @@ export default function CartItemCard({ cartItem, price }: CartItemCardProps) {
   );
 
   return (
-    <View style={[styles.container, { backgroundColor: colorTheme.background.card }]}>
-      {/* image */}
-      <TouchableOpacity
-        style={styles.imageContainer}
-        onPress={() =>
-          navigation.navigate("ProductScreen", {
-            productId: cartItem.product.id.toString(),
-            cartItemId: cartItem.id.toString(),
-          })
-        }
-      >
-        <RemoteImage
-          imageName={cartItem.product.imageName}
-          imageVersion={cartItem.product.imageVersion}
-          style={styles.image}
-        />
-      </TouchableOpacity>
+    <TouchableOpacity
+      activeOpacity={0.5}
+      onPress={() =>
+        navigation.navigate("ProductScreen", {
+          productId: cartItem.product.id.toString(),
+          cartItemId: cartItem.id.toString(),
+        })
+      }
+    >
+      <View style={[styles.container, { backgroundColor: colorTheme.background.card }]}>
+        {/* image */}
+        <View style={styles.imageContainer}>
+          <RemoteImage
+            imageName={cartItem.product.imageName}
+            imageVersion={cartItem.product.imageVersion}
+            style={styles.image}
+          />
+        </View>
 
-      {/* info section */}
-      <View style={styles.infoSectionContainer}>
-        {/* product title */}
-        <Text
-          style={[styles.productNameText, { color: colorTheme.text.primary }]}
-          numberOfLines={1}
-          ellipsizeMode="tail"
-        >
-          {cartItem.product.name}
-        </Text>
+        {/* info section */}
+        <View style={styles.infoSectionContainer}>
+          {/* product title */}
+          <Text
+            style={[styles.productNameText, { color: colorTheme.text.primary }]}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {cartItem.product.name}
+          </Text>
 
-        {/* product subtitle */}
-        <Text
-          style={[styles.productSubtitleText, { color: colorTheme.text.primary }]}
-          numberOfLines={1}
-          ellipsizeMode="tail"
-        >
-          {cartItem.product.subtitle}
-        </Text>
+          {/* product subtitle */}
+          <Text
+            style={[styles.productSubtitleText, { color: colorTheme.text.primary }]}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {cartItem.product.subtitle}
+          </Text>
 
-        {/* product options */}
-        <Text style={[styles.productOptionsText, { color: colorTheme.text.secondary }]}>
-          {selectedOptionsStr}
-        </Text>
+          {/* product options */}
+          <Text style={[styles.productOptionsText, { color: colorTheme.text.secondary }]}>
+            {selectedOptionsStr}
+          </Text>
 
-        {/* price section */}
-        <View style={styles.priceSectionContainer}>
-          <View style={[styles.priceContainer, { backgroundColor: colorTheme.background.accent }]}>
-            <Text style={[styles.priceText, { color: colorTheme.text.onAccent }]}>{formatPrice(price)}</Text>
+          {/* price section */}
+          <View style={styles.priceSectionContainer}>
+            <View style={[styles.priceContainer, { backgroundColor: colorTheme.background.accent }]}>
+              <Text style={[styles.priceText, { color: colorTheme.text.onAccent }]}>
+                {formatPrice(price)}
+              </Text>
+            </View>
+
+            {/* minus */}
+            <TouchableOpacity onPress={() => changeCartItemCount(cartItem.id, -1)}>
+              <MinusCircleSvg style={styles.plusMinusSvg} />
+            </TouchableOpacity>
+
+            {/* count */}
+            <Text style={styles.itemCountText}>{cartItem.count}</Text>
+
+            {/* plus */}
+            <TouchableOpacity onPress={() => changeCartItemCount(cartItem.id, 1)}>
+              <PlusCircleSvg style={styles.plusMinusSvg} />
+            </TouchableOpacity>
           </View>
-
-          {/* minus */}
-          <TouchableOpacity onPress={() => changeCartItemCount(cartItem.id, -1)}>
-            <MinusCircleSvg style={styles.plusMinusSvg} />
-          </TouchableOpacity>
-
-          {/* count */}
-          <Text style={styles.itemCountText}>{cartItem.count}</Text>
-
-          {/* plus */}
-          <TouchableOpacity onPress={() => changeCartItemCount(cartItem.id, 1)}>
-            <PlusCircleSvg style={styles.plusMinusSvg} />
-          </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
