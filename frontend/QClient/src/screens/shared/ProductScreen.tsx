@@ -33,8 +33,9 @@ export default function ProductScreen() {
   const productQuery = useProductWithOptionsQuery(productId);
   const [cartItemOptions, setCartItemOptions] = useState<CartItemOptions>(cartItem?.options ?? {});
 
-  if (productQuery.isLoading || !productQuery.data) return <ScreenActivityIndicator text="" />;
-  if (productQuery.isError) return <ErrorComponent onRetry={productQuery.refetch} />;
+  if (productQuery.isFetching) return <ScreenActivityIndicator text="" />;
+  if (productQuery.isError) return <ErrorComponent />;
+  if (!productQuery.data) throw new Error("Product not found");
 
   const product = productQuery.data;
 

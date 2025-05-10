@@ -1,6 +1,8 @@
 import axios from "axios";
 import { ENV } from "src/constants";
 import { ProductId } from "./types/Product";
+import { AddressId } from "./types/Address";
+import { AccountId } from "src/context/AuthContext";
 
 export const api = {
   axios: axios.create({
@@ -10,10 +12,10 @@ export const api = {
   }),
 
   routes: Object.freeze({
-    account: (accountId: string) => {
+    account: (accountId: AccountId) => {
       return {
         addresses: `/accounts/${accountId}/addresses`,
-        address: (addressId: number) => `/accounts/${accountId}/addresses/${addressId}`,
+        address: (addressId: AddressId) => `/accounts/${accountId}/addresses/${addressId}`,
         orders: `/accounts/${accountId}/orders`,
       };
     },

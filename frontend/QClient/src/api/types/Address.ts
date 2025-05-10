@@ -1,3 +1,5 @@
+export type AddressId = number;
+
 export type Address = {
   id: number;
   addressType: string;

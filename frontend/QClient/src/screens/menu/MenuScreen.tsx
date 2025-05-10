@@ -63,17 +63,8 @@ export default function MenuScreen() {
     return productsSplit;
   }, [productsQuery.data, categoryQuery.data]);
 
-  if (productsQuery.isLoading || categoryQuery.isLoading) return <MenuSkeletonLoader />;
-  if (productsQuery.isError || categoryQuery.isError) {
-    return (
-      <ErrorComponent
-        onRetry={() => {
-          productsQuery.refetch();
-          categoryQuery.refetch();
-        }}
-      />
-    );
-  }
+  if (productsQuery.isFetching || categoryQuery.isFetching) return <MenuSkeletonLoader />;
+  if (productsQuery.isError || categoryQuery.isError) return <ErrorComponent />;
 
   return (
     <SafeAreaView style={{ backgroundColor: colorTheme.background.primary }}>

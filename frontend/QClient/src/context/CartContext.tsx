@@ -2,6 +2,7 @@ import { OptionId, OptionListId, ProductWithOptions } from "src/api/types/Produc
 import logger from "src/utils/logger";
 import React, { createContext, ReactNode, useCallback, useContext, useRef, useState } from "react";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function logCart(cart: CartItem[]) {
   logger.log(
     JSON.stringify(
@@ -47,11 +48,7 @@ export function CartContextProvider({ children }: { children: ReactNode }) {
   const nextId = useRef(1);
 
   const addCartItem = useCallback((product: Readonly<ProductWithOptions>, options: CartItemOptions) => {
-    setCart((prev) => {
-      const newCart = [...prev, { id: nextId.current++, product, options, count: 1 }];
-      logCart(newCart);
-      return newCart;
-    });
+    setCart((prev) => [...prev, { id: nextId.current++, product, options, count: 1 }]);
   }, []);
 
   const changeCartItemCount = useCallback(
@@ -62,17 +59,9 @@ export function CartContextProvider({ children }: { children: ReactNode }) {
 
       item.count += increment;
       if (item.count === 0) {
-        setCart((prev) => {
-          const newCart = prev.filter((item) => item.id !== cartItemId);
-          logCart(newCart);
-          return newCart;
-        });
+        setCart((prev) => prev.filter((item) => item.id !== cartItemId));
       } else if (item.count > 0) {
-        setCart((prev) => {
-          const newCart = [...prev];
-          logCart(newCart);
-          return newCart;
-        });
+        setCart((prev) => [...prev]);
       }
     },
     [cart]
@@ -84,11 +73,7 @@ export function CartContextProvider({ children }: { children: ReactNode }) {
       if (!item) throw new Error(`Item ( ${cartItemId} ) not found in cart`);
 
       item.options = options;
-      setCart((prev) => {
-        const newCart = [...prev];
-        logCart(newCart);
-        return newCart;
-      });
+      setCart((prev) => [...prev]);
     },
     [cart]
   );

@@ -79,7 +79,7 @@ export default function CartScreen() {
   }
 
   if (sendingOrder) return <ScreenActivityIndicator text="Se trimite comanda..." />;
-  if (addressQuery.isLoading) return <ScreenActivityIndicator text="Se încarcă adresele..." />;
+  if (addressQuery.isFetching) return <ScreenActivityIndicator text="Se încarcă adresele..." />;
 
   return (
     <SafeAreaView style={{ backgroundColor: colorTheme.background.primary }}>

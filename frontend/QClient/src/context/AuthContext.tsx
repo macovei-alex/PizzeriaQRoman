@@ -16,6 +16,8 @@ import logger from "src/utils/logger";
 import { z } from "zod";
 import * as SecureStore from "expo-secure-store";
 
+export type AccountId = string;
+
 const AccountClaimsSchema = z
   .object({
     sub: z.string(),
@@ -30,7 +32,7 @@ const AccountClaimsSchema = z
   .passthrough()
   .transform(({ sub, email, email_verified, given_name, family_name, ...rest }) => ({
     ...rest,
-    id: sub,
+    id: sub as AccountId,
     email,
     emailVerified: email_verified,
     givenName: given_name,

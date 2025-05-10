@@ -22,9 +22,7 @@ export default function OrderCard({ order, containerStyle }: OrderCardProps) {
   const productsQuery = useProductsQuery();
 
   const processedItems = useMemo(() => {
-    if (!productsQuery.data) {
-      return [];
-    }
+    if (!productsQuery.data) return [];
     return order.items
       .map((item) => ({
         orderItem: item,
@@ -37,12 +35,8 @@ export default function OrderCard({ order, containerStyle }: OrderCardProps) {
     }[];
   }, [productsQuery, order]);
 
-  if (productsQuery.isLoading) {
-    return <Text>Loading...</Text>;
-  }
-  if (productsQuery.isError) {
-    return <ErrorComponent onRetry={productsQuery.refetch} />;
-  }
+  if (productsQuery.isFetching) return null;
+  if (productsQuery.isError) return <ErrorComponent />;
 
   return (
     <View style={[styles.container, { borderColor: colorTheme.text.primary }, containerStyle]}>

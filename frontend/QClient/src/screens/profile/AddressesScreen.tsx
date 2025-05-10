@@ -113,7 +113,7 @@ export default function AddressesScreen() {
   }, [navigation, route.params]);
 
   if (addressesQuery.isFetching) return <ScreenActivityIndicator text="Se încarcă adresele" />;
-  if (addressesQuery.isError) return <ErrorComponent onRetry={() => addressesQuery.refetch()} />;
+  if (addressesQuery.isError) return <ErrorComponent />;
 
   return (
     <SafeAreaView style={[styles.contaier, { backgroundColor: colorTheme.background.primary }]}>
