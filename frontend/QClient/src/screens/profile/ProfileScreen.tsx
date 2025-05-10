@@ -4,6 +4,7 @@ import React, { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "rea
 import { SafeAreaView } from "react-native-safe-area-context";
 import AccountForm from "src/components/profile/ProfileScreen/AccountForm";
 import TitleSection from "src/components/profile/ProfileScreen/TitleSection";
+import ArrowSvg from "src/components/svg/ArrowSvg";
 import { useAuthContext } from "src/context/AuthContext";
 import { useCartContext } from "src/context/CartContext";
 import useColorTheme from "src/hooks/useColorTheme";
@@ -16,8 +17,6 @@ export default function ProfileScreen() {
   logger.render("ProfileScreen");
 
   const authContext = useAuthContext();
-  if (!authContext.account) throw new Error("Account not found");
-
   const cartContext = useCartContext();
   const colorTheme = useColorTheme();
   const navigation = useNavigation<NavigationProps>();
@@ -31,19 +30,26 @@ export default function ProfileScreen() {
         <View style={[styles.textAreaContainer, { backgroundColor: colorTheme.background.primary }]}>
           {/* account data section */}
           <AccountForm />
-          {/* navigation buttons */}
+
+          {/* addresses button */}
           <TouchableOpacity
             style={[styles.buttonContainer, { borderBottomColor: colorTheme.background.elevated }]}
             onPress={() => navigation.push("AddressesScreen")}
           >
             <Text style={[styles.buttonText, { color: colorTheme.text.primary }]}>Adresele mele</Text>
+            <ArrowSvg style={styles.arrowSvg} />
           </TouchableOpacity>
+
+          {/* order history button */}
           <TouchableOpacity
             style={[styles.buttonContainer, { borderBottomColor: colorTheme.background.elevated }]}
             onPress={() => navigation.push("OrderHistoryScreen")}
           >
             <Text style={[styles.buttonText, { color: colorTheme.text.primary }]}>Istoricul comenzilor</Text>
+            <ArrowSvg style={styles.arrowSvg} />
           </TouchableOpacity>
+
+          {/* payment methods button */}
           <TouchableOpacity
             style={[styles.buttonContainer, { borderBottomColor: colorTheme.background.elevated }]}
             onPress={() => {
@@ -52,6 +58,7 @@ export default function ProfileScreen() {
             }}
           >
             <Text style={[styles.buttonText, { color: colorTheme.text.primary }]}>Deconectare</Text>
+            <ArrowSvg style={styles.arrowSvg} />
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -76,5 +83,9 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 18,
     fontWeight: "600",
+  },
+  arrowSvg: {
+    width: 26,
+    height: 26,
   },
 });

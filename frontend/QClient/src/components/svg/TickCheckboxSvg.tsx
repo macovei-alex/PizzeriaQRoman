@@ -22,8 +22,24 @@ export default function TickCheckboxSvg({ style, checked }: TickCheckboxSvgProps
       />
       {checked && (
         <>
-          <Line x1="25" y1="50" x2="48" y2="72" stroke={colorTheme.text.success} strokeWidth="7" />
-          <Line x1="48" y1="72" x2="70" y2="28" stroke={colorTheme.text.success} strokeWidth="7" />
+          <Line
+            x1="27"
+            y1="52"
+            x2="48"
+            y2="70"
+            stroke={colorTheme.text.success}
+            strokeWidth="7"
+            strokeLinecap="round"
+          />
+          <Line
+            x1="48"
+            y1="70"
+            x2="68"
+            y2="30"
+            stroke={colorTheme.text.success}
+            strokeWidth="7"
+            strokeLinecap="round"
+          />
         </>
       )}
     </Svg>
