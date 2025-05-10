@@ -1,6 +1,5 @@
 import { OptionId, OptionListId, ProductId } from "./Product";
 
-// TODO: Create these types
 export type PlacedOrderOption = {
   optionId: OptionId;
   count: number;

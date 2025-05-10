@@ -60,7 +60,7 @@ export default function CartScreen() {
     };
 
     api.axios
-      .post(`/accounts/${authContext.account!.id}/orders`, order)
+      .post(api.routes.account(authContext.account!.id).orders, order)
       .then((res) => {
         if (res.status === 200 || res.status === 201) {
           emptyCart();

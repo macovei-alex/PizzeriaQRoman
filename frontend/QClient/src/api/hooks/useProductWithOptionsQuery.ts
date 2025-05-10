@@ -5,7 +5,7 @@ import { ProductId, ProductWithOptions } from "src/api/types/Product";
 export default function useProductWithOptionsQuery(productId: ProductId) {
   return useQuery<ProductWithOptions, Error>({
     queryFn: async () => {
-      return (await api.axios.get(`/products/${productId}`)).data as ProductWithOptions;
+      return (await api.axios.get<ProductWithOptions>(api.routes.product(productId))).data;
     },
     queryKey: ["product", productId],
   });

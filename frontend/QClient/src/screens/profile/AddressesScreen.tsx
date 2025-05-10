@@ -38,6 +38,8 @@ type RouteProps = RouteProp<ProfileStackParamList, "AddressesScreen">;
 export default function AddressesScreen() {
   const colorTheme = useColorTheme();
   const authContext = useAuthContext();
+  if (!authContext.account) throw new Error("Account is not defined in AddressesScreen");
+  const accountId = authContext.account.id;
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<RouteProps>();
   const addressesQuery = useAddressesQuery();
@@ -49,21 +51,27 @@ export default function AddressesScreen() {
       if (!address) return;
       try {
         const httpMethod = address.id === 0 ? "POST" : "PUT";
-        const url = `/accounts/${authContext.account?.id}/addresses${httpMethod === "PUT" ? `/${address.id}` : ""}`;
-        await api.axios.request<Address>({ method: httpMethod, url: url, data: address });
+        await api.axios.request<Address>({
+          method: httpMethod,
+          url:
+            httpMethod === "POST"
+              ? api.routes.account(accountId).addresses
+              : api.routes.account(accountId).address(address.id),
+          data: address,
+        });
         await addressesQuery.refetch();
       } catch (error) {
         logger.error(error);
       }
     },
-    [authContext.account?.id, addressesQuery]
+    [accountId, addressesQuery]
   );
 
   const showDeleteAddressDialog = useCallback(
     async (addressId: number) => {
       const deleteAddress = async () => {
         try {
-          await api.axios.delete(`/accounts/${authContext.account?.id}/addresses/${addressId}`);
+          await api.axios.delete(api.routes.account(accountId).address(addressId));
           await addressesQuery.refetch();
         } catch (error) {
           console.error(error);
@@ -85,7 +93,7 @@ export default function AddressesScreen() {
         { cancelable: false }
       );
     },
-    [authContext.account?.id, addressesQuery]
+    [accountId, addressesQuery]
   );
 
   useLayoutEffect(() => {

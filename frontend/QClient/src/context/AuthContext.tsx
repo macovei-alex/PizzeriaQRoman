@@ -53,8 +53,6 @@ const discovery = {
   tokenEndpoint: `${ENV.EXPO_PUBLIC_KEYCLOAK_REALM_URL}/protocol/openid-connect/token`,
 };
 
-const AuthContext = createContext<AuthContextType | null>(null);
-
 function extractAccountClaims(idToken: string): AccountClaims {
   try {
     return AccountClaimsSchema.parse(JSON.parse(atob(idToken.split(".")[1])));
@@ -65,11 +63,19 @@ function extractAccountClaims(idToken: string): AccountClaims {
   }
 }
 
+const AuthContext = createContext<AuthContextType | null>(null);
+
 export function useAuthContext() {
   const context = useContext(AuthContext);
   if (!context) throw new Error("useAuthContext must be used within a AuthContextProvider");
   return context;
 }
+
+const authAxios = axios.create({
+  baseURL: ENV.EXPO_PUBLIC_KEYCLOAK_REALM_URL,
+  withCredentials: false,
+  timeout: 5000,
+});
 
 export function AuthContextProvider({ children }: { children: ReactNode }) {
   logger.render("AuthContextProvider");
@@ -161,8 +167,8 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(async () => {
     await Promise.all([
-      axios.post(
-        `${ENV.EXPO_PUBLIC_KEYCLOAK_REALM_URL}/protocol/openid-connect/logout`,
+      authAxios.post(
+        "/protocol/openid-connect/logout",
         {
           client_id: ENV.EXPO_PUBLIC_KEYCLOAK_CLIENT_ID,
           refresh_token: refreshToken,
@@ -178,8 +184,8 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
   const tryRefreshTokens = useCallback(async () => {
     if (!refreshToken) return null;
     try {
-      const response = await axios.post(
-        `${ENV.EXPO_PUBLIC_KEYCLOAK_REALM_URL}/protocol/openid-connect/token`,
+      const response = await authAxios.post(
+        "/protocol/openid-connect/token",
         {
           grant_type: "refresh_token",
           client_id: ENV.EXPO_PUBLIC_KEYCLOAK_CLIENT_ID,
@@ -220,8 +226,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
       (response) => response,
       async (error: AxiosError) => {
         const fullUrl = (error.config?.baseURL ?? "") + (error.config?.url ?? "");
-        const tokenUrl = `${ENV.EXPO_PUBLIC_KEYCLOAK_REALM_URL}/protocol/openid-connect/token`;
-        if (!error.config || fullUrl === tokenUrl) {
+        if (!error.config || fullUrl.includes("/openid-connect/token")) {
           return Promise.reject(error);
         }
 
