@@ -1,20 +1,53 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import React, { useCallback, useLayoutEffect, useState } from "react";
+import { ActivityIndicator, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { api } from "src/api";
+import { usePhoneNumberQuery } from "src/api/hooks/usePhoneNumberQuery";
+import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import LabelledBorderComponent from "src/components/shared/generic/LabelledBorderComponent";
+import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
 import { useAuthContext } from "src/context/AuthContext";
 import useColorTheme from "src/hooks/useColorTheme";
+import logger from "src/utils/logger";
 
 export default function AccountForm() {
   const authContext = useAuthContext();
   if (!authContext.account) throw new Error("Account not found in context");
   const colorTheme = useColorTheme();
+  const phoneNumberQuery = usePhoneNumberQuery(authContext.account.id);
 
   const [accountData, setAccountData] = useState({
-    givenName: authContext.account.givenName,
-    familyName: authContext.account.familyName,
+    firstName: authContext.account.givenName,
+    lastName: authContext.account.familyName,
     email: authContext.account.email,
-    phone: "0733983257",
+    phoneNumber: "",
   });
+  const [updatingInfo, setUpdatingInfo] = useState(false);
+
+  useLayoutEffect(() => {
+    setAccountData((prev) => {
+      return { ...prev, phoneNumber: phoneNumberQuery.data ?? "" };
+    });
+  }, [phoneNumberQuery.data]);
+
+  const handleInfoUpdate = useCallback(() => {
+    setUpdatingInfo(true);
+    api.axios
+      .put(api.routes.account(authContext.account!.id).self, accountData)
+      .catch((error) => {
+        logger.error("Error updating account data", error);
+        setAccountData({
+          firstName: authContext.account!.givenName,
+          lastName: authContext.account!.familyName,
+          email: authContext.account!.email,
+          phoneNumber: "",
+        });
+        phoneNumberQuery.refetch();
+      })
+      .finally(() => setUpdatingInfo(false));
+  }, [authContext.account, accountData, phoneNumberQuery]);
+
+  if (phoneNumberQuery.isFetching) return <ScreenActivityIndicator />;
+  if (phoneNumberQuery.isError) return <ErrorComponent size="small" />;
 
   return (
     <View style={styles.container}>
@@ -26,8 +59,8 @@ export default function AccountForm() {
         labelStyle={styles.inputLabel}
       >
         <TextInput
-          value={accountData.givenName}
-          onChangeText={(text) => setAccountData({ ...accountData, givenName: text })}
+          value={accountData.firstName}
+          onChangeText={(text) => setAccountData({ ...accountData, firstName: text })}
           style={styles.input}
         />
       </LabelledBorderComponent>
@@ -40,8 +73,8 @@ export default function AccountForm() {
         labelStyle={styles.inputLabel}
       >
         <TextInput
-          value={accountData.familyName}
-          onChangeText={(text) => setAccountData({ ...accountData, familyName: text })}
+          value={accountData.lastName}
+          onChangeText={(text) => setAccountData({ ...accountData, lastName: text })}
           style={styles.input}
         />
       </LabelledBorderComponent>
@@ -54,7 +87,7 @@ export default function AccountForm() {
         labelStyle={styles.inputLabel}
       >
         <TextInput
-          value={authContext.account.email}
+          value={accountData.email}
           onChangeText={(text) => setAccountData({ ...accountData, email: text })}
           style={styles.input}
         />
@@ -70,13 +103,21 @@ export default function AccountForm() {
         <Text style={styles.phoneNumberPrefix}>+40</Text>
         <TextInput
           style={styles.input}
-          value={accountData.phone}
-          onChangeText={(text) => setAccountData({ ...accountData, phone: text })}
+          value={accountData.phoneNumber}
+          onChangeText={(text) => setAccountData({ ...accountData, phoneNumber: text })}
         />
       </LabelledBorderComponent>
 
-      <TouchableOpacity style={[styles.button, { backgroundColor: colorTheme.background.accent }]}>
-        <Text style={[styles.buttonText, { color: colorTheme.text.onAccent }]}>Salvați modificările</Text>
+      <TouchableOpacity
+        style={[styles.button, { backgroundColor: colorTheme.background.accent }]}
+        disabled={updatingInfo}
+        onPress={handleInfoUpdate}
+      >
+        {updatingInfo ? (
+          <ActivityIndicator size={27} color={colorTheme.text.onAccent} />
+        ) : (
+          <Text style={[styles.buttonText, { color: colorTheme.text.onAccent }]}>Salvați modificările</Text>
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -100,6 +141,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 10,
+    flexGrow: 1,
   },
   phoneNumberContainerStyle: {
     flexDirection: "row",

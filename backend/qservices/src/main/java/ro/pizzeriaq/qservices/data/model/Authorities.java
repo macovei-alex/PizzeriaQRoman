@@ -1,4 +1,4 @@
-package ro.pizzeriaq.qservices.security;
+package ro.pizzeriaq.qservices.data.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

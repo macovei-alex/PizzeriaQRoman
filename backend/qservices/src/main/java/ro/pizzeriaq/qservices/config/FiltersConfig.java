@@ -1,9 +1,11 @@
-package ro.pizzeriaq.qservices.filters;
+package ro.pizzeriaq.qservices.config;
 
 import jakarta.servlet.Filter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import ro.pizzeriaq.qservices.config.filters.AccountCreationFilter;
+import ro.pizzeriaq.qservices.config.filters.CustomRequestLoggingFilter;
 import ro.pizzeriaq.qservices.service.AccountService;
 import ro.pizzeriaq.qservices.service.AuthenticationInsightsService;
 import ro.pizzeriaq.qservices.service.KeycloakService;

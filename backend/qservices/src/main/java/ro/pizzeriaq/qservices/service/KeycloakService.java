@@ -3,6 +3,7 @@ package ro.pizzeriaq.qservices.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,8 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 import ro.pizzeriaq.qservices.data.model.KeycloakUser;
 import ro.pizzeriaq.qservices.exceptions.KeycloakException;
+import ro.pizzeriaq.qservices.service.DTO.AccountDto;
+import ro.pizzeriaq.qservices.service.DTO.mapper.AccountMapper;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,16 +20,19 @@ import java.util.UUID;
 @Service
 public class KeycloakService {
 
+	private final AccountMapper accountMapper;
 	private final RestClient restClient;
 	private final OAuth2AuthorizedClientManager authorizedClientManager;
 	private final String keycloakRealm;
 
 
 	public KeycloakService(
+			AccountMapper accountMapper,
 			OAuth2AuthorizedClientManager authorizedClientManager,
 			@Value("${keycloak.base-url}") String keycloakBaseUrl,
 			@Value("${keycloak.realm}") String keycloakRealm
 	) {
+		this.accountMapper = accountMapper;
 		this.keycloakRealm = keycloakRealm;
 		this.authorizedClientManager = authorizedClientManager;
 		this.restClient = RestClient.builder()
@@ -35,24 +41,13 @@ public class KeycloakService {
 	}
 
 
-	private OAuth2AuthorizeRequest createClientAuthorizeRequest() {
-		return OAuth2AuthorizeRequest
-				.withClientRegistrationId("keycloak")
-				.principal("keycloak-client")
-				.build();
-	}
-
-
 	public List<KeycloakUser> getUsers() {
-		var authorizedClient = authorizedClientManager.authorize(createClientAuthorizeRequest());
-		if (authorizedClient == null) {
-			throw new KeycloakException("Failed to authorize client");
-		}
-
+		var accessToken = generateAccessToken();
 		try {
-			return this.restClient.get()
+			return restClient
+					.get()
 					.uri("/admin/realms/%s/users".formatted(keycloakRealm))
-					.header(HttpHeaders.AUTHORIZATION, "Bearer " + authorizedClient.getAccessToken().getTokenValue())
+					.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
 					.retrieve()
 					.body(new ParameterizedTypeReference<>() {
 					});
@@ -63,21 +58,47 @@ public class KeycloakService {
 
 
 	public KeycloakUser getUser(UUID id) {
-		var authorizedClient = authorizedClientManager.authorize(createClientAuthorizeRequest());
-		if (authorizedClient == null) {
+		var accessToken = generateAccessToken();
+		try {
+			return restClient
+					.get()
+					.uri("/admin/realms/%s/users/%s".formatted(keycloakRealm, id))
+					.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+					.retrieve()
+					.body(KeycloakUser.class);
+		} catch (RestClientException ex) {
+			throw new KeycloakException("Failed to get user ( %s )".formatted(id), ex);
+		}
+	}
+
+
+	public void updateUser(UUID id, AccountDto accountDto) {
+		var accessToken = generateAccessToken();
+		try {
+			restClient
+					.put()
+					.uri("/admin/realms/%s/users/%s".formatted(keycloakRealm, id))
+					.accept(MediaType.APPLICATION_JSON)
+					.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+					.body(accountMapper.toKeycloakAccountUpdateDto(accountDto))
+					.retrieve()
+					.toBodilessEntity();
+		} catch (RestClientException ex) {
+			throw new KeycloakException("Failed to update user ( %s )".formatted(id), ex);
+		}
+	}
+
+
+	private String generateAccessToken() {
+		var client = authorizedClientManager.authorize(OAuth2AuthorizeRequest
+				.withClientRegistrationId("keycloak")
+				.principal("keycloak-client")
+				.build()
+		);
+		if (client == null) {
 			throw new KeycloakException("Failed to authorize client");
 		}
-
-		try {
-			return this.restClient.get()
-					.uri("/admin/realms/%s/users/%s".formatted(keycloakRealm, id))
-					.header(HttpHeaders.AUTHORIZATION, "Bearer " + authorizedClient.getAccessToken().getTokenValue())
-					.retrieve()
-					.body(new ParameterizedTypeReference<>() {
-					});
-		} catch (RestClientException ex) {
-			throw new KeycloakException("Failed to get user ( %s ) or parse response".formatted(id), ex);
-		}
+		return client.getAccessToken().getTokenValue();
 	}
 
 }

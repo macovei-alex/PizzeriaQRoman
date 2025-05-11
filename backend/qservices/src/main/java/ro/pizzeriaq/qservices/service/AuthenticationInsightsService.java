@@ -2,7 +2,7 @@ package ro.pizzeriaq.qservices.service;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import ro.pizzeriaq.qservices.security.Authorities;
+import ro.pizzeriaq.qservices.data.model.Authorities;
 
 import java.util.UUID;
 

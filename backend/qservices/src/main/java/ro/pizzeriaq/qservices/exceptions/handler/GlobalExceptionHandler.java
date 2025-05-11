@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import ro.pizzeriaq.qservices.exceptions.AccessDeniedException;
 import ro.pizzeriaq.qservices.exceptions.KeycloakException;
 import ro.pizzeriaq.qservices.exceptions.PhoneNumberMissingException;
 
@@ -80,6 +81,13 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException e) {
 		logger.error("Entity not found", e);
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+	}
+
+
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException e) {
+		logger.error("Access denied", e);
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
 	}
 
 

@@ -1,4 +1,4 @@
-package ro.pizzeriaq.qservices.security;
+package ro.pizzeriaq.qservices.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +17,7 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import ro.pizzeriaq.qservices.data.model.Authorities;
 
 import java.util.ArrayList;
 import java.util.Collection;

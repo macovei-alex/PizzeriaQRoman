@@ -14,6 +14,8 @@ export const api = {
   routes: Object.freeze({
     account: (accountId: AccountId) => {
       return {
+        self: `/accounts/${accountId}`,
+        phoneNumber: `/accounts/${accountId}/phone-number`,
         addresses: `/accounts/${accountId}/addresses`,
         address: (addressId: AddressId) => `/accounts/${accountId}/addresses/${addressId}`,
         orders: `/accounts/${accountId}/orders`,

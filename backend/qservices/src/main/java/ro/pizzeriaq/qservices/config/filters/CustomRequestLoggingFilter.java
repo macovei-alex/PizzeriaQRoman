@@ -1,4 +1,4 @@
-package ro.pizzeriaq.qservices.filters;
+package ro.pizzeriaq.qservices.config.filters;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.NonNull;

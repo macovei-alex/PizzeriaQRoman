@@ -3,8 +3,8 @@ package ro.pizzeriaq.qservices.controller;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ro.pizzeriaq.qservices.exceptions.AccessDeniedException;
 import ro.pizzeriaq.qservices.service.AddressService;
 import ro.pizzeriaq.qservices.service.AuthenticationInsightsService;
 import ro.pizzeriaq.qservices.service.DTO.AddressDto;
@@ -25,60 +25,65 @@ public class AddressController {
 
 
 	@GetMapping
-	public ResponseEntity<List<AddressDto>> getAddresses(@PathVariable UUID accountId) {
+	public List<AddressDto> getAddresses(@PathVariable UUID accountId) {
 		if (!authenticationInsightsService.isIdSameAs(accountId) && !authenticationInsightsService.isAdmin()) {
 			logger.error("User ( {} ) is not authorized to access addresses of user ( {} )",
 					authenticationInsightsService.getAuthenticationId(),
 					accountId
 			);
-			return ResponseEntity.status(403).build();
+			throw new AccessDeniedException("User ( %s ) is not authorized to access addresses of user ( %s )"
+					.formatted(authenticationInsightsService.getAuthenticationId(), accountId)
+			);
 		}
-		return ResponseEntity.ok(addressService.getAddressesForAccount(accountId));
+		return addressService.getAddressesForAccount(accountId);
 	}
 
 
 	@PutMapping("{addressId}")
-	public ResponseEntity<AddressDto> updateAddress(
+	public AddressDto updateAddress(
 			@PathVariable UUID accountId,
 			@PathVariable int addressId,
 			@RequestBody AddressDto address
 	) {
 		if (!authenticationInsightsService.isIdSameAs(accountId)) {
-			logger.error("User ( {} ) is not authorized to update address of user ( {} )",
+			logger.error("User ( {} ) is not authorized to update an address of user ( {} )",
 					authenticationInsightsService.getAuthenticationId(),
 					accountId
 			);
-			return ResponseEntity.status(403).build();
+			throw new AccessDeniedException("User ( %s ) is not authorized to update an address of user ( %s )"
+					.formatted(authenticationInsightsService.getAuthenticationId(), accountId)
+			);
 		}
-		var updatedAddress = addressService.updateAddress(addressId, address);
-		return ResponseEntity.ok().body(updatedAddress);
+		return addressService.updateAddress(addressId, address);
 	}
 
 
 	@PostMapping
-	public ResponseEntity<AddressDto> createAddress(@PathVariable UUID accountId, @RequestBody AddressDto address) {
+	public AddressDto createAddress(@PathVariable UUID accountId, @RequestBody AddressDto address) {
 		if (!authenticationInsightsService.isIdSameAs(accountId)) {
 			logger.error("User ( {} ) is not authorized to create an address for user ( {} )",
 					authenticationInsightsService.getAuthenticationId(),
 					accountId
 			);
-			return ResponseEntity.status(403).build();
+			throw new AccessDeniedException("User ( %s ) is not authorized to create an address for user ( %s )"
+					.formatted(authenticationInsightsService.getAuthenticationId(), accountId)
+			);
 		}
-		var createdAddress = addressService.createAddress(accountId, address);
-		return ResponseEntity.ok().body(createdAddress);
+		return addressService.createAddress(accountId, address);
 	}
 
 
 	@DeleteMapping("{addressId}")
-	public ResponseEntity<Void> deleteAddress(@PathVariable UUID accountId, @PathVariable int addressId) {
+	public void deleteAddress(@PathVariable UUID accountId, @PathVariable int addressId) {
 		if (!authenticationInsightsService.isIdSameAs(accountId)) {
 			logger.error("User ( {} ) is not authorized to delete address of user ( {} )",
 					authenticationInsightsService.getAuthenticationId(),
 					accountId
 			);
-			return ResponseEntity.status(403).build();
+			throw new AccessDeniedException("User ( %s ) is not authorized to delete an address of user ( %s )"
+					.formatted(authenticationInsightsService.getAuthenticationId(), accountId)
+			);
 		}
 		addressService.deleteAddress(addressId);
-		return ResponseEntity.noContent().build();
 	}
 }

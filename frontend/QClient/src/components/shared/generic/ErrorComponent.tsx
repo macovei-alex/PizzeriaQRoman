@@ -9,9 +9,10 @@ import useColorTheme from "src/hooks/useColorTheme";
 
 type ErrorComponentProps = {
   onRetry?: () => void;
+  size?: "fullscreen" | "small";
 };
 
-export default function ErrorComponent({ onRetry }: ErrorComponentProps) {
+export default function ErrorComponent({ onRetry, size = "fullscreen" }: ErrorComponentProps) {
   const authContext = useAuthContext();
   const queryClient = useQueryClient();
   const colorTheme = useColorTheme();
@@ -22,7 +23,7 @@ export default function ErrorComponent({ onRetry }: ErrorComponentProps) {
       <Text style={[styles.title, { color: colorTheme.text.primary }]}>Ceva nu a mers bine...</Text>
 
       {/* image */}
-      <Image source={images.sadChef} style={styles.image} />
+      {size === "fullscreen" && <Image source={images.sadChef} style={styles.image} />}
 
       <View style={styles.buttonSection}>
         {/* retry button */}
