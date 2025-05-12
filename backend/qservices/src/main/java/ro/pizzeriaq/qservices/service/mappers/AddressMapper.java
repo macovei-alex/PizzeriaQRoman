@@ -1,4 +1,4 @@
-package ro.pizzeriaq.qservices.service.DTO.mapper;
+package ro.pizzeriaq.qservices.service.mappers;
 
 import org.springframework.stereotype.Component;
 import ro.pizzeriaq.qservices.data.entity.Account;

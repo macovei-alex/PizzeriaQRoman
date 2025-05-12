@@ -8,7 +8,7 @@ import ro.pizzeriaq.qservices.data.repository.*;
 import ro.pizzeriaq.qservices.exceptions.PhoneNumberMissingException;
 import ro.pizzeriaq.qservices.service.DTO.HistoryOrderMinimalDTO;
 import ro.pizzeriaq.qservices.service.DTO.PlacedOrderDTO;
-import ro.pizzeriaq.qservices.service.DTO.mapper.HistoryOrderMinimalMapper;
+import ro.pizzeriaq.qservices.service.mappers.HistoryOrderMinimalMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

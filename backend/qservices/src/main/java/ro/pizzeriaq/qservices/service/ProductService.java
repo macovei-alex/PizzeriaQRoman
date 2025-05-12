@@ -10,11 +10,10 @@ import ro.pizzeriaq.qservices.data.repository.OptionListRepository;
 import ro.pizzeriaq.qservices.data.repository.ProductRepository;
 import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
 import ro.pizzeriaq.qservices.service.DTO.ProductWithOptionsDTO;
-import ro.pizzeriaq.qservices.service.DTO.mapper.ProductMapper;
-import ro.pizzeriaq.qservices.service.DTO.mapper.ProductWithOptionsMapper;
+import ro.pizzeriaq.qservices.service.mappers.ProductMapper;
+import ro.pizzeriaq.qservices.service.mappers.ProductWithOptionsMapper;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor

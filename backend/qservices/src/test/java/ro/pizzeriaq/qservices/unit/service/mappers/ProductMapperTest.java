@@ -1,4 +1,4 @@
-package ro.pizzeriaq.qservices.unit.service.DTO.mapper;
+package ro.pizzeriaq.qservices.unit.service.mappers;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,7 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ro.pizzeriaq.qservices.data.entity.Product;
 import ro.pizzeriaq.qservices.data.entity.ProductCategory;
 import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
-import ro.pizzeriaq.qservices.service.DTO.mapper.ProductMapper;
+import ro.pizzeriaq.qservices.service.mappers.ProductMapper;
 import ro.pizzeriaq.qservices.service.ImageService;
 
 import java.math.BigDecimal;

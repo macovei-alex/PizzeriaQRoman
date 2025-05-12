@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ro.pizzeriaq.qservices.data.repository.ProductCategoryRepository;
 import ro.pizzeriaq.qservices.service.DTO.ProductCategoryDTO;
-import ro.pizzeriaq.qservices.service.DTO.mapper.ProductCategoryMapper;
+import ro.pizzeriaq.qservices.service.mappers.ProductCategoryMapper;
 
 import java.util.List;
 

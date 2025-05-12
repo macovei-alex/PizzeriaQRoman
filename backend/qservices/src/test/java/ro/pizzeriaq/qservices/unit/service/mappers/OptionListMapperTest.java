@@ -1,10 +1,10 @@
-package ro.pizzeriaq.qservices.unit.service.DTO.mapper;
+package ro.pizzeriaq.qservices.unit.service.mappers;
 
 import org.junit.jupiter.api.Test;
 import ro.pizzeriaq.qservices.data.entity.Option;
 import ro.pizzeriaq.qservices.data.entity.OptionList;
 import ro.pizzeriaq.qservices.service.DTO.OptionListDTO;
-import ro.pizzeriaq.qservices.service.DTO.mapper.OptionListMapper;
+import ro.pizzeriaq.qservices.service.mappers.OptionListMapper;
 
 import java.math.BigDecimal;
 import java.util.List;

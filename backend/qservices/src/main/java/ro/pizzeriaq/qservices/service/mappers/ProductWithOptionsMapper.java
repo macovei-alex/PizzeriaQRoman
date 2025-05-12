@@ -1,4 +1,4 @@
-package ro.pizzeriaq.qservices.service.DTO.mapper;
+package ro.pizzeriaq.qservices.service.mappers;
 
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;

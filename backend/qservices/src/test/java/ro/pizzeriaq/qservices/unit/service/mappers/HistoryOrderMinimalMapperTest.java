@@ -1,4 +1,4 @@
-package ro.pizzeriaq.qservices.unit.service.DTO.mapper;
+package ro.pizzeriaq.qservices.unit.service.mappers;
 
 import org.junit.jupiter.api.Test;
 import ro.pizzeriaq.qservices.data.entity.Order;
@@ -6,7 +6,7 @@ import ro.pizzeriaq.qservices.data.entity.OrderItem;
 import ro.pizzeriaq.qservices.data.entity.OrderStatus;
 import ro.pizzeriaq.qservices.data.entity.Product;
 import ro.pizzeriaq.qservices.service.DTO.HistoryOrderMinimalDTO;
-import ro.pizzeriaq.qservices.service.DTO.mapper.HistoryOrderMinimalMapper;
+import ro.pizzeriaq.qservices.service.mappers.HistoryOrderMinimalMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

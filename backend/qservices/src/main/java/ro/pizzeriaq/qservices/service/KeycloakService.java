@@ -12,7 +12,7 @@ import org.springframework.web.client.RestClientException;
 import ro.pizzeriaq.qservices.data.model.KeycloakUser;
 import ro.pizzeriaq.qservices.exceptions.KeycloakException;
 import ro.pizzeriaq.qservices.service.DTO.AccountDto;
-import ro.pizzeriaq.qservices.service.DTO.mapper.AccountMapper;
+import ro.pizzeriaq.qservices.service.mappers.AccountMapper;
 
 import java.util.List;
 import java.util.UUID;

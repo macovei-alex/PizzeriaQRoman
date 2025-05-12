@@ -8,7 +8,7 @@ import ro.pizzeriaq.qservices.data.repository.AccountRepository;
 import ro.pizzeriaq.qservices.data.repository.AddressRepository;
 import ro.pizzeriaq.qservices.data.repository.AddressTypeRepository;
 import ro.pizzeriaq.qservices.service.DTO.AddressDto;
-import ro.pizzeriaq.qservices.service.DTO.mapper.AddressMapper;
+import ro.pizzeriaq.qservices.service.mappers.AddressMapper;
 
 import java.util.List;
 import java.util.UUID;
