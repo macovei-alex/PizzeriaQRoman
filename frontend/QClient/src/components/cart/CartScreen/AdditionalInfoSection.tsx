@@ -57,7 +57,9 @@ function AdditionalInfoSection(
             <View
               style={[styles.addressPickerContainer, { backgroundColor: colorTheme.background.elevated }]}
             >
+              {/* TODO: Replace the picker with aa better one */}
               <Picker
+                dropdownIconColor={colorTheme.text.primary}
                 numberOfLines={3}
                 selectedValue={address}
                 onValueChange={(value: Address) => {
@@ -89,10 +91,11 @@ function AdditionalInfoSection(
           ))}
       </View>
       <View>
-        <Text style={styles.subsectionTitle}>Mențiuni speciale</Text>
+        <Text style={[styles.subsectionTitle, { color: colorTheme.text.primary }]}>Mențiuni speciale</Text>
         <TextInput
           style={[styles.additionalNotesInput, { backgroundColor: colorTheme.background.elevated }]}
           placeholder="Mențiuni speciale..."
+          placeholderTextColor={colorTheme.text.secondary}
           multiline={true}
           onChangeText={setAdditionalNotes}
         >

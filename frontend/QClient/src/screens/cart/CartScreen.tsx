@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import useColorTheme from "src/hooks/useColorTheme";
 import ProductSection from "src/components/cart/CartScreen/ProductSection";
 import { useCartContext } from "src/context/CartContext";
@@ -21,6 +20,7 @@ import AdditionalInfoSection, {
 import useAddressesQuery from "src/api/hooks/useAddressesQuery";
 import { useAuthContext } from "src/context/AuthContext";
 import { RootStackParamList } from "src/navigation/RootStackNavigator";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type NavigationProps = CompositeNavigationProp<
   NativeStackNavigationProp<CartStackParamList, "CartScreen">,
@@ -73,6 +73,7 @@ export default function CartScreen() {
           logger.error("Error sending order:", res.data);
         }
         queryClient.invalidateQueries({ queryKey: ["order-history"] });
+        queryClient.prefetchInfiniteQuery({ queryKey: ["order-history"], initialPageParam: 0 });
       })
       .catch((error) => {
         logger.error("Error sending order:", error.response.data);
@@ -86,28 +87,36 @@ export default function CartScreen() {
   if (addressQuery.isFetching) return <ScreenActivityIndicator text="Se încarcă adresele..." />;
 
   return (
-    <SafeAreaView style={{ backgroundColor: colorTheme.background.primary }}>
-      <ScrollView>
-        <ScreenTitle title={"Comanda mea"} containerStyle={styles.titleScreenContainer} />
+    <KeyboardAvoidingView
+      behavior="padding"
+      style={[styles.screen, { backgroundColor: colorTheme.background.primary }]}
+    >
+      <SafeAreaView>
+        <ScrollView>
+          <ScreenTitle title={"Comanda mea"} containerStyle={styles.titleScreenContainer} />
 
-        <ProductSection />
+          <ProductSection />
 
-        <AdditionalInfoSection addresses={addressQuery.data!} ref={additionalSectionRef} />
+          <AdditionalInfoSection addresses={addressQuery.data!} ref={additionalSectionRef} />
 
-        <View style={styles.sendOrderContainer}>
-          <TouchableOpacity
-            style={[styles.sendOrderButton, { backgroundColor: colorTheme.background.accent }]}
-            onPress={sendOrder}
-          >
-            <Text style={[styles.sendOrderText, { color: colorTheme.text.onAccent }]}>Trimite comanda</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+          <View style={styles.sendOrderContainer}>
+            <TouchableOpacity
+              style={[styles.sendOrderButton, { backgroundColor: colorTheme.background.accent }]}
+              onPress={sendOrder}
+            >
+              <Text style={[styles.sendOrderText, { color: colorTheme.text.onAccent }]}>Trimite comanda</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+  },
   titleScreenContainer: {
     marginBottom: 20,
   },

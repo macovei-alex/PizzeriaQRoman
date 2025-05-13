@@ -41,7 +41,6 @@ export default function LabelledBorderComponent({
 const styles = StyleSheet.create({
   container: {
     position: "relative",
-    paddingVertical: 12,
     borderWidth: 1,
     borderRadius: 14,
     paddingHorizontal: 16,

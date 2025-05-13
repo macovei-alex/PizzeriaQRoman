@@ -133,7 +133,6 @@ const styles = StyleSheet.create({
   labelledBorderContainer: {
     borderWidth: 1.5,
     paddingHorizontal: 20,
-    paddingVertical: 10,
     marginBottom: 8,
   },
   inputLabel: {

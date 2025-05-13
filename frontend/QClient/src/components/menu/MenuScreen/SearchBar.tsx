@@ -19,14 +19,15 @@ export default function SearchBar({ placeholder, onSearch }: SearchBarProps) {
     <View style={[styles.container, { backgroundColor: colorTheme.background.elevated }]}>
       <SearchIconSvg style={styles.searchIcon} />
       <TextInput
-        style={styles.textInput}
+        style={[styles.textInput, { color: colorTheme.text.primary }]}
+        placeholderTextColor={colorTheme.text.secondary}
         placeholder={placeholder}
         value={text}
         onChangeText={(newText) => setText(newText)}
         onSubmitEditing={() => {
           onSearch(text);
         }}
-      ></TextInput>
+      />
     </View>
   );
 }

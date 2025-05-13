@@ -1,7 +1,6 @@
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import AccountForm from "src/components/profile/ProfileScreen/AccountForm";
 import TitleSection from "src/components/profile/ProfileScreen/TitleSection";
 import ArrowSvg from "src/components/svg/ArrowSvg";
@@ -26,7 +25,7 @@ export default function ProfileScreen() {
   const navigation = useNavigation<NavigationProps>();
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colorTheme.background.primary }]}>
+    <View style={[styles.container, { backgroundColor: colorTheme.background.primary }]}>
       <ScrollView>
         <TitleSection />
 
@@ -66,7 +65,7 @@ export default function ProfileScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 

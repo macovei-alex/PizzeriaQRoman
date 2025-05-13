@@ -8,14 +8,9 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "automatic",
-    "platforms": [
-      "android",
-      "ios"
-    ],
+    "platforms": ["android", "ios"],
     "newArchEnabled": true,
-    "plugins": [
-      "expo-secure-store"
-    ],
+    "plugins": ["expo-secure-store", "expo-web-browser"],
     "splash": {
       "image": "./assets/images/logo.png",
       "resizeMode": "contain",
@@ -26,7 +21,8 @@
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.pizzeriaq"
+      "package": "com.pizzeriaq",
+      "edgeToEdgeEnabled": false
     },
     "ios": {
       "supportsTablet": true
@@ -41,3 +37,4 @@
     }
   }
 }
+
