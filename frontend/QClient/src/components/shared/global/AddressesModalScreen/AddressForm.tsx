@@ -22,7 +22,7 @@ type ModalFormProps = {
   onSubmit: (address: NewAddress | null) => void;
 };
 
-export default function ModalForm({ modalEditState, initialState, onSubmit }: ModalFormProps) {
+export default function AddressForm({ modalEditState, initialState, onSubmit }: ModalFormProps) {
   const colorTheme = useColorTheme();
   const [modalState, setModalState] = useState<NewAddress>(initialState);
 

@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { CompositeNavigationProp, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -9,9 +9,13 @@ import { useAuthContext } from "src/context/AuthContext";
 import { useCartContext } from "src/context/CartContext";
 import useColorTheme from "src/hooks/useColorTheme";
 import { ProfileStackParamList } from "src/navigation/ProfileStackNavigator";
+import { RootStackParamList } from "src/navigation/RootStackNavigator";
 import logger from "src/utils/logger";
 
-type NavigationProps = NativeStackNavigationProp<ProfileStackParamList, "ProfileScreen">;
+type NavigationProps = CompositeNavigationProp<
+  NativeStackNavigationProp<ProfileStackParamList, "ProfileScreen">,
+  NativeStackNavigationProp<RootStackParamList, "AddressesModalScreen">
+>;
 
 export default function ProfileScreen() {
   logger.render("ProfileScreen");
@@ -34,7 +38,7 @@ export default function ProfileScreen() {
           {/* addresses button */}
           <TouchableOpacity
             style={[styles.buttonContainer, { borderBottomColor: colorTheme.background.elevated }]}
-            onPress={() => navigation.push("AddressesScreen")}
+            onPress={() => navigation.navigate("AddressesModalScreen")}
           >
             <Text style={[styles.buttonText, { color: colorTheme.text.primary }]}>Adresele mele</Text>
             <ArrowSvg style={styles.arrowSvg} />

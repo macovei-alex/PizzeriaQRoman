@@ -16,15 +16,15 @@ const routeToIconMap: Readonly<Record<string, string>> = {
   TestScreen: "search",
 };
 
-export type RootTabParamList = {
+export type MainTabParamList = {
   MenuStackNavigator: NavigatorScreenParams<MenuStackParamList>;
   CartStackNavigator: NavigatorScreenParams<CartStackParamList>;
   ProfileStackNavigator: NavigatorScreenParams<ProfileStackParamList>;
 };
 
-const Tab = createBottomTabNavigator();
+const MainTab = createBottomTabNavigator();
 
-export default function TabNavigator() {
+export default function MainTabNavigator() {
   const colorTheme = useColorTheme();
 
   const svgColors = {
@@ -34,7 +34,7 @@ export default function TabNavigator() {
   };
 
   return (
-    <Tab.Navigator
+    <MainTab.Navigator
       screenOptions={({ navigation, route }) => ({
         headerShown: false,
         tabBarStyle: [styles.tabBar, { backgroundColor: colorTheme.background.navbar }],
@@ -50,16 +50,16 @@ export default function TabNavigator() {
         },
       })}
     >
-      <Tab.Screen name="MenuStackNavigator" component={MenuStackNavigator} options={{ title: "Meniu" }} />
-      <Tab.Screen name="CartStackNavigator" component={CartStackNavigator} options={{ title: "Coș" }} />
-      <Tab.Screen
+      <MainTab.Screen name="MenuStackNavigator" component={MenuStackNavigator} options={{ title: "Meniu" }} />
+      <MainTab.Screen name="CartStackNavigator" component={CartStackNavigator} options={{ title: "Coș" }} />
+      <MainTab.Screen
         name="ProfileStackNavigator"
         component={ProfileStackNavigator}
-        options={{ title: "Profil", popToTopOnBlur: true }}
+        options={{ title: "Profil" }}
       />
       {/* <Tab.Screen name="ConsoleScreen" component={ConsoleScreen} options={{ title: "Console" }} /> */}
       {/* <Tab.Screen name="TestScreen" component={TestScreen} options={{ title: "Test" }} /> */}
-    </Tab.Navigator>
+    </MainTab.Navigator>
   );
 }
 

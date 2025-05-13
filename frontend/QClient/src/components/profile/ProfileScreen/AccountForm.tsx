@@ -12,13 +12,14 @@ import logger from "src/utils/logger";
 export default function AccountForm() {
   const authContext = useAuthContext();
   if (!authContext.account) throw new Error("Account not found in context");
+  const account = authContext.account;
   const colorTheme = useColorTheme();
-  const phoneNumberQuery = usePhoneNumberQuery(authContext.account.id);
+  const phoneNumberQuery = usePhoneNumberQuery(account.id);
 
   const [accountData, setAccountData] = useState({
-    firstName: authContext.account.givenName,
-    lastName: authContext.account.familyName,
-    email: authContext.account.email,
+    firstName: account.givenName,
+    lastName: account.familyName,
+    email: account.email,
     phoneNumber: "",
   });
   const [updatingInfo, setUpdatingInfo] = useState(false);
@@ -32,19 +33,19 @@ export default function AccountForm() {
   const handleInfoUpdate = useCallback(() => {
     setUpdatingInfo(true);
     api.axios
-      .put(api.routes.account(authContext.account!.id).self, accountData)
+      .put(api.routes.account(account.id).self, accountData)
       .catch((error) => {
         logger.error("Error updating account data", error);
         setAccountData({
-          firstName: authContext.account!.givenName,
-          lastName: authContext.account!.familyName,
-          email: authContext.account!.email,
+          firstName: account.givenName,
+          lastName: account.familyName,
+          email: account.email,
           phoneNumber: "",
         });
         phoneNumberQuery.refetch();
       })
       .finally(() => setUpdatingInfo(false));
-  }, [authContext.account, accountData, phoneNumberQuery]);
+  }, [account, accountData, phoneNumberQuery]);
 
   if (phoneNumberQuery.isFetching) return <ScreenActivityIndicator />;
   if (phoneNumberQuery.isError) return <ErrorComponent size="small" />;

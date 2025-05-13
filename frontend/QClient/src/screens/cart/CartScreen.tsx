@@ -13,15 +13,19 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
 import ScreenTitle from "src/components/shared/generic/ScreenTitle";
 import { api } from "src/api";
-import { useNavigation } from "@react-navigation/native";
+import { CompositeNavigationProp, useNavigation } from "@react-navigation/native";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
 import AdditionalInfoSection, {
   AdditionalInfoSectionHandle,
 } from "src/components/cart/CartScreen/AdditionalInfoSection";
 import useAddressesQuery from "src/api/hooks/useAddressesQuery";
 import { useAuthContext } from "src/context/AuthContext";
+import { RootStackParamList } from "src/navigation/RootStackNavigator";
 
-type NavigationProps = NativeStackNavigationProp<CartStackParamList, "CartScreen">;
+type NavigationProps = CompositeNavigationProp<
+  NativeStackNavigationProp<CartStackParamList, "CartScreen">,
+  NativeStackNavigationProp<RootStackParamList>
+>;
 
 export default function CartScreen() {
   logger.render("CartScreen");
@@ -64,7 +68,7 @@ export default function CartScreen() {
       .then((res) => {
         if (res.status === 200 || res.status === 201) {
           emptyCart();
-          navigation.navigate("ConfirmationScreen");
+          navigation.navigate("OrderConfirmationScreen");
         } else {
           logger.error("Error sending order:", res.data);
         }

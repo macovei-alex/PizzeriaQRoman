@@ -1,5 +1,4 @@
 import { Picker } from "@react-native-picker/picker";
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { forwardRef, useImperativeHandle, useLayoutEffect, useState } from "react";
@@ -7,12 +6,12 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-nativ
 import { Address } from "src/api/types/Address";
 import useColorTheme from "src/hooks/useColorTheme";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
-import { RootTabParamList } from "src/navigation/TabNavigator";
+import { RootStackParamList } from "src/navigation/RootStackNavigator";
 import logger from "src/utils/logger";
 
 type NavigationProps = CompositeNavigationProp<
   NativeStackNavigationProp<CartStackParamList, "CartScreen">,
-  BottomTabNavigationProp<RootTabParamList>
+  NativeStackNavigationProp<RootStackParamList, "AddressesModalScreen">
 >;
 
 type AdditionalInfoSectionProps = {
@@ -82,12 +81,7 @@ function AdditionalInfoSection(
               </Text>
               <TouchableOpacity
                 style={[styles.addAddressButton, { backgroundColor: colorTheme.background.accent }]}
-                onPress={() =>
-                  navigation.navigate("ProfileStackNavigator", {
-                    screen: "AddressesScreen",
-                    params: { backToScreen: "CartScreen" },
-                  })
-                }
+                onPress={() => navigation.navigate("AddressesModalScreen")}
               >
                 <Text style={{ color: colorTheme.text.onAccent }}>Adăugați o adresă</Text>
               </TouchableOpacity>

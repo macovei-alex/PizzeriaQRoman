@@ -4,21 +4,19 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import useColorTheme from "src/hooks/useColorTheme";
 import TickCheckboxSvg from "src/components/svg/TickCheckboxSvg";
 import logger from "src/utils/logger";
-import { CompositeNavigationProp, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "src/navigation/RootStackNavigator";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import { RootTabParamList } from "src/navigation/TabNavigator";
-import { CartStackParamList } from "src/navigation/CartStackNavigator";
 
-type ConfirmationScreenNavigationProps = CompositeNavigationProp<
-  NativeStackNavigationProp<CartStackParamList, "ConfirmationScreen">,
-  BottomTabNavigationProp<RootTabParamList>
+type OrderConfirmationScreenNavigationProps = NativeStackNavigationProp<
+  RootStackParamList,
+  "OrderConfirmationScreen"
 >;
 
-export default function ConfirmationScreen() {
+export default function OrderConfirmationScreen() {
   logger.render("ConfirmationScreen");
 
-  const navigation = useNavigation<ConfirmationScreenNavigationProps>();
+  const navigation = useNavigation<OrderConfirmationScreenNavigationProps>();
   const colorTheme = useColorTheme();
 
   return (
@@ -34,8 +32,13 @@ export default function ConfirmationScreen() {
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colorTheme.background.success }]}
             onPress={() => {
-              navigation.popToTop();
-              navigation.navigate("ProfileStackNavigator", { screen: "OrderHistoryScreen" });
+              navigation.navigate("MainTabNavigator", {
+                screen: "ProfileStackNavigator",
+                params: {
+                  screen: "OrderHistoryScreen",
+                  initial: false,
+                },
+              });
             }}
           >
             <Text style={[styles.buttonText, { color: colorTheme.text.success }]}>Înapoi la comandă</Text>
