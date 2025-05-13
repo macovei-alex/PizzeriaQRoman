@@ -1,19 +1,17 @@
 package ro.pizzeriaq.qservices.service.DTO;
 
-import lombok.*;
+import lombok.Builder;
 
-@Data
 @Builder
-public class AddressDto {
-
-	private Integer id;
-	private String addressType;
-	private String city;
-	private String street;
-	private String streetNumber;
-	private String block;
-	private int floor;
-	private String apartment;
-	private boolean isPrimary;
-
+public record AddressDto(
+		Integer id,
+		String addressType,
+		String city,
+		String street,
+		String streetNumber,
+		String block,
+		int floor,
+		String apartment,
+		boolean isPrimary
+) {
 }

@@ -13,6 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode
 @Entity
 public class Account {
 

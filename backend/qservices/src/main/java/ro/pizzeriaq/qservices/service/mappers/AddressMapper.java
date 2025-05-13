@@ -1,19 +1,19 @@
 package ro.pizzeriaq.qservices.service.mappers;
 
+import lombok.NonNull;
 import org.springframework.stereotype.Component;
 import ro.pizzeriaq.qservices.data.entity.Account;
 import ro.pizzeriaq.qservices.data.entity.Address;
 import ro.pizzeriaq.qservices.data.entity.AddressType;
 import ro.pizzeriaq.qservices.service.DTO.AddressDto;
 
+import java.util.Objects;
+
 @Component
 public class AddressMapper {
 
-	public AddressDto fromEntity(Address entity) {
-		if (entity == null) {
-			return null;
-		}
 
+	public AddressDto fromEntity(@NonNull Address entity) {
 		return AddressDto.builder()
 				.id(entity.getId())
 				.addressType(entity.getAddressType().getName())
@@ -23,42 +23,38 @@ public class AddressMapper {
 				.block(entity.getBlock())
 				.floor(entity.getFloor())
 				.apartment(entity.getApartment())
+				.isPrimary(entity.isPrimary())
 				.build();
 	}
 
 
-	public Address fromDto(AddressDto dto, Account account, AddressType addressType) {
-		if (dto == null) {
-			return null;
-		}
-
+	public Address fromDto(@NonNull AddressDto dto, Account account, AddressType addressType) {
 		return Address.builder()
+				.id(Objects.equals(dto.id(), 0) ? null : dto.id())
 				.account(account)
 				.addressType(addressType)
-				.city(dto.getCity())
-				.street(dto.getStreet())
-				.streetNumber(dto.getStreetNumber())
-				.block(dto.getBlock())
-				.floor(dto.getFloor())
-				.apartment(dto.getApartment())
-				.isPrimary(false)
+				.city(dto.city())
+				.street(dto.street())
+				.streetNumber(dto.streetNumber())
+				.block(dto.block())
+				.floor(dto.floor())
+				.apartment(dto.apartment())
+				.isPrimary(dto.isPrimary())
 				.build();
 	}
 
 
-	public Address updateEntity(Address entity, AddressDto dto) {
-		if (dto == null) {
-			return entity;
+	public void updateEntity(@NonNull Address entity, @NonNull AddressDto dto, AddressType addressType) {
+		if (!dto.addressType().equals(entity.getAddressType().getName())) {
+			entity.setAddressType(addressType);
 		}
-
-		entity.setCity(dto.getCity());
-		entity.setStreet(dto.getStreet());
-		entity.setStreetNumber(dto.getStreetNumber());
-		entity.setBlock(dto.getBlock());
-		entity.setFloor(dto.getFloor());
-		entity.setApartment(dto.getApartment());
-
-		return entity;
+		entity.setCity(dto.city());
+		entity.setStreet(dto.street());
+		entity.setStreetNumber(dto.streetNumber());
+		entity.setBlock(dto.block());
+		entity.setFloor(dto.floor());
+		entity.setApartment(dto.apartment());
+		entity.setPrimary(dto.isPrimary());
 	}
 
 }

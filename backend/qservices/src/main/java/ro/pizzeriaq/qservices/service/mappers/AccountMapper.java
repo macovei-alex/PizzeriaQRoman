@@ -18,7 +18,7 @@ public class AccountMapper {
 				.id(user.id())
 				.email(user.email())
 				.isEmailVerified(user.emailVerified())
-				.phoneNumber("")
+				.phoneNumber(null)
 				.createdAt(user.createdTimestampDate())
 				.isActive(true)
 				.build();

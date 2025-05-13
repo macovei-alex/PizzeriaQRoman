@@ -9,6 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode
 @Entity
 public class AddressType {
 
@@ -18,9 +19,11 @@ public class AddressType {
 
 
 	@OneToMany(mappedBy = "addressType")
+	@EqualsAndHashCode.Exclude
 	private List<Address> addresses;
 
 
 	@Column(nullable = false, unique = true, length = 30)
 	private String name;
+
 }

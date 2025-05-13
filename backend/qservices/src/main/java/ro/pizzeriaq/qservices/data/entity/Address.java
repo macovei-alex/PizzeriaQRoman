@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -63,4 +64,25 @@ public class Address {
 	@ColumnDefault("1")
 	@Builder.Default
 	private boolean isActive = true;
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Address other)) {
+			return false;
+		}
+
+		return Objects.equals(id, other.id)
+				&& Objects.equals(account == null ? null : account.getId(), other.account == null ? null : other.account.getId())
+				&& Objects.equals(addressType, other.addressType)
+				&& Objects.equals(city, other.city)
+				&& Objects.equals(street, other.street)
+				&& Objects.equals(streetNumber, other.streetNumber)
+				&& Objects.equals(block, other.block)
+				&& floor == other.floor
+				&& Objects.equals(apartment, other.apartment)
+				&& isPrimary == other.isPrimary
+				&& isActive == other.isActive;
+	}
+
 }

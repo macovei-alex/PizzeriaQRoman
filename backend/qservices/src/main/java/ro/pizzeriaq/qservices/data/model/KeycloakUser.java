@@ -1,5 +1,7 @@
 package ro.pizzeriaq.qservices.data.model;
 
+import lombok.NonNull;
+
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.UUID;
@@ -29,6 +31,7 @@ public record KeycloakUser(
 
 
 	@Override
+	@NonNull
 	public String toString() {
 		return "KeycloakUser{" +
 				"id=" + id +

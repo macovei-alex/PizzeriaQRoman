@@ -35,22 +35,33 @@ public class AddressService {
 		var existingAddress = addressRepository.findById(id)
 				.orElseThrow(() -> new EntityNotFoundException("Address not found"));
 
-		address.setId(id);
-		var mappedAddress = addressMapper.updateEntity(existingAddress, address);
-		var updatedAddress = addressRepository.save(mappedAddress);
+		if (!existingAddress.getAddressType().getName().equals(address.addressType())) {
+			var addressType = addressTypeRepository.findByName(address.addressType())
+					.orElseThrow(() -> new EntityNotFoundException("Address type with name ( %s ) not found"
+							.formatted(address.addressType())
+					));
+			addressMapper.updateEntity(existingAddress, address, addressType);
+		}
+		else {
+			addressMapper.updateEntity(existingAddress, address, null);
+		}
+
+		existingAddress.setId(id);
+		var updatedAddress = addressRepository.save(existingAddress);
 
 		return addressMapper.fromEntity(updatedAddress);
 	}
 
 
-	@Transactional
 	public AddressDto createAddress(UUID userId, AddressDto address) {
 		var account = accountRepository.findById(userId)
 				.orElseThrow(() -> new EntityNotFoundException("Account with id ( %s ) not found".formatted(userId)));
 
 		var addressTypeName = "Home";
 		var addressType = addressTypeRepository.findByName(addressTypeName)
-				.orElseThrow(() -> new EntityNotFoundException("Address type ( %s ) not found".formatted(addressTypeName)));
+				.orElseThrow(() -> new EntityNotFoundException("Address type with name ( %s ) not found"
+						.formatted(addressTypeName)
+				));
 
 		var newEntity = addressMapper.fromDto(address, account, addressType);
 		newEntity = addressRepository.save(newEntity);
