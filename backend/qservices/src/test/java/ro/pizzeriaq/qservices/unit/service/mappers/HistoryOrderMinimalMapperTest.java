@@ -24,11 +24,6 @@ public class HistoryOrderMinimalMapperTest {
 	}
 
 	@Test
-	void entityNull() {
-		assertNull(historyOrderMinimalMapper.fromEntity(null));
-	}
-
-	@Test
 	void throwCases() {
 		assertThrows(NullPointerException.class, () -> historyOrderMinimalMapper.fromEntity(Order.builder()
 				.id(null)

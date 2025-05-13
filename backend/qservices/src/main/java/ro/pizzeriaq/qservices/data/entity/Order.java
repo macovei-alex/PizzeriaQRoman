@@ -21,7 +21,7 @@ public class Order {
 	private Integer id;
 
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_account", nullable = false)
 	private Account account;
 
@@ -31,7 +31,7 @@ public class Order {
 	private Address address;
 
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_coupon", nullable = true)
 	private Coupon coupon;
 
