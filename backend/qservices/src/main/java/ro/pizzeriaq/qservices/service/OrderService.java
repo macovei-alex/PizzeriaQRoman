@@ -1,6 +1,7 @@
 package ro.pizzeriaq.qservices.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.pizzeriaq.qservices.data.entity.*;
@@ -28,6 +29,16 @@ public class OrderService {
 	private final OrderItem_OptionList_OptionRepository orderItemOptionListOptionRepository;
 	private final AddressRepository addressRepository;
 	private final AccountRepository accountRepository;
+
+
+	@Transactional(readOnly = true)
+	public List<HistoryOrderMinimalDTO> getOrdersHistory(UUID accountId, int page, int pageSize) {
+		var orders = orderRepository.findByAccountIdOrderByOrderTimestampDesc(accountId, PageRequest.of(page, pageSize));
+
+		return orders.stream()
+				.map(historyOrderMinimalMapper::fromEntity)
+				.toList();
+	}
 
 
 	@Transactional
@@ -218,13 +229,4 @@ public class OrderService {
 		return orderItem;
 	}
 
-
-	@Transactional(readOnly = true)
-	public List<HistoryOrderMinimalDTO> getOrdersHistory(UUID accountId) {
-		List<Order> orders = orderRepository.findByAccountIdOrderByOrderTimestampDesc(accountId);
-
-		return orders.stream()
-				.map(historyOrderMinimalMapper::fromEntity)
-				.toList();
-	}
 }

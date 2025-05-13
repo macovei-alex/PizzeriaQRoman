@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.util.MultiValueMap;
 import ro.pizzeriaq.qservices.data.entity.OrderStatus;
 import ro.pizzeriaq.qservices.data.repository.AddressRepository;
 import ro.pizzeriaq.qservices.service.DTO.OptionListDTO;
@@ -27,6 +28,7 @@ import ro.pizzeriaq.qservices.utils.TestUtilsService;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -77,6 +79,7 @@ public class OrderControllerTest {
 
 	private MockHttpServletRequestBuilder constructDefaultGetRequest(UUID accountId) {
 		return get(contextPath + "/accounts/" + accountId + "/orders")
+				.params(MultiValueMap.fromSingleValue(Map.of("page", "0", "pageSize", "100")))
 				.contextPath(contextPath)
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON);
@@ -260,7 +263,7 @@ public class OrderControllerTest {
 					)
 					.build();
 
-			var historyOrders = orderService.getOrdersHistory(accountId);
+			var historyOrders = orderService.getOrdersHistory(accountId, 0, 100);
 
 			BigDecimal expectedPrice = products.stream()
 					.map(ProductDTO::getPrice)
@@ -301,7 +304,7 @@ public class OrderControllerTest {
 					.map(ProductDTO::getPrice)
 					.reduce(BigDecimal.ZERO, (acc, price) -> acc.add(price.multiply(BigDecimal.valueOf(10))));
 
-			var historyOrders = orderService.getOrdersHistory(accountId);
+			var historyOrders = orderService.getOrdersHistory(accountId, 0, 100);
 
 			mockMvc.perform(constructDefaultPostRequest(accountId)
 							.content(objectMapper.writeValueAsString(placedOrderDTO)))
@@ -365,7 +368,7 @@ public class OrderControllerTest {
 							.multiply(BigDecimal.valueOf(3)))
 					.reduce(BigDecimal.ZERO, BigDecimal::add);
 
-			var historyOrders = orderService.getOrdersHistory(accountId);
+			var historyOrders = orderService.getOrdersHistory(accountId, 0, 100);
 
 			mockMvc.perform(constructDefaultPostRequest(accountId)
 							.content(objectMapper.writeValueAsString(placedOrderDTO)))
@@ -439,7 +442,7 @@ public class OrderControllerTest {
 					})
 					.reduce(BigDecimal.ZERO, BigDecimal::add);
 
-			var historyOrders = orderService.getOrdersHistory(accountId);
+			var historyOrders = orderService.getOrdersHistory(accountId, 0, 100);
 
 			mockMvc.perform(constructDefaultPostRequest(accountId)
 							.content(objectMapper.writeValueAsString(placedOrderDTO)))

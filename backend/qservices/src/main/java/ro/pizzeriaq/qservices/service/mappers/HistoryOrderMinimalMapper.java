@@ -1,5 +1,6 @@
 package ro.pizzeriaq.qservices.service.mappers;
 
+import lombok.NonNull;
 import org.springframework.stereotype.Component;
 import ro.pizzeriaq.qservices.data.entity.Order;
 import ro.pizzeriaq.qservices.data.entity.OrderItem;
@@ -9,11 +10,7 @@ import ro.pizzeriaq.qservices.service.DTO.HistoryOrderMinimalDTO;
 public class HistoryOrderMinimalMapper {
 
 
-	public HistoryOrderMinimalDTO fromEntity(Order order) {
-		if (order == null) {
-			return null;
-		}
-
+	public HistoryOrderMinimalDTO fromEntity(@NonNull Order order) {
 		return HistoryOrderMinimalDTO.builder()
 				.id(order.getId())
 				.orderStatus(order.getOrderStatus().name())
@@ -28,9 +25,7 @@ public class HistoryOrderMinimalMapper {
 	}
 
 
-	private HistoryOrderMinimalDTO.Item mapOrderItem(OrderItem item) {
-		assert item != null;
-
+	private HistoryOrderMinimalDTO.Item mapOrderItem(@NonNull OrderItem item) {
 		return HistoryOrderMinimalDTO.Item.builder()
 				.productId(item.getProduct().getId())
 				.count(item.getCount())

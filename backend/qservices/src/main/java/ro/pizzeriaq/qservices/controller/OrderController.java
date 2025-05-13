@@ -26,8 +26,12 @@ public class OrderController {
 
 
 	@GetMapping
-	public List<HistoryOrderMinimalDTO> getOrdersHistory(@PathVariable UUID accountId) {
-		// TODO: use the accountId for the order history
-		return orderService.getOrdersHistory(accountId);
+	public List<HistoryOrderMinimalDTO> getOrdersHistory(
+			@PathVariable UUID accountId,
+			@RequestParam("page") int page,
+			@RequestParam("pageSize") int pageSize
+	) {
+		// TODO: Test pagination.
+		return orderService.getOrdersHistory(accountId, page, pageSize);
 	}
 }

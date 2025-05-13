@@ -1,5 +1,6 @@
 package ro.pizzeriaq.qservices.data.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,10 +14,10 @@ import java.util.UUID;
 public interface OrderRepository extends JpaRepository<Order, Integer> {
 
 	@Query("""
-		SELECT order FROM Order order
-		WHERE order.account.id = :accountId
-		ORDER BY order.orderTimestamp DESC, order.id DESC
+		SELECT o FROM Order o
+		WHERE o.account.id = :accountId
+		ORDER BY o.orderTimestamp DESC, o.id DESC
 	""")
-	List<Order> findByAccountIdOrderByOrderTimestampDesc(@Param("accountId") UUID accountId);
+	List<Order> findByAccountIdOrderByOrderTimestampDesc(@Param("accountId") UUID accountId, Pageable pageable);
 
 }
