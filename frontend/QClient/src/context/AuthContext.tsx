@@ -48,6 +48,7 @@ type AuthContextType = {
   isAuthenticated: boolean;
   login: () => Promise<void>;
   logout: () => Promise<void>;
+  tryRefreshTokens: () => Promise<string | null>;
 };
 
 const discovery = {
@@ -281,6 +282,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
         isAuthenticated,
         login,
         logout,
+        tryRefreshTokens,
       }}
     >
       {children}

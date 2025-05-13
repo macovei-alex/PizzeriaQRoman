@@ -20,7 +20,7 @@ export default function AccountForm() {
     firstName: account.givenName,
     lastName: account.familyName,
     email: account.email,
-    phoneNumber: "",
+    phoneNumber: phoneNumberQuery.data ?? "",
   });
   const [updatingInfo, setUpdatingInfo] = useState(false);
 
@@ -30,22 +30,24 @@ export default function AccountForm() {
     });
   }, [phoneNumberQuery.data]);
 
-  const handleInfoUpdate = useCallback(() => {
+  const handleInfoUpdate = useCallback(async () => {
     setUpdatingInfo(true);
-    api.axios
-      .put(api.routes.account(account.id).self, accountData)
-      .catch((error) => {
-        logger.error("Error updating account data", error);
-        setAccountData({
-          firstName: account.givenName,
-          lastName: account.familyName,
-          email: account.email,
-          phoneNumber: "",
-        });
-        phoneNumberQuery.refetch();
-      })
-      .finally(() => setUpdatingInfo(false));
-  }, [account, accountData, phoneNumberQuery]);
+    try {
+      await api.axios.put(api.routes.account(account.id).self, accountData);
+      await authContext.tryRefreshTokens();
+    } catch (error) {
+      logger.error("Error updating account data", error);
+      setAccountData({
+        firstName: account.givenName,
+        lastName: account.familyName,
+        email: account.email,
+        phoneNumber: phoneNumberQuery.data ?? "",
+      });
+      phoneNumberQuery.refetch();
+    } finally {
+      setUpdatingInfo(false);
+    }
+  }, [authContext, account, accountData, phoneNumberQuery]);
 
   if (phoneNumberQuery.isFetching) return <ScreenActivityIndicator />;
   if (phoneNumberQuery.isError) return <ErrorComponent size="small" />;
