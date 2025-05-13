@@ -1,6 +1,7 @@
 package ro.pizzeriaq.qservices.service.mappers;
 
-import lombok.NonNull;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import ro.pizzeriaq.qservices.data.entity.Account;
 import ro.pizzeriaq.qservices.data.entity.Address;
@@ -44,7 +45,7 @@ public class AddressMapper {
 	}
 
 
-	public void updateEntity(@NonNull Address entity, @NonNull AddressDto dto, AddressType addressType) {
+	public void updateEntity(@NonNull Address entity, @NonNull AddressDto dto, @Nullable AddressType addressType) {
 		if (!dto.addressType().equals(entity.getAddressType().getName())) {
 			entity.setAddressType(addressType);
 		}

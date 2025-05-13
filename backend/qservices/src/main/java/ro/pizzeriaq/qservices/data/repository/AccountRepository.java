@@ -1,8 +1,8 @@
 package ro.pizzeriaq.qservices.data.repository;
 
-import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 import ro.pizzeriaq.qservices.data.entity.Account;
 

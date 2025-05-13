@@ -1,7 +1,7 @@
 package ro.pizzeriaq.qservices.config.filters;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.NonNull;
+import org.springframework.lang.NonNull;
 import org.springframework.web.filter.AbstractRequestLoggingFilter;
 
 public class CustomRequestLoggingFilter extends AbstractRequestLoggingFilter {

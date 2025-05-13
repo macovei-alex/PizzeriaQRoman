@@ -20,7 +20,6 @@ public class OrderController {
 
 	@PostMapping
 	public void placeOrder(@PathVariable UUID accountId, @Valid @RequestBody PlacedOrderDTO placedOrderDTO) {
-		// TODO: use the accountId for the order
 		orderService.placeOrder(placedOrderDTO, accountId);
 	}
 

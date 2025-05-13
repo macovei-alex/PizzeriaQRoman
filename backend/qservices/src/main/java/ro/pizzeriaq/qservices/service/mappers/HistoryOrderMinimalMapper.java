@@ -1,6 +1,6 @@
 package ro.pizzeriaq.qservices.service.mappers;
 
-import lombok.NonNull;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import ro.pizzeriaq.qservices.data.entity.Order;
 import ro.pizzeriaq.qservices.data.entity.OrderItem;

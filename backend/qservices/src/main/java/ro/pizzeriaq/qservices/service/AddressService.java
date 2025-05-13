@@ -1,6 +1,8 @@
 package ro.pizzeriaq.qservices.service;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.PersistenceContext;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,9 @@ public class AddressService {
 	private final AddressTypeRepository addressTypeRepository;
 	private final AddressMapper addressMapper;
 
+	@PersistenceContext
+	private final EntityManager entityManager;
+
 
 	public List<AddressDto> getAddressesForAccount(UUID accountId) {
 		return addressRepository.findAllActiveByAccountId(accountId)
@@ -31,9 +36,19 @@ public class AddressService {
 	}
 
 
+	@Transactional()
 	public AddressDto updateAddress(int id, AddressDto address) {
 		var existingAddress = addressRepository.findById(id)
 				.orElseThrow(() -> new EntityNotFoundException("Address not found"));
+		if (!existingAddress.getOrders().isEmpty()) {
+			existingAddress.setActive(false);
+			addressRepository.save(existingAddress);
+			addressRepository.flush();
+
+			entityManager.detach(existingAddress);
+			existingAddress.setActive(true);
+			existingAddress.setId(null);
+		}
 
 		if (!existingAddress.getAddressType().getName().equals(address.addressType())) {
 			var addressType = addressTypeRepository.findByName(address.addressType())
@@ -41,14 +56,11 @@ public class AddressService {
 							.formatted(address.addressType())
 					));
 			addressMapper.updateEntity(existingAddress, address, addressType);
-		}
-		else {
+		} else {
 			addressMapper.updateEntity(existingAddress, address, null);
 		}
 
-		existingAddress.setId(id);
 		var updatedAddress = addressRepository.save(existingAddress);
-
 		return addressMapper.fromEntity(updatedAddress);
 	}
 
