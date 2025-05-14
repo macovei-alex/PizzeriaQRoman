@@ -26,7 +26,7 @@ public class Order {
 	private Account account;
 
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_address", nullable = false)
 	private Address address;
 
