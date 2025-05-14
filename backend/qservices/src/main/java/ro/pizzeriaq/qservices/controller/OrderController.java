@@ -32,6 +32,13 @@ public class OrderController {
 	}
 
 
+	@GetMapping("{orderId}")
+	@AccountIdChecked
+	public HistoryOrderFullDto getOrderDetails(@PathVariable int orderId) {
+		return orderService.getFullOrder(orderId);
+	}
+
+
 	@PostMapping
 	@AccountIdChecked
 	public void placeOrder(@PathVariable UUID accountId, @Valid @RequestBody PlacedOrderDTO placedOrderDTO) {

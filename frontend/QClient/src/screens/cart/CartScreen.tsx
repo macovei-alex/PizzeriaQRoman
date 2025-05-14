@@ -31,16 +31,16 @@ type NavigationProps = CompositeNavigationProp<
 export default function CartScreen() {
   logger.render("CartScreen");
 
+  const authContext = useAuthContext();
+  if (!authContext.account) throw new Error("Account is not defined in CartScreen");
+  const accountId = authContext.account.id;
   const navigation = useNavigation<NavigationProps>();
   const colorTheme = useColorTheme();
-  const authContext = useAuthContext();
   const { cart, emptyCart } = useCartContext();
   const queryClient = useQueryClient();
   const addressQuery = useAddressesQuery();
   const [sendingOrder, setSendingOrder] = useState(false);
   const additionalSectionRef = useRef<AdditionalInfoSectionHandle>(null);
-
-  if (!authContext.account) throw new Error("Account is not defined in CartScreen");
 
   function sendOrder() {
     if (cart.length === 0) {
@@ -65,7 +65,7 @@ export default function CartScreen() {
     };
 
     api.axios
-      .post(api.routes.account(authContext.account!.id).orders, order)
+      .post(api.routes.account(accountId).orders, order)
       .then((res) => {
         if (res.status === 200 || res.status === 201) {
           emptyCart();
@@ -88,7 +88,10 @@ export default function CartScreen() {
             params: { screen: "ProfileScreen" },
           });
         } else {
-          logger.error("Error sending order:", error.response?.data);
+          logger.error(
+            "Error sending order:",
+            error.response?.data ?? "Response data missing. Request data: " + error.request?.data
+          );
         }
       })
       .finally(() => setSendingOrder(false));

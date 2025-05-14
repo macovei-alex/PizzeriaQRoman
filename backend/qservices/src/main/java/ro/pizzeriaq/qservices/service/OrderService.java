@@ -1,9 +1,13 @@
 package ro.pizzeriaq.qservices.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import ro.pizzeriaq.qservices.config.annotations.AccountIdChecked;
 import ro.pizzeriaq.qservices.data.entity.*;
 import ro.pizzeriaq.qservices.data.repository.*;
 import ro.pizzeriaq.qservices.exceptions.PhoneNumberMissingException;
@@ -44,6 +48,9 @@ public class OrderService {
 
 	@Transactional(readOnly = true)
 	public HistoryOrderFullDto getFullOrder(int orderId) {
+		var order = orderRepository.findById(orderId)
+				.orElseThrow(() -> new EntityNotFoundException("Order not found for ID: " + orderId));
+		// TODO: Implement mapper
 		return HistoryOrderFullDto.builder().build();
 	}
 

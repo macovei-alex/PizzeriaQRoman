@@ -1,14 +1,14 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { api } from "src/api";
-import { HistoryOrder, HistoryOrderDTO } from "src/api/types/Order";
+import { HistoryOrder, HistoryOrderDTO, OrderStatusSchema } from "src/api/types/Order";
 import { useAuthContext } from "src/context/AuthContext";
+import logger from "src/utils/logger";
 
 const PAGE_SIZE = 5;
 
 export default function useOrderHistoryInfiniteQuery() {
   const authContext = useAuthContext();
   if (!authContext.account) throw new Error("Account is not defined in useOrderHistoryQuery");
-
   const accountId = authContext.account.id;
 
   return useInfiniteQuery<HistoryOrder[], Error>({
@@ -21,13 +21,20 @@ export default function useOrderHistoryInfiniteQuery() {
         },
       });
 
-      const historyOrderDtos = response.data;
+      const dtos = response.data;
 
-      return historyOrderDtos.map((dto) => ({
-        ...dto,
-        orderTimestamp: new Date(dto.orderTimestamp),
-        deliveryTimestamp: dto.deliveryTimestamp ? new Date(dto.deliveryTimestamp) : undefined,
-      }));
+      return dtos.map((dto) => {
+        const statusResult = OrderStatusSchema.safeParse(dto.orderStatus);
+        if (!statusResult.success) {
+          logger.warn(`Order status is not valid: ${dto.orderStatus}`);
+        }
+        return {
+          ...dto,
+          orderStatus: statusResult.success ? statusResult.data : "RECEIVED",
+          orderTimestamp: new Date(dto.orderTimestamp),
+          deliveryTimestamp: dto.deliveryTimestamp ? new Date(dto.deliveryTimestamp) : undefined,
+        };
+      });
     },
     getNextPageParam: (lastPage, allPages) => (lastPage.length < PAGE_SIZE ? undefined : allPages.length),
     initialPageParam: 0,

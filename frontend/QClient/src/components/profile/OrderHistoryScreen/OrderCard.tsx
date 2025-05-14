@@ -8,6 +8,9 @@ import logger from "src/utils/logger";
 import { formatDate, formatPrice } from "src/utils/utils";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import RemoteImage from "src/components/shared/generic/RemoteImage";
+import { ProfileStackParamList } from "src/navigation/ProfileStackNavigator";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
 
 const MAX_ITEMS_PER_ORDER = 4;
 
@@ -16,9 +19,12 @@ type OrderCardProps = {
   containerStyle?: StyleProp<ViewStyle>;
 };
 
+type NavigationProps = NativeStackNavigationProp<ProfileStackParamList, "OrderHistoryScreen">;
+
 export default function OrderCard({ order, containerStyle }: OrderCardProps) {
   logger.render("OrderCard");
 
+  const navigation = useNavigation<NavigationProps>();
   const colorTheme = useColorTheme();
   const productsQuery = useProductsQuery();
 
@@ -111,6 +117,7 @@ export default function OrderCard({ order, containerStyle }: OrderCardProps) {
 
         <TouchableOpacity
           style={[styles.moreButtonContainer, { backgroundColor: colorTheme.background.accent }]}
+          onPress={() => navigation.navigate("FullOrderScreen", { orderId: order.id })}
         >
           <Text style={[styles.moreButtonText, { color: colorTheme.text.onAccent }]}>Mai multe</Text>
         </TouchableOpacity>

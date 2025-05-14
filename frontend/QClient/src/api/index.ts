@@ -3,6 +3,7 @@ import { ENV } from "src/constants";
 import { ProductId } from "./types/Product";
 import { AddressId } from "./types/Address";
 import { AccountId } from "src/context/AuthContext";
+import { OrderId } from "./types/Order";
 
 export const api = {
   axios: axios.create({
@@ -19,6 +20,7 @@ export const api = {
         addresses: `/accounts/${accountId}/addresses`,
         address: (addressId: AddressId) => `/accounts/${accountId}/addresses/${addressId}`,
         orders: `/accounts/${accountId}/orders`,
+        order: (orderId: OrderId) => `/accounts/${accountId}/orders/${orderId}`,
       };
     },
     categories: "/categories",
