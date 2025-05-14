@@ -15,7 +15,6 @@ export default function AccountForm() {
   const account = authContext.account;
   const colorTheme = useColorTheme();
   const phoneNumberQuery = usePhoneNumberQuery(account.id);
-
   const [accountData, setAccountData] = useState({
     firstName: account.givenName,
     lastName: account.familyName,

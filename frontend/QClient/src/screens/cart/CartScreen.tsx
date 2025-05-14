@@ -21,6 +21,7 @@ import useAddressesQuery from "src/api/hooks/useAddressesQuery";
 import { useAuthContext } from "src/context/AuthContext";
 import { RootStackParamList } from "src/navigation/RootStackNavigator";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { AxiosError } from "axios";
 
 type NavigationProps = CompositeNavigationProp<
   NativeStackNavigationProp<CartStackParamList, "CartScreen">,
@@ -75,12 +76,22 @@ export default function CartScreen() {
         queryClient.invalidateQueries({ queryKey: ["order-history"] });
         queryClient.prefetchInfiniteQuery({ queryKey: ["order-history"], initialPageParam: 0 });
       })
-      .catch((error) => {
-        logger.error("Error sending order:", error.response.data);
+      .catch((error: AxiosError) => {
+        if (
+          error.response?.status === 417 &&
+          typeof error.response?.data === "string" &&
+          error.response.data.toLowerCase().includes("phone number is missing")
+        ) {
+          showToast("Vă rugăm să introduceți un număr de telefon");
+          navigation.navigate("MainTabNavigator", {
+            screen: "ProfileStackNavigator",
+            params: { screen: "ProfileScreen" },
+          });
+        } else {
+          logger.error("Error sending order:", error.response?.data);
+        }
       })
-      .finally(() => {
-        setSendingOrder(false);
-      });
+      .finally(() => setSendingOrder(false));
   }
 
   if (sendingOrder) return <ScreenActivityIndicator text="Se trimite comanda..." />;
