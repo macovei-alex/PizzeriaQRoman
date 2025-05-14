@@ -64,7 +64,7 @@ export default function AccountForm() {
         <TextInput
           value={accountData.firstName}
           onChangeText={(text) => setAccountData({ ...accountData, firstName: text })}
-          style={styles.input}
+          style={[styles.input, { color: colorTheme.text.primary }]}
         />
       </LabelledBorderComponent>
 
@@ -78,7 +78,7 @@ export default function AccountForm() {
         <TextInput
           value={accountData.lastName}
           onChangeText={(text) => setAccountData({ ...accountData, lastName: text })}
-          style={styles.input}
+          style={[styles.input, { color: colorTheme.text.primary }]}
         />
       </LabelledBorderComponent>
 
@@ -92,7 +92,7 @@ export default function AccountForm() {
         <TextInput
           value={accountData.email}
           onChangeText={(text) => setAccountData({ ...accountData, email: text })}
-          style={styles.input}
+          style={[styles.input, { color: colorTheme.text.primary }]}
         />
       </LabelledBorderComponent>
 
@@ -105,23 +105,37 @@ export default function AccountForm() {
       >
         <Text style={styles.phoneNumberPrefix}>+40</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { color: colorTheme.text.primary }]}
           value={accountData.phoneNumber}
           onChangeText={(text) => setAccountData({ ...accountData, phoneNumber: text })}
         />
       </LabelledBorderComponent>
 
-      <TouchableOpacity
-        style={[styles.button, { backgroundColor: colorTheme.background.accent }]}
-        disabled={updatingInfo}
-        onPress={handleInfoUpdate}
-      >
-        {updatingInfo ? (
-          <ActivityIndicator size={27} color={colorTheme.text.onAccent} />
-        ) : (
-          <Text style={[styles.buttonText, { color: colorTheme.text.onAccent }]}>Salvați modificările</Text>
-        )}
-      </TouchableOpacity>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: colorTheme.background.accent }]}
+          disabled={updatingInfo}
+          onPress={handleInfoUpdate}
+        >
+          {updatingInfo ? (
+            <ActivityIndicator size={27} color={colorTheme.text.onAccent} />
+          ) : (
+            <Text style={[styles.buttonText, { color: colorTheme.text.onAccent }]}>Salvați</Text>
+          )}
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: colorTheme.background.accent }]}
+          disabled={updatingInfo}
+          onPress={handleInfoUpdate}
+        >
+          {updatingInfo ? (
+            <ActivityIndicator size={27} color={colorTheme.text.onAccent} />
+          ) : (
+            <Text style={[styles.buttonText, { color: colorTheme.text.onAccent }]}>Resetați</Text>
+          )}
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -140,10 +154,10 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
   input: {
+    flex: 1,
     fontSize: 18,
     fontWeight: "600",
     marginLeft: 10,
-    flexGrow: 1,
   },
   phoneNumberContainerStyle: {
     flexDirection: "row",
@@ -154,11 +168,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginLeft: 10,
   },
+  buttonsContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 8,
+    marginTop: 16,
+  },
   button: {
+    flex: 1,
     padding: 12,
     borderRadius: 12,
-    marginTop: 16,
-    width: "100%",
     alignItems: "center",
   },
   buttonText: {

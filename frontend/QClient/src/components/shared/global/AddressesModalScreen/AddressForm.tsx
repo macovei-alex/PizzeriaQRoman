@@ -61,6 +61,8 @@ export default function AddressForm({ modalEditState, initialState, onSubmit }: 
             onChangeText={(text) => setModalState({ ...modalState, block: text })}
           />
         </LabelledBorderComponent>
+
+        {/* floor and apartment section */}
         <View style={styles.floorAndApartmentContainer}>
           <LabelledBorderComponent label="Etajul" style={styles.floorAndAptLabelledBorder}>
             <TextInput
@@ -69,6 +71,7 @@ export default function AddressForm({ modalEditState, initialState, onSubmit }: 
               onChangeText={(text) => setModalState({ ...modalState, floor: text })}
             />
           </LabelledBorderComponent>
+
           <LabelledBorderComponent label="Apartamentul" style={styles.floorAndAptLabelledBorder}>
             <TextInput
               value={modalState.apartment}
@@ -118,21 +121,18 @@ const styles = StyleSheet.create({
   floorAndApartmentContainer: {
     flexDirection: "row",
     gap: 12,
-    justifyContent: "space-around",
-    alignItems: "center",
   },
   floorAndAptLabelledBorder: {
-    flexGrow: 1,
-    flexShrink: 1,
+    flex: 1,
   },
   confirmAddressButton: {
-    padding: 16,
-    marginTop: 12,
+    padding: 12,
+    marginTop: 20,
     borderRadius: 24,
     alignItems: "center",
   },
   confirmAddressText: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "bold",
   },
 });

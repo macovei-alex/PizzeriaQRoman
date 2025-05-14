@@ -25,12 +25,15 @@ export const emptyAddressState: NewAddress = {
 
 export default function AddressesModalScreen() {
   const colorTheme = useColorTheme();
+
   const authContext = useAuthContext();
   if (!authContext.account) throw new Error("Account is not defined in AddressesScreen");
   const accountId = authContext.account.id;
+
   const addressesQuery = useAddressesQuery();
   const [addressEditState, setModalEditState] = useState<"closed" | "add" | "edit">("closed");
   const [initialAddressState, setInitialAddressState] = useState(emptyAddressState);
+
   const onModalSubmit = useCallback(
     async (address: NewAddress | null) => {
       setModalEditState("closed");
@@ -76,10 +79,13 @@ export default function AddressesModalScreen() {
             onPress: deleteAddress,
           },
         ],
-        { cancelable: false }
+        {
+          cancelable: false,
+          userInterfaceStyle: colorTheme.name,
+        }
       );
     },
-    [accountId, addressesQuery]
+    [accountId, addressesQuery, colorTheme.name]
   );
 
   if (addressesQuery.isFetching) return <ScreenActivityIndicator text="Se încarcă adresele" />;

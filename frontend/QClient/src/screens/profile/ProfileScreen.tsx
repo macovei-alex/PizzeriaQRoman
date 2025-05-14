@@ -52,7 +52,7 @@ export default function ProfileScreen() {
             <ArrowSvg style={styles.arrowSvg} />
           </TouchableOpacity>
 
-          {/* payment methods button */}
+          {/* disconnect button */}
           <TouchableOpacity
             style={[styles.buttonContainer, { borderBottomColor: colorTheme.background.elevated }]}
             onPress={() => {
