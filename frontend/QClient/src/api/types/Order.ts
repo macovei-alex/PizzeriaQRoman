@@ -1,5 +1,7 @@
 import { OptionId, OptionListId, ProductId } from "./Product";
 
+export type OrderStatus = "RECEIVED" | "IN_PREPARATION" | "IN_DELIVERY" | "DELIVERED";
+
 export type PlacedOrderOption = {
   optionId: OptionId;
   count: number;
@@ -22,7 +24,7 @@ export type PlacedOrder = {
 
 export type HistoryOrder = {
   id: number;
-  orderStatus: string;
+  orderStatus: OrderStatus;
   orderTimestamp: Date;
   deliveryTimestamp?: Date;
   estimatedPreparationTime?: number;

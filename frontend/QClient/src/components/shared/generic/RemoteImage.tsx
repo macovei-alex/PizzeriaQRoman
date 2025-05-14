@@ -1,10 +1,11 @@
 import { Image, ImageProps } from "expo-image";
 import React from "react";
+import { images } from "src/constants";
 import { useAuthContext } from "src/context/AuthContext";
 import { imageUri } from "src/utils/utils";
 
 type RemoteImageProps = ImageProps & {
-  imageName: string;
+  imageName?: string;
   imageVersion: number;
 };
 
@@ -13,12 +14,16 @@ export default function RemoteImage({ imageName, imageVersion, ...rest }: Remote
 
   return (
     <Image
-      source={{
-        uri: imageUri(imageName, imageVersion),
-        headers: {
-          Authorization: `Bearer ${authContext.accessToken}`,
-        },
-      }}
+      source={
+        imageName
+          ? {
+              uri: imageUri(imageName, imageVersion),
+              headers: {
+                Authorization: `Bearer ${authContext.accessToken}`,
+              },
+            }
+          : images.defaultPizza
+      }
       {...rest}
     />
   );
