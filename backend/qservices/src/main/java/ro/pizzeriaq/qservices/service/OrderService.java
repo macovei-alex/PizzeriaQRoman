@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ro.pizzeriaq.qservices.data.entity.*;
 import ro.pizzeriaq.qservices.data.repository.*;
 import ro.pizzeriaq.qservices.exceptions.PhoneNumberMissingException;
+import ro.pizzeriaq.qservices.service.DTO.HistoryOrderFullDto;
 import ro.pizzeriaq.qservices.service.DTO.HistoryOrderMinimalDTO;
 import ro.pizzeriaq.qservices.service.DTO.PlacedOrderDTO;
 import ro.pizzeriaq.qservices.service.mappers.HistoryOrderMinimalMapper;
@@ -38,6 +39,12 @@ public class OrderService {
 		return orders.stream()
 				.map(historyOrderMinimalMapper::fromEntity)
 				.toList();
+	}
+
+
+	@Transactional(readOnly = true)
+	public HistoryOrderFullDto getFullOrder(int orderId) {
+		return HistoryOrderFullDto.builder().build();
 	}
 
 

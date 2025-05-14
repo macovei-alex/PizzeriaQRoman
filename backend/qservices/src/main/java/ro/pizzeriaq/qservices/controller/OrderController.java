@@ -3,6 +3,8 @@ package ro.pizzeriaq.qservices.controller;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ro.pizzeriaq.qservices.config.annotations.AccountIdChecked;
+import ro.pizzeriaq.qservices.service.DTO.HistoryOrderFullDto;
 import ro.pizzeriaq.qservices.service.DTO.HistoryOrderMinimalDTO;
 import ro.pizzeriaq.qservices.service.DTO.PlacedOrderDTO;
 import ro.pizzeriaq.qservices.service.OrderService;
@@ -18,13 +20,8 @@ public class OrderController {
 	private final OrderService orderService;
 
 
-	@PostMapping
-	public void placeOrder(@PathVariable UUID accountId, @Valid @RequestBody PlacedOrderDTO placedOrderDTO) {
-		orderService.placeOrder(placedOrderDTO, accountId);
-	}
-
-
 	@GetMapping
+	@AccountIdChecked
 	public List<HistoryOrderMinimalDTO> getOrdersHistory(
 			@PathVariable UUID accountId,
 			@RequestParam("page") int page,
@@ -32,5 +29,12 @@ public class OrderController {
 	) {
 		// TODO: Test pagination.
 		return orderService.getOrdersHistory(accountId, page, pageSize);
+	}
+
+
+	@PostMapping
+	@AccountIdChecked
+	public void placeOrder(@PathVariable UUID accountId, @Valid @RequestBody PlacedOrderDTO placedOrderDTO) {
+		orderService.placeOrder(placedOrderDTO, accountId);
 	}
 }

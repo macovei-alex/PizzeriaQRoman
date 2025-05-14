@@ -20,12 +20,12 @@ public class OrderItem {
 	private Integer id;
 
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_order", nullable = false)
 	private Order order;
 
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_product", nullable = false)
 	private Product product;
 
