@@ -5,7 +5,7 @@ import ProductScreen from "src/screens/shared/ProductScreen";
 
 export type CartStackParamList = {
   CartScreen: undefined;
-  ProductScreen: { productId: string; cartItemId: string };
+  ProductScreen: { productId: number; cartItemId: number };
 };
 
 const CartStack = createNativeStackNavigator<CartStackParamList>();

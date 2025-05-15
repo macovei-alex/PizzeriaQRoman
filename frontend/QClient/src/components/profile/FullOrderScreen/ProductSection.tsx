@@ -5,6 +5,7 @@ import useColorTheme from "src/hooks/useColorTheme";
 import logger from "src/utils/logger";
 import { formatPrice } from "src/utils/utils";
 import { FullOrderItem } from "src/api/types/order/FullHistoryOrder";
+import { OrderId } from "src/api/types/order/Order";
 
 function calculatePrice(item: FullOrderItem) {
   return item.options
@@ -19,10 +20,11 @@ function calculatePrice(item: FullOrderItem) {
 }
 
 type ProductSectionProps = {
+  orderId: OrderId;
   orderItems: FullOrderItem[];
 };
 
-export default function ProductSection({ orderItems }: ProductSectionProps) {
+export default function ProductSection({ orderId, orderItems }: ProductSectionProps) {
   logger.render("ProductSection");
 
   const colorTheme = useColorTheme();
@@ -33,7 +35,7 @@ export default function ProductSection({ orderItems }: ProductSectionProps) {
   return (
     <>
       {orderItems.map((orderItem, index) => (
-        <OrderItemCard key={orderItem.id} orderItem={orderItem} price={prices[index]} />
+        <OrderItemCard key={orderItem.id} orderId={orderId} orderItem={orderItem} price={prices[index]} />
       ))}
       <View style={styles.totalPriceContainerContainer}>
         <View style={[styles.totalPriceContainer, { backgroundColor: colorTheme.background.accent }]}>

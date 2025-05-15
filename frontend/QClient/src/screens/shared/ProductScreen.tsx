@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-nati
 import { SafeAreaView } from "react-native-safe-area-context";
 import OptionList from "src/components/shared/ProductScreen/OptionListCard";
 import useColorTheme from "src/hooks/useColorTheme";
-import HorizontalLine from "src/components/shared/ProductScreen/HorizontalLine";
+import HorizontalLine from "src/components/shared/generic/HorizontalLine";
 import { Fragment } from "react";
 import TitleSection from "src/components/shared/ProductScreen/TitleSection";
 import { CartItemOptions, useCartContext } from "src/context/CartContext";
@@ -25,15 +25,15 @@ export default function ProductScreen() {
   const colorTheme = useColorTheme();
   const { cart, addCartItem, changeCartItemOptions } = useCartContext();
   const route = useRoute<RouteProps>();
-  const productId = Number(route.params.productId);
-  const cartItemId = "cartItemId" in route.params ? Number(route.params.cartItemId) : null;
+  const productId = route.params.productId;
+  const cartItemId = "cartItemId" in route.params ? route.params.cartItemId : null;
   const cartItem = cartItemId ? cart.find((item) => item.id === cartItemId) : null;
   if (!!cartItemId && !cartItem) throw new Error(`Cart item not found for id ( ${cartItemId} )`);
 
   const productQuery = useProductWithOptionsQuery(productId);
   const [cartItemOptions, setCartItemOptions] = useState<CartItemOptions>(cartItem?.options ?? {});
 
-  if (productQuery.isFetching) return <ScreenActivityIndicator text="" />;
+  if (productQuery.isFetching) return <ScreenActivityIndicator />;
   if (productQuery.isError) return <ErrorComponent />;
   if (!productQuery.data) throw new Error("Product not found");
 

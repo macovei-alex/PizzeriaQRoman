@@ -47,7 +47,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <TouchableOpacity
           testID={product.name === "Pizza Capriciosa" ? "info-button-capriciosa" : undefined}
           style={[styles.infoButtonContainer, { backgroundColor: colorTheme.background.accent }]}
-          onPress={() => navigation.navigate("ProductScreen", { productId: product.id.toString() })}
+          onPress={() => navigation.navigate("ProductScreen", { productId: product.id })}
         >
           <Text style={[styles.infoButtonText, { color: colorTheme.text.onAccent }]}>Informații</Text>
         </TouchableOpacity>

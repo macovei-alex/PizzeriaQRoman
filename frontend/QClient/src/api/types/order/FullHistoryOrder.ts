@@ -2,28 +2,25 @@ import { Address } from "../Address";
 import { OrderId, OrderItemId, OrderStatus } from "./Order";
 import { OptionId, OptionListId, ProductId, ProductWithOptions } from "../Product";
 
+export type FullOrderItemOptions = {
+  id: number;
+  optionListId: OptionListId;
+  optionId: OptionId;
+  count: number;
+}[];
+
 export type FullOrderItemDTO = {
   id: OrderItemId;
   productId: ProductId;
   count: number;
-  options: {
-    id: number;
-    optionListId: OptionListId;
-    optionId: OptionId;
-    count: number;
-  }[];
+  options: FullOrderItemOptions;
 };
 
 export type FullOrderItem = {
   id: OrderItemId;
   product: ProductWithOptions;
   count: number;
-  options: {
-    id: number;
-    optionListId: OptionListId;
-    optionId: OptionId;
-    count: number;
-  }[];
+  options: FullOrderItemOptions;
 };
 
 export type FullHistoryOrderDTO = {

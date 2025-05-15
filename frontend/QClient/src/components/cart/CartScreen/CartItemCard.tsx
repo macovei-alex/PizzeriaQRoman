@@ -50,8 +50,8 @@ export default function CartItemCard({ cartItem, price }: CartItemCardProps) {
       activeOpacity={0.5}
       onPress={() =>
         navigation.navigate("ProductScreen", {
-          productId: cartItem.product.id.toString(),
-          cartItemId: cartItem.id.toString(),
+          productId: cartItem.product.id,
+          cartItemId: cartItem.id,
         })
       }
     >

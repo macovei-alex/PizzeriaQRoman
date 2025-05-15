@@ -1,8 +1,8 @@
 import React from "react";
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
-import HorizontalLine from "src/components/shared/ProductScreen/HorizontalLine";
 import useColorTheme from "src/hooks/useColorTheme";
 import logger from "src/utils/logger";
+import HorizontalLine from "./HorizontalLine";
 
 type ScreenTitleProps = {
   title: string;

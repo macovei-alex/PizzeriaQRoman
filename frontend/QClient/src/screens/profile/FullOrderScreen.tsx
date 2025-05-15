@@ -46,7 +46,7 @@ export default function FullOrderScreen() {
         <ScrollView>
           <ScreenTitle title="Comanda mea" containerStyle={styles.titleScreenContainer} />
 
-          <ProductSection orderItems={orderQuery.data.items} />
+          <ProductSection orderId={orderQuery.data.id} orderItems={orderQuery.data.items} />
 
           <AdditionalInfoSection
             address={orderQuery.data.address}
@@ -58,10 +58,10 @@ export default function FullOrderScreen() {
               style={[styles.sendOrderButton, { backgroundColor: colorTheme.background.accent }]}
               onPress={() => {
                 // TODO: Implement copy order functionality
-                // navigation.navigate("MainTabNavigator", {
-                //   screen: "CartStackNavigator",
-                //   params: { screen: "CartScreen" },
-                // });
+                navigation.navigate("MainTabNavigator", {
+                  screen: "CartStackNavigator",
+                  params: { screen: "CartScreen" },
+                });
               }}
             >
               <Text style={[styles.sendOrderText, { color: colorTheme.text.onAccent }]}>

@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Address } from "src/api/types/Address";
 import useColorTheme from "src/hooks/useColorTheme";
+import logger from "src/utils/logger";
 
 type AdditionalInfoSectionProps = {
   address: Address;
@@ -9,6 +10,8 @@ type AdditionalInfoSectionProps = {
 };
 
 export default function AdditionalInfoSection({ address, additionalNotes }: AdditionalInfoSectionProps) {
+  logger.render("AdditionalInfoSection");
+
   const colorTheme = useColorTheme();
 
   return (

@@ -9,6 +9,7 @@ import RemoteImage from "src/components/shared/generic/RemoteImage";
 import { ProfileStackParamList } from "src/navigation/ProfileStackNavigator";
 import { FullOrderItem } from "src/api/types/order/FullHistoryOrder";
 import { RootStackParamList } from "src/navigation/RootStackNavigator";
+import { OrderId } from "src/api/types/order/Order";
 
 type NavigationProps = CompositeNavigationProp<
   NativeStackNavigationProp<ProfileStackParamList, "FullOrderScreen">,
@@ -16,11 +17,12 @@ type NavigationProps = CompositeNavigationProp<
 >;
 
 type OrderItemCardProps = {
+  orderId: OrderId;
   orderItem: FullOrderItem;
   price: number;
 };
 
-export default function OrderItemCard({ orderItem, price }: OrderItemCardProps) {
+export default function OrderItemCard({ orderId, orderItem, price }: OrderItemCardProps) {
   logger.render("OrderItemCard");
 
   const navigation = useNavigation<NavigationProps>();
@@ -45,15 +47,9 @@ export default function OrderItemCard({ orderItem, price }: OrderItemCardProps) 
     <TouchableOpacity
       activeOpacity={0.5}
       onPress={() =>
-        navigation.navigate("MainTabNavigator", {
-          screen: "CartStackNavigator",
-          params: {
-            screen: "ProductScreen",
-            params: {
-              productId: orderItem.product.id.toString(),
-              cartItemId: orderItem.id.toString(),
-            },
-          },
+        navigation.navigate("OrderItemScreen", {
+          orderId: orderId,
+          itemId: orderItem.id,
         })
       }
     >
