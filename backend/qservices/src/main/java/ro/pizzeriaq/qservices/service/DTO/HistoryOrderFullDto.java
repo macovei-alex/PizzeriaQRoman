@@ -19,14 +19,29 @@ public class HistoryOrderFullDto {
 	private String additionalNotes;
 	private BigDecimal totalPrice;
 	private BigDecimal totalPriceWithDiscount;
-	private List<HistoryOrderMinimalDTO.Item> items;
+	private AddressDto address;
+	private List<Item> items;
 
 
 	@Builder
 	@Data
 	public static class Item {
+
+		private int id;
 		private int productId;
 		private int count;
+		List<Option> options;
+
+
+		@Data
+		@Builder
+		public static class Option {
+
+			private int optionListId;
+			private int optionId;
+			private int count;
+
+		}
 	}
 
 }

@@ -1,8 +1,9 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { api } from "src/api";
-import { HistoryOrder, HistoryOrderDTO, OrderStatusSchema } from "src/api/types/Order";
+import { OrderStatusSchema } from "src/api/types/order/Order";
 import { useAuthContext } from "src/context/AuthContext";
 import logger from "src/utils/logger";
+import { HistoryOrderMinimal, HistoryOrderMinimalDTO } from "../types/order/HistoryOrderMinimal";
 
 const PAGE_SIZE = 5;
 
@@ -11,10 +12,10 @@ export default function useOrderHistoryInfiniteQuery() {
   if (!authContext.account) throw new Error("Account is not defined in useOrderHistoryQuery");
   const accountId = authContext.account.id;
 
-  return useInfiniteQuery<HistoryOrder[], Error>({
+  return useInfiniteQuery<HistoryOrderMinimal[], Error>({
     queryKey: ["order-history", accountId],
     queryFn: async ({ pageParam }) => {
-      const response = await api.axios.get<HistoryOrderDTO[]>(api.routes.account(accountId).orders, {
+      const response = await api.axios.get<HistoryOrderMinimalDTO[]>(api.routes.account(accountId).orders, {
         params: {
           page: pageParam,
           pageSize: PAGE_SIZE,

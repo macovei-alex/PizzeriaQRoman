@@ -27,6 +27,7 @@ public class HistoryOrderMinimalMapper {
 
 	private HistoryOrderMinimalDTO.Item mapOrderItem(@NonNull OrderItem item) {
 		return HistoryOrderMinimalDTO.Item.builder()
+				.orderItemId(item.getId())
 				.productId(item.getProduct().getId())
 				.count(item.getCount())
 				.build();

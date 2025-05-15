@@ -48,17 +48,17 @@ public class HistoryOrderMinimalMapperTest {
 		assertThrows(NullPointerException.class, () -> historyOrderMinimalMapper.fromEntity(Order.builder()
 				.id(1)
 				.orderStatus(OrderStatus.RECEIVED)
-				.orderItems(List.of(OrderItem.builder().product(null).count(1).build()))
+				.orderItems(List.of(OrderItem.builder().id(null).product(Product.builder().id(1).build()).count(1).build()))
 				.build()));
 		assertThrows(NullPointerException.class, () -> historyOrderMinimalMapper.fromEntity(Order.builder()
 				.id(1)
 				.orderStatus(OrderStatus.RECEIVED)
-				.orderItems(List.of(OrderItem.builder().product(null).count(1).build()))
+				.orderItems(List.of(OrderItem.builder().id(1).product(null).count(1).build()))
 				.build()));
 		assertThrows(NullPointerException.class, () -> historyOrderMinimalMapper.fromEntity(Order.builder()
 				.id(1)
 				.orderStatus(OrderStatus.RECEIVED)
-				.orderItems(List.of(OrderItem.builder().product(Product.builder().id(null).build()).count(1).build()))
+				.orderItems(List.of(OrderItem.builder().id(1).product(Product.builder().id(null).build()).count(1).build()))
 				.build()));
 	}
 
@@ -72,7 +72,11 @@ public class HistoryOrderMinimalMapperTest {
 		assertDoesNotThrow(() -> historyOrderMinimalMapper.fromEntity(Order.builder()
 				.id(1)
 				.orderStatus(OrderStatus.RECEIVED)
-				.orderItems(List.of(OrderItem.builder().product(Product.builder().id(1).build()).count(1).build()))
+				.orderItems(List.of(OrderItem.builder()
+						.id(1)
+						.product(Product.builder().id(1).build())
+						.count(1)
+						.build()))
 				.build()));
 	}
 
@@ -105,8 +109,8 @@ public class HistoryOrderMinimalMapperTest {
 				.id(1)
 				.orderStatus(OrderStatus.RECEIVED)
 				.orderItems(List.of(
-						OrderItem.builder().product(Product.builder().id(1).build()).count(1).build(),
-						OrderItem.builder().product(Product.builder().id(2).build()).count(2).build()
+						OrderItem.builder().id(1).product(Product.builder().id(1).build()).count(1).build(),
+						OrderItem.builder().id(2).product(Product.builder().id(2).build()).count(2).build()
 				))
 				.build();
 
@@ -120,8 +124,8 @@ public class HistoryOrderMinimalMapperTest {
 				.totalPrice(null)
 				.totalPriceWithDiscount(null)
 				.items(List.of(
-						HistoryOrderMinimalDTO.Item.builder().productId(1).count(1).build(),
-						HistoryOrderMinimalDTO.Item.builder().productId(2).count(2).build()
+						HistoryOrderMinimalDTO.Item.builder().orderItemId(1).productId(1).count(1).build(),
+						HistoryOrderMinimalDTO.Item.builder().orderItemId(2).productId(2).count(2).build()
 				))
 				.build();
 
@@ -140,8 +144,8 @@ public class HistoryOrderMinimalMapperTest {
 				.totalPrice(BigDecimal.valueOf(100.0))
 				.totalPriceWithDiscount(BigDecimal.valueOf(90.0))
 				.orderItems(List.of(
-						OrderItem.builder().product(Product.builder().id(1).build()).count(1).build(),
-						OrderItem.builder().product(Product.builder().id(2).build()).count(2).build()
+						OrderItem.builder().id(1).product(Product.builder().id(1).build()).count(1).build(),
+						OrderItem.builder().id(2).product(Product.builder().id(2).build()).count(2).build()
 				))
 				.build();
 
@@ -155,8 +159,8 @@ public class HistoryOrderMinimalMapperTest {
 				.totalPrice(BigDecimal.valueOf(100.0))
 				.totalPriceWithDiscount(BigDecimal.valueOf(90.0))
 				.items(List.of(
-						HistoryOrderMinimalDTO.Item.builder().productId(1).count(1).build(),
-						HistoryOrderMinimalDTO.Item.builder().productId(2).count(2).build()
+						HistoryOrderMinimalDTO.Item.builder().orderItemId(1).productId(1).count(1).build(),
+						HistoryOrderMinimalDTO.Item.builder().orderItemId(2).productId(2).count(2).build()
 				))
 				.build();
 

@@ -4,7 +4,6 @@ import useColorTheme from "src/hooks/useColorTheme";
 import ProductSection from "src/components/cart/CartScreen/ProductSection";
 import { useCartContext } from "src/context/CartContext";
 import { showToast } from "src/utils/toast";
-import { PlacedOrder } from "src/api/types/Order";
 import logger from "src/utils/logger";
 import { convertCartItemOptions } from "src/utils/convertions";
 import { useQueryClient } from "@tanstack/react-query";
@@ -22,6 +21,7 @@ import { useAuthContext } from "src/context/AuthContext";
 import { RootStackParamList } from "src/navigation/RootStackNavigator";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AxiosError } from "axios";
+import { PlacedOrder } from "src/api/types/order/PlacedOrder";
 
 type NavigationProps = CompositeNavigationProp<
   NativeStackNavigationProp<CartStackParamList, "CartScreen">,
@@ -107,7 +107,7 @@ export default function CartScreen() {
     >
       <SafeAreaView>
         <ScrollView>
-          <ScreenTitle title={"Comanda mea"} containerStyle={styles.titleScreenContainer} />
+          <ScreenTitle title="Coșul meu" containerStyle={styles.titleScreenContainer} />
 
           <ProductSection />
 

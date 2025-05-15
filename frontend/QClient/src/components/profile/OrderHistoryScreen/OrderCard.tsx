@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { ColorValue, StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
-import { HistoryOrder, OrderStatus } from "src/api/types/Order";
+import { OrderStatus } from "src/api/types/order/Order";
 import { Product, ProductId } from "src/api/types/Product";
 import useColorTheme from "src/hooks/useColorTheme";
 import useProductsQuery from "src/api/hooks/useProductsQuery";
@@ -11,11 +11,12 @@ import RemoteImage from "src/components/shared/generic/RemoteImage";
 import { ProfileStackParamList } from "src/navigation/ProfileStackNavigator";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
+import { HistoryOrderMinimal } from "src/api/types/order/HistoryOrderMinimal";
 
 const MAX_ITEMS_PER_ORDER = 4;
 
 type OrderCardProps = {
-  order: HistoryOrder;
+  order: HistoryOrderMinimal;
   containerStyle?: StyleProp<ViewStyle>;
 };
 

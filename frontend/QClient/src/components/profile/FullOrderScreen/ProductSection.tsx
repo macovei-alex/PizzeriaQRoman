@@ -1,43 +1,39 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { CartItem, useCartContext } from "src/context/CartContext";
-import CartItemCard from "./CartItemCard";
+import OrderItemCard from "./OrderItemCard";
 import useColorTheme from "src/hooks/useColorTheme";
 import logger from "src/utils/logger";
 import { formatPrice } from "src/utils/utils";
+import { FullOrderItem } from "src/api/types/order/FullHistoryOrder";
 
-function calculatePrice(item: CartItem) {
-  let price = item.product.price;
-  for (const [optionListId, optionList] of Object.entries(item.options)) {
-    for (const [optionId, optionCount] of Object.entries(optionList)) {
-      const list = item.product.optionLists.find((list) => list.id === Number(optionListId));
-      if (!list) {
-        throw new Error(`Option list not found: ${optionListId}`);
-      }
-      const option = list.options.find((option) => option.id === Number(optionId));
-      if (!option) {
-        throw new Error(`Option not found: ${optionId}`);
-      }
-
-      price += option.price * optionCount;
-    }
-  }
-  return price * item.count;
+function calculatePrice(item: FullOrderItem) {
+  return item.options
+    .map(({ optionListId, optionId, count }) => {
+      const optionList = item.product.optionLists.find((optionList) => optionList.id === optionListId);
+      if (!optionList) throw new Error(`Option list not found: ${optionListId}`);
+      const option = optionList.options.find((option) => option.id === Number(optionId));
+      if (!option) throw new Error(`Option not found: ${optionId}`);
+      return option.price * count;
+    })
+    .reduce((acc, price) => acc + price, item.product.price);
 }
 
-export default function ProductSection() {
+type ProductSectionProps = {
+  orderItems: FullOrderItem[];
+};
+
+export default function ProductSection({ orderItems }: ProductSectionProps) {
   logger.render("ProductSection");
 
   const colorTheme = useColorTheme();
-  const { cart } = useCartContext();
 
-  const prices = cart.map((cartItem) => calculatePrice(cartItem));
+  const prices = orderItems.map((cartItem) => calculatePrice(cartItem));
   const totalPrice = prices.reduce((acc, price) => acc + price, 0);
 
   return (
     <>
-      {cart.map((cartItem, index) => (
-        <CartItemCard key={cartItem.id} cartItem={cartItem} price={prices[index]} />
+      {orderItems.map((orderItem, index) => (
+        <OrderItemCard key={orderItem.id} orderItem={orderItem} price={prices[index]} />
       ))}
       <View style={styles.totalPriceContainerContainer}>
         <View style={[styles.totalPriceContainer, { backgroundColor: colorTheme.background.accent }]}>

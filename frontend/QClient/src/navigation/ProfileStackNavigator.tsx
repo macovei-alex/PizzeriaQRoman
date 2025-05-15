@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import OrderHistoryScreen from "src/screens/profile/OrderHistoryScreen";
 import ProfileScreen from "src/screens/profile/ProfileScreen";
 import FullOrderScreen from "src/screens/profile/FullOrderScreen";
-import { OrderId } from "src/api/types/Order";
+import { OrderId } from "src/api/types/order/Order";
 
 export type ProfileStackParamList = {
   ProfileScreen: undefined;

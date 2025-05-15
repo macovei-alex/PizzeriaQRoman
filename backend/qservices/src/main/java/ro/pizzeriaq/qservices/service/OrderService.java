@@ -5,15 +5,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import ro.pizzeriaq.qservices.config.annotations.AccountIdChecked;
 import ro.pizzeriaq.qservices.data.entity.*;
 import ro.pizzeriaq.qservices.data.repository.*;
 import ro.pizzeriaq.qservices.exceptions.PhoneNumberMissingException;
 import ro.pizzeriaq.qservices.service.DTO.HistoryOrderFullDto;
 import ro.pizzeriaq.qservices.service.DTO.HistoryOrderMinimalDTO;
 import ro.pizzeriaq.qservices.service.DTO.PlacedOrderDTO;
+import ro.pizzeriaq.qservices.service.mappers.HistoryOrderFullMapper;
 import ro.pizzeriaq.qservices.service.mappers.HistoryOrderMinimalMapper;
 
 import java.math.BigDecimal;
@@ -28,6 +26,7 @@ import java.util.UUID;
 public class OrderService {
 
 	private final HistoryOrderMinimalMapper historyOrderMinimalMapper;
+	private final HistoryOrderFullMapper historyOrderFullMapper;
 	private final OrderRepository orderRepository;
 	private final OrderItemRepository orderItemRepository;
 	private final ProductRepository productRepository;
@@ -51,7 +50,7 @@ public class OrderService {
 		var order = orderRepository.findById(orderId)
 				.orElseThrow(() -> new EntityNotFoundException("Order not found for ID: " + orderId));
 		// TODO: Implement mapper
-		return HistoryOrderFullDto.builder().build();
+		return historyOrderFullMapper.fromEntity(order);
 	}
 
 

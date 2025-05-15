@@ -3,7 +3,7 @@ import { ENV } from "src/constants";
 import { ProductId } from "./types/Product";
 import { AddressId } from "./types/Address";
 import { AccountId } from "src/context/AuthContext";
-import { OrderId } from "./types/Order";
+import { OrderId } from "./types/order/Order";
 
 export const api = {
   axios: axios.create({

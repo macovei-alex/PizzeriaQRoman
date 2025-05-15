@@ -24,6 +24,7 @@ public class HistoryOrderMinimalDTO {
 	@Builder
 	@Data
 	public static class Item {
+		private int orderItemId;
 		private int productId;
 		private int count;
 	}
