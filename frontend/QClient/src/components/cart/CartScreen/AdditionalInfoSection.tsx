@@ -1,12 +1,12 @@
-import { Picker } from "@react-native-picker/picker";
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import React, { forwardRef, useImperativeHandle, useLayoutEffect, useState } from "react";
+import React, { forwardRef, useImperativeHandle, useLayoutEffect, useMemo, useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Address } from "src/api/types/Address";
 import useColorTheme from "src/hooks/useColorTheme";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
 import { RootStackParamList } from "src/navigation/RootStackNavigator";
+import Dropdown from "react-native-input-select";
 import logger from "src/utils/logger";
 
 type NavigationProps = CompositeNavigationProp<
@@ -34,6 +34,13 @@ function AdditionalInfoSection(
   const [address, setAddress] = useState<Address | null>(null);
   const [additionalNotes, setAdditionalNotes] = useState<string | null>(null);
 
+  const addressDropdownOptions = useMemo(() => {
+    return addresses.map((address) => ({
+      label: `${address.street}, No. ` + address.streetNumber,
+      value: address.id,
+    }));
+  }, [addresses]);
+
   useImperativeHandle(
     ref,
     () => ({
@@ -54,28 +61,20 @@ function AdditionalInfoSection(
         <Text style={styles.subsectionTitle}>Adresă de livrare</Text>
         {addresses &&
           (address ? (
-            <View
-              style={[styles.addressPickerContainer, { backgroundColor: colorTheme.background.elevated }]}
-            >
-              {/* TODO: Replace the picker with aa better one */}
-              <Picker
-                dropdownIconColor={colorTheme.text.primary}
-                numberOfLines={3}
-                selectedValue={address}
-                onValueChange={(value: Address) => {
-                  setAddress(value);
-                }}
-              >
-                {addresses.map((address) => (
-                  <Picker.Item
-                    key={address.id}
-                    style={{ color: colorTheme.text.primary }}
-                    label={`${address.street}, No. ` + address.streetNumber}
-                    value={address}
-                  />
-                ))}
-              </Picker>
-            </View>
+            <Dropdown
+              dropdownStyle={StyleSheet.flatten([
+                styles.addressPickerContainer,
+                { backgroundColor: colorTheme.background.elevated },
+              ])}
+              selectedItemStyle={styles.addressPickerLabel}
+              options={addressDropdownOptions}
+              selectedValue={address.id}
+              onValueChange={(id) => setAddress(addresses.find((addr) => addr.id === id) || null)}
+              primaryColor={colorTheme.background.success}
+              modalControls={{
+                modalProps: { animationType: "slide" },
+              }}
+            />
           ) : (
             <>
               <Text style={[styles.noAddressText, { color: colorTheme.text.primary }]}>
@@ -96,7 +95,7 @@ function AdditionalInfoSection(
           style={[styles.additionalNotesInput, { backgroundColor: colorTheme.background.elevated }]}
           placeholder="Mențiuni speciale..."
           placeholderTextColor={colorTheme.text.secondary}
-          multiline={true}
+          multiline
           onChangeText={setAdditionalNotes}
         >
           {additionalNotes}
@@ -121,6 +120,10 @@ const styles = StyleSheet.create({
   addressPickerContainer: {
     paddingHorizontal: 16,
     borderRadius: 24,
+    borderWidth: 0,
+  },
+  addressPickerLabel: {
+    fontSize: 16,
   },
   subsectionTitle: {
     fontSize: 20,
