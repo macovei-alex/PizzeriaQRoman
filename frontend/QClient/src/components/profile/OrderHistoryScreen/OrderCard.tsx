@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
-import { ColorValue, StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
-import { OrderStatus } from "src/api/types/order/Order";
+import { StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
 import { Product, ProductId } from "src/api/types/Product";
 import useColorTheme from "src/hooks/useColorTheme";
 import useProductsQuery from "src/api/hooks/useProductsQuery";
@@ -43,11 +42,15 @@ export default function OrderCard({ order, containerStyle }: OrderCardProps) {
     }[];
   }, [productsQuery, order]);
 
-  const orderStatusColors: Record<OrderStatus, ColorValue> = useMemo(() => {
+  const orderStatusColors = useMemo(() => {
     return {
       RECEIVED: colorTheme.background.accent,
       IN_PREPARATION: colorTheme.background.accent,
-      IN_DELIVERY: colorTheme.background.accent,
+      IN_DELIVERY: {
+        text: colorTheme.text.onAccent,
+        border: colorTheme.background.accent,
+        background: colorTheme.background.accent,
+      },
       DELIVERED: colorTheme.background.success,
     };
   }, [colorTheme]);
@@ -86,17 +89,28 @@ export default function OrderCard({ order, containerStyle }: OrderCardProps) {
           <Text style={styles.dateText}>{formatDate(order.deliveryTimestamp)}</Text>
 
           {/* status */}
-          <Text
-            style={[
-              styles.statusText,
-              {
-                color: orderStatusColors[order.orderStatus],
-                borderColor: orderStatusColors[order.orderStatus],
-              },
-            ]}
+          <TouchableOpacity
+            disabled={order.orderStatus !== "IN_DELIVERY"}
+            onPress={() => navigation.navigate("OrderDeliveryScreen")}
           >
-            {orderStatusNames[order.orderStatus]}
-          </Text>
+            <Text
+              style={[
+                styles.statusText,
+                order.orderStatus !== "IN_DELIVERY"
+                  ? {
+                      color: orderStatusColors[order.orderStatus],
+                      borderColor: orderStatusColors[order.orderStatus],
+                    }
+                  : {
+                      color: orderStatusColors[order.orderStatus].text,
+                      backgroundColor: orderStatusColors[order.orderStatus].background,
+                      borderColor: orderStatusColors[order.orderStatus].border,
+                    },
+              ]}
+            >
+              {orderStatusNames[order.orderStatus]}
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {/* products */}

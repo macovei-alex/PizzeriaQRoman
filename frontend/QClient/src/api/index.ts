@@ -26,5 +26,12 @@ export const api = {
     categories: "/categories",
     products: "/products",
     product: (productId: ProductId) => `/products/${productId}`,
+    navigation: {
+      directions: (
+        origin: { latitude: number; longitude: number },
+        destination: { latitude: number; longitude: number }
+      ) =>
+        `/navigation/directions?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}`,
+    },
   }),
 };
