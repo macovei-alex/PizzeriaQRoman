@@ -17,7 +17,7 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: "module",
   },
-  plugins: ["react", "prettier"],
+  plugins: ["react", "prettier", "react-you-might-not-need-an-effect"],
   rules: {
     "react/prop-types": "error",
     "prettier/prettier": [
@@ -28,6 +28,7 @@ module.exports = {
         trailingComma: "es5",
       },
     ],
+    "react-you-might-not-need-an-effect/you-might-not-need-an-effect": "warn",
   },
   settings: {
     react: {
