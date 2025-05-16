@@ -1,5 +1,6 @@
 import * as Location from "expo-location";
 import { useEffect, useState } from "react";
+import logger from "src/utils/logger";
 
 const precision = 100_000;
 
@@ -21,7 +22,7 @@ export function useCurrentLocation() {
     async function startListening() {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        console.warn("Permission to access location was denied");
+        logger.warn("Permission to access location was denied");
         return;
       }
 

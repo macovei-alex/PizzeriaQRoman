@@ -12,10 +12,8 @@ import CartIconSvg from "src/components/svg/CartIconSvg";
 import { useDirectionsQuery } from "src/api/hooks/useDirectionsQuery";
 
 const DESTINATION = {
-  coords: {
-    latitude: 45.46958477253526,
-    longitude: 28.033678383941893,
-  },
+  latitude: 45.46958477253526,
+  longitude: 28.033678383941893,
 };
 
 export default function OrderDeliveryScreen() {
@@ -23,12 +21,10 @@ export default function OrderDeliveryScreen() {
 
   const colorTheme = useColorTheme();
   const location = useCurrentLocation();
-  const directionsQuery = useDirectionsQuery(location?.coords, DESTINATION.coords);
+  const directionsQuery = useDirectionsQuery(location?.coords, DESTINATION);
 
   if (location === null || directionsQuery.isLoading) return <ScreenActivityIndicator />;
-  if (directionsQuery.isError) {
-    return <ErrorComponent onRetry={directionsQuery.refetch} />;
-  }
+  if (directionsQuery.isError) return <ErrorComponent onRetry={directionsQuery.refetch} />;
 
   const points = directionsQuery.data;
 
@@ -62,8 +58,8 @@ export default function OrderDeliveryScreen() {
         <Marker
           tracksViewChanges={false}
           coordinate={{
-            latitude: DESTINATION.coords.latitude,
-            longitude: DESTINATION.coords.longitude,
+            latitude: DESTINATION.latitude,
+            longitude: DESTINATION.longitude,
           }}
           title="Restaurant PizzeriaQ"
         >

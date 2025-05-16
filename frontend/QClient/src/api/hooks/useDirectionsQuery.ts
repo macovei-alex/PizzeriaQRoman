@@ -12,7 +12,6 @@ export function useDirectionsQuery(origin?: LatLng, destination?: LatLng) {
 
   const query = useQuery<LatLng[]>({
     queryFn: async ({ signal }) => {
-      console.log(originRef.current?.latitude, originRef.current?.longitude);
       if (!originRef.current || !destinationRef.current) return [];
       const data = (
         await api.axios.get<Directions>(
