@@ -35,7 +35,6 @@ public class SecurityConfig {
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/accounts").hasAuthority(Authorities.ADMIN.getName())
-						.requestMatchers("/products/search").permitAll()
 						.anyRequest().authenticated()
 				)
 				.anonymous(AbstractHttpConfigurer::disable)

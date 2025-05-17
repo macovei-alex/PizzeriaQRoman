@@ -20,7 +20,6 @@ public class Account {
 	@Id
 	private UUID id;
 
-
 	@ManyToMany
 	@JoinTable(
 			name = "account_coupon",
@@ -29,18 +28,14 @@ public class Account {
 	)
 	private List<Coupon> coupons;
 
-
 	@OneToMany(mappedBy = "account")
 	private List<Order> orders;
-
 
 	@OneToMany(mappedBy = "account")
 	private List<Address> addresses;
 
-
 	@Column(nullable = false, columnDefinition = "DATETIME")
 	private LocalDateTime createdAt;
-
 
 	@Column(nullable = false, length = 50)
 	private String email;
@@ -48,10 +43,10 @@ public class Account {
 	@Column(nullable = false)
 	private boolean isEmailVerified;
 
-
 	@Column(nullable = false, length = 20)
 	private String phoneNumber;
 
+	private UUID conversationId;
 
 	@Column(nullable = false)
 	@ColumnDefault("1")
