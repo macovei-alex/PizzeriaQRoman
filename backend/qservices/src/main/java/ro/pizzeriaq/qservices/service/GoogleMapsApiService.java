@@ -6,6 +6,8 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import ro.pizzeriaq.qservices.service.DTO.GoogleApiDirections;
 
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+
 @Service
 public class GoogleMapsApiService {
 
@@ -13,7 +15,9 @@ public class GoogleMapsApiService {
 	private final String apiKey;
 
 
-	public GoogleMapsApiService(@Value("${keys.google-maps-api}") String apiKey) {
+	public GoogleMapsApiService(@Value("${google-maps.api-key}") String apiKey) {
+		assertNotNull(apiKey);
+
 		this.apiKey = apiKey;
 		this.restClient = RestClient.builder()
 				.baseUrl("https://maps.googleapis.com/maps/api/directions/json")
