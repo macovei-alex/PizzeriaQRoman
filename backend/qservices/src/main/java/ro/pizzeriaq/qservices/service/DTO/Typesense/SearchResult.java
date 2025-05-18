@@ -1,4 +1,4 @@
-package ro.pizzeriaq.qservices.service.DTO.TypesenseResponse;
+package ro.pizzeriaq.qservices.service.DTO.Typesense;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -7,14 +7,14 @@ import java.util.List;
 
 
 @Data
-public class SearchResult {
+public class SearchResult<TDocument> {
 
 	@JsonProperty("facet_counts")
 	private List<Object> facetCounts;
 
 	private int found;
 
-	private List<Hit> hits;
+	private List<Hit<TDocument>> hits;
 
 	@JsonProperty("out_of")
 	private int outOf;
@@ -47,9 +47,9 @@ public class SearchResult {
 
 
 	@Data
-	public static class Hit {
+	public static class Hit<TDocument> {
 
-		private Document document;
+		private TDocument document;
 
 		private Highlight highlight;
 
@@ -63,22 +63,6 @@ public class SearchResult {
 
 		@JsonProperty("vector_distance")
 		private double vectorDistance;
-
-
-		@Data
-		public static class Document {
-
-			private String description;
-
-			private String id;
-
-			private String ingredients;
-
-			private String options;
-
-			private String type;
-
-		}
 
 
 		@Data

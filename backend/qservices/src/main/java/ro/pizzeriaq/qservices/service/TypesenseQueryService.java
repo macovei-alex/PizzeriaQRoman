@@ -4,12 +4,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
-import ro.pizzeriaq.qservices.service.DTO.TypesenseResponse.TypesenseResponseDto;
+import ro.pizzeriaq.qservices.service.DTO.Typesense.TypesenseConversationResultDto;
+import ro.pizzeriaq.qservices.service.DTO.Typesense.TypesenseLookupResponseDto;
 
+import javax.naming.ServiceUnavailableException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
@@ -19,6 +23,7 @@ public class TypesenseQueryService {
 
 	private final RestClient restClient;
 	private final String lookupCollectionName;
+	private final String conversationsCollectionName;
 	private final String conversationModelId;
 	private final AccountService accountService;
 
@@ -26,6 +31,7 @@ public class TypesenseQueryService {
 	public TypesenseQueryService(
 			@Value("${typesense.base-url}") String typesenseUrl,
 			@Value("${typesense.collections.lookup}") String lookupCollectionName,
+			@Value("${typesense.collections.conversations}") String conversationsCollectionName,
 			@Value("${typesense.conversation-model-id}") String conversationModelId,
 			@Value("${typesense.api-key}") String apiKey,
 			AccountService accountService
@@ -40,12 +46,46 @@ public class TypesenseQueryService {
 				.defaultHeaders((headers) -> headers.add("x-typesense-api-key", apiKey))
 				.build();
 		this.lookupCollectionName = lookupCollectionName;
+		this.conversationsCollectionName = conversationsCollectionName;
 		this.conversationModelId = conversationModelId;
 		this.accountService = accountService;
 	}
 
 
-	public TypesenseResponseDto queryPizza(@NonNull String naturalLanguageQuery, @NonNull UUID accountId) {
+	public Optional<TypesenseConversationResultDto> getConversationHistory(
+			@NonNull UUID accountId
+	) throws ServiceUnavailableException {
+
+		var conversationId = accountService.getConversationId(accountId);
+		if (conversationId == null) {
+			return Optional.empty();
+		}
+
+		var uri = UriComponentsBuilder
+				.fromUriString("/collections")
+				.pathSegment(conversationsCollectionName, "documents", "search")
+				.queryParam("q", "*")
+				.queryParam("query_by", "conversation_id")
+				.toUriString();
+
+		try {
+			return Optional.ofNullable(restClient
+					.get()
+					.uri(uri + "&filter_by=conversation_id:=" + conversationId)
+					.retrieve()
+					.body(TypesenseConversationResultDto.class)
+			);
+		} catch (HttpStatusCodeException e) {
+			if (e.getStatusCode().is5xxServerError()) {
+				throw new ServiceUnavailableException("Typesense is unavailable");
+			} else {
+				return Optional.empty();
+			}
+		}
+	}
+
+
+	public TypesenseLookupResponseDto queryPizza(@NonNull String naturalLanguageQuery, @NonNull UUID accountId) {
 		var conversationId = accountService.getConversationId(accountId);
 		var response = executeQuery(naturalLanguageQuery, conversationId);
 		if (!response.getConversation().getConversationId().equals(conversationId)) {
@@ -55,7 +95,7 @@ public class TypesenseQueryService {
 	}
 
 
-	private TypesenseResponseDto executeQuery(@NonNull String naturalLanguageQuery, @Nullable UUID conversationId) {
+	private TypesenseLookupResponseDto executeQuery(@NonNull String naturalLanguageQuery, @Nullable UUID conversationId) {
 		var uri = UriComponentsBuilder
 				.fromUriString("/multi_search")
 				.queryParam("q", naturalLanguageQuery)
@@ -77,7 +117,7 @@ public class TypesenseQueryService {
 						))
 				))
 				.retrieve()
-				.body(TypesenseResponseDto.class);
+				.body(TypesenseLookupResponseDto.class);
 	}
 
 
@@ -86,7 +126,6 @@ public class TypesenseQueryService {
 		if (conversationId == null) {
 			return;
 		}
-
 		accountService.setConversationId(accountId, null);
 	}
 

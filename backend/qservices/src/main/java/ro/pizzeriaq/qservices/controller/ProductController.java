@@ -1,14 +1,17 @@
 package ro.pizzeriaq.qservices.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.pizzeriaq.qservices.service.AuthenticationInsightsService;
 import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
 import ro.pizzeriaq.qservices.service.DTO.ProductWithOptionsDTO;
-import ro.pizzeriaq.qservices.service.DTO.TypesenseResponse.TypesenseResponseDto;
+import ro.pizzeriaq.qservices.service.DTO.Typesense.TypesenseConversationResultDto;
+import ro.pizzeriaq.qservices.service.DTO.Typesense.TypesenseLookupResponseDto;
 import ro.pizzeriaq.qservices.service.ProductService;
 import ro.pizzeriaq.qservices.service.TypesenseQueryService;
 
+import javax.naming.ServiceUnavailableException;
 import java.util.List;
 
 @RestController
@@ -34,7 +37,7 @@ public class ProductController {
 
 
 	@GetMapping("/search")
-	public TypesenseResponseDto queryPizza(@RequestParam("q") String query) {
+	public TypesenseLookupResponseDto queryPizza(@RequestParam("q") String query) {
 		var accountId = authenticationInsightsService.getAuthenticationId();
 		return typesenseQueryService.queryPizza(query, accountId);
 	}
@@ -44,5 +47,13 @@ public class ProductController {
 	public void deleteSearchHistory() {
 		var accountId = authenticationInsightsService.getAuthenticationId();
 		typesenseQueryService.deleteConversationForAccount(accountId);
+	}
+
+
+	@GetMapping("/search/history")
+	public ResponseEntity<TypesenseConversationResultDto> getConversationHistory() throws ServiceUnavailableException {
+		var accountId = authenticationInsightsService.getAuthenticationId();
+		var history = typesenseQueryService.getConversationHistory(accountId);
+		return history.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
 	}
 }

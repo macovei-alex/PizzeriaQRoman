@@ -14,6 +14,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import ro.pizzeriaq.qservices.exceptions.AccessDeniedException;
 import ro.pizzeriaq.qservices.exceptions.KeycloakException;
 import ro.pizzeriaq.qservices.exceptions.PhoneNumberMissingException;
+import ro.pizzeriaq.qservices.exceptions.TypesenseException;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -63,6 +64,13 @@ public class GlobalExceptionHandler {
 	}
 
 
+	@ExceptionHandler(TypesenseException.class)
+	public ResponseEntity<String> handleTypesenseException(TypesenseException e) {
+		logger.error("Typesense error", e);
+		return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(e.getMessage());
+	}
+
+
 	@ExceptionHandler(NoResourceFoundException.class)
 	public ResponseEntity<String> handleNoResourceFoundException(NoResourceFoundException e) {
 		logger.error("Resource not found", e);
@@ -92,7 +100,7 @@ public class GlobalExceptionHandler {
 
 
 	private String messageOrDefault(String message) {
-		if (message == null || message.isEmpty() || message.isBlank()) {
+		if (message == null || message.isBlank()) {
 			return "no associated message";
 		}
 		return message;
