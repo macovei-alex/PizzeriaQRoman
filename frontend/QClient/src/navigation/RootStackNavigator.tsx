@@ -4,11 +4,13 @@ import MainTabNavigator, { MainTabParamList } from "./MainTabNavigator";
 import AddressesModalScreen from "src/screens/shared/global/AddressesModalScreen";
 import OrderConfirmationScreen from "src/screens/shared/global/OrderConfirmationScreen";
 import { NavigatorScreenParams } from "@react-navigation/native";
+import ChatScreen from "src/screens/shared/global/ChatScreen";
 
 export type RootStackParamList = {
   MainTabNavigator: NavigatorScreenParams<MainTabParamList>;
   AddressesModalScreen: undefined;
   OrderConfirmationScreen: undefined;
+  ChatScreen: undefined;
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -25,6 +27,11 @@ export default function RootStackNavigator() {
       <RootStack.Screen
         name="OrderConfirmationScreen"
         component={OrderConfirmationScreen}
+        options={{ presentation: "fullScreenModal" }}
+      />
+      <RootStack.Screen
+        name="ChatScreen"
+        component={ChatScreen}
         options={{ presentation: "fullScreenModal" }}
       />
     </RootStack.Navigator>

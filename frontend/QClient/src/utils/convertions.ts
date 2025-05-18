@@ -1,6 +1,6 @@
 import { CartItemOptions } from "src/context/CartContext";
-import { PlacedOrderOptionList } from "src/api/types/order/Order";
 import { ColorValue } from "react-native";
+import { PlacedOrderOptionList } from "src/api/types/order/PlacedOrder";
 
 export function convertCartItemOptions(cartItemOptions: CartItemOptions): PlacedOrderOptionList[] {
   return Object.entries(cartItemOptions).map(([optionListId, optionList]) => ({

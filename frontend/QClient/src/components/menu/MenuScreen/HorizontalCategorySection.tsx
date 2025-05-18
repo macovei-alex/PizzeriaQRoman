@@ -1,9 +1,15 @@
 import React from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 import CategoryTouchable from "./CategoryTouchable";
-import SearchBar from "./SearchBar";
 import { Category, CategoryId } from "src/api/types/Category";
 import logger from "src/utils/logger";
+import SearchIconSvg from "src/components/svg/SearchIconSvg";
+import useColorTheme from "src/hooks/useColorTheme";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "src/navigation/RootStackNavigator";
+
+type NavigationProps = NativeStackNavigationProp<RootStackParamList, "MainTabNavigator">;
 
 type HorizontalCategorySectionProps = {
   categories: Category[];
@@ -15,6 +21,9 @@ export default function HorizontalCategorySection({
   onCategoryPress,
 }: HorizontalCategorySectionProps) {
   logger.render("HorizontalCategorySection");
+
+  const colorTheme = useColorTheme();
+  const navigation = useNavigation<NavigationProps>();
 
   return (
     <>
@@ -29,12 +38,13 @@ export default function HorizontalCategorySection({
         ))}
       </ScrollView>
 
-      <SearchBar
-        placeholder={"Caută ce îți dorești"}
-        onSearch={(text) => {
-          logger.log(text);
-        }}
-      />
+      <TouchableOpacity
+        style={[styles.searchBarContainer, { backgroundColor: colorTheme.background.elevated }]}
+        onPress={() => navigation.navigate("ChatScreen")}
+      >
+        <SearchIconSvg style={styles.searchIcon} />
+        <Text style={[styles.searchBarText, { color: colorTheme.text.primary }]}>Caută ce îți dorești</Text>
+      </TouchableOpacity>
     </>
   );
 }
@@ -45,5 +55,21 @@ const styles = StyleSheet.create({
   },
   category: {
     marginHorizontal: 8,
+  },
+  searchBarContainer: {
+    flexDirection: "row",
+    alignSelf: "center",
+    width: "90%",
+    borderRadius: 9999,
+    alignItems: "center",
+  },
+  searchIcon: {
+    width: 40,
+    height: 40,
+  },
+  searchBarText: {
+    textAlign: "center",
+    flexGrow: 1,
+    left: -20,
   },
 });

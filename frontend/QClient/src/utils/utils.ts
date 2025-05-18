@@ -2,14 +2,12 @@ import { ENV } from "src/constants";
 
 export function formatDate(date?: Date) {
   return date
-    ? date.toLocaleDateString("ro", { day: "2-digit", month: "2-digit" }) +
-        "  " +
-        date.toLocaleTimeString("en", {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: false,
-        })
+    ? date.toLocaleDateString("ro", { day: "2-digit", month: "2-digit" }) + "  " + formatTime(date)
     : "";
+}
+
+export function formatTime(date?: Date) {
+  return date ? date.toLocaleTimeString("ro", { hour: "2-digit", minute: "2-digit" }) : "";
 }
 
 export function formatPrice(price: number) {
