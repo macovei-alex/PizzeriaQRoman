@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
+import ro.pizzeriaq.qservices.exceptions.TypesenseException;
 import ro.pizzeriaq.qservices.service.DTO.Typesense.TypesenseConversationResultDto;
 import ro.pizzeriaq.qservices.service.DTO.Typesense.TypesenseLookupResponseDto;
 
@@ -78,24 +79,38 @@ public class TypesenseQueryService {
 		} catch (HttpStatusCodeException e) {
 			if (e.getStatusCode().is5xxServerError()) {
 				throw new ServiceUnavailableException("Typesense is unavailable");
-			} else {
-				return Optional.empty();
 			}
+			return Optional.empty();
 		}
 	}
 
 
-	public TypesenseLookupResponseDto queryPizza(@NonNull String naturalLanguageQuery, @NonNull UUID accountId) {
+	public TypesenseLookupResponseDto queryPizza(
+			@NonNull String naturalLanguageQuery,
+			@NonNull UUID accountId
+	) throws ServiceUnavailableException {
+
 		var conversationId = accountService.getConversationId(accountId);
-		var response = executeQuery(naturalLanguageQuery, conversationId);
-		if (!response.getConversation().getConversationId().equals(conversationId)) {
-			accountService.setConversationId(accountId, response.getConversation().getConversationId());
+		try {
+			var response = executeQuery(naturalLanguageQuery, conversationId);
+			if (!response.getConversation().getConversationId().equals(conversationId)) {
+				accountService.setConversationId(accountId, response.getConversation().getConversationId());
+			}
+			return response;
+		} catch (TypesenseException e) {
+			if (e.getCause() instanceof HttpStatusCodeException inner && inner.getStatusCode().value() == 404) {
+				accountService.setConversationId(accountId, null);
+			}
+			throw e;
 		}
-		return response;
 	}
 
 
-	private TypesenseLookupResponseDto executeQuery(@NonNull String naturalLanguageQuery, @Nullable UUID conversationId) {
+	private TypesenseLookupResponseDto executeQuery(
+			@NonNull String naturalLanguageQuery,
+			@Nullable UUID conversationId
+	) throws ServiceUnavailableException {
+
 		var uri = UriComponentsBuilder
 				.fromUriString("/multi_search")
 				.queryParam("q", naturalLanguageQuery)
@@ -106,18 +121,27 @@ public class TypesenseQueryService {
 			uri.queryParam("conversation_id", conversationId);
 		}
 
-		return restClient.post()
-				.uri(uri.build().toUriString())
-				.body(Map.of(
-						"searches", List.of(Map.of(
-								"collection", lookupCollectionName,
-								"query_by", "embedding",
-								"exclude_fields", "externId",
-								"sort_by", "_text_match:desc"
-						))
-				))
-				.retrieve()
-				.body(TypesenseLookupResponseDto.class);
+		try {
+
+			return restClient.post()
+					.uri(uri.build().toUriString())
+					.body(Map.of(
+							"searches", List.of(Map.of(
+									"collection", lookupCollectionName,
+									"query_by", "embedding",
+									"exclude_fields", "externId",
+									"sort_by", "_text_match:desc"
+							))
+					))
+					.retrieve()
+					.body(TypesenseLookupResponseDto.class);
+
+		} catch (HttpStatusCodeException e) {
+			if (e.getStatusCode().is5xxServerError()) {
+				throw new ServiceUnavailableException("Typesense is unavailable");
+			}
+			throw new TypesenseException("Something went wrong", e);
+		}
 	}
 
 

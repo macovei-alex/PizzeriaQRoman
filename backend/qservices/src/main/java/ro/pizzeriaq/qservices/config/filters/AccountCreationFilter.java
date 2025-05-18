@@ -12,6 +12,7 @@ import ro.pizzeriaq.qservices.service.AccountService;
 import ro.pizzeriaq.qservices.service.AuthenticationInsightsService;
 import ro.pizzeriaq.qservices.service.KeycloakService;
 
+import javax.naming.ServiceUnavailableException;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -50,9 +51,13 @@ public class AccountCreationFilter extends OncePerRequestFilter {
 				// possibly add a mutex per account instead of per method in the future for a performance increase
 				synchronized (lock) {
 					if (!accountIdCache.containsKey(id) && !accountService.exists(id)) {
-						var keycloakUser = keycloakService.getUser(id);
-						accountService.createAccount(keycloakUser);
-						logger.info("Account created for user with id ( %s )".formatted(keycloakUser.id()));
+						try {
+							var keycloakUser = keycloakService.getUser(id);
+							accountService.createAccount(keycloakUser);
+							logger.info("Account created for user with id ( %s )".formatted(keycloakUser.id()));
+						} catch (ServiceUnavailableException e) {
+							logger.error("Failed to create account for user with id ( %s )".formatted(id), e);
+						}
 					}
 					accountIdCache.put(id, null);
 				}

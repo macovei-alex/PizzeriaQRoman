@@ -7,13 +7,14 @@ import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestClientException;
 import ro.pizzeriaq.qservices.data.model.KeycloakUser;
 import ro.pizzeriaq.qservices.exceptions.KeycloakException;
 import ro.pizzeriaq.qservices.service.DTO.AccountDto;
 import ro.pizzeriaq.qservices.service.mappers.AccountMapper;
 
+import javax.naming.ServiceUnavailableException;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,7 +42,7 @@ public class KeycloakService {
 	}
 
 
-	public List<KeycloakUser> getUsers() {
+	public List<KeycloakUser> getUsers() throws ServiceUnavailableException {
 		var accessToken = generateAccessToken();
 		try {
 			return restClient
@@ -51,13 +52,16 @@ public class KeycloakService {
 					.retrieve()
 					.body(new ParameterizedTypeReference<>() {
 					});
-		} catch (RestClientException ex) {
-			throw new KeycloakException("Failed to get users or parse response", ex);
+		} catch (HttpStatusCodeException e) {
+			if (e.getStatusCode().is5xxServerError()) {
+				throw new ServiceUnavailableException("Keycloak service is unavailable");
+			}
+			throw new KeycloakException("Failed to get users or parse response", e);
 		}
 	}
 
 
-	public KeycloakUser getUser(UUID id) {
+	public KeycloakUser getUser(UUID id) throws ServiceUnavailableException {
 		var accessToken = generateAccessToken();
 		try {
 			return restClient
@@ -66,13 +70,16 @@ public class KeycloakService {
 					.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
 					.retrieve()
 					.body(KeycloakUser.class);
-		} catch (RestClientException ex) {
-			throw new KeycloakException("Failed to get user ( %s )".formatted(id), ex);
+		} catch (HttpStatusCodeException e) {
+			if (e.getStatusCode().is5xxServerError()) {
+				throw new ServiceUnavailableException("Keycloak service is unavailable");
+			}
+			throw new KeycloakException("Failed to get user ( %s )".formatted(id), e);
 		}
 	}
 
 
-	public void updateUser(UUID id, AccountDto accountDto) {
+	public void updateUser(UUID id, AccountDto accountDto) throws ServiceUnavailableException {
 		var accessToken = generateAccessToken();
 		try {
 			restClient
@@ -83,8 +90,11 @@ public class KeycloakService {
 					.body(accountMapper.toKeycloakAccountUpdateDto(accountDto))
 					.retrieve()
 					.toBodilessEntity();
-		} catch (RestClientException ex) {
-			throw new KeycloakException("Failed to update user ( %s )".formatted(id), ex);
+		} catch (HttpStatusCodeException e) {
+			if (e.getStatusCode().is5xxServerError()) {
+				throw new ServiceUnavailableException("Keycloak service is unavailable");
+			}
+			throw new KeycloakException("Failed to update user ( %s )".formatted(id), e);
 		}
 	}
 

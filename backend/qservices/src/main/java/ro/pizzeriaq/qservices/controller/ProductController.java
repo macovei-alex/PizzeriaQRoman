@@ -37,7 +37,7 @@ public class ProductController {
 
 
 	@GetMapping("/search")
-	public TypesenseLookupResponseDto queryPizza(@RequestParam("q") String query) {
+	public TypesenseLookupResponseDto queryPizza(@RequestParam("q") String query) throws ServiceUnavailableException {
 		var accountId = authenticationInsightsService.getAuthenticationId();
 		return typesenseQueryService.queryPizza(query, accountId);
 	}

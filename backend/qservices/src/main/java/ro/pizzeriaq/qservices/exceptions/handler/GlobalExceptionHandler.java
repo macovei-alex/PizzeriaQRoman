@@ -16,6 +16,7 @@ import ro.pizzeriaq.qservices.exceptions.KeycloakException;
 import ro.pizzeriaq.qservices.exceptions.PhoneNumberMissingException;
 import ro.pizzeriaq.qservices.exceptions.TypesenseException;
 
+import javax.naming.ServiceUnavailableException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -60,13 +61,20 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(KeycloakException.class)
 	public ResponseEntity<String> handleKeycloakException(KeycloakException e) {
 		logger.error("Keycloak error", e);
-		return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(e.getMessage());
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
 
 
 	@ExceptionHandler(TypesenseException.class)
 	public ResponseEntity<String> handleTypesenseException(TypesenseException e) {
 		logger.error("Typesense error", e);
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	}
+
+
+	@ExceptionHandler(ServiceUnavailableException.class)
+	public ResponseEntity<String> handleServiceUnavailableException(ServiceUnavailableException e) {
+		logger.error("Service unavailable", e);
 		return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(e.getMessage());
 	}
 

@@ -9,6 +9,7 @@ import ro.pizzeriaq.qservices.service.AccountService;
 import ro.pizzeriaq.qservices.service.DTO.AccountDto;
 import ro.pizzeriaq.qservices.service.KeycloakService;
 
+import javax.naming.ServiceUnavailableException;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,7 +24,7 @@ public class AccountController {
 
 
 	@GetMapping
-	public List<KeycloakUser> getAccounts() {
+	public List<KeycloakUser> getAccounts() throws ServiceUnavailableException {
 		return keycloakService.getUsers();
 	}
 

@@ -8,6 +8,7 @@ import ro.pizzeriaq.qservices.data.entity.*;
 import ro.pizzeriaq.qservices.data.model.KeycloakUser;
 import ro.pizzeriaq.qservices.data.repository.*;
 
+import javax.naming.ServiceUnavailableException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -297,7 +298,13 @@ public class EntityInitializerService {
 
 	@Transactional
 	public void addAccounts() {
-		var keycloakUsers = keycloakService.getUsers();
+		List<KeycloakUser> keycloakUsers;
+		try {
+			keycloakUsers = keycloakService.getUsers();
+		} catch (ServiceUnavailableException e) {
+			throw new RuntimeException(e);
+		}
+
 		keycloakUsers.sort(Comparator.comparing(KeycloakUser::createdTimestamp));
 		if (keycloakUsers.size() < 2) {
 			throw new RuntimeException("Not enough users in Keycloak: a minimum of 2 users required");
