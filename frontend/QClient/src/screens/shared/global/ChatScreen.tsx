@@ -53,6 +53,7 @@ export default function ChatScreen() {
         role,
         message: text,
         timestamp: new Date(),
+        productIds: [],
       };
       if (conversationQuery.data && conversationQuery.data.length > 0) {
         const lastMessage = conversationQuery.data[conversationQuery.data.length - 1];

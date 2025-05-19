@@ -1,3 +1,5 @@
+import { ProductId } from "./Product";
+
 export type MessageRole = "user" | "assistant";
 
 export type MessageDto = {
@@ -14,4 +16,5 @@ export type Message = {
   role: MessageRole;
   message: string;
   timestamp: Date;
+  productIds: ProductId[];
 };
