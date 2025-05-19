@@ -1,0 +1,85 @@
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { ProductId } from "src/api/types/Product";
+import useColorTheme from "src/hooks/useColorTheme";
+import { useProductsMap } from "src/hooks/useProductsMap";
+import { RootStackParamList } from "src/navigation/RootStackNavigator";
+import logger from "src/utils/logger";
+import RemoteImage from "../../generic/RemoteImage";
+import { Feather } from "@expo/vector-icons";
+
+type NavigationProps = NativeStackNavigationProp<RootStackParamList, "ChatScreen">;
+
+type ProductLinkProps = {
+  productIds: ProductId[];
+};
+
+export default function ProductLinks({ productIds }: ProductLinkProps) {
+  logger.render("ProductLinks");
+
+  const colorTheme = useColorTheme();
+  const navigation = useNavigation<NavigationProps>();
+  const productsMap = useProductsMap();
+
+  return (
+    <>
+      {productIds.map((productId) => {
+        const product = productsMap.get(productId);
+        if (!product) return null;
+        return (
+          <TouchableOpacity
+            key={product.id}
+            style={[styles.linkButton, { backgroundColor: colorTheme.background.accent }]}
+            onPress={() =>
+              navigation.navigate("MainTabNavigator", {
+                screen: "MenuStackNavigator",
+                params: {
+                  screen: "ProductScreen",
+                  params: { productId: product.id },
+                },
+              })
+            }
+          >
+            <RemoteImage
+              imageName={product.imageName}
+              imageVersion={product.imageVersion}
+              style={styles.image}
+            />
+            <Text style={[styles.linkText, { color: colorTheme.text.onAccent }]}>{product.name}</Text>
+            <Feather style={styles.icon} name="arrow-right" size={24} color={colorTheme.text.onAccent} />
+          </TouchableOpacity>
+        );
+      })}
+    </>
+  );
+}
+
+const styles = StyleSheet.create({
+  linkButton: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    width: "100%",
+    maxWidth: "100%",
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderRadius: 9999,
+    marginVertical: 4,
+  },
+  linkText: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginLeft: 12,
+    flexShrink: 1,
+  },
+  image: {
+    width: 52,
+    height: 52,
+    borderRadius: 9999,
+  },
+  icon: {
+    marginLeft: "auto",
+  },
+});

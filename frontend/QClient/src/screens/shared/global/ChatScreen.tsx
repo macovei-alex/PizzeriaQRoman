@@ -21,6 +21,7 @@ import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import { useConversationMutation } from "src/api/hooks/mutations/useConversationMutation";
 import TopBar from "src/components/shared/global/ChatScreen/TopBar";
 import useScrollRef from "src/hooks/useScrollRef";
+import ProductLinks from "src/components/shared/global/ChatMessage/ProductLinks";
 
 export default function ChatScreen() {
   logger.render("ChatScreen");
@@ -100,10 +101,13 @@ export default function ChatScreen() {
                 key={message.id}
                 style={[styles.messageContainer, { alignSelf: isUser ? "flex-end" : "flex-start" }]}
               >
-                <ChatMessage
-                  message={message}
-                  isThinking={index === messages.length - 1 && conversationQuery.isFetching}
-                />
+                <View style={styles.messageInnerContainer}>
+                  <ChatMessage
+                    message={message}
+                    isThinking={index === messages.length - 1 && conversationQuery.isFetching}
+                  />
+                  <ProductLinks productIds={message.productIds} />
+                </View>
               </View>
             );
           })}
@@ -152,6 +156,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-end",
     gap: 4,
+  },
+  messageInnerContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "flex-start",
   },
   inputSectionContainer: {
     flexDirection: "row",
