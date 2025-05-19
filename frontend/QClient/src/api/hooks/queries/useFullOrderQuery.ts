@@ -1,9 +1,9 @@
 import { useQueries, useQuery } from "@tanstack/react-query";
-import { OrderId, OrderStatusSchema } from "../types/order/Order";
-import { api } from "..";
+import { OrderId, OrderStatusSchema } from "../../types/order/Order";
+import { api } from "../..";
 import { useAuthContext } from "src/context/AuthContext";
-import { FullHistoryOrder, FullHistoryOrderDTO } from "../types/order/FullHistoryOrder";
-import { ProductWithOptions } from "../types/Product";
+import { FullHistoryOrder, FullHistoryOrderDTO } from "../../types/order/FullHistoryOrder";
+import { ProductWithOptions } from "../../types/Product";
 import { useMemo } from "react";
 
 export function useFullOrderQuery(orderId: OrderId) {

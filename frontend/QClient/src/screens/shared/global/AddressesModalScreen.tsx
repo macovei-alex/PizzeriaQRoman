@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { api } from "src/api";
-import useAddressesQuery from "src/api/hooks/useAddressesQuery";
+import useAddressesQuery from "src/api/hooks/queries/useAddressesQuery";
 import { Address } from "src/api/types/Address";
 import AddressForm from "src/components/shared/global/AddressesModalScreen/AddressForm";
 import { NewAddress } from "src/components/shared/global/AddressesModalScreen/types/NewAddress";

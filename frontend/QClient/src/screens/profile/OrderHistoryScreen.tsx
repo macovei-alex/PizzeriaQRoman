@@ -3,7 +3,7 @@ import { ActivityIndicator, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OrderCard from "src/components/profile/OrderHistoryScreen/OrderCard";
 import ScreenTitle from "src/components/shared/generic/ScreenTitle";
-import useOrderHistoryInfiniteQuery from "src/api/hooks/useOrderHistoryInfiniteQuery";
+import useOrderHistoryInfiniteQuery from "src/api/hooks/queries/useOrderHistoryInfiniteQuery";
 import logger from "src/utils/logger";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import { LegendList } from "@legendapp/list";

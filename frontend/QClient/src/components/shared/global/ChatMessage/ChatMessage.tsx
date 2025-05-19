@@ -1,15 +1,16 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { Message } from "src/api/types/Message";
 import useColorTheme from "src/hooks/useColorTheme";
 import logger from "src/utils/logger";
-import { Message } from "./types/Message";
 import { formatTime } from "src/utils/utils";
 
 type CharMessageProps = {
   message: Message;
+  isThinking: boolean;
 };
 
-export default function ChatMessage({ message }: CharMessageProps) {
+export default function ChatMessage({ message, isThinking }: CharMessageProps) {
   logger.render("ChatMessage");
 
   const colorTheme = useColorTheme();
@@ -17,10 +18,10 @@ export default function ChatMessage({ message }: CharMessageProps) {
   return (
     <View style={[styles.container, { backgroundColor: colorTheme.background.card }]}>
       <View style={styles.messageDetailsContainer}>
-        <Text style={styles.senderText}>{message.sender}</Text>
-        <Text style={styles.timeText}>{formatTime(message.createdAt)}</Text>
+        {message.role === "assistant" && <Text style={styles.senderText}>Bot</Text>}
+        <Text style={styles.timeText}>{formatTime(message.timestamp)}</Text>
       </View>
-      <Text>{message.content}</Text>
+      {!isThinking ? <Text>{message.message}</Text> : <Text>...</Text>}
     </View>
   );
 }
@@ -44,5 +45,6 @@ const styles = StyleSheet.create({
   timeText: {
     fontSize: 12,
     fontWeight: "500",
+    justifyContent: "flex-end",
   },
 });

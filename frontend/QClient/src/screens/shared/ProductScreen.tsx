@@ -7,7 +7,7 @@ import HorizontalLine from "src/components/shared/generic/HorizontalLine";
 import { Fragment } from "react";
 import TitleSection from "src/components/shared/ProductScreen/TitleSection";
 import { CartItemOptions, useCartContext } from "src/context/CartContext";
-import useProductWithOptionsQuery from "src/api/hooks/useProductWithOptionsQuery";
+import useProductWithOptionsQuery from "src/api/hooks/queries/useProductWithOptionsQuery";
 import logger from "src/utils/logger";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
 import { MenuStackParamList } from "src/navigation/MenuStackNavigator";

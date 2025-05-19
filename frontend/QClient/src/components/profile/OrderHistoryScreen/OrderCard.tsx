@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
 import { Product, ProductId } from "src/api/types/Product";
 import useColorTheme from "src/hooks/useColorTheme";
-import useProductsQuery from "src/api/hooks/useProductsQuery";
+import useProductsQuery from "src/api/hooks/queries/useProductsQuery";
 import logger from "src/utils/logger";
 import { formatDate, formatPrice } from "src/utils/utils";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";

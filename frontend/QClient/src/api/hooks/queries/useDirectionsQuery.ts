@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { LatLng } from "react-native-maps";
-import { api } from "..";
-import { Directions } from "../types/Directions";
+import { api } from "../..";
+import { Directions } from "../../types/Directions";
 import { decode } from "@mapbox/polyline";
 import { useEffect, useRef } from "react";
 import equal from "fast-deep-equal";

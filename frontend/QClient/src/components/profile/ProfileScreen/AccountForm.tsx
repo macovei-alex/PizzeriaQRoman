@@ -1,7 +1,7 @@
 import React, { useCallback, useLayoutEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { api } from "src/api";
-import { usePhoneNumberQuery } from "src/api/hooks/usePhoneNumberQuery";
+import { usePhoneNumberQuery } from "src/api/hooks/queries/usePhoneNumberQuery";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import LabelledBorderComponent from "src/components/shared/generic/LabelledBorderComponent";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";

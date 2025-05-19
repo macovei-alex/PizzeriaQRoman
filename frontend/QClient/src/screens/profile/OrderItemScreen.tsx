@@ -8,7 +8,7 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
 import { ProfileStackParamList } from "src/navigation/ProfileStackNavigator";
-import { useFullOrderQuery } from "src/api/hooks/useFullOrderQuery";
+import { useFullOrderQuery } from "src/api/hooks/queries/useFullOrderQuery";
 import HorizontalLine from "src/components/shared/generic/HorizontalLine";
 import OptionListCard from "src/components/profile/OrderItemScreen/OptionListCard";
 import { OptionId, OptionListId } from "src/api/types/Product";

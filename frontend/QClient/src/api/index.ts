@@ -14,13 +14,18 @@ export const api = {
 
   routes: Object.freeze({
     account: (accountId: AccountId) => {
+      const base = `/accounts/${accountId}`;
       return {
-        self: `/accounts/${accountId}`,
-        phoneNumber: `/accounts/${accountId}/phone-number`,
-        addresses: `/accounts/${accountId}/addresses`,
-        address: (addressId: AddressId) => `/accounts/${accountId}/addresses/${addressId}`,
-        orders: `/accounts/${accountId}/orders`,
-        order: (orderId: OrderId) => `/accounts/${accountId}/orders/${orderId}`,
+        self: base,
+        phoneNumber: `${base}/phone-number`,
+        addresses: `${base}/addresses`,
+        address: (addressId: AddressId) => `${base}/addresses/${addressId}`,
+        orders: `${base}/orders`,
+        order: (orderId: OrderId) => `${base}/orders/${orderId}`,
+        search: {
+          self: `${base}/search`,
+          history: `${base}/search/history`,
+        },
       };
     },
     categories: "/categories",

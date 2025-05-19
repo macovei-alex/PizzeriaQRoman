@@ -16,7 +16,7 @@ import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivit
 import AdditionalInfoSection, {
   AdditionalInfoSectionHandle,
 } from "src/components/cart/CartScreen/AdditionalInfoSection";
-import useAddressesQuery from "src/api/hooks/useAddressesQuery";
+import useAddressesQuery from "src/api/hooks/queries/useAddressesQuery";
 import { useAuthContext } from "src/context/AuthContext";
 import { RootStackParamList } from "src/navigation/RootStackNavigator";
 import { SafeAreaView } from "react-native-safe-area-context";

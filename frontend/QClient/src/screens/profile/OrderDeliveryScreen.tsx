@@ -9,7 +9,7 @@ import useColorTheme from "src/hooks/useColorTheme";
 import logger from "src/utils/logger";
 import HomeIconSvg from "src/components/svg/HomeIconSvg";
 import CartIconSvg from "src/components/svg/CartIconSvg";
-import { useDirectionsQuery } from "src/api/hooks/useDirectionsQuery";
+import { useDirectionsQuery } from "src/api/hooks/queries/useDirectionsQuery";
 
 const DESTINATION = {
   latitude: 45.46958477253526,

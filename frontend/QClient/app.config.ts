@@ -40,6 +40,7 @@ export default (): ExpoConfig => {
       },
       package: "com.pizzeriaq",
       edgeToEdgeEnabled: false,
+      softwareKeyboardLayoutMode: "pan",
       config: {
         googleMaps: {
           apiKey: process.env.GOOGLE_MAPS_API_KEY,

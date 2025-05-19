@@ -1,109 +1,102 @@
-import { LegendList } from "@legendapp/list";
-import { useQuery } from "@tanstack/react-query";
-import React, { useEffect, useRef, useState } from "react";
-import { KeyboardAvoidingView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { LegendList, LegendListRef } from "@legendapp/list";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Message } from "src/api/types/Message";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
 import ChatMessage from "src/components/shared/global/ChatMessage/ChatMessage";
-import { Message } from "src/components/shared/global/ChatMessage/types/Message";
 import SearchIconSvg from "src/components/svg/SearchIconSvg";
 import useColorTheme from "src/hooks/useColorTheme";
 import logger from "src/utils/logger";
-
-const exampleMessages: Message[] = [
-  {
-    id: "1",
-    sender: "You",
-    content: "Hello, how are you?",
-    createdAt: new Date(),
-  },
-  {
-    id: "2",
-    sender: "Bot",
-    content: "I'm fine, thank you! How can I help you today?",
-    createdAt: new Date(),
-  },
-  {
-    id: "3",
-    sender: "You",
-    content: "Hello, how are you?",
-    createdAt: new Date(),
-  },
-  {
-    id: "4",
-    sender: "Bot",
-    content: "I'm fine, thank you! How can I help you today?",
-    createdAt: new Date(),
-  },
-  {
-    id: "5",
-    sender: "You",
-    content: "Hello, how are you?",
-    createdAt: new Date(),
-  },
-  {
-    id: "6",
-    sender: "Bot",
-    content: "I'm fine, thank you! How can I help you today?",
-    createdAt: new Date(),
-  },
-  {
-    id: "7",
-    sender: "You",
-    content: "Hello, how are you?",
-    createdAt: new Date(),
-  },
-  {
-    id: "8",
-    sender: "Bot",
-    content: "I'm fine, thank you! How can I help you today?",
-    createdAt: new Date(),
-  },
-] as const;
+import { useConversationQuery } from "src/api/hooks/queries/useConversationQuery";
+import { useAuthContext } from "src/context/AuthContext";
+import ErrorComponent from "src/components/shared/generic/ErrorComponent";
+import { useConversationMutation } from "src/api/hooks/mutations/useConversationMutation";
 
 export default function ChatScreen() {
   logger.render("ChatScreen");
 
   const colorTheme = useColorTheme();
-  const messagesQuery = useQuery<Message[], Error>({
-    queryFn: () => Promise.resolve(exampleMessages),
-    queryKey: ["messages"],
-  });
+  const accountId = useAuthContext().account?.id;
+  if (!accountId) throw new Error("Account ID is required");
+  const conversationQuery = useConversationQuery();
+  const conversationMutation = useConversationMutation();
   const [currentMessage, setCurrentMessage] = useState("");
   const textInputRef = useRef<TextInput>(null);
+  const scrollViewRef = useRef<LegendListRef>(null);
 
   useEffect(() => {
-    if (messagesQuery.isLoading) return;
+    if (conversationQuery.isLoading) return;
     const timeout = setTimeout(() => textInputRef.current?.focus(), 100);
-    return () => timeout && clearTimeout(timeout);
-  }, [messagesQuery.isLoading]);
+    return () => clearTimeout(timeout);
+  }, [conversationQuery.isLoading]);
 
-  if (!messagesQuery.data) return <ScreenActivityIndicator />;
+  useEffect(() => {
+    if (!conversationQuery.isPending || conversationMutation.isPending) {
+      scrollViewRef.current?.scrollToOffset({
+        offset: 9999,
+        animated: true,
+      });
+    }
+  }, [conversationQuery.isPending, conversationMutation.isPending]);
+
+  const handleSendMessage = () => {
+    textInputRef.current?.blur();
+    if (currentMessage === "") return;
+    const newMessage: Message = {
+      id: "temporary id",
+      conversationId: "temporary conversationId",
+      role: "user",
+      message: currentMessage,
+      timestamp: new Date(),
+    };
+
+    conversationMutation.mutate(newMessage);
+    setCurrentMessage("");
+  };
+
+  const messages = useMemo(() => {
+    if (!conversationQuery.data) return [];
+    if (!conversationMutation.isPending) return conversationQuery.data;
+    return [
+      ...conversationQuery.data,
+      {
+        id: "temporary id 2",
+        conversationId: "temporary conversationId",
+        role: "assistant",
+        message: "...",
+        timestamp: new Date(),
+      } as Message,
+    ];
+  }, [conversationQuery.data, conversationMutation.isPending]);
+
+  if (conversationQuery.isLoading) return <ScreenActivityIndicator />;
+  if (conversationQuery.isError || !conversationQuery.data) return <ErrorComponent />;
 
   return (
     <SafeAreaView style={[styles.screen, { backgroundColor: colorTheme.background.primary }]}>
-      <KeyboardAvoidingView style={styles.screen} behavior={"padding"}>
+      <KeyboardAvoidingView
+        style={styles.screen}
+        behavior={Platform.select({ ios: "padding", default: undefined })}
+        keyboardVerticalOffset={Platform.select({ ios: 100, default: 0 })}
+      >
         <LegendList
-          data={messagesQuery.data}
-          renderItem={({ item }) => {
-            const isSender = item.sender === "You";
+          data={messages}
+          ref={scrollViewRef}
+          renderItem={({ item, index }) => {
+            const isUser = item.role === "user";
             return (
-              <View style={[styles.messageContainer, { alignSelf: isSender ? "flex-end" : "flex-start" }]}>
-                <ChatMessage message={item} />
+              <View style={[styles.messageContainer, { alignSelf: isUser ? "flex-end" : "flex-start" }]}>
+                <ChatMessage
+                  message={item}
+                  isThinking={index === messages.length - 1 && conversationQuery.isFetching}
+                />
               </View>
             );
           }}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={{ padding: 10 }}
           recycleItems={true}
-          initialScrollIndex={messagesQuery.data.length - 1}
-          alignItemsAtEnd // Aligns to the end of the screen, so if there's only a few items there will be enough padding at the top to make them appear to be at the bottom.
-          maintainScrollAtEnd // prop will check if you are already scrolled to the bottom when data changes, and if so it keeps you scrolled to the bottom.
-          maintainScrollAtEndThreshold={0.5} // prop will check if you are already scrolled to the bottom when data changes, and if so it keeps you scrolled to the bottom.
-          maintainVisibleContentPosition //Automatically adjust item positions when items are added/removed/resized above the viewport so that there is no shift in the visible content.
-          // getEstimatedItemSize={(info) => { // use if items are different known sizes
-          //   console.log("info", info);
-          // }}
+          initialScrollOffset={9999}
         />
         <View style={styles.inputSectionContainer}>
           <View
@@ -117,7 +110,7 @@ export default function ChatScreen() {
           >
             <TextInput
               ref={textInputRef}
-              placeholder="Type a message"
+              placeholder="Scrie un mesaj..."
               style={[styles.input, { color: colorTheme.text.primary }]}
               placeholderTextColor={colorTheme.text.secondary}
               multiline
@@ -127,7 +120,7 @@ export default function ChatScreen() {
           </View>
           <TouchableOpacity
             style={[styles.sendButton, { backgroundColor: colorTheme.background.card }]}
-            onPress={() => console.log(currentMessage)}
+            onPress={handleSendMessage}
           >
             <SearchIconSvg style={styles.svgIcon} stroke={colorTheme.text.primary} />
           </TouchableOpacity>
@@ -153,7 +146,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 8,
     marginTop: 20,
-    paddingHorizontal: 8,
+    padding: 8,
   },
   inputContainer: {
     flexDirection: "row",

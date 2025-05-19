@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { Address } from "../types/Address";
-import { api } from "..";
+import { Address } from "../../types/Address";
+import { api } from "../..";
 import { useAuthContext } from "src/context/AuthContext";
 
 export default function useAddressesQuery() {
