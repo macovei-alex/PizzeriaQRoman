@@ -1,5 +1,13 @@
 import React from "react";
-import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import useColorTheme from "src/hooks/useColorTheme";
 import logger from "src/utils/logger";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -39,7 +47,7 @@ export default function FullOrderScreen() {
 
   return (
     <KeyboardAvoidingView
-      behavior="padding"
+      behavior={Platform.select({ ios: "padding", default: undefined })}
       style={[styles.screen, { backgroundColor: colorTheme.background.primary }]}
     >
       <SafeAreaView>

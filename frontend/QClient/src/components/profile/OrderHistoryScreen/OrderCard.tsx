@@ -9,8 +9,9 @@ import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import RemoteImage from "src/components/shared/generic/RemoteImage";
 import { ProfileStackParamList } from "src/navigation/ProfileStackNavigator";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useNavigation } from "@react-navigation/native";
+import { CompositeNavigationProp, useNavigation } from "@react-navigation/native";
 import { HistoryOrderMinimal } from "src/api/types/order/HistoryOrderMinimal";
+import { RootStackParamList } from "src/navigation/RootStackNavigator";
 
 const MAX_ITEMS_PER_ORDER = 4;
 
@@ -19,7 +20,10 @@ type OrderCardProps = {
   containerStyle?: StyleProp<ViewStyle>;
 };
 
-type NavigationProps = NativeStackNavigationProp<ProfileStackParamList, "OrderHistoryScreen">;
+type NavigationProps = CompositeNavigationProp<
+  NativeStackNavigationProp<ProfileStackParamList, "OrderHistoryScreen">,
+  NativeStackNavigationProp<RootStackParamList>
+>;
 
 export default function OrderCard({ order, containerStyle }: OrderCardProps) {
   logger.render("OrderCard");

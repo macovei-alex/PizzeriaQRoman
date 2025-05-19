@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
@@ -22,6 +22,12 @@ export default function OrderDeliveryScreen() {
   const colorTheme = useColorTheme();
   const location = useCurrentLocation();
   const directionsQuery = useDirectionsQuery(location?.coords, DESTINATION);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setIsLoaded(true), 1500);
+    return () => clearTimeout(timeout);
+  }, []);
 
   if (location === null || directionsQuery.isLoading) return <ScreenActivityIndicator />;
   if (directionsQuery.isError) return <ErrorComponent onRetry={directionsQuery.refetch} />;
@@ -41,7 +47,7 @@ export default function OrderDeliveryScreen() {
         }}
       >
         <Marker
-          tracksViewChanges={false}
+          tracksViewChanges={!isLoaded}
           coordinate={{
             latitude: location.coords.latitude,
             longitude: location.coords.longitude,
@@ -56,7 +62,7 @@ export default function OrderDeliveryScreen() {
           />
         </Marker>
         <Marker
-          tracksViewChanges={false}
+          tracksViewChanges={!isLoaded}
           coordinate={{
             latitude: DESTINATION.latitude,
             longitude: DESTINATION.longitude,
