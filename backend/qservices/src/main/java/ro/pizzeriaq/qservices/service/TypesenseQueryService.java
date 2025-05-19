@@ -67,6 +67,7 @@ public class TypesenseQueryService {
 				.pathSegment(conversationsCollectionName, "documents", "search")
 				.queryParam("q", "*")
 				.queryParam("query_by", "conversation_id")
+				.queryParam("per_page", "20")
 				.toUriString();
 
 		try {

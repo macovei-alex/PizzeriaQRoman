@@ -14,11 +14,13 @@ export function useConversationQuery() {
         api.routes.account(accountId).search.history
       );
       if (response.status === axios.HttpStatusCode.NoContent) return [];
-      return response.data.hits.reverse().map((hit) => ({
-        ...hit.document,
-        conversationId: hit.document.conversation_id,
-        timestamp: new Date(hit.document.timestamp),
-      }));
+      return response.data.hits
+        .sort((dto1, dto2) => dto2.document.timestamp - dto1.document.timestamp)
+        .map((hit) => ({
+          ...hit.document,
+          conversationId: hit.document.conversation_id,
+          timestamp: new Date(hit.document.timestamp * 1000),
+        }));
     },
     queryKey: ["messages", accountId],
     gcTime: 0,

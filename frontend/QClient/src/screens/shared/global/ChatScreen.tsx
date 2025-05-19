@@ -34,7 +34,7 @@ export default function ChatScreen() {
   useEffect(() => {
     if (!conversationQuery.isPending || conversationMutation.isPending) {
       scrollViewRef.current?.scrollToOffset({
-        offset: 9999,
+        offset: 99999,
         animated: true,
       });
     }
@@ -83,7 +83,7 @@ export default function ChatScreen() {
         <LegendList
           data={messages}
           ref={scrollViewRef}
-          renderItem={({ item, index }) => {
+          renderItem={({ item, index }: { item: Message; index: number }) => {
             const isUser = item.role === "user";
             return (
               <View style={[styles.messageContainer, { alignSelf: isUser ? "flex-end" : "flex-start" }]}>
@@ -95,8 +95,11 @@ export default function ChatScreen() {
             );
           }}
           keyExtractor={(item) => item.id}
-          recycleItems={true}
-          initialScrollOffset={9999}
+          initialScrollOffset={99999}
+          estimatedItemSize={250}
+          recycleItems
+          alignItemsAtEnd
+          maintainVisibleContentPosition
         />
         <View style={styles.inputSectionContainer}>
           <View
