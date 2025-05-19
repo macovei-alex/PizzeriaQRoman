@@ -1,6 +1,14 @@
 import { LegendList, LegendListRef } from "@legendapp/list";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Message } from "src/api/types/Message";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
@@ -35,7 +43,7 @@ export default function ChatScreen() {
     if (!conversationQuery.isPending || conversationMutation.isPending) {
       scrollViewRef.current?.scrollToOffset({
         offset: 99999,
-        animated: true,
+        animated: false,
       });
     }
   }, [conversationQuery.isPending, conversationMutation.isPending]);
@@ -96,7 +104,7 @@ export default function ChatScreen() {
           }}
           keyExtractor={(item) => item.id}
           initialScrollOffset={99999}
-          estimatedItemSize={250}
+          estimatedItemSize={Dimensions.get("window").height / 4}
           recycleItems
           alignItemsAtEnd
           maintainVisibleContentPosition

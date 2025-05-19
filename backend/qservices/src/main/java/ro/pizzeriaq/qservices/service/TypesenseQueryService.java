@@ -67,6 +67,7 @@ public class TypesenseQueryService {
 				.pathSegment(conversationsCollectionName, "documents", "search")
 				.queryParam("q", "*")
 				.queryParam("query_by", "conversation_id")
+				.queryParam("sort_by", "timestamp:desc")
 				.queryParam("per_page", "20")
 				.toUriString();
 
@@ -124,14 +125,16 @@ public class TypesenseQueryService {
 
 		try {
 
-			return restClient.post()
+			return restClient
+					.post()
 					.uri(uri.build().toUriString())
 					.body(Map.of(
 							"searches", List.of(Map.of(
 									"collection", lookupCollectionName,
 									"query_by", "embedding",
-									"exclude_fields", "externId",
-									"sort_by", "_text_match:desc"
+									"exclude_fields", "embedding",
+									"sort_by", "_text_match:desc",
+									"per_page", 3
 							))
 					))
 					.retrieve()

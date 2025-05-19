@@ -15,7 +15,11 @@ export function useConversationQuery() {
       );
       if (response.status === axios.HttpStatusCode.NoContent) return [];
       return response.data.hits
-        .sort((dto1, dto2) => dto2.document.timestamp - dto1.document.timestamp)
+        .sort((dto1, dto2) => {
+          const deltaTimestamp = dto1.document.timestamp - dto2.document.timestamp;
+          if (deltaTimestamp !== 0) return deltaTimestamp;
+          return dto1.document.role === "user" ? -1 : 1;
+        })
         .map((hit) => ({
           ...hit.document,
           conversationId: hit.document.conversation_id,
