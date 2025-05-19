@@ -2,7 +2,7 @@ import { useCallback, useRef } from "react";
 import { ScrollView } from "react-native";
 
 export default function useScrollRef() {
-  const scrollRef = useRef<ScrollView | null>(null);
+  const scrollRef = useRef<ScrollView>(null);
 
   const scrollToStart = useCallback(() => {
     scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true });

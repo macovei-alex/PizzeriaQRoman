@@ -1,16 +1,15 @@
-import { LegendList, LegendListRef } from "@legendapp/list";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  Dimensions,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Message } from "src/api/types/Message";
+import { Message, MessageRole } from "src/api/types/Message";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
 import ChatMessage from "src/components/shared/global/ChatMessage/ChatMessage";
 import SearchIconSvg from "src/components/svg/SearchIconSvg";
@@ -21,6 +20,7 @@ import { useAuthContext } from "src/context/AuthContext";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import { useConversationMutation } from "src/api/hooks/mutations/useConversationMutation";
 import TopBar from "src/components/shared/global/ChatScreen/TopBar";
+import useScrollRef from "src/hooks/useScrollRef";
 
 export default function ChatScreen() {
   logger.render("ChatScreen");
@@ -32,7 +32,8 @@ export default function ChatScreen() {
   const conversationMutation = useConversationMutation();
   const [currentMessage, setCurrentMessage] = useState("");
   const textInputRef = useRef<TextInput>(null);
-  const scrollViewRef = useRef<LegendListRef>(null);
+  const scrollViewRef = useScrollRef();
+  const messageCounter = useRef(10000);
 
   useEffect(() => {
     if (conversationQuery.isLoading) return;
@@ -41,43 +42,42 @@ export default function ChatScreen() {
   }, [conversationQuery.isLoading]);
 
   useEffect(() => {
-    if (!conversationQuery.isPending || conversationMutation.isPending) {
-      scrollViewRef.current?.scrollToOffset({
-        offset: 99999,
-        animated: false,
-      });
-    }
-  }, [conversationQuery.isPending, conversationMutation.isPending]);
+    scrollViewRef.scrollToEnd();
+  }, [conversationQuery.data, scrollViewRef]);
+
+  const generateNewMessage = useCallback(
+    (text: string, role: MessageRole) => {
+      const newMessage: Message = {
+        id: messageCounter.current.toString(),
+        conversationId: "temporary conversationId",
+        role,
+        message: text,
+        timestamp: new Date(),
+      };
+      if (conversationQuery.data && conversationQuery.data.length > 0) {
+        const lastMessage = conversationQuery.data[conversationQuery.data.length - 1];
+        newMessage.id = (Number(lastMessage.id) + 1).toString();
+        newMessage.conversationId = lastMessage.conversationId;
+      } else {
+        messageCounter.current += 1;
+      }
+      return newMessage;
+    },
+    [conversationQuery.data]
+  );
 
   const handleSendMessage = () => {
     textInputRef.current?.blur();
     if (currentMessage === "") return;
-    const newMessage: Message = {
-      id: "temporary id",
-      conversationId: "temporary conversationId",
-      role: "user",
-      message: currentMessage,
-      timestamp: new Date(),
-    };
-
-    conversationMutation.mutate(newMessage);
+    conversationMutation.mutate(generateNewMessage(currentMessage, "user"));
     setCurrentMessage("");
   };
 
   const messages = useMemo(() => {
     if (!conversationQuery.data) return [];
     if (!conversationMutation.isPending) return conversationQuery.data;
-    return [
-      ...conversationQuery.data,
-      {
-        id: "temporary id 2",
-        conversationId: "temporary conversationId",
-        role: "assistant",
-        message: "...",
-        timestamp: new Date(),
-      } as Message,
-    ];
-  }, [conversationQuery.data, conversationMutation.isPending]);
+    return [...conversationQuery.data, generateNewMessage("...", "assistant")];
+  }, [conversationQuery.data, conversationMutation.isPending, generateNewMessage]);
 
   if (conversationQuery.isLoading) return <ScreenActivityIndicator />;
   if (conversationQuery.isError || !conversationQuery.data) return <ErrorComponent />;
@@ -90,28 +90,24 @@ export default function ChatScreen() {
         keyboardVerticalOffset={Platform.select({ ios: 100, default: 0 })}
       >
         <TopBar />
-        <LegendList
-          data={messages}
-          ref={scrollViewRef}
-          renderItem={({ item, index }: { item: Message; index: number }) => {
-            const isUser = item.role === "user";
+
+        <ScrollView ref={scrollViewRef.scrollRef}>
+          {messages.map((message, index) => {
+            const isUser = message.role === "user";
             return (
-              <View style={[styles.messageContainer, { alignSelf: isUser ? "flex-end" : "flex-start" }]}>
+              <View
+                key={message.id}
+                style={[styles.messageContainer, { alignSelf: isUser ? "flex-end" : "flex-start" }]}
+              >
                 <ChatMessage
-                  message={item}
+                  message={message}
                   isThinking={index === messages.length - 1 && conversationQuery.isFetching}
                 />
               </View>
             );
-          }}
-          keyExtractor={(item) => item.id}
-          initialScrollOffset={99999}
-          estimatedItemSize={Dimensions.get("window").height / 6}
-          recycleItems
-          alignItemsAtEnd
-          maintainVisibleContentPosition
-          maintainScrollAtEnd
-        />
+          })}
+        </ScrollView>
+
         <View style={styles.inputSectionContainer}>
           <View
             style={[
