@@ -28,9 +28,10 @@ export default function ChatMessage({ message, isThinking }: CharMessageProps) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 12,
     borderRadius: 16,
+    minWidth: "100%",
+    maxWidth: "100%",
   },
   messageDetailsContainer: {
     flexDirection: "row",
