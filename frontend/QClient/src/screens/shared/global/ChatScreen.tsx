@@ -20,6 +20,7 @@ import { useConversationQuery } from "src/api/hooks/queries/useConversationQuery
 import { useAuthContext } from "src/context/AuthContext";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import { useConversationMutation } from "src/api/hooks/mutations/useConversationMutation";
+import TopBar from "src/components/shared/global/ChatScreen/TopBar";
 
 export default function ChatScreen() {
   logger.render("ChatScreen");
@@ -88,6 +89,7 @@ export default function ChatScreen() {
         behavior={Platform.select({ ios: "padding", default: undefined })}
         keyboardVerticalOffset={Platform.select({ ios: 100, default: 0 })}
       >
+        <TopBar />
         <LegendList
           data={messages}
           ref={scrollViewRef}
@@ -104,10 +106,11 @@ export default function ChatScreen() {
           }}
           keyExtractor={(item) => item.id}
           initialScrollOffset={99999}
-          estimatedItemSize={Dimensions.get("window").height / 4}
+          estimatedItemSize={Dimensions.get("window").height / 6}
           recycleItems
           alignItemsAtEnd
           maintainVisibleContentPosition
+          maintainScrollAtEnd
         />
         <View style={styles.inputSectionContainer}>
           <View

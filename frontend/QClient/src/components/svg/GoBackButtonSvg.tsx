@@ -1,6 +1,7 @@
 import React from "react";
 import { ColorValue, StyleProp, ViewStyle } from "react-native";
 import Svg, { Circle, Path } from "react-native-svg";
+import useColorTheme from "src/hooks/useColorTheme";
 
 type GoBackButtonSvgProps = {
   style?: StyleProp<ViewStyle>;
@@ -10,9 +11,10 @@ type GoBackButtonSvgProps = {
 };
 
 export default function GoBackButtonSvg({ style, stroke, fillPrimary, fillSecondary }: GoBackButtonSvgProps) {
-  stroke = stroke ?? "black";
-  fillPrimary = fillPrimary ?? "white";
-  fillSecondary = fillSecondary ?? "black";
+  const colorTheme = useColorTheme();
+  stroke = stroke ?? colorTheme.text.primary;
+  fillPrimary = fillPrimary ?? colorTheme.background.primary;
+  fillSecondary = fillSecondary ?? colorTheme.text.primary;
 
   return (
     <Svg style={style} viewBox="0 0 46 46">

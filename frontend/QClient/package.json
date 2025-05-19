@@ -50,7 +50,8 @@
     "react-native-svg": "15.11.2",
     "react-native-toast-message": "^2.2.1",
     "typescript": "^5.3.3",
-    "zod": "^3.24.3"
+    "zod": "^3.24.3",
+    "@expo/vector-icons": "^14.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
