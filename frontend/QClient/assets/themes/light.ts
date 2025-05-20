@@ -1,13 +1,13 @@
 import { Theme } from "./theme-type";
 
 const background = {
-  primary: "#fcfcfc",
-  card: "#dceadb",
-  onCard: "#ddf1db",
+  primary: "#f2f2f2",
+  card: "#c9d3c4",
+  onCard: "#dceadb",
   navbar: "#ffffff",
-  success: "#5ab02d",
+  success: "#60b238",
   accent: "#cf4949",
-  elevated: "#f0f0f0",
+  elevated: "#f6f6f6",
 };
 
 const text = {

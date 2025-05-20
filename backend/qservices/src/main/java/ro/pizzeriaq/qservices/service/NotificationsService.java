@@ -2,6 +2,7 @@ package ro.pizzeriaq.qservices.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import ro.pizzeriaq.qservices.data.entity.PushToken;
@@ -31,17 +32,14 @@ public class NotificationsService {
 
 
 	public void addPushToken(String token) {
-		if (pushTokenRepository.existsById(token)) {
-			return;
+		try {
+			pushTokenRepository.save(new PushToken(token));
+		} catch (DataIntegrityViolationException ignored) {
 		}
-		pushTokenRepository.save(new PushToken(token));
 	}
 
 
 	public void removePushToken(String token) {
-		if (!pushTokenRepository.existsById(token)) {
-			return;
-		}
 		pushTokenRepository.deleteById(token);
 	}
 

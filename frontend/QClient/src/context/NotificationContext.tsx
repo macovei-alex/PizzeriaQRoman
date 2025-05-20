@@ -6,6 +6,7 @@ import Constants from "expo-constants";
 import logger from "src/utils/logger";
 import axios from "axios";
 import { api } from "src/api";
+import { storage } from "src/utils/mmkv";
 
 async function registerForPushNotificationsAsync() {
   if (Platform.OS === "android") {
@@ -24,9 +25,23 @@ async function registerForPushNotificationsAsync() {
 
   const { status: existingStatus } = await Notifications.getPermissionsAsync();
   if (existingStatus !== "granted") {
-    const { status } = await Notifications.requestPermissionsAsync();
-    if (status !== "granted") {
-      logger.warn("Permission not granted for push notifications");
+    const lastNotificationToken = storage.getString("notificationToken");
+    if (lastNotificationToken === undefined) {
+      // User never accepted push notifications, so we need to ask for permission
+      const { status } = await Notifications.requestPermissionsAsync();
+      if (status !== "granted") {
+        logger.warn("Permission not granted for push notifications");
+        storage.set("notificationToken", "revoked");
+        storage.delete("notificationTokenSent");
+        return null;
+      }
+    } else {
+      // User accepted push notifications before, but has blocked them since, so we don't want to ask again
+      if (lastNotificationToken !== "revoked") {
+        api.axios.delete(api.routes.notifications.pushTokens, { data: { token: lastNotificationToken } });
+        storage.set("notificationToken", "revoked");
+        storage.delete("notificationTokenSent");
+      }
       return null;
     }
   }
@@ -35,12 +50,34 @@ async function registerForPushNotificationsAsync() {
   if (!projectId) throw new Error("Project ID not found in EAS config");
 
   try {
-    const token = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
-    await api.axios.post(api.routes.notifications.pushTokens, { token });
-    return token;
+    const lastToken = storage.getString("notificationToken");
+    const tokenSent = storage.getBoolean("notificationTokenSent");
+    const newToken = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
+    if (lastToken === newToken && tokenSent) {
+      // User has push notifications permissions enabled and token has been sent to server
+      return lastToken;
+    } else if (lastToken === newToken && !tokenSent) {
+      // User has push notifications permissions enabled, but token has not been sent to server
+      await api.axios.post(api.routes.notifications.pushTokens, { token: lastToken });
+      storage.set("notificationTokenSent", true);
+      return lastToken;
+    } else if (lastToken !== newToken) {
+      // User has just accepted push notifications, so token is sent to server
+      storage.set("notificationToken", newToken);
+      await api.axios.post(api.routes.notifications.pushTokens, { token: newToken });
+      storage.set("notificationTokenSent", true);
+      return newToken;
+    } else {
+      logger.error("Last token: ", lastToken);
+      logger.error("New token: ", newToken);
+      logger.error("Token sent: ", tokenSent);
+      throw new Error("Notification token registering should never be able to reach this");
+    }
   } catch (error) {
-    if (axios.isAxiosError(error)) throw error;
-    else if (error instanceof Error) throw new Error("Error sending Expo Push Token: " + error.message);
+    if (axios.isAxiosError(error)) {
+      storage.delete("notificationTokenSent");
+      throw error;
+    } else if (error instanceof Error) throw new Error("Error sending Expo Push Token: " + error.message);
     else if (typeof error === "string") throw new Error("Error getting Expo Push Token: " + error);
     throw new Error("Error getting Expo Push Token");
   }
