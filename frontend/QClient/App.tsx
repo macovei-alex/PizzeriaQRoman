@@ -8,6 +8,18 @@ import { StatusBar } from "expo-status-bar";
 import logger from "src/utils/logger";
 import Navigation from "src/navigation/Navigation";
 import { AuthContextProvider } from "src/context/AuthContext";
+import * as Notifications from "expo-notifications";
+import NotificationProvider from "src/context/NotificationContext";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
+  }),
+});
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,14 +38,16 @@ export default function App() {
   const colorTheme = useColorTheme();
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthContextProvider>
-        <CartContextProvider>
-          <StatusBar style={colorTheme.statusBarStyle} />
-          <Navigation />
-          {Platform.OS === "ios" && <Toast />}
-        </CartContextProvider>
-      </AuthContextProvider>
-    </QueryClientProvider>
+    <NotificationProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthContextProvider>
+          <CartContextProvider>
+            <StatusBar style={colorTheme.statusBarStyle} />
+            <Navigation />
+            {Platform.OS === "ios" && <Toast />}
+          </CartContextProvider>
+        </AuthContextProvider>
+      </QueryClientProvider>
+    </NotificationProvider>
   );
 }

@@ -46,6 +46,7 @@ export default (): ExpoConfig => {
           apiKey: process.env.GOOGLE_MAPS_API_KEY,
         },
       },
+      googleServicesFile: "./google-services.json",
     },
     ios: {
       supportsTablet: true,
