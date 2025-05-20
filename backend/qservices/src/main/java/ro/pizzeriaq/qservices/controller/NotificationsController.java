@@ -1,14 +1,11 @@
 package ro.pizzeriaq.qservices.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ro.pizzeriaq.qservices.service.DTO.PushNotificationRequestDto;
+import ro.pizzeriaq.qservices.service.DTO.PushNotificationTokenDto;
 import ro.pizzeriaq.qservices.service.NotificationsService;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/notifications")
@@ -19,14 +16,20 @@ public class NotificationsController {
 
 
 	@PostMapping("/send")
-	public void sendNotification(@RequestBody PushNotificationRequestDto notificationRequest) {
+	public void sendNotification(@Valid @RequestBody PushNotificationRequestDto notificationRequest) {
 		notificationsService.sendNotification(notificationRequest.getTitle(), notificationRequest.getBody());
 	}
 
 
 	@PostMapping("/push-tokens")
-	public void registerDevice(@RequestBody Map<String, Object> payload) {
-		System.out.println("Registered device: " + payload);
+	public void registerDevice(@RequestBody PushNotificationTokenDto notificationToken) {
+		notificationsService.addPushToken(notificationToken.getToken());
+	}
+
+
+	@DeleteMapping("/push-tokens")
+	public void unregisterDevice(@Valid @RequestBody PushNotificationTokenDto notificationToken) {
+		notificationsService.removePushToken(notificationToken.getToken());
 	}
 
 }

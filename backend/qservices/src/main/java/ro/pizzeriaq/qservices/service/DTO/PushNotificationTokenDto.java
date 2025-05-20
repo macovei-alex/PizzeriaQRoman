@@ -4,12 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class PushNotificationRequestDto {
+public class PushNotificationTokenDto {
 
 	@NotBlank
-	private String title;
-
-	@NotBlank
-	private String body;
+	private String token;
 
 }

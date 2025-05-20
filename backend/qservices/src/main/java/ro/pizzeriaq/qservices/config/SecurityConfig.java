@@ -35,7 +35,7 @@ public class SecurityConfig {
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/notifications/push-tokens").permitAll()
-						.requestMatchers("/notifications/send").permitAll()
+						.requestMatchers("/notifications/send").hasAuthority(Authorities.ADMIN.getName())
 						.requestMatchers("/accounts").hasAuthority(Authorities.ADMIN.getName())
 						.anyRequest().authenticated()
 				)

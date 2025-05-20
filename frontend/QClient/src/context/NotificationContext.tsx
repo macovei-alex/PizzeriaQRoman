@@ -23,13 +23,10 @@ async function registerForPushNotificationsAsync() {
   }
 
   const { status: existingStatus } = await Notifications.getPermissionsAsync();
-  console.log("Existing status:", existingStatus);
-
   if (existingStatus !== "granted") {
     const { status } = await Notifications.requestPermissionsAsync();
-    console.log("Requested status:", status);
     if (status !== "granted") {
-      logger.warn("Permission not granted for push notifications!");
+      logger.warn("Permission not granted for push notifications");
       return null;
     }
   }
@@ -40,11 +37,10 @@ async function registerForPushNotificationsAsync() {
   try {
     const token = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
     await api.axios.post(api.routes.notifications.pushTokens, { token });
-    console.log("Expo Push Token:", token);
     return token;
   } catch (error) {
     if (axios.isAxiosError(error)) throw error;
-    else if (error instanceof Error) throw new Error("Error getting Expo Push Token: " + error.message);
+    else if (error instanceof Error) throw new Error("Error sending Expo Push Token: " + error.message);
     else if (typeof error === "string") throw new Error("Error getting Expo Push Token: " + error);
     throw new Error("Error getting Expo Push Token");
   }
