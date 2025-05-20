@@ -40,8 +40,10 @@ yarn-error.*
 android/
 ios/
 !dev/**/*/
-.env*
+!.env*
 
 pizzeriaq-firebase-adminsdk-*.json
 credentials.json
 !google-services.json
+/backend
+/doc

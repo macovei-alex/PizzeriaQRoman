@@ -34,7 +34,8 @@ public class SecurityConfig {
 				.oauth2Client(Customizer.withDefaults())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/notifications").permitAll()
+						.requestMatchers("/notifications/push-tokens").permitAll()
+						.requestMatchers("/notifications/send").permitAll()
 						.requestMatchers("/accounts").hasAuthority(Authorities.ADMIN.getName())
 						.anyRequest().authenticated()
 				)

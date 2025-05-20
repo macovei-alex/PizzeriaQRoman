@@ -4,6 +4,8 @@ import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import Constants from "expo-constants";
 import logger from "src/utils/logger";
+import axios from "axios";
+import { api } from "src/api";
 
 async function registerForPushNotificationsAsync() {
   if (Platform.OS === "android") {
@@ -37,14 +39,13 @@ async function registerForPushNotificationsAsync() {
 
   try {
     const token = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
+    await api.axios.post(api.routes.notifications.pushTokens, { token });
     console.log("Expo Push Token:", token);
     return token;
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error("Error getting Expo Push Token: " + error.message);
-    } else if (typeof error === "string") {
-      throw new Error("Error getting Expo Push Token: " + error);
-    }
+    if (axios.isAxiosError(error)) throw error;
+    else if (error instanceof Error) throw new Error("Error getting Expo Push Token: " + error.message);
+    else if (typeof error === "string") throw new Error("Error getting Expo Push Token: " + error);
     throw new Error("Error getting Expo Push Token");
   }
 }
@@ -82,7 +83,7 @@ export default function NotificationProvider({ children }: { children: React.Rea
 
     notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
       // While the app is running
-      console.log("Notification received: ", notification);
+      console.log("Notification received: ", JSON.stringify(notification.request.content.data, null, 2));
       setNotification(notification);
     });
 
@@ -90,7 +91,6 @@ export default function NotificationProvider({ children }: { children: React.Rea
       // When the user taps on the notification
       console.log(
         "Notification response received: ",
-        JSON.stringify(response, null, 2),
         JSON.stringify(response.notification.request.content.data, null, 2)
       );
     });

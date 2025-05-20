@@ -38,5 +38,8 @@ export const api = {
       ) =>
         `/navigation/directions?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}`,
     },
+    notifications: {
+      pushTokens: "/notifications/push-tokens",
+    },
   }),
 };
