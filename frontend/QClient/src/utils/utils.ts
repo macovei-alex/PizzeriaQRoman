@@ -1,4 +1,4 @@
-import { ENV } from "src/constants";
+import { ENV } from "src/constants/env";
 
 export function formatDate(date?: Date) {
   return date

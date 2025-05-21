@@ -6,7 +6,7 @@ import Constants from "expo-constants";
 import logger from "src/utils/logger";
 import axios from "axios";
 import { api } from "src/api";
-import { storage } from "src/utils/mmkv";
+import { storage } from "src/constants/mmkv";
 
 async function registerForPushNotificationsAsync() {
   if (Platform.OS === "android") {

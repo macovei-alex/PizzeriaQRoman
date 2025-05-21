@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
-import { images } from "src/constants";
+import { images } from "src/constants/images";
 import { useAuthContext } from "src/context/AuthContext";
 import useColorTheme from "src/hooks/useColorTheme";
 import { convertToRGBA } from "src/utils/convertions";

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ENV } from "src/constants";
+import { ENV } from "src/constants/env";
 import { ProductId } from "./types/Product";
 import { AddressId } from "./types/Address";
 import { AccountId } from "src/context/AuthContext";

@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, ImageBackground, Image, StyleSheet } from "react-native";
-import { images } from "src/constants";
+import { images } from "src/constants/images";
 import useColorTheme from "src/hooks/useColorTheme";
 import logger from "src/utils/logger";
 

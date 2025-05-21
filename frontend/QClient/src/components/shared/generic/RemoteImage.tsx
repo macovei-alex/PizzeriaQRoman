@@ -1,6 +1,6 @@
 import { Image, ImageProps } from "expo-image";
 import React from "react";
-import { images } from "src/constants";
+import { images } from "src/constants/images";
 import { useAuthContext } from "src/context/AuthContext";
 import { imageUri } from "src/utils/utils";
 

@@ -3,7 +3,7 @@ import { AccountId } from "../AuthContext";
 import { productWithOptionsOptions } from "src/api/hooks/options/productWithOptionsOptions";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Cart, SerializedCart } from "./types";
-import { storage } from "src/utils/mmkv";
+import { storage } from "src/constants/mmkv";
 import { ProductWithOptions } from "src/api/types/Product";
 import logger from "src/utils/logger";
 
