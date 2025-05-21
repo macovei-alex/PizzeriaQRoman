@@ -43,7 +43,6 @@ public class Account {
 	@Column(nullable = false)
 	private boolean isEmailVerified;
 
-	@Column(nullable = false, length = 20)
 	private String phoneNumber;
 
 	private UUID conversationId;

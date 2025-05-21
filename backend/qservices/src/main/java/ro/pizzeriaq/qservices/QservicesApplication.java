@@ -20,6 +20,9 @@ public class QservicesApplication {
 	@Value("${app.environment}")
 	private String environment;
 
+	@Value("${populate.database:0}")
+	private String populateDatabase;
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(QservicesApplication.class, args);
@@ -36,7 +39,9 @@ public class QservicesApplication {
 	@Profile("default")
 	public CommandLineRunner initializeEntities(EntityInitializerService entityInitializerService) {
 		return (_) -> {
-			// EntityInitializerService.reInitializeEntities(entityInitializerService);
+			if (populateDatabase.equals("1")) {
+				EntityInitializerService.reInitializeEntities(entityInitializerService);
+			}
 		};
 	}
 
