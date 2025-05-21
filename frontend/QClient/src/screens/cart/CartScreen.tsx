@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import useColorTheme from "src/hooks/useColorTheme";
 import ProductSection from "src/components/cart/CartScreen/ProductSection";
-import { useCartContext } from "src/context/CartContext";
+import { useCartContext } from "src/context/CartContext/CartContext";
 import { showToast } from "src/utils/toast";
 import logger from "src/utils/logger";
 import { convertCartItemOptions } from "src/utils/convertions";

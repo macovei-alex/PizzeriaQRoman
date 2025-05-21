@@ -2,7 +2,7 @@ import React from "react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { Platform } from "react-native";
 import useColorTheme from "src/hooks/useColorTheme";
-import { CartContextProvider } from "src/context/CartContext";
+import { CartContextProvider } from "src/context/CartContext/CartContext";
 import Toast from "react-native-toast-message";
 import { StatusBar } from "expo-status-bar";
 import logger from "src/utils/logger";

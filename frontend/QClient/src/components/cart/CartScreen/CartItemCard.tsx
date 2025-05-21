@@ -3,13 +3,14 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import useColorTheme from "src/hooks/useColorTheme";
 import PlusCircleSvg from "src/components/svg/PlusCircleSvg";
 import MinusCircleSvg from "src/components/svg/MinusCircleSvg";
-import { CartItem, useCartContext } from "src/context/CartContext";
+import { useCartContext } from "src/context/CartContext/CartContext";
 import logger from "src/utils/logger";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
 import { formatPrice } from "src/utils/utils";
 import { useNavigation } from "@react-navigation/native";
 import RemoteImage from "src/components/shared/generic/RemoteImage";
+import { CartItem } from "src/context/CartContext/types";
 
 type NavigationProps = NativeStackNavigationProp<CartStackParamList, "CartScreen">;
 type CartItemCardProps = {
@@ -42,7 +43,7 @@ export default function CartItemCard({ cartItem, price }: CartItemCardProps) {
             .join(", ")
         )
         .join(", "),
-    [cartItem.options, cartItem.product.optionLists]
+    [cartItem.options, cartItem.product]
   );
 
   return (

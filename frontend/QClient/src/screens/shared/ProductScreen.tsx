@@ -6,7 +6,7 @@ import useColorTheme from "src/hooks/useColorTheme";
 import HorizontalLine from "src/components/shared/generic/HorizontalLine";
 import { Fragment } from "react";
 import TitleSection from "src/components/shared/ProductScreen/TitleSection";
-import { CartItemOptions, useCartContext } from "src/context/CartContext";
+import { useCartContext } from "src/context/CartContext/CartContext";
 import useProductWithOptionsQuery from "src/api/hooks/queries/useProductWithOptionsQuery";
 import logger from "src/utils/logger";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
@@ -14,6 +14,7 @@ import { MenuStackParamList } from "src/navigation/MenuStackNavigator";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
+import { CartItemOptions } from "src/context/CartContext/types";
 
 type RouteProps =
   | RouteProp<MenuStackParamList, "ProductScreen">

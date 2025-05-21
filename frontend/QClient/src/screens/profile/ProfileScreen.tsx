@@ -5,7 +5,7 @@ import AccountForm from "src/components/profile/ProfileScreen/AccountForm";
 import TitleSection from "src/components/profile/ProfileScreen/TitleSection";
 import ArrowSvg from "src/components/svg/ArrowSvg";
 import { useAuthContext } from "src/context/AuthContext";
-import { useCartContext } from "src/context/CartContext";
+import { useCartContext } from "src/context/CartContext/CartContext";
 import useColorTheme from "src/hooks/useColorTheme";
 import { ProfileStackParamList } from "src/navigation/ProfileStackNavigator";
 import { RootStackParamList } from "src/navigation/RootStackNavigator";
