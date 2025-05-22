@@ -57,7 +57,7 @@ export default function ProductScreen() {
 
         {product.optionLists.map((optionList) => (
           <Fragment key={optionList.id}>
-            <HorizontalLine style={[styles.horizontalLine, { backgroundColor: colorTheme.text.secondary }]} />
+            <HorizontalLine style={styles.horizontalLine} color={colorTheme.text.secondary} />
             <OptionList
               optionList={optionList}
               currentOptions={cartItemOptions[optionList.id] || {}}

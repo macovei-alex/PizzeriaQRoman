@@ -88,7 +88,7 @@ export default function OrderItemScreen() {
         {/* option lists */}
         {product.optionLists.map((optionList) => (
           <Fragment key={optionList.id}>
-            <HorizontalLine style={[styles.horizontalLine, { backgroundColor: colorTheme.text.secondary }]} />
+            <HorizontalLine style={styles.horizontalLine} color={colorTheme.text.secondary} />
             <OptionListCard optionList={optionList} selectedOptions={selectedOptions[optionList.id] ?? {}} />
           </Fragment>
         ))}
