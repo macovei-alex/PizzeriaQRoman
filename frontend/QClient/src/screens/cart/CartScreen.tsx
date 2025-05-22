@@ -22,6 +22,8 @@ import { RootStackParamList } from "src/navigation/RootStackNavigator";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AxiosError } from "axios";
 import { PlacedOrder } from "src/api/types/order/PlacedOrder";
+import ErrorComponent from "src/components/shared/generic/ErrorComponent";
+import EmptyCartScreen from "src/components/cart/CartScreen/EmptyCartScreen";
 
 type NavigationProps = CompositeNavigationProp<
   NativeStackNavigationProp<CartStackParamList, "CartScreen">,
@@ -99,6 +101,8 @@ export default function CartScreen() {
 
   if (sendingOrder) return <ScreenActivityIndicator text="Se trimite comanda..." />;
   if (addressQuery.isFetching) return <ScreenActivityIndicator text="Se încarcă adresele..." />;
+  if (addressQuery.isError) return <ErrorComponent />;
+  if (cart.length === 0) return <EmptyCartScreen />;
 
   return (
     <KeyboardAvoidingView
