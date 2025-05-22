@@ -16,6 +16,7 @@ const text = {
   accent: "#cf4949",
   onAccent: "#ffffff",
   success: "#ffffff",
+  disabled: "#b0b0b0",
   onDarkOverlay: "white",
 };
 

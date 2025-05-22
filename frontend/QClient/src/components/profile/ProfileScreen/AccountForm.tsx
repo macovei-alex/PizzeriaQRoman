@@ -4,7 +4,6 @@ import { api } from "src/api";
 import { usePhoneNumberQuery } from "src/api/hooks/queries/usePhoneNumberQuery";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import LabelledBorderComponent from "src/components/shared/generic/LabelledBorderComponent";
-import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
 import { useAuthContext } from "src/context/AuthContext";
 import useColorTheme from "src/hooks/useColorTheme";
 import logger from "src/utils/logger";
@@ -21,12 +20,20 @@ export default function AccountForm() {
     email: account.email,
     phoneNumber: phoneNumberQuery.data ?? "",
   });
+  const resetAccountData = useCallback(
+    () =>
+      setAccountData({
+        firstName: account.givenName,
+        lastName: account.familyName,
+        email: account.email,
+        phoneNumber: phoneNumberQuery.data ?? "",
+      }),
+    [account, phoneNumberQuery.data]
+  );
   const [updatingInfo, setUpdatingInfo] = useState(false);
 
   useLayoutEffect(() => {
-    setAccountData((prev) => {
-      return { ...prev, phoneNumber: phoneNumberQuery.data ?? "" };
-    });
+    setAccountData((prev) => ({ ...prev, phoneNumber: phoneNumberQuery.data ?? "" }));
   }, [phoneNumberQuery.data]);
 
   const handleInfoUpdate = useCallback(async () => {
@@ -36,103 +43,101 @@ export default function AccountForm() {
       await authContext.tryRefreshTokens();
     } catch (error) {
       logger.error("Error updating account data", error);
-      setAccountData({
-        firstName: account.givenName,
-        lastName: account.familyName,
-        email: account.email,
-        phoneNumber: phoneNumberQuery.data ?? "",
-      });
+      resetAccountData();
       phoneNumberQuery.refetch();
     } finally {
       setUpdatingInfo(false);
     }
-  }, [authContext, account, accountData, phoneNumberQuery]);
+  }, [authContext, account, accountData, phoneNumberQuery, resetAccountData]);
 
-  if (phoneNumberQuery.isFetching) return <ScreenActivityIndicator />;
   if (phoneNumberQuery.isError) return <ErrorComponent size="small" />;
 
+  const isLoading = phoneNumberQuery.isLoading || updatingInfo;
+  const textColor = isLoading ? colorTheme.text.disabled : colorTheme.text.primary;
+  const borderColor = isLoading ? colorTheme.text.disabled : colorTheme.text.primary;
+  const buttonsOpacity = isLoading ? 0.5 : 1;
+
   return (
-    <View style={styles.container}>
-      {/* first name */}
-      <LabelledBorderComponent
-        label="Prenume"
-        style={{ backgroundColor: colorTheme.background.primary }}
-        containerStyle={styles.labelledBorderContainer}
-        labelStyle={styles.inputLabel}
-      >
-        <TextInput
-          value={accountData.firstName}
-          onChangeText={(text) => setAccountData({ ...accountData, firstName: text })}
-          style={[styles.input, { color: colorTheme.text.primary }]}
-        />
-      </LabelledBorderComponent>
+    <View style={styles.container} pointerEvents={isLoading ? "none" : "auto"}>
+      <View>
+        {isLoading && (
+          <ActivityIndicator size={48} color={colorTheme.background.accent} style={styles.spinner} />
+        )}
 
-      {/* last name */}
-      <LabelledBorderComponent
-        label="Nume de familie"
-        style={{ backgroundColor: colorTheme.background.primary }}
-        containerStyle={styles.labelledBorderContainer}
-        labelStyle={styles.inputLabel}
-      >
-        <TextInput
-          value={accountData.lastName}
-          onChangeText={(text) => setAccountData({ ...accountData, lastName: text })}
-          style={[styles.input, { color: colorTheme.text.primary }]}
-        />
-      </LabelledBorderComponent>
+        {/* first name */}
+        <LabelledBorderComponent
+          label="Prenume"
+          style={{ backgroundColor: colorTheme.background.primary }}
+          containerStyle={[styles.labelledBorderContainer, { borderColor }]}
+          labelStyle={styles.inputLabel}
+        >
+          <TextInput
+            value={accountData.firstName}
+            onChangeText={(text) => setAccountData({ ...accountData, firstName: text })}
+            style={[styles.input, { color: textColor }]}
+          />
+        </LabelledBorderComponent>
 
-      {/* email */}
-      <LabelledBorderComponent
-        label="Email"
-        style={{ backgroundColor: colorTheme.background.primary }}
-        containerStyle={styles.labelledBorderContainer}
-        labelStyle={styles.inputLabel}
-      >
-        <TextInput
-          value={accountData.email}
-          onChangeText={(text) => setAccountData({ ...accountData, email: text })}
-          style={[styles.input, { color: colorTheme.text.primary }]}
-        />
-      </LabelledBorderComponent>
+        {/* last name */}
+        <LabelledBorderComponent
+          label="Nume de familie"
+          style={{ backgroundColor: colorTheme.background.primary }}
+          containerStyle={[styles.labelledBorderContainer, { borderColor }]}
+          labelStyle={styles.inputLabel}
+        >
+          <TextInput
+            value={accountData.lastName}
+            onChangeText={(text) => setAccountData({ ...accountData, lastName: text })}
+            style={[styles.input, { color: textColor }]}
+          />
+        </LabelledBorderComponent>
 
-      {/* phone number */}
-      <LabelledBorderComponent
-        label="Număr de telefon"
-        style={{ backgroundColor: colorTheme.background.primary }}
-        containerStyle={[styles.labelledBorderContainer, styles.phoneNumberContainerStyle]}
-        labelStyle={styles.inputLabel}
-      >
-        <Text style={styles.phoneNumberPrefix}>+40</Text>
-        <TextInput
-          style={[styles.input, { color: colorTheme.text.primary }]}
-          value={accountData.phoneNumber}
-          onChangeText={(text) => setAccountData({ ...accountData, phoneNumber: text })}
-        />
-      </LabelledBorderComponent>
+        {/* email */}
+        <LabelledBorderComponent
+          label="Email"
+          style={{ backgroundColor: colorTheme.background.primary }}
+          containerStyle={[styles.labelledBorderContainer, { borderColor }]}
+          labelStyle={styles.inputLabel}
+        >
+          <TextInput
+            value={accountData.email}
+            onChangeText={(text) => setAccountData({ ...accountData, email: text })}
+            style={[styles.input, { color: textColor }]}
+          />
+        </LabelledBorderComponent>
+        {/* phone number */}
+        <LabelledBorderComponent
+          label="Număr de telefon"
+          style={{ backgroundColor: colorTheme.background.primary }}
+          containerStyle={[styles.labelledBorderContainer, styles.phoneNumberContainerStyle, { borderColor }]}
+          labelStyle={styles.inputLabel}
+        >
+          <Text style={[styles.phoneNumberPrefix, { color: textColor }]}>+40</Text>
+          <TextInput
+            style={[styles.input, { color: textColor }]}
+            value={accountData.phoneNumber}
+            onChangeText={(text) => setAccountData({ ...accountData, phoneNumber: text })}
+          />
+        </LabelledBorderComponent>
+      </View>
 
       <View style={styles.buttonsContainer}>
         <TouchableOpacity
-          style={[styles.button, { backgroundColor: colorTheme.background.accent }]}
-          disabled={updatingInfo}
+          style={[styles.button, { backgroundColor: colorTheme.background.accent, opacity: buttonsOpacity }]}
+          disabled={isLoading}
           onPress={handleInfoUpdate}
+          activeOpacity={0.6}
         >
-          {updatingInfo ? (
-            <ActivityIndicator size={27} color={colorTheme.text.onAccent} />
-          ) : (
-            <Text style={[styles.buttonText, { color: colorTheme.text.onAccent }]}>Salvați</Text>
-          )}
+          <Text style={[styles.buttonText, { color: colorTheme.text.onAccent }]}>Salvați</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.button, { backgroundColor: colorTheme.background.accent }]}
-          disabled={updatingInfo}
-          onPress={handleInfoUpdate}
+          style={[styles.button, { backgroundColor: colorTheme.background.accent, opacity: buttonsOpacity }]}
+          disabled={isLoading}
+          onPress={resetAccountData}
+          activeOpacity={0.6}
         >
-          {updatingInfo ? (
-            <ActivityIndicator size={27} color={colorTheme.text.onAccent} />
-          ) : (
-            <Text style={[styles.buttonText, { color: colorTheme.text.onAccent }]}>Resetați</Text>
-          )}
+          <Text style={[styles.buttonText, { color: colorTheme.text.onAccent }]}>Resetați</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -142,6 +147,10 @@ export default function AccountForm() {
 const styles = StyleSheet.create({
   container: {
     marginBottom: 16,
+  },
+  spinner: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 1,
   },
   labelledBorderContainer: {
     borderWidth: 1.5,
