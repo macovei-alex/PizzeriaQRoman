@@ -41,7 +41,7 @@ export default function MorphingButton({
   contentHeight,
 }: MorphingButtonProps) {
   const colorTheme = useColorTheme();
-  const screenWidth = Dimensions.get("window").width;
+  const screenWidth = Dimensions.get("screen").width;
 
   const scrollingStyle = calculateScrollingStyle(scrollY, visibleHeight, contentHeight, screenWidth);
 
