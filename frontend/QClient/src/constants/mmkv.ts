@@ -1,4 +1,5 @@
 import { MMKV } from "react-native-mmkv";
+import logger from "src/utils/logger";
 
 class CustomStorage extends MMKV {
   setObject<T>(key: string, value: T) {
@@ -11,7 +12,7 @@ class CustomStorage extends MMKV {
       try {
         return JSON.parse(value);
       } catch (e) {
-        console.error("Error parsing JSON from MMKV:", e);
+        logger.error("Error parsing JSON from MMKV:", e);
         return null;
       }
     }

@@ -23,7 +23,7 @@ type NavigationProps = NativeStackNavigationProp<RootStackParamList, "MainTabNav
 
 type HorizontalCategorySectionProps = {
   categories: Category[];
-  verticalOffsets: Record<CategoryId, number>;
+  verticalOffsets: Map<CategoryId, number>;
   onCategoryPress: (categoryId: CategoryId) => void;
   scrollY: number;
 };
@@ -48,13 +48,21 @@ export default function HorizontalCategorySection({
   );
 
   const categoryLimits = useMemo(() => {
+    if (verticalOffsets.size === 0) return [];
     const limits = [];
-    const sortedOffsets = Object.entries(verticalOffsets).sort((a, b) => a[1] - b[1]);
+    const sortedOffsets = Array.from(verticalOffsets).sort((a, b) => a[1] - b[1]);
     for (let i = 0; i < sortedOffsets.length - 1; ++i) {
       limits.push({
-        categoryId: Number(sortedOffsets[i][0]),
-        min: sortedOffsets[i][1],
-        max: sortedOffsets[i + 1][1],
+        categoryId: sortedOffsets[i][0],
+        min: sortedOffsets[i][1] - 150,
+        max: sortedOffsets[i + 1][1] - 150,
+      });
+    }
+    if (sortedOffsets.length >= 1) {
+      limits.push({
+        categoryId: sortedOffsets[sortedOffsets.length - 1][0],
+        min: sortedOffsets[sortedOffsets.length - 1][1] - 150,
+        max: Number.MAX_SAFE_INTEGER,
       });
     }
     return limits;
@@ -65,20 +73,23 @@ export default function HorizontalCategorySection({
   useEffect(() => {
     const windowWidth = Dimensions.get("window").width;
     const currentLimits = categoryLimits[limitsIndex];
-    if (currentLimits) {
-      if (scrollY < currentLimits.min && limitsIndex > 0) {
-        const categoryId = categoryLimits[limitsIndex - 1].categoryId;
-        setLimitsIndex(limitsIndex - 1);
-        scrollToPos({ x: horizontal.offsets[categoryId] - windowWidth / 2 + 50 });
-      } else if (currentLimits.max < scrollY && limitsIndex < categoryLimits.length - 1) {
-        const categoryId = categoryLimits[limitsIndex + 1].categoryId;
-        setLimitsIndex(limitsIndex + 1);
-        scrollToPos({ x: horizontal.offsets[categoryId] - windowWidth / 2 + 50 });
-      }
+    if (!currentLimits) return;
+    if (scrollY < currentLimits.min && limitsIndex > 0) {
+      const categoryId = categoryLimits[limitsIndex - 1].categoryId;
+      const horizontalOffset = horizontal.offsets.get(categoryId);
+      if (!horizontalOffset) return;
+      setLimitsIndex(limitsIndex - 1);
+      scrollToPos({ x: horizontalOffset - windowWidth / 2 + 50 });
+    } else if (currentLimits.max < scrollY && limitsIndex < categoryLimits.length - 1) {
+      const categoryId = categoryLimits[limitsIndex + 1].categoryId;
+      const horizontalOffset = horizontal.offsets.get(categoryId);
+      if (!horizontalOffset) return;
+      setLimitsIndex(limitsIndex + 1);
+      scrollToPos({ x: horizontalOffset - windowWidth / 2 + 50 });
     }
   }, [scrollY, limitsIndex, categoryLimits, scrollToPos, horizontal.offsets]);
 
-  const currentCategoryId = categoryLimits[limitsIndex].categoryId;
+  const currentCategoryId = categoryLimits[limitsIndex]?.categoryId;
 
   return (
     <View style={[styles.container, { backgroundColor: colorTheme.background.primary }]}>

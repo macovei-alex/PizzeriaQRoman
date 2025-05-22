@@ -37,7 +37,7 @@ export default function MenuScreen() {
   );
 
   const scrollVertically = useCallback(
-    (categoryId: CategoryId) => scrollToPos({ y: vertical.offsets[categoryId] }),
+    (categoryId: CategoryId) => scrollToPos({ y: vertical.offsets.get(categoryId) }),
     [vertical.offsets, scrollToPos]
   );
 
