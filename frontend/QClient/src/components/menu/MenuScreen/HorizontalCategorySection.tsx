@@ -1,5 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { LayoutChangeEvent, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Dimensions,
+  LayoutChangeEvent,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import CategoryTouchable from "./CategoryTouchable";
 import { Category, CategoryId } from "src/api/types/Category";
 import logger from "src/utils/logger";
@@ -35,7 +43,7 @@ export default function HorizontalCategorySection({
   const horizontal = useScrollOffsets<CategoryId>();
   const updateHorizontalOffsets = useCallback(
     (categoryId: CategoryId, event: LayoutChangeEvent) =>
-      horizontal.addOffset(categoryId, event.nativeEvent.layout.x + 20),
+      horizontal.addOffset(categoryId, event.nativeEvent.layout.x),
     [horizontal]
   );
 
@@ -44,31 +52,33 @@ export default function HorizontalCategorySection({
     const sortedOffsets = Object.entries(verticalOffsets).sort((a, b) => a[1] - b[1]);
     for (let i = 0; i < sortedOffsets.length - 1; ++i) {
       limits.push({
-        categoryId: sortedOffsets[i][0],
+        categoryId: Number(sortedOffsets[i][0]),
         min: sortedOffsets[i][1],
         max: sortedOffsets[i + 1][1],
       });
     }
-    console.log(limits);
     return limits;
   }, [verticalOffsets]);
 
   const [limitsIndex, setLimitsIndex] = useState(0);
 
   useEffect(() => {
+    const windowWidth = Dimensions.get("window").width;
     const currentLimits = categoryLimits[limitsIndex];
     if (currentLimits) {
       if (scrollY < currentLimits.min && limitsIndex > 0) {
-        const categoryId = Number(categoryLimits[limitsIndex - 1].categoryId);
+        const categoryId = categoryLimits[limitsIndex - 1].categoryId;
         setLimitsIndex(limitsIndex - 1);
-        scrollToPos({ x: horizontal.offsets[categoryId] });
+        scrollToPos({ x: horizontal.offsets[categoryId] - windowWidth / 2 + 50 });
       } else if (currentLimits.max < scrollY && limitsIndex < categoryLimits.length - 1) {
-        const categoryId = Number(categoryLimits[limitsIndex + 1].categoryId);
+        const categoryId = categoryLimits[limitsIndex + 1].categoryId;
         setLimitsIndex(limitsIndex + 1);
-        scrollToPos({ x: horizontal.offsets[categoryId] });
+        scrollToPos({ x: horizontal.offsets[categoryId] - windowWidth / 2 + 50 });
       }
     }
   }, [scrollY, limitsIndex, categoryLimits, scrollToPos, horizontal.offsets]);
+
+  const currentCategoryId = categoryLimits[limitsIndex].categoryId;
 
   return (
     <View style={[styles.container, { backgroundColor: colorTheme.background.primary }]}>
@@ -86,6 +96,7 @@ export default function HorizontalCategorySection({
             category={category}
             onPress={() => onCategoryPress(category.id)}
             onLayout={(event) => updateHorizontalOffsets(category.id, event)}
+            highlight={category.id === currentCategoryId}
           />
         ))}
       </ScrollView>
