@@ -70,7 +70,8 @@ export function useHydratedCartItems(accountId: AccountId | null) {
   useEffect(() => {
     if (accountId) {
       const loadedCart = storage.getObject<SerializedCart>(`cart-${accountId}`);
-      nextId.current = loadedCart ? Math.max(...loadedCart.map((item) => item.id)) + 1 : 1;
+      const cartIds = loadedCart?.map((item) => item.id) || [];
+      nextId.current = cartIds.length > 0 ? Math.max(...cartIds) + 1 : 1;
       if (loadedCart) setSerializedCart(loadedCart);
     }
   }, [accountId]);

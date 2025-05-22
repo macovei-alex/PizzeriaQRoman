@@ -102,6 +102,7 @@ export default function CartScreen() {
   if (sendingOrder) return <ScreenActivityIndicator text="Se trimite comanda..." />;
   if (addressQuery.isFetching) return <ScreenActivityIndicator text="Se încarcă adresele..." />;
   if (addressQuery.isError) return <ErrorComponent />;
+  if (!addressQuery.data) throw new Error("Addresses not found");
   if (cart.length === 0) return <EmptyCartScreen />;
 
   return (
@@ -115,7 +116,7 @@ export default function CartScreen() {
 
           <ProductSection />
 
-          <AdditionalInfoSection addresses={addressQuery.data!} ref={additionalSectionRef} />
+          <AdditionalInfoSection addresses={addressQuery.data} ref={additionalSectionRef} />
 
           <View style={styles.sendOrderContainer}>
             <TouchableOpacity
