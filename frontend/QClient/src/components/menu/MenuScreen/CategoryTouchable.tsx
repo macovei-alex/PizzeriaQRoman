@@ -8,15 +8,16 @@ type HorizontalCategoryProps = {
   category: Category;
   onPress: () => void;
   style?: any;
+  onLayout?: (event: any) => void;
 };
 
-export default function CategoryTouchable({ category, onPress, style }: HorizontalCategoryProps) {
+export default function CategoryTouchable({ category, onPress, style, onLayout }: HorizontalCategoryProps) {
   logger.render("CategoryTouchable");
 
   const colorTheme = useColorTheme();
 
   return (
-    <View style={style}>
+    <View style={style} onLayout={onLayout}>
       <TouchableOpacity
         style={[styles.button, { backgroundColor: colorTheme.background.elevated }]}
         onPress={onPress}

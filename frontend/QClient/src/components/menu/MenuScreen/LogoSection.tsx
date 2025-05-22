@@ -10,18 +10,16 @@ export default function LogoSection() {
   const colorTheme = useColorTheme();
 
   return (
-    <View>
-      <ImageBackground source={images.menuBackground} style={styles.imageBackground}>
-        <View style={styles.centerSection}>
-          <Image source={images.logo} style={styles.logoImage} />
-          <View style={[styles.subtextContainer, { backgroundColor: colorTheme.background.success }]}>
-            <Text style={[styles.subtext, { color: colorTheme.text.primary }]}>
-              Comanda minimă este de 40 RON
-            </Text>
-          </View>
+    <ImageBackground source={images.menuBackground} style={styles.imageBackground}>
+      <View style={styles.centerSection}>
+        <Image source={images.logo} style={styles.logoImage} />
+        <View style={[styles.subtextContainer, { backgroundColor: colorTheme.background.success }]}>
+          <Text style={[styles.subtext, { color: colorTheme.text.primary }]}>
+            Comanda minimă este de 40 RON
+          </Text>
         </View>
-      </ImageBackground>
-    </View>
+      </View>
+    </ImageBackground>
   );
 }
 

@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { LayoutChangeEvent, ScrollView, View } from "react-native";
+import { LayoutChangeEvent, ScrollView } from "react-native";
 import useScrollRef from "src/hooks/useScrollRef";
 import LogoSection from "src/components/menu/MenuScreen/LogoSection";
 import HorizontalCategorySection from "src/components/menu/MenuScreen/HorizontalCategorySection";
@@ -13,6 +13,7 @@ import logger from "src/utils/logger";
 import MenuSkeletonLoader from "src/components/menu/MenuScreen/MenuSkeletonLoader";
 import useColorTheme from "src/hooks/useColorTheme";
 import ErrorComponent from "../../components/shared/generic/ErrorComponent";
+import { useScrollOffsets } from "src/hooks/useScrollOffsets";
 
 type ProductSplit = {
   category: Category;
@@ -26,24 +27,18 @@ export default function MenuScreen() {
   const productsQuery = useProductsQuery();
   const categoryQuery = useCategoriesQuery();
   const { scrollRef, scrollToPos } = useScrollRef();
-  const [categoryPositions, setCategoryPositions] = useState<Record<CategoryId, number>>({});
+  const vertical = useScrollOffsets<CategoryId>();
 
   // Save the position of each category for the scroll to position from the horizontal menu
-  const updateCategoryLayoutPosition = useCallback((categoryId: CategoryId, event: LayoutChangeEvent) => {
-    // Extracting data in layout is a MUST because the event is a synthetic event (event pooling)
-    // and event.nativeEvent will be set to null afterwards.
-    const { layout } = event.nativeEvent;
-    setCategoryPositions((prev) => {
-      return { ...prev, [categoryId]: layout.y };
-    });
-  }, []);
+  const updateVerticalOffsets = useCallback(
+    (categoryId: CategoryId, event: LayoutChangeEvent) =>
+      vertical.addOffset(categoryId, event.nativeEvent.layout.y - 120),
+    [vertical]
+  );
 
-  const scrollToCategoryId = useCallback(
-    (categoryId: CategoryId) => {
-      const pos = categoryPositions[categoryId];
-      if (pos) scrollToPos({ y: pos });
-    },
-    [categoryPositions, scrollToPos]
+  const scrollVertically = useCallback(
+    (categoryId: CategoryId) => scrollToPos({ y: vertical.offsets[categoryId] }),
+    [vertical.offsets, scrollToPos]
   );
 
   // Split products by category
@@ -63,26 +58,39 @@ export default function MenuScreen() {
     return productsSplit;
   }, [productsQuery.data, categoryQuery.data]);
 
+  const [scrollY, setScrollY] = useState(0);
+
   if (productsQuery.isFetching || categoryQuery.isFetching) return <MenuSkeletonLoader />;
   if (productsQuery.isError || categoryQuery.isError) return <ErrorComponent />;
+  if (!categoryQuery.data) throw new Error("Categories not found");
 
   return (
     <SafeAreaView style={{ backgroundColor: colorTheme.background.primary }}>
-      <ScrollView ref={scrollRef}>
+      <ScrollView
+        ref={scrollRef}
+        stickyHeaderIndices={[1]}
+        onScroll={(event) => setScrollY(event.nativeEvent.contentOffset.y)}
+        nestedScrollEnabled
+      >
         <LogoSection />
 
-        <HorizontalCategorySection categories={categoryQuery.data!} onCategoryPress={scrollToCategoryId} />
+        <HorizontalCategorySection
+          categories={categoryQuery.data}
+          verticalOffsets={vertical.offsets}
+          onCategoryPress={scrollVertically}
+          scrollY={scrollY}
+        />
 
-        <View>
+        <>
           {productsPerCategory.map(({ category, products }) => (
             <VerticalCategorySection
               key={category.id}
               category={category}
               products={products}
-              onLayout={updateCategoryLayoutPosition}
+              onLayout={updateVerticalOffsets}
             />
           ))}
-        </View>
+        </>
       </ScrollView>
     </SafeAreaView>
   );
