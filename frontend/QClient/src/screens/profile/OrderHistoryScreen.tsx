@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { ActivityIndicator, StyleSheet } from "react-native";
+import { ActivityIndicator, RefreshControl, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OrderCard from "src/components/profile/OrderHistoryScreen/OrderCard";
 import ScreenTitle from "src/components/shared/generic/ScreenTitle";
@@ -36,6 +36,9 @@ export default function OrderHistoryScreen() {
           }
           maintainVisibleContentPosition
           ListFooterComponent={ordersQuery.isFetchingNextPage ? <CustomActivityIndicator /> : null}
+          refreshControl={
+            <RefreshControl refreshing={ordersQuery.isFetching} onRefresh={ordersQuery.refetch} />
+          }
         />
       )}
     </SafeAreaView>

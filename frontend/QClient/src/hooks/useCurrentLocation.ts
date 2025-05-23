@@ -14,6 +14,7 @@ function roundCoordinates(coords?: Location.LocationObjectCoords) {
 
 export function useCurrentLocation() {
   const [currentLocation, setCurrentLocation] = useState<Location.LocationObject | null>(null);
+  const [permissionAllowed, setPermissionAllowed] = useState(true);
 
   useEffect(() => {
     let subscription: Location.LocationSubscription | null = null;
@@ -22,9 +23,12 @@ export function useCurrentLocation() {
     async function startListening() {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
+        setPermissionAllowed(false);
         logger.warn("Permission to access location was denied");
         return;
       }
+
+      setPermissionAllowed(true);
 
       const location = await Location.getLastKnownPositionAsync();
       setCurrentLocation((prev) => prev ?? location);
@@ -52,5 +56,8 @@ export function useCurrentLocation() {
     };
   }, []);
 
-  return currentLocation;
+  return {
+    currentLocation,
+    permissionAllowed,
+  };
 }

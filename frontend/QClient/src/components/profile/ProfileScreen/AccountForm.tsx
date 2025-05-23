@@ -7,6 +7,7 @@ import LabelledBorderComponent from "src/components/shared/generic/LabelledBorde
 import { useAuthContext } from "src/context/AuthContext";
 import useColorTheme from "src/hooks/useColorTheme";
 import logger from "src/utils/logger";
+import { showToast } from "src/utils/toast";
 
 export default function AccountForm() {
   const authContext = useAuthContext();
@@ -32,19 +33,22 @@ export default function AccountForm() {
   );
   const [updatingInfo, setUpdatingInfo] = useState(false);
 
-  useLayoutEffect(() => {
-    setAccountData((prev) => ({ ...prev, phoneNumber: phoneNumberQuery.data ?? "" }));
-  }, [phoneNumberQuery.data]);
+  useLayoutEffect(
+    () => setAccountData((prev) => ({ ...prev, phoneNumber: phoneNumberQuery.data ?? "" })),
+    [phoneNumberQuery.data]
+  );
 
   const handleInfoUpdate = useCallback(async () => {
     setUpdatingInfo(true);
     try {
       await api.axios.put(api.routes.account(account.id).self, accountData);
       await authContext.tryRefreshTokens();
+      await phoneNumberQuery.refetch();
     } catch (error) {
+      await phoneNumberQuery.refetch();
+      showToast("Eroare la actualizarea datelor");
       logger.error("Error updating account data", error);
       resetAccountData();
-      phoneNumberQuery.refetch();
     } finally {
       setUpdatingInfo(false);
     }

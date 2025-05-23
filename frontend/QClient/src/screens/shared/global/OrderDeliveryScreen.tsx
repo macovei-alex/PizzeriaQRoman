@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
@@ -10,6 +10,7 @@ import logger from "src/utils/logger";
 import HomeIconSvg from "src/components/svg/HomeIconSvg";
 import CartIconSvg from "src/components/svg/CartIconSvg";
 import { useDirectionsQuery } from "src/api/hooks/queries/useDirectionsQuery";
+import PermissionDenied from "src/components/shared/generic/PermissionDenied";
 
 const DESTINATION = {
   latitude: 45.46958477253526,
@@ -20,16 +21,14 @@ export default function OrderDeliveryScreen() {
   logger.render("OrderDeliveryScreen");
 
   const colorTheme = useColorTheme();
-  const location = useCurrentLocation();
-  const directionsQuery = useDirectionsQuery(location?.coords, DESTINATION);
+  const { currentLocation, permissionAllowed } = useCurrentLocation();
+  const directionsQuery = useDirectionsQuery(currentLocation?.coords, DESTINATION);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => setIsLoaded(true), 1500);
-    return () => clearTimeout(timeout);
-  }, []);
-
-  if (location === null || directionsQuery.isLoading) return <ScreenActivityIndicator />;
+  if (!permissionAllowed) {
+    return <PermissionDenied text="Vă rugăm să permiteți accesul la locație pentru a urmări livrarea." />;
+  }
+  if (currentLocation === null || directionsQuery.isLoading) return <ScreenActivityIndicator />;
   if (directionsQuery.isError) return <ErrorComponent onRetry={directionsQuery.refetch} />;
 
   const points = directionsQuery.data;
@@ -37,11 +36,12 @@ export default function OrderDeliveryScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <MapView
+        onMapLoaded={() => setIsLoaded(true)}
         style={styles.map}
         provider={PROVIDER_GOOGLE}
         region={{
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
+          latitude: currentLocation.coords.latitude,
+          longitude: currentLocation.coords.longitude,
           latitudeDelta: 0.02,
           longitudeDelta: 0.02,
         }}
@@ -49,8 +49,8 @@ export default function OrderDeliveryScreen() {
         <Marker
           tracksViewChanges={!isLoaded}
           coordinate={{
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
+            latitude: currentLocation.coords.latitude,
+            longitude: currentLocation.coords.longitude,
           }}
           title="Adresa ta"
         >
