@@ -141,28 +141,25 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     if (!request) return;
     const response = await promptAsync();
     try {
-      if (response?.type === "success") {
-        const responseTokens = await AuthSession.exchangeCodeAsync(
-          {
-            clientId: request?.clientId,
-            code: response.params.code,
-            redirectUri: request?.redirectUri,
-            extraParams: {
-              code_verifier: request?.codeVerifier!,
-            },
+      if (response?.type !== "success") throw new Error("Bad response type");
+      const responseTokens = await AuthSession.exchangeCodeAsync(
+        {
+          clientId: request?.clientId,
+          code: response.params.code,
+          redirectUri: request?.redirectUri,
+          extraParams: {
+            code_verifier: request?.codeVerifier!,
           },
-          discovery
-        );
-        if (!responseTokens?.refreshToken) throw new Error("Missing refresh token in response");
-        if (!responseTokens?.idToken) throw new Error("Missing id token in response");
-        await saveAccountInfo(
-          responseTokens.accessToken,
-          responseTokens.refreshToken,
-          extractAccountClaims(responseTokens.idToken)
-        );
-      } else {
-        throw new Error("Bad response type");
-      }
+        },
+        discovery
+      );
+      if (!responseTokens?.refreshToken) throw new Error("Missing refresh token in response");
+      if (!responseTokens?.idToken) throw new Error("Missing id token in response");
+      await saveAccountInfo(
+        responseTokens.accessToken,
+        responseTokens.refreshToken,
+        extractAccountClaims(responseTokens.idToken)
+      );
     } catch (error) {
       logger.error("Login failed: ", error);
     }
