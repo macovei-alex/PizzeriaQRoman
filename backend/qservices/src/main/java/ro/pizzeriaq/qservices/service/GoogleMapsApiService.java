@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
-import ro.pizzeriaq.qservices.service.DTO.GoogleApiDirections;
+import ro.pizzeriaq.qservices.service.DTO.navigation.GoogleApiDirections;
+import ro.pizzeriaq.qservices.service.DTO.navigation.GoogleApiGeocode;
+
+import javax.naming.ServiceUnavailableException;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 
@@ -20,22 +23,55 @@ public class GoogleMapsApiService {
 
 		this.apiKey = apiKey;
 		this.restClient = RestClient.builder()
-				.baseUrl("https://maps.googleapis.com/maps/api/directions/json")
+				.baseUrl("https://maps.googleapis.com/maps/api")
 				.build();
 	}
 
 
-	public GoogleApiDirections getDirections(String origin, String destination) {
-		String uri = UriComponentsBuilder.fromUriString("")
+	public GoogleApiDirections getDirections(
+			String origin,
+			String destination
+	) throws ServiceUnavailableException {
+		String uri = UriComponentsBuilder.fromUriString("/directions/json")
 				.queryParam("origin", origin)
 				.queryParam("destination", destination)
 				.queryParam("mode", "driving")
 				.queryParam("key", apiKey)
 				.build()
 				.toUriString();
-		return restClient.get()
+
+		var response = restClient.get()
 				.uri(uri)
 				.retrieve()
 				.body(GoogleApiDirections.class);
+
+		if (response == null) {
+			throw new ServiceUnavailableException("Google Maps API service is unavailable");
+		}
+		return response;
+	}
+
+
+	public String getAddress(double latitude, double longitude) throws ServiceUnavailableException {
+		String uri = UriComponentsBuilder.fromUriString("/geocode/json")
+				.queryParam("latlng", latitude + "," + longitude)
+				.queryParam("key", apiKey)
+				.build()
+				.toUriString();
+
+		var response = restClient.get()
+				.uri(uri)
+				.retrieve()
+				.body(GoogleApiGeocode.class);
+
+		if (response == null) {
+			throw new ServiceUnavailableException("Google Maps API service is unavailable");
+		}
+
+		if(response.getStatus().equals("ZERO_RESULTS")) {
+			throw new IllegalArgumentException("Address not found");
+		}
+
+		return response.getResults().get(0).getFormattedAddress();
 	}
 }

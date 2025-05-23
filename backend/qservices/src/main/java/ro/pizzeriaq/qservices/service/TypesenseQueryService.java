@@ -8,8 +8,8 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import ro.pizzeriaq.qservices.exceptions.TypesenseException;
-import ro.pizzeriaq.qservices.service.DTO.Typesense.TypesenseConversationResultDto;
-import ro.pizzeriaq.qservices.service.DTO.Typesense.TypesenseLookupResponseDto;
+import ro.pizzeriaq.qservices.service.DTO.typesense.TypesenseConversationResultDto;
+import ro.pizzeriaq.qservices.service.DTO.typesense.TypesenseLookupResponseDto;
 
 import javax.naming.ServiceUnavailableException;
 import java.util.List;

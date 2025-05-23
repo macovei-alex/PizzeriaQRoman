@@ -1,4 +1,4 @@
-package ro.pizzeriaq.qservices.service.DTO;
+package ro.pizzeriaq.qservices.service.DTO.navigation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

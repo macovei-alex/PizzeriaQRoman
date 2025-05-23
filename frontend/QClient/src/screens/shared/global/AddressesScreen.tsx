@@ -1,60 +1,29 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { api } from "src/api";
 import useAddressesQuery from "src/api/hooks/queries/useAddressesQuery";
-import { Address } from "src/api/types/Address";
-import AddressForm from "src/components/shared/global/AddressesModalScreen/AddressForm";
-import { NewAddress } from "src/components/shared/global/AddressesModalScreen/types/NewAddress";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
 import ScreenTitle from "src/components/shared/generic/ScreenTitle";
 import { useAuthContext } from "src/context/AuthContext";
 import useColorTheme from "src/hooks/useColorTheme";
 import logger from "src/utils/logger";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "src/navigation/RootStackNavigator";
 
-export const emptyAddressState: NewAddress = {
-  id: 0,
-  city: "",
-  street: "",
-  streetNumber: "",
-  block: "",
-  floor: "",
-  apartment: "",
-} as const;
+type NavigationProps = NativeStackNavigationProp<RootStackParamList, "AddressesScreen">;
 
-export default function AddressesModalScreen() {
+export default function AddressesScreen() {
+  logger.render("AddressesScreen");
+
   const colorTheme = useColorTheme();
-
-  const authContext = useAuthContext();
-  if (!authContext.account) throw new Error("Account is not defined in AddressesScreen");
-  const accountId = authContext.account.id;
+  const navigation = useNavigation<NavigationProps>();
+  const accountId = useAuthContext().account?.id;
+  if (!accountId) throw new Error("Account is not defined in AddressesScreen");
 
   const addressesQuery = useAddressesQuery();
-  const [addressEditState, setModalEditState] = useState<"closed" | "add" | "edit">("closed");
-  const [initialAddressState, setInitialAddressState] = useState(emptyAddressState);
-
-  const onModalSubmit = useCallback(
-    async (address: NewAddress | null) => {
-      setModalEditState("closed");
-      if (!address) return;
-      try {
-        const httpMethod = address.id === 0 ? "POST" : "PUT";
-        await api.axios.request<Address>({
-          method: httpMethod,
-          url:
-            httpMethod === "POST"
-              ? api.routes.account(accountId).addresses
-              : api.routes.account(accountId).address(address.id),
-          data: address,
-        });
-        await addressesQuery.refetch();
-      } catch (error) {
-        logger.error(error);
-      }
-    },
-    [accountId, addressesQuery]
-  );
 
   const showDeleteAddressDialog = useCallback(
     async (addressId: number) => {
@@ -100,10 +69,6 @@ export default function AddressesModalScreen() {
         {addressesQuery.data!.map((address) => (
           <TouchableOpacity
             key={address.id}
-            onPress={() => {
-              setModalEditState("edit");
-              setInitialAddressState({ ...address, floor: address.floor.toString() });
-            }}
             onLongPress={() => showDeleteAddressDialog(address.id)}
             style={[styles.addressCard, { backgroundColor: colorTheme.background.card }]}
           >
@@ -119,21 +84,10 @@ export default function AddressesModalScreen() {
       {/* New address button */}
       <TouchableOpacity
         style={[styles.newAddressButton, { backgroundColor: colorTheme.background.accent }]}
-        onPress={() => {
-          setModalEditState("add");
-          setInitialAddressState(emptyAddressState);
-        }}
+        onPress={() => navigation.navigate("NewAddressScreen")}
       >
         <Text style={[styles.newAddressText, { color: colorTheme.text.onAccent }]}>Adaugă o adresă nouă</Text>
       </TouchableOpacity>
-
-      {addressEditState !== "closed" && (
-        <AddressForm
-          modalEditState={addressEditState}
-          initialState={initialAddressState}
-          onSubmit={onModalSubmit}
-        />
-      )}
     </SafeAreaView>
   );
 }

@@ -1,7 +1,7 @@
-package ro.pizzeriaq.qservices.service.DTO.Typesense;
+package ro.pizzeriaq.qservices.service.DTO.typesense;
 
 import lombok.Data;
-import ro.pizzeriaq.qservices.service.DTO.Typesense.documents.LookupCollectionDocument;
+import ro.pizzeriaq.qservices.service.DTO.typesense.documents.LookupCollectionDocument;
 
 import java.util.List;
 

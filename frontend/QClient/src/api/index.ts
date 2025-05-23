@@ -37,6 +37,8 @@ export const api = {
         destination: { latitude: number; longitude: number }
       ) =>
         `/navigation/directions?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}`,
+      address: (latitude: number, longitude: number) =>
+        `/navigation/address?latitude=${latitude}&longitude=${longitude}`,
     },
     notifications: {
       pushTokens: "/notifications/push-tokens",

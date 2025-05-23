@@ -1,15 +1,17 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import MainTabNavigator, { MainTabParamList } from "./MainTabNavigator";
-import AddressesModalScreen from "src/screens/shared/global/AddressesModalScreen";
 import OrderConfirmationScreen from "src/screens/shared/global/OrderConfirmationScreen";
 import { NavigatorScreenParams } from "@react-navigation/native";
 import ChatScreen from "src/screens/shared/global/ChatScreen";
 import OrderDeliveryScreen from "src/screens/shared/global/OrderDeliveryScreen";
+import NewAddressScreen from "src/screens/shared/global/NewAddressScreen";
+import AddressesScreen from "src/screens/shared/global/AddressesScreen";
 
 export type RootStackParamList = {
   MainTabNavigator: NavigatorScreenParams<MainTabParamList>;
-  AddressesModalScreen: undefined;
+  AddressesScreen: undefined;
+  NewAddressScreen: undefined;
   OrderConfirmationScreen: undefined;
   ChatScreen: undefined;
   OrderDeliveryScreen: undefined;
@@ -22,8 +24,8 @@ export default function RootStackNavigator() {
     <RootStack.Navigator screenOptions={{ headerShown: false }}>
       <RootStack.Screen name="MainTabNavigator" component={MainTabNavigator} />
       <RootStack.Screen
-        name="AddressesModalScreen"
-        component={AddressesModalScreen}
+        name="AddressesScreen"
+        component={AddressesScreen}
         options={{ presentation: "modal" }}
       />
       <RootStack.Screen
@@ -40,6 +42,11 @@ export default function RootStackNavigator() {
         name="OrderDeliveryScreen"
         component={OrderDeliveryScreen}
         options={{ presentation: "fullScreenModal" }}
+      />
+      <RootStack.Screen
+        name="NewAddressScreen"
+        component={NewAddressScreen}
+        options={{ presentation: "modal" }}
       />
     </RootStack.Navigator>
   );

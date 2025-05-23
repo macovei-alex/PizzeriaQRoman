@@ -1,12 +1,16 @@
 package ro.pizzeriaq.qservices.controller;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ro.pizzeriaq.qservices.service.DTO.GoogleApiDirections;
+import ro.pizzeriaq.qservices.service.DTO.navigation.GoogleApiDirections;
 import ro.pizzeriaq.qservices.service.GoogleMapsApiService;
+
+import javax.naming.ServiceUnavailableException;
 
 @RestController
 @RequestMapping("/navigation")
@@ -17,8 +21,20 @@ public class NavigationController {
 
 
 	@GetMapping("/directions")
-	public GoogleApiDirections getDirections(@RequestParam String origin, @RequestParam String destination) {
+	public GoogleApiDirections getDirections(
+			@NotBlank @RequestParam String origin,
+			@NotBlank @RequestParam String destination
+	) throws ServiceUnavailableException {
 		return googleMapsApiService.getDirections(origin, destination);
+	}
+
+
+	@GetMapping("/address")
+	public String getAddress(
+			@NotNull @RequestParam Double latitude,
+			@NotNull @RequestParam Double longitude
+	) throws ServiceUnavailableException {
+		return googleMapsApiService.getAddress(latitude, longitude);
 	}
 
 }

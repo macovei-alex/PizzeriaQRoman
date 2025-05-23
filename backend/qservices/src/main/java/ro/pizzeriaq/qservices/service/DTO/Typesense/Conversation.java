@@ -1,4 +1,4 @@
-package ro.pizzeriaq.qservices.service.DTO.Typesense;
+package ro.pizzeriaq.qservices.service.DTO.typesense;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

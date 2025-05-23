@@ -13,7 +13,7 @@ import logger from "src/utils/logger";
 
 type NavigationProps = CompositeNavigationProp<
   NativeStackNavigationProp<ProfileStackParamList, "ProfileScreen">,
-  NativeStackNavigationProp<RootStackParamList, "AddressesModalScreen">
+  NativeStackNavigationProp<RootStackParamList>
 >;
 
 export default function ProfileScreen() {
@@ -37,7 +37,7 @@ export default function ProfileScreen() {
           {/* addresses button */}
           <TouchableOpacity
             style={[styles.buttonContainer, { borderBottomColor: colorTheme.background.elevated }]}
-            onPress={() => navigation.navigate("AddressesModalScreen")}
+            onPress={() => navigation.navigate("AddressesScreen")}
           >
             <Text style={[styles.buttonText, { color: colorTheme.text.primary }]}>Adresele mele</Text>
             <ArrowSvg style={styles.arrowSvg} />

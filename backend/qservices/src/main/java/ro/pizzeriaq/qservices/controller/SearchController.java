@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.pizzeriaq.qservices.config.annotations.AccountIdChecked;
-import ro.pizzeriaq.qservices.service.DTO.Typesense.TypesenseConversationResultDto;
-import ro.pizzeriaq.qservices.service.DTO.Typesense.TypesenseLookupResponseDto;
+import ro.pizzeriaq.qservices.service.DTO.typesense.TypesenseConversationResultDto;
+import ro.pizzeriaq.qservices.service.DTO.typesense.TypesenseLookupResponseDto;
 import ro.pizzeriaq.qservices.service.TypesenseQueryService;
 
 import javax.naming.ServiceUnavailableException;

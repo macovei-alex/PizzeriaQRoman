@@ -1,4 +1,4 @@
-package ro.pizzeriaq.qservices.service.DTO.Typesense.documents;
+package ro.pizzeriaq.qservices.service.DTO.typesense.documents;
 
 import lombok.Data;
 
