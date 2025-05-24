@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Alert, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { api } from "src/api";
 import useAddressesQuery from "src/api/hooks/queries/useAddressesQuery";
@@ -65,7 +65,10 @@ export default function AddressesScreen() {
       <ScreenTitle title="Adresele mele" containerStyle={styles.screenTitle} />
 
       {/* Addresses */}
-      <ScrollView style={styles.addressesContainer}>
+      <ScrollView
+        style={styles.addressesContainer}
+        refreshControl={<RefreshControl refreshing={false} onRefresh={addressesQuery.refetch} />}
+      >
         {addressesQuery.data!.map((address) => (
           <TouchableOpacity
             key={address.id}

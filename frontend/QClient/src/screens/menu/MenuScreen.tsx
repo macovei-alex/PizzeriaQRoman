@@ -1,7 +1,6 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { LayoutChangeEvent, ScrollView } from "react-native";
-import useScrollRef from "src/hooks/useScrollRef";
+import { LayoutChangeEvent, RefreshControl, ScrollView } from "react-native";
 import LogoSection from "src/components/menu/MenuScreen/LogoSection";
 import HorizontalCategorySection from "src/components/menu/MenuScreen/HorizontalCategorySection";
 import VerticalCategorySection from "src/components/menu/MenuScreen/VerticalCategorySection";
@@ -26,7 +25,7 @@ export default function MenuScreen() {
   const colorTheme = useColorTheme();
   const productsQuery = useProductsQuery();
   const categoryQuery = useCategoriesQuery();
-  const { scrollRef, scrollToPos } = useScrollRef();
+  const scrollRef = useRef<ScrollView>(null);
   const vertical = useScrollOffsets<CategoryId>();
 
   // Save the position of each category for the scroll to position from the horizontal menu
@@ -37,8 +36,8 @@ export default function MenuScreen() {
   );
 
   const scrollVertically = useCallback(
-    (categoryId: CategoryId) => scrollToPos({ y: vertical.offsets.get(categoryId) }),
-    [vertical.offsets, scrollToPos]
+    (categoryId: CategoryId) => scrollRef.current?.scrollTo({ y: vertical.offsets.get(categoryId) }),
+    [vertical.offsets]
   );
 
   // Split products by category
@@ -68,6 +67,15 @@ export default function MenuScreen() {
     <SafeAreaView style={{ backgroundColor: colorTheme.background.primary }}>
       <ScrollView
         ref={scrollRef}
+        refreshControl={
+          <RefreshControl
+            refreshing={false}
+            onRefresh={() => {
+              productsQuery.refetch();
+              categoryQuery.refetch();
+            }}
+          />
+        }
         stickyHeaderIndices={[1]}
         onScroll={(event) => setScrollY(event.nativeEvent.contentOffset.y)}
         nestedScrollEnabled

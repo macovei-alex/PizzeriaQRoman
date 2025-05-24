@@ -1,4 +1,12 @@
-import React, { useCallback, useLayoutEffect, useState } from "react";
+import React, {
+  ForwardedRef,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { ActivityIndicator, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { api } from "src/api";
 import { usePhoneNumberQuery } from "src/api/hooks/queries/usePhoneNumberQuery";
@@ -9,7 +17,11 @@ import useColorTheme from "src/hooks/useColorTheme";
 import logger from "src/utils/logger";
 import { showToast } from "src/utils/toast";
 
-export default function AccountForm() {
+export type AccountFormHandle = {
+  handleRefresh: () => Promise<void>;
+};
+
+function AccountForm(props: object, ref: ForwardedRef<AccountFormHandle>) {
   const authContext = useAuthContext();
   if (!authContext.account) throw new Error("Account not found in context");
   const account = authContext.account;
@@ -32,8 +44,21 @@ export default function AccountForm() {
     [account, phoneNumberQuery.data]
   );
   const [updatingInfo, setUpdatingInfo] = useState(false);
+  const abortController = useRef<AbortController | null>(null);
 
-  useLayoutEffect(
+  useImperativeHandle(ref, () => {
+    return {
+      handleRefresh: async () => {
+        if (abortController.current) abortController.current.abort();
+        await authContext.tryRefreshTokens();
+        await phoneNumberQuery
+          .refetch()
+          .then((result) => setAccountData((prev) => ({ ...prev, phoneNumber: result.data ?? "" })));
+      },
+    };
+  });
+
+  useEffect(
     () => setAccountData((prev) => ({ ...prev, phoneNumber: phoneNumberQuery.data ?? "" })),
     [phoneNumberQuery.data]
   );
@@ -41,7 +66,11 @@ export default function AccountForm() {
   const handleInfoUpdate = useCallback(async () => {
     setUpdatingInfo(true);
     try {
-      await api.axios.put(api.routes.account(account.id).self, accountData);
+      if (abortController.current) abortController.current.abort();
+      abortController.current = new AbortController();
+      await api.axios.put(api.routes.account(account.id).self, accountData, {
+        signal: abortController.current.signal,
+      });
       await authContext.tryRefreshTokens();
       await phoneNumberQuery.refetch();
     } catch (error) {
@@ -51,12 +80,13 @@ export default function AccountForm() {
       resetAccountData();
     } finally {
       setUpdatingInfo(false);
+      abortController.current = null;
     }
   }, [authContext, account, accountData, phoneNumberQuery, resetAccountData]);
 
   if (phoneNumberQuery.isError) return <ErrorComponent size="small" />;
 
-  const isLoading = phoneNumberQuery.isLoading || updatingInfo;
+  const isLoading = phoneNumberQuery.isFetching || updatingInfo;
   const textColor = isLoading ? colorTheme.text.disabled : colorTheme.text.primary;
   const borderColor = isLoading ? colorTheme.text.disabled : colorTheme.text.primary;
   const buttonsOpacity = isLoading ? 0.5 : 1;
@@ -147,6 +177,8 @@ export default function AccountForm() {
     </View>
   );
 }
+
+export default forwardRef<AccountFormHandle>(AccountForm);
 
 const styles = StyleSheet.create({
   container: {

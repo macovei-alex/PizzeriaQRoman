@@ -1,5 +1,13 @@
 import React, { useRef, useState } from "react";
-import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import useColorTheme from "src/hooks/useColorTheme";
 import ProductSection from "src/components/cart/CartScreen/ProductSection";
 import { useCartContext } from "src/context/CartContext/CartContext";
@@ -111,7 +119,9 @@ export default function CartScreen() {
       style={[styles.screen, { backgroundColor: colorTheme.background.primary }]}
     >
       <SafeAreaView>
-        <ScrollView>
+        <ScrollView
+          refreshControl={<RefreshControl refreshing={false} onRefresh={() => addressQuery.refetch()} />}
+        >
           <ScreenTitle title="Coșul meu" containerStyle={styles.titleScreenContainer} />
 
           <ProductSection />

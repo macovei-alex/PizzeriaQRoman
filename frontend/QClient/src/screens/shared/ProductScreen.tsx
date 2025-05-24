@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { RefreshControl, ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OptionList from "src/components/shared/ProductScreen/OptionListCard";
 import useColorTheme from "src/hooks/useColorTheme";
@@ -16,6 +16,7 @@ import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
 import { CartItemOptions } from "src/context/CartContext/types";
 import MorphingButton from "src/components/shared/ProductScreen/MorphingButton";
+import { showToast } from "src/utils/toast";
 
 type RouteProps =
   | RouteProp<MenuStackParamList, "ProductScreen">
@@ -48,6 +49,9 @@ export default function ProductScreen() {
   return (
     <SafeAreaView>
       <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={productQuery.isFetching} onRefresh={productQuery.refetch} />
+        }
         contentContainerStyle={styles.scrollViewContent}
         onScroll={(e) => setScrollY(e.nativeEvent.contentOffset.y)}
         onLayout={(e) => setVisibleHeight(e.nativeEvent.layout.height)}
@@ -72,8 +76,10 @@ export default function ProductScreen() {
         onPress={() => {
           if (!cartItemId) {
             addCartItem(product, cartItemOptions);
+            showToast("Produs adăugat în coș");
           } else {
             changeCartItemOptions(cartItemId, cartItemOptions);
+            showToast("Produs actualizat în coș");
           }
         }}
         scrollY={scrollY}

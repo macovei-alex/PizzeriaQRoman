@@ -1,7 +1,6 @@
 import React from "react";
 import { Dimensions, StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
 import useColorTheme from "src/hooks/useColorTheme";
-import { showToast } from "src/utils/toast";
 
 function calculateScrollProgress(scrollY: number, visibleHeight: number, contentHeight: number) {
   const maxScrollable = contentHeight - visibleHeight;
@@ -49,10 +48,7 @@ export default function MorphingButton({
   return (
     <View style={styles.floatingButtonContainer}>
       <TouchableOpacity
-        onPress={() => {
-          showToast("Produs adăugat in coș");
-          onPress();
-        }}
+        onPress={onPress}
         style={[styles.button, { backgroundColor: colorTheme.background.accent }, scrollingStyle]}
         activeOpacity={0.8}
       >

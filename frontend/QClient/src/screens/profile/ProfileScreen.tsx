@@ -1,7 +1,8 @@
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import React, { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import AccountForm from "src/components/profile/ProfileScreen/AccountForm";
+import { useRef } from "react";
+import React, { RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import AccountForm, { AccountFormHandle } from "src/components/profile/ProfileScreen/AccountForm";
 import TitleSection from "src/components/profile/ProfileScreen/TitleSection";
 import ArrowSvg from "src/components/svg/ArrowSvg";
 import { useAuthContext } from "src/context/AuthContext";
@@ -20,19 +21,27 @@ export default function ProfileScreen() {
   logger.render("ProfileScreen");
 
   const authContext = useAuthContext();
+  const accountId = authContext.account?.id;
+  if (!accountId) throw new Error("Account is not defined in ProfileScreen");
   const cartContext = useCartContext();
   const colorTheme = useColorTheme();
   const navigation = useNavigation<NavigationProps>();
 
+  const accountFormRef = useRef<AccountFormHandle>(null);
+
   return (
     <View style={[styles.container, { backgroundColor: colorTheme.background.primary }]}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={false} onRefresh={() => accountFormRef.current?.handleRefresh()} />
+        }
+      >
         <TitleSection />
 
         {/* text section */}
         <View style={[styles.textAreaContainer, { backgroundColor: colorTheme.background.primary }]}>
           {/* account data section */}
-          <AccountForm />
+          <AccountForm ref={accountFormRef} />
 
           {/* addresses button */}
           <TouchableOpacity

@@ -1,7 +1,7 @@
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import React, { forwardRef, useImperativeHandle, useLayoutEffect, useMemo, useState } from "react";
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import React, { forwardRef, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Address } from "src/api/types/Address";
 import useColorTheme from "src/hooks/useColorTheme";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
@@ -34,13 +34,6 @@ function AdditionalInfoSection(
   const [address, setAddress] = useState<Address | null>(null);
   const [additionalNotes, setAdditionalNotes] = useState<string | null>(null);
 
-  const addressDropdownOptions = useMemo(() => {
-    return addresses.map((address) => ({
-      label: address.addressString.slice(0, 30) + (address.addressString.length > 30 ? "..." : ""),
-      value: address.id,
-    }));
-  }, [addresses]);
-
   useImperativeHandle(
     ref,
     () => ({
@@ -55,6 +48,21 @@ function AdditionalInfoSection(
     setAddress(addresses.find((address) => address.primary) || addresses[0]);
   }, [addresses]);
 
+  const selectedAddressRef = useRef<Address | null>(null);
+  selectedAddressRef.current = address;
+
+  const addressDropdownOptions = useMemo<{ value: number; label: React.JSX.Element }[]>(() => {
+    const width = Dimensions.get("window").width - 84;
+    return addresses.map((addressOption) => ({
+      label: (
+        <View>
+          <Text style={[styles.addressPickerLabel, { width }]}>{addressOption.addressString}</Text>
+        </View>
+      ),
+      value: addressOption.id,
+    }));
+  }, [addresses]);
+
   return (
     <View style={styles.container}>
       <View style={styles.addressSection}>
@@ -66,8 +74,8 @@ function AdditionalInfoSection(
                 styles.addressPickerContainer,
                 { backgroundColor: colorTheme.background.elevated },
               ])}
+              dropdownIcon={<></>}
               selectedValue={address.id}
-              selectedItemStyle={styles.addressPickerLabel}
               options={addressDropdownOptions}
               onValueChange={(id) => setAddress(addresses.find((addr) => addr.id === id) || null)}
               primaryColor={colorTheme.background.success}
@@ -122,6 +130,7 @@ const styles = StyleSheet.create({
   },
   addressPickerLabel: {
     fontSize: 16,
+    paddingLeft: 4,
   },
   subsectionTitle: {
     fontSize: 20,

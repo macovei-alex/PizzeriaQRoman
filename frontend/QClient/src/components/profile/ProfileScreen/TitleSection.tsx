@@ -13,23 +13,15 @@ export default function TitleSection() {
   if (!authContext.account) throw new Error("Account not found");
 
   const colorTheme = useColorTheme();
-  const accentRgba = useMemo(
-    () => convertToRGBA(colorTheme.background.accent),
-    [colorTheme.background.accent]
-  );
+  const accentRgba = useMemo(() => {
+    const rgba = convertToRGBA(colorTheme.background.accent);
+    if (rgba) return `rgba(${rgba.r},${rgba.g},${rgba.b},0.6)`;
+    else return "rgba(0,0,0,0.6)";
+  }, [colorTheme.background.accent]);
 
   return (
     <ImageBackground source={images.menuBackground} style={styles.image}>
-      <View
-        style={[
-          styles.overlay,
-          {
-            backgroundColor: accentRgba
-              ? `rgba(${accentRgba.r},${accentRgba.g},${accentRgba.b},0.6)`
-              : "rgba(0,0,0,0.6)",
-          },
-        ]}
-      />
+      <View style={[styles.overlay, { backgroundColor: accentRgba }]} />
       <Text style={[styles.titleText, { color: colorTheme.text.onAccent }]} numberOfLines={2}>
         Bună, {authContext.account.givenName}!
       </Text>
