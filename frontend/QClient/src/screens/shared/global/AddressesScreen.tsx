@@ -72,11 +72,7 @@ export default function AddressesScreen() {
             onLongPress={() => showDeleteAddressDialog(address.id)}
             style={[styles.addressCard, { backgroundColor: colorTheme.background.card }]}
           >
-            <Text style={styles.addressText}>Localitatea: {address.city}</Text>
-            <Text style={styles.addressText}>Strada: {`${address.street} nr. ${address.streetNumber}`}</Text>
-            <Text style={styles.addressText}>
-              Blocul: {`Bloc ${address.block}, et. ${address.floor}, ap. ${address.apartment}`}
-            </Text>
+            <Text style={styles.addressText}>{address.addressString}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>

@@ -20,7 +20,7 @@ export default function AdditionalInfoSection({ address, additionalNotes }: Addi
         <Text style={styles.subsectionTitle}>Adresă de livrare</Text>
         <View style={[styles.addressContainer, { backgroundColor: colorTheme.background.elevated }]}>
           <Text style={[styles.addressText, { color: colorTheme.text.primary }]}>
-            {`${address.street}, No. ` + address.streetNumber}
+            {address.addressString}
           </Text>
         </View>
       </View>

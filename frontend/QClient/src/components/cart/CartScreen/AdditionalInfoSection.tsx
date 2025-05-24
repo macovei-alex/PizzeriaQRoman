@@ -11,7 +11,7 @@ import logger from "src/utils/logger";
 
 type NavigationProps = CompositeNavigationProp<
   NativeStackNavigationProp<CartStackParamList, "CartScreen">,
-  NativeStackNavigationProp<RootStackParamList, "AddressesModalScreen">
+  NativeStackNavigationProp<RootStackParamList>
 >;
 
 type AdditionalInfoSectionProps = {
@@ -36,7 +36,7 @@ function AdditionalInfoSection(
 
   const addressDropdownOptions = useMemo(() => {
     return addresses.map((address) => ({
-      label: `${address.street}, No. ` + address.streetNumber,
+      label: address.addressString.slice(0, 30) + (address.addressString.length > 30 ? "..." : ""),
       value: address.id,
     }));
   }, [addresses]);
@@ -66,14 +66,12 @@ function AdditionalInfoSection(
                 styles.addressPickerContainer,
                 { backgroundColor: colorTheme.background.elevated },
               ])}
+              selectedValue={address.id}
               selectedItemStyle={styles.addressPickerLabel}
               options={addressDropdownOptions}
-              selectedValue={address.id}
               onValueChange={(id) => setAddress(addresses.find((addr) => addr.id === id) || null)}
               primaryColor={colorTheme.background.success}
-              modalControls={{
-                modalProps: { animationType: "slide" },
-              }}
+              modalControls={{ modalProps: { animationType: "fade" } }}
             />
           ) : (
             <>
@@ -82,7 +80,7 @@ function AdditionalInfoSection(
               </Text>
               <TouchableOpacity
                 style={[styles.addAddressButton, { backgroundColor: colorTheme.background.accent }]}
-                onPress={() => navigation.navigate("AddressesModalScreen")}
+                onPress={() => navigation.navigate("AddressesScreen")}
               >
                 <Text style={{ color: colorTheme.text.onAccent }}>Adăugați o adresă</Text>
               </TouchableOpacity>

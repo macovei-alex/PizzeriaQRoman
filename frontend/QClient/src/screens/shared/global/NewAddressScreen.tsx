@@ -62,9 +62,9 @@ export default function NewAddressScreen() {
         .post<any, any, CreatedAddress>(api.routes.account(accountId).addresses, {
           addressString:
             newAddress.baseString +
-            (newAddress.block ? ", Blocul" + newAddress.block : "") +
-            (newAddress.floor ? ", Etajul" + newAddress.floor : "") +
-            (newAddress.apartment ? ", Apartamentul" + newAddress.apartment : ""),
+            (newAddress.block ? ", Blocul " + newAddress.block : "") +
+            (newAddress.floor ? ", Etajul " + newAddress.floor : "") +
+            (newAddress.apartment ? ", Apartamentul " + newAddress.apartment : ""),
           primary: true,
         })
         .then(() => {
