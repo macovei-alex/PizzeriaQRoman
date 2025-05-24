@@ -41,7 +41,9 @@ export default function OrderConfirmationScreen() {
               });
             }}
           >
-            <Text style={[styles.buttonText, { color: colorTheme.text.success }]}>Înapoi la comandă</Text>
+            <Text style={[styles.buttonText, { color: colorTheme.text.success }]} numberOfLines={2}>
+              Către comenzile dumneavoastră
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -74,15 +76,18 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   buttonContainer: {
+    marginHorizontal: 32,
     alignItems: "center",
     marginBottom: 20,
   },
   button: {
-    paddingHorizontal: 30,
-    paddingVertical: 10,
-    borderRadius: 15,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 32,
   },
   buttonText: {
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight: "600",
+    textAlign: "center",
   },
 });
