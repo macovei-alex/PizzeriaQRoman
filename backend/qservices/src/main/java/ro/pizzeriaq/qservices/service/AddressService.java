@@ -1,15 +1,13 @@
 package ro.pizzeriaq.qservices.service;
 
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.PersistenceContext;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ro.pizzeriaq.qservices.data.repository.AccountRepository;
 import ro.pizzeriaq.qservices.data.repository.AddressRepository;
 import ro.pizzeriaq.qservices.data.repository.AddressTypeRepository;
 import ro.pizzeriaq.qservices.service.DTO.AddressDto;
+import ro.pizzeriaq.qservices.service.DTO.CreateAddressDto;
 import ro.pizzeriaq.qservices.service.mappers.AddressMapper;
 
 import java.util.List;
@@ -24,9 +22,6 @@ public class AddressService {
 	private final AddressTypeRepository addressTypeRepository;
 	private final AddressMapper addressMapper;
 
-	@PersistenceContext
-	private final EntityManager entityManager;
-
 
 	public List<AddressDto> getAddressesForAccount(UUID accountId) {
 		return addressRepository.findAllActiveByAccountId(accountId)
@@ -36,36 +31,7 @@ public class AddressService {
 	}
 
 
-	@Transactional()
-	public AddressDto updateAddress(int id, AddressDto address) {
-		var existingAddress = addressRepository.findById(id)
-				.orElseThrow(() -> new EntityNotFoundException("Address not found"));
-		if (!existingAddress.getOrders().isEmpty()) {
-			existingAddress.setActive(false);
-			addressRepository.save(existingAddress);
-			addressRepository.flush();
-
-			entityManager.detach(existingAddress);
-			existingAddress.setActive(true);
-			existingAddress.setId(null);
-		}
-
-		if (!existingAddress.getAddressType().getName().equals(address.addressType())) {
-			var addressType = addressTypeRepository.findByName(address.addressType())
-					.orElseThrow(() -> new EntityNotFoundException("Address type with name ( %s ) not found"
-							.formatted(address.addressType())
-					));
-			addressMapper.updateEntity(existingAddress, address, addressType);
-		} else {
-			addressMapper.updateEntity(existingAddress, address, null);
-		}
-
-		var updatedAddress = addressRepository.save(existingAddress);
-		return addressMapper.fromEntity(updatedAddress);
-	}
-
-
-	public AddressDto createAddress(UUID userId, AddressDto address) {
+	public AddressDto createAddress(UUID userId, CreateAddressDto address) {
 		var account = accountRepository.findById(userId)
 				.orElseThrow(() -> new EntityNotFoundException("Account with id ( %s ) not found".formatted(userId)));
 

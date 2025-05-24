@@ -10,9 +10,9 @@ export default function useAddressesQuery() {
   const accountId = authContext.account.id;
 
   return useQuery<Address[], Error>({
+    queryKey: ["addresses"],
     queryFn: async () => {
       return (await api.axios.get<Address[]>(api.routes.account(accountId).addresses)).data;
     },
-    queryKey: ["addresses"],
   });
 }

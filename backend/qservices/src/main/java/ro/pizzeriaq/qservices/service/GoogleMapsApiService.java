@@ -6,6 +6,7 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import ro.pizzeriaq.qservices.service.DTO.navigation.GoogleApiDirections;
 import ro.pizzeriaq.qservices.service.DTO.navigation.GoogleApiGeocode;
+import ro.pizzeriaq.qservices.service.DTO.navigation.GoogleApiLocation;
 
 import javax.naming.ServiceUnavailableException;
 
@@ -73,5 +74,29 @@ public class GoogleMapsApiService {
 		}
 
 		return response.getResults().get(0).getFormattedAddress();
+	}
+
+
+	public GoogleApiLocation getGeocode(String address) throws ServiceUnavailableException {
+		String uri = UriComponentsBuilder.fromUriString("/geocode/json")
+				.queryParam("address", address)
+				.queryParam("key", apiKey)
+				.build()
+				.toUriString();
+
+		var response = restClient.get()
+				.uri(uri)
+				.retrieve()
+				.body(GoogleApiGeocode.class);
+
+		if (response == null) {
+			throw new ServiceUnavailableException("Google Maps API service is unavailable");
+		}
+
+		if(response.getStatus().equals("ZERO_RESULTS")) {
+			throw new IllegalArgumentException("Geocode not found for address: " + address);
+		}
+
+		return response.getResults().get(0).getGeometry().getLocation();
 	}
 }

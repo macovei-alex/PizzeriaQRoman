@@ -5,9 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
-public record AddressDto(
-		Integer id,
-		@NotBlank String addressType,
+public record CreateAddressDto(
 		@NotBlank String addressString,
 		@NotNull boolean isPrimary
 ) {

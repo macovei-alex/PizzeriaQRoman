@@ -95,7 +95,7 @@ export default function AddressesScreen() {
 const styles = StyleSheet.create({
   contaier: {
     flex: 1,
-    paddingBottom: 12,
+    paddingBottom: 16,
   },
   screenTitle: {
     marginBottom: 16,
@@ -115,13 +115,13 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   newAddressButton: {
-    padding: 16,
+    paddingVertical: 12,
     marginHorizontal: 12,
-    borderRadius: 24,
+    borderRadius: 12,
     alignItems: "center",
   },
   newAddressText: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "bold",
   },
 });

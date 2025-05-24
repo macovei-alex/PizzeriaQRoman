@@ -11,7 +11,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Message, MessageRole } from "src/api/types/Message";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
-import ChatMessage from "src/components/shared/global/ChatMessage/ChatMessage";
+import ChatMessage from "src/components/shared/global/ChatScreen/ChatMessage";
 import SearchIconSvg from "src/components/svg/SearchIconSvg";
 import useColorTheme from "src/hooks/useColorTheme";
 import logger from "src/utils/logger";
@@ -21,7 +21,7 @@ import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import { useConversationMutation } from "src/api/hooks/mutations/useConversationMutation";
 import TopBar from "src/components/shared/global/ChatScreen/TopBar";
 import useScrollRef from "src/hooks/useScrollRef";
-import ProductLinks from "src/components/shared/global/ChatMessage/ProductLinks";
+import ProductLinks from "src/components/shared/global/ChatScreen/ProductLinks";
 
 export default function ChatScreen() {
   logger.render("ChatScreen");

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ro.pizzeriaq.qservices.service.DTO.navigation.GoogleApiDirections;
+import ro.pizzeriaq.qservices.service.DTO.navigation.GoogleApiLocation;
 import ro.pizzeriaq.qservices.service.GoogleMapsApiService;
 
 import javax.naming.ServiceUnavailableException;
@@ -35,6 +36,12 @@ public class NavigationController {
 			@NotNull @RequestParam Double longitude
 	) throws ServiceUnavailableException {
 		return googleMapsApiService.getAddress(latitude, longitude);
+	}
+
+
+	@GetMapping("/coordinates")
+	public GoogleApiLocation getGeocode(@NotBlank @RequestParam String address) throws ServiceUnavailableException {
+		return googleMapsApiService.getGeocode(address);
 	}
 
 }

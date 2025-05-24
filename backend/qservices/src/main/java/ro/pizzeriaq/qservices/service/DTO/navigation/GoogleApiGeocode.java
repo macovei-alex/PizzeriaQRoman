@@ -9,11 +9,15 @@ import java.util.List;
 public class GoogleApiGeocode {
 
 	List<Result> results;
+
 	private String status;
 
 
 	@Data
 	public static class Result {
+
+		@JsonProperty("address_components")
+		private List<AddressComponent> addressComponents;
 
 		@JsonProperty("formatted_address")
 		private String formattedAddress;
@@ -29,7 +33,7 @@ public class GoogleApiGeocode {
 		@Data
 		public static class Geometry {
 
-			private Location location;
+			private GoogleApiLocation location;
 
 			@JsonProperty("location_type")
 			private String locationType;
@@ -38,18 +42,32 @@ public class GoogleApiGeocode {
 
 
 			@Data
-			public static class Location {
-				private double lat;
-				private double lng;
-			}
-
-
-			@Data
 			public static class Viewport {
-				private Location northeast;
-				private Location southwest;
+				private GoogleApiLocation northeast;
+				private GoogleApiLocation southwest;
 			}
+		}
 
+		@Data
+		public static class AddressComponent {
+
+			private String longName;
+
+			private String shortName;
+
+			private List<String> types;
+
+			@JsonProperty("postal_code")
+			private String postalCode;
+
+			@JsonProperty("locality")
+			private String locality;
+
+			@JsonProperty("administrative_area_level_1")
+			private String administrativeAreaLevel1;
+
+			@JsonProperty("country")
+			private String country;
 		}
 	}
 }

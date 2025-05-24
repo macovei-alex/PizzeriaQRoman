@@ -11,3 +11,8 @@ export type Address = {
   apartment: string;
   primary: boolean;
 };
+
+export type CreatedAddress = {
+  addressString: string;
+  primary: boolean;
+};

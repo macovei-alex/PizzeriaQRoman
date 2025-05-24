@@ -34,29 +34,11 @@ public class Address {
 	private AddressType addressType;
 
 
-	@Column(nullable = false, length = 40)
-	private String city;
+	@Column(nullable = false)
+	private String addressString;
 
 
-	@Column(nullable = false, length = 60)
-	private String street;
-
-
-	@Column(nullable = false, length = 20)
-	private String streetNumber;
-
-
-	@Column(length = 30)
-	private String block;
-
-
-	private int floor;
-
-
-	@Column(length = 20)
-	private String apartment;
-
-
+	@Column(nullable = false)
 	private boolean isPrimary;
 
 
@@ -75,12 +57,7 @@ public class Address {
 		return Objects.equals(id, other.id)
 				&& Objects.equals(account == null ? null : account.getId(), other.account == null ? null : other.account.getId())
 				&& Objects.equals(addressType, other.addressType)
-				&& Objects.equals(city, other.city)
-				&& Objects.equals(street, other.street)
-				&& Objects.equals(streetNumber, other.streetNumber)
-				&& Objects.equals(block, other.block)
-				&& floor == other.floor
-				&& Objects.equals(apartment, other.apartment)
+				&& Objects.equals(addressString, other.addressString)
 				&& isPrimary == other.isPrimary
 				&& isActive == other.isActive;
 	}

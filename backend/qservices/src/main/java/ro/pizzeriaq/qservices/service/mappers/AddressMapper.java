@@ -7,6 +7,7 @@ import ro.pizzeriaq.qservices.data.entity.Account;
 import ro.pizzeriaq.qservices.data.entity.Address;
 import ro.pizzeriaq.qservices.data.entity.AddressType;
 import ro.pizzeriaq.qservices.service.DTO.AddressDto;
+import ro.pizzeriaq.qservices.service.DTO.CreateAddressDto;
 
 import java.util.Objects;
 
@@ -18,44 +19,20 @@ public class AddressMapper {
 		return AddressDto.builder()
 				.id(entity.getId())
 				.addressType(entity.getAddressType().getName())
-				.city(entity.getCity())
-				.street(entity.getStreet())
-				.streetNumber(entity.getStreetNumber())
-				.block(entity.getBlock())
-				.floor(entity.getFloor())
-				.apartment(entity.getApartment())
+				.addressString(entity.getAddressString())
 				.isPrimary(entity.isPrimary())
 				.build();
 	}
 
 
-	public Address fromDto(@NonNull AddressDto dto, Account account, AddressType addressType) {
+	public Address fromDto(@NonNull CreateAddressDto dto, Account account, AddressType addressType) {
 		return Address.builder()
-				.id(Objects.equals(dto.id(), 0) ? null : dto.id())
+				.id(null)
 				.account(account)
 				.addressType(addressType)
-				.city(dto.city())
-				.street(dto.street())
-				.streetNumber(dto.streetNumber())
-				.block(dto.block())
-				.floor(dto.floor())
-				.apartment(dto.apartment())
+				.addressString(dto.addressString())
 				.isPrimary(dto.isPrimary())
 				.build();
-	}
-
-
-	public void updateEntity(@NonNull Address entity, @NonNull AddressDto dto, @Nullable AddressType addressType) {
-		if (!dto.addressType().equals(entity.getAddressType().getName())) {
-			entity.setAddressType(addressType);
-		}
-		entity.setCity(dto.city());
-		entity.setStreet(dto.street());
-		entity.setStreetNumber(dto.streetNumber());
-		entity.setBlock(dto.block());
-		entity.setFloor(dto.floor());
-		entity.setApartment(dto.apartment());
-		entity.setPrimary(dto.isPrimary());
 	}
 
 }

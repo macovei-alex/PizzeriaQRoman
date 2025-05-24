@@ -1,10 +1,12 @@
 package ro.pizzeriaq.qservices.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ro.pizzeriaq.qservices.config.annotations.AccountIdChecked;
 import ro.pizzeriaq.qservices.service.AddressService;
 import ro.pizzeriaq.qservices.service.DTO.AddressDto;
+import ro.pizzeriaq.qservices.service.DTO.CreateAddressDto;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,15 +29,8 @@ public class AddressController {
 
 	@PostMapping
 	@AccountIdChecked(allowAdmin = false)
-	public AddressDto createAddress(@PathVariable UUID accountId, @RequestBody AddressDto address) {
+	public AddressDto createAddress(@PathVariable UUID accountId, @Valid @RequestBody CreateAddressDto address) {
 		return addressService.createAddress(accountId, address);
-	}
-
-
-	@PutMapping("{addressId}")
-	@AccountIdChecked(allowAdmin = false)
-	public AddressDto updateAddress(@PathVariable int addressId, @RequestBody AddressDto address) {
-		return addressService.updateAddress(addressId, address);
 	}
 
 
