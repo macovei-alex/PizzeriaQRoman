@@ -11,10 +11,10 @@ import React, {
 import { api } from "src/api";
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import * as AuthSession from "expo-auth-session";
-import { ENV } from "src/constants/env";
 import logger from "src/utils/logger";
 import { z } from "zod";
 import * as SecureStore from "expo-secure-store";
+import { ENV } from "src/constants/env";
 
 export type AccountId = string;
 
@@ -52,8 +52,8 @@ type AuthContextType = {
 };
 
 const discovery = {
-  authorizationEndpoint: `${ENV.EXPO_PUBLIC_KEYCLOAK_REALM_URL}/protocol/openid-connect/auth`,
-  tokenEndpoint: `${ENV.EXPO_PUBLIC_KEYCLOAK_REALM_URL}/protocol/openid-connect/token`,
+  authorizationEndpoint: `${ENV.KEYCLOAK_REALM_URL}/protocol/openid-connect/auth`,
+  tokenEndpoint: `${ENV.KEYCLOAK_REALM_URL}/protocol/openid-connect/token`,
 };
 
 function extractAccountClaims(idToken: string): AccountClaims {
@@ -75,7 +75,7 @@ export function useAuthContext() {
 }
 
 const authAxios = axios.create({
-  baseURL: ENV.EXPO_PUBLIC_KEYCLOAK_REALM_URL,
+  baseURL: ENV.KEYCLOAK_REALM_URL,
   withCredentials: false,
   timeout: 5000,
 });
@@ -88,7 +88,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
   const [account, setAccount] = useState<AccountClaims | null>(null);
   const [request, , promptAsync] = AuthSession.useAuthRequest(
     {
-      clientId: ENV.EXPO_PUBLIC_KEYCLOAK_CLIENT_ID,
+      clientId: ENV.KEYCLOAK_CLIENT_ID,
       redirectUri: AuthSession.makeRedirectUri({
         scheme: "com.pizzeriaq",
         path: "redirect",
@@ -170,7 +170,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
       authAxios.post(
         "/protocol/openid-connect/logout",
         {
-          client_id: ENV.EXPO_PUBLIC_KEYCLOAK_CLIENT_ID,
+          client_id: ENV.KEYCLOAK_CLIENT_ID,
           refresh_token: refreshToken,
         },
         {
@@ -188,7 +188,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
         "/protocol/openid-connect/token",
         {
           grant_type: "refresh_token",
-          client_id: ENV.EXPO_PUBLIC_KEYCLOAK_CLIENT_ID,
+          client_id: ENV.KEYCLOAK_CLIENT_ID,
           refresh_token: refreshToken,
         },
         {

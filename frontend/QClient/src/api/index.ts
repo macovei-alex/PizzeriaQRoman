@@ -1,30 +1,30 @@
 import axios from "axios";
-import { ENV } from "src/constants/env";
 import { ProductId } from "./types/Product";
 import { AddressId } from "./types/Address";
 import { AccountId } from "src/context/AuthContext";
 import { OrderId } from "./types/order/Order";
+import { ENV } from "src/constants/env";
 
 export const api = {
   axios: axios.create({
-    baseURL: ENV.EXPO_PUBLIC_API_BASE_URL,
+    baseURL: ENV.API_BASE_URL,
     withCredentials: false,
     timeout: 5000,
   }),
 
   routes: Object.freeze({
     account: (accountId: AccountId) => {
-      const base = `/accounts/${accountId}`;
+      const accountBase = `/accounts/${accountId}`;
       return {
-        self: base,
-        phoneNumber: `${base}/phone-number`,
-        addresses: `${base}/addresses`,
-        address: (addressId: AddressId) => `${base}/addresses/${addressId}`,
-        orders: `${base}/orders`,
-        order: (orderId: OrderId) => `${base}/orders/${orderId}`,
+        self: accountBase,
+        phoneNumber: `${accountBase}/phone-number`,
+        addresses: `${accountBase}/addresses`,
+        address: (addressId: AddressId) => `${accountBase}/addresses/${addressId}`,
+        orders: `${accountBase}/orders`,
+        order: (orderId: OrderId) => `${accountBase}/orders/${orderId}`,
         search: {
-          self: `${base}/search`,
-          history: `${base}/search/history`,
+          self: `${accountBase}/search`,
+          history: `${accountBase}/search/history`,
         },
       };
     },

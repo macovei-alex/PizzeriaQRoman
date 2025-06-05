@@ -15,5 +15,5 @@ export function formatPrice(price: number) {
 }
 
 export function imageUri(imageName: string, imageVersion: number) {
-  return `${ENV.EXPO_PUBLIC_API_BASE_URL}/images/${imageName}?v=${imageVersion}`;
+  return `${ENV.API_BASE_URL}/images/${imageName}?v=${imageVersion}`;
 }
