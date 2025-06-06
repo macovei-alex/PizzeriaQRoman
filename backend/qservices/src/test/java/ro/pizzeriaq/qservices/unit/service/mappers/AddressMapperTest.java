@@ -1,12 +1,12 @@
 package ro.pizzeriaq.qservices.unit.service.mappers;
 
 import org.junit.jupiter.api.Test;
-import ro.pizzeriaq.qservices.data.entity.Account;
-import ro.pizzeriaq.qservices.data.entity.Address;
-import ro.pizzeriaq.qservices.data.entity.AddressType;
-import ro.pizzeriaq.qservices.service.DTO.AddressDto;
-import ro.pizzeriaq.qservices.service.DTO.CreateAddressDto;
-import ro.pizzeriaq.qservices.service.mappers.AddressMapper;
+import ro.pizzeriaq.qservices.data.entities.Account;
+import ro.pizzeriaq.qservices.data.entities.Address;
+import ro.pizzeriaq.qservices.data.entities.AddressType;
+import ro.pizzeriaq.qservices.data.dtos.AddressDto;
+import ro.pizzeriaq.qservices.data.dtos.CreateAddressDto;
+import ro.pizzeriaq.qservices.services.mappers.AddressMapper;
 
 import java.util.UUID;
 

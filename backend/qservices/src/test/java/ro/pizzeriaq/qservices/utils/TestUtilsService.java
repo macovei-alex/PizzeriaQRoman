@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import ro.pizzeriaq.qservices.data.repository.AccountRepository;
+import ro.pizzeriaq.qservices.repositories.AccountRepository;
 
 import java.util.List;
 import java.util.UUID;

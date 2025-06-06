@@ -12,8 +12,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import ro.pizzeriaq.qservices.service.EntityInitializerService;
-import ro.pizzeriaq.qservices.service.ProductCategoryService;
+import ro.pizzeriaq.qservices.services.EntityInitializerService;
+import ro.pizzeriaq.qservices.services.ProductCategoryService;
 import ro.pizzeriaq.qservices.utils.TestUtilsService;
 
 import static org.assertj.core.api.Assertions.assertThat;

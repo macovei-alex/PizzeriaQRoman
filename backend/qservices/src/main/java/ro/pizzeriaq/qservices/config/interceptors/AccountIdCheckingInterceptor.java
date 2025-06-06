@@ -11,7 +11,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import ro.pizzeriaq.qservices.config.annotations.AccountIdChecked;
 import ro.pizzeriaq.qservices.exceptions.AccessDeniedException;
-import ro.pizzeriaq.qservices.service.AuthenticationInsightsService;
+import ro.pizzeriaq.qservices.services.AuthenticationInsightsService;
 
 import java.util.Arrays;
 import java.util.UUID;

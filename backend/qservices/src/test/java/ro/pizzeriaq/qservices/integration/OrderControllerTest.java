@@ -16,14 +16,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.util.MultiValueMap;
-import ro.pizzeriaq.qservices.data.entity.OrderStatus;
-import ro.pizzeriaq.qservices.data.repository.AddressRepository;
-import ro.pizzeriaq.qservices.service.DTO.OptionListDTO;
-import ro.pizzeriaq.qservices.service.DTO.PlacedOrderDTO;
-import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
-import ro.pizzeriaq.qservices.service.EntityInitializerService;
-import ro.pizzeriaq.qservices.service.OrderService;
-import ro.pizzeriaq.qservices.service.ProductService;
+import ro.pizzeriaq.qservices.data.entities.OrderStatus;
+import ro.pizzeriaq.qservices.repositories.AddressRepository;
+import ro.pizzeriaq.qservices.data.dtos.OptionListDto;
+import ro.pizzeriaq.qservices.data.dtos.PlacedOrderDto;
+import ro.pizzeriaq.qservices.data.dtos.ProductDto;
+import ro.pizzeriaq.qservices.services.EntityInitializerService;
+import ro.pizzeriaq.qservices.services.OrderService;
+import ro.pizzeriaq.qservices.services.ProductService;
 import ro.pizzeriaq.qservices.utils.TestUtilsService;
 
 import java.math.BigDecimal;
@@ -155,7 +155,7 @@ public class OrderControllerTest {
 	@Test
 	void badPayloadValidation1() throws Exception {
 		testUtilsService.withDynamicMockUser((accountId) -> {
-			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+			PlacedOrderDto placedOrderDTO = PlacedOrderDto.builder()
 					.build();
 
 			mockMvc.perform(constructDefaultPostRequest(accountId)
@@ -167,7 +167,7 @@ public class OrderControllerTest {
 	@Test
 	void badPayloadValidation2() throws Exception {
 		testUtilsService.withDynamicMockUser((accountId) -> {
-			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+			PlacedOrderDto placedOrderDTO = PlacedOrderDto.builder()
 					.items(List.of())
 					.build();
 
@@ -181,9 +181,9 @@ public class OrderControllerTest {
 	@Test
 	void badPayloadValidation3() throws Exception {
 		testUtilsService.withDynamicMockUser((accountId) -> {
-			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+			PlacedOrderDto placedOrderDTO = PlacedOrderDto.builder()
 					.items(List.of(
-							PlacedOrderDTO.Item.builder().productId(0).count(1).optionLists(List.of()).build()))
+							PlacedOrderDto.Item.builder().productId(0).count(1).optionLists(List.of()).build()))
 					.build();
 
 			mockMvc.perform(constructDefaultPostRequest(accountId)
@@ -198,9 +198,9 @@ public class OrderControllerTest {
 		testUtilsService.withDynamicMockUser((accountId) -> {
 			var productId = productService.getProducts().stream().findFirst().orElseThrow().getId();
 
-			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+			PlacedOrderDto placedOrderDTO = PlacedOrderDto.builder()
 					.items(List.of(
-							PlacedOrderDTO.Item.builder().productId(productId).count(0).optionLists(List.of()).build()))
+							PlacedOrderDto.Item.builder().productId(productId).count(0).optionLists(List.of()).build()))
 					.build();
 
 			mockMvc.perform(constructDefaultPostRequest(accountId)
@@ -215,9 +215,9 @@ public class OrderControllerTest {
 		testUtilsService.withDynamicMockUser((accountId) -> {
 			var productId = productService.getProducts().stream().findFirst().orElseThrow().getId();
 
-			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+			PlacedOrderDto placedOrderDTO = PlacedOrderDto.builder()
 					.items(List.of(
-							PlacedOrderDTO.Item.builder().productId(productId).count(1).optionLists(null).build()
+							PlacedOrderDto.Item.builder().productId(productId).count(1).optionLists(null).build()
 					))
 					.build();
 
@@ -231,9 +231,9 @@ public class OrderControllerTest {
 	@Test
 	void badPayloadDBValues() throws Exception {
 		testUtilsService.withDynamicMockUser((accountId) -> {
-			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+			PlacedOrderDto placedOrderDTO = PlacedOrderDto.builder()
 					.items(List.of(
-							PlacedOrderDTO.Item.builder().productId(Integer.MAX_VALUE).count(1).optionLists(List.of()).build()
+							PlacedOrderDto.Item.builder().productId(Integer.MAX_VALUE).count(1).optionLists(List.of()).build()
 					))
 					.build();
 
@@ -251,10 +251,10 @@ public class OrderControllerTest {
 
 			assertThat(address).isNotNull();
 
-			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+			PlacedOrderDto placedOrderDTO = PlacedOrderDto.builder()
 					.addressId(address.getId())
 					.items(products.stream()
-							.map((p) -> PlacedOrderDTO.Item.builder()
+							.map((p) -> PlacedOrderDto.Item.builder()
 									.productId(p.getId())
 									.count(2)
 									.optionLists(List.of())
@@ -266,7 +266,7 @@ public class OrderControllerTest {
 			var historyOrders = orderService.getOrdersHistory(accountId, 0, 100);
 
 			BigDecimal expectedPrice = products.stream()
-					.map(ProductDTO::getPrice)
+					.map(ProductDto::getPrice)
 					.reduce(BigDecimal.ZERO, (acc, price) -> acc.add(price.multiply(BigDecimal.valueOf(2))));
 
 			mockMvc.perform(constructDefaultPostRequest(accountId)
@@ -289,10 +289,10 @@ public class OrderControllerTest {
 			var address = addressRepository.findAllActiveByAccountId(accountId).get(0);
 			var products = productService.getProducts();
 
-			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+			PlacedOrderDto placedOrderDTO = PlacedOrderDto.builder()
 					.addressId(address.getId())
 					.items(products.stream()
-							.map(product -> PlacedOrderDTO.Item.builder()
+							.map(product -> PlacedOrderDto.Item.builder()
 									.productId(product.getId())
 									.count(10)
 									.optionLists(List.of())
@@ -301,7 +301,7 @@ public class OrderControllerTest {
 					.build();
 
 			BigDecimal expectedPrice = products.stream()
-					.map(ProductDTO::getPrice)
+					.map(ProductDto::getPrice)
 					.reduce(BigDecimal.ZERO, (acc, price) -> acc.add(price.multiply(BigDecimal.valueOf(10))));
 
 			var historyOrders = orderService.getOrdersHistory(accountId, 0, 100);
@@ -329,11 +329,11 @@ public class OrderControllerTest {
 					.limit(5)
 					.toList();
 
-			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+			PlacedOrderDto placedOrderDTO = PlacedOrderDto.builder()
 					.addressId(address.getId())
 					.items(products.stream()
 							.map(product -> {
-								var orderItem = PlacedOrderDTO.Item.builder()
+								var orderItem = PlacedOrderDto.Item.builder()
 										.productId(product.getId())
 										.count(3)
 										.optionLists(List.of())
@@ -343,11 +343,11 @@ public class OrderControllerTest {
 									return orderItem;
 								}
 
-								OptionListDTO optionList = product.getOptionLists().get(0);
-								PlacedOrderDTO.Item.OptionList optionListDTO = PlacedOrderDTO.Item.OptionList.builder()
+								OptionListDto optionList = product.getOptionLists().get(0);
+								PlacedOrderDto.Item.OptionList optionListDTO = PlacedOrderDto.Item.OptionList.builder()
 										.optionListId(optionList.getId())
 										.options(List.of(
-												PlacedOrderDTO.Item.OptionList.Option.builder()
+												PlacedOrderDto.Item.OptionList.Option.builder()
 														.optionId(optionList.getOptions().get(0).getId())
 														.count(1)
 														.build()
@@ -395,11 +395,11 @@ public class OrderControllerTest {
 
 			AtomicInteger optionCounter = new AtomicInteger(0);
 
-			PlacedOrderDTO placedOrderDTO = PlacedOrderDTO.builder()
+			PlacedOrderDto placedOrderDTO = PlacedOrderDto.builder()
 					.addressId(address.getId())
 					.items(products.stream()
 							.map(product -> {
-								var orderItem = PlacedOrderDTO.Item.builder()
+								var orderItem = PlacedOrderDto.Item.builder()
 										.productId(product.getId())
 										.count(optionCounter.incrementAndGet())
 										.optionLists(List.of())
@@ -409,13 +409,13 @@ public class OrderControllerTest {
 									return orderItem;
 								}
 
-								OptionListDTO optionList = product.getOptionLists().get(0);
-								OptionListDTO.Option option = optionList.getOptions().get(0);
+								OptionListDto optionList = product.getOptionLists().get(0);
+								OptionListDto.Option option = optionList.getOptions().get(0);
 
-								PlacedOrderDTO.Item.OptionList optionListDTO = PlacedOrderDTO.Item.OptionList.builder()
+								PlacedOrderDto.Item.OptionList optionListDTO = PlacedOrderDto.Item.OptionList.builder()
 										.optionListId(optionList.getId())
 										.options(List.of(
-												PlacedOrderDTO.Item.OptionList.Option.builder()
+												PlacedOrderDto.Item.OptionList.Option.builder()
 														.optionId(option.getId())
 														.count(option.getMaxCount())
 														.build()
@@ -432,9 +432,9 @@ public class OrderControllerTest {
 
 			BigDecimal expectedPrice = products.stream()
 					.map((product) -> {
-						OptionListDTO.Option option = !product.getOptionLists().isEmpty()
+						OptionListDto.Option option = !product.getOptionLists().isEmpty()
 								? product.getOptionLists().get(0).getOptions().get(0)
-								: OptionListDTO.Option.builder().price(BigDecimal.ZERO).maxCount(1).build();
+								: OptionListDto.Option.builder().price(BigDecimal.ZERO).maxCount(1).build();
 						System.out.println("Product: " + product.getName() + " Option: " + option.getName());
 						return product.getPrice()
 								.add(option.getPrice().multiply(BigDecimal.valueOf(option.getMaxCount())))

@@ -8,9 +8,9 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ro.pizzeriaq.qservices.data.cache.LRUCache;
 import ro.pizzeriaq.qservices.data.cache.ThreadSafeLRUCache;
-import ro.pizzeriaq.qservices.service.AccountService;
-import ro.pizzeriaq.qservices.service.AuthenticationInsightsService;
-import ro.pizzeriaq.qservices.service.KeycloakService;
+import ro.pizzeriaq.qservices.services.AccountService;
+import ro.pizzeriaq.qservices.services.AuthenticationInsightsService;
+import ro.pizzeriaq.qservices.services.KeycloakService;
 
 import javax.naming.ServiceUnavailableException;
 import java.io.IOException;

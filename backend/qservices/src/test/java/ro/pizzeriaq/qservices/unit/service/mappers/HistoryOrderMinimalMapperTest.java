@@ -1,12 +1,12 @@
 package ro.pizzeriaq.qservices.unit.service.mappers;
 
 import org.junit.jupiter.api.Test;
-import ro.pizzeriaq.qservices.data.entity.Order;
-import ro.pizzeriaq.qservices.data.entity.OrderItem;
-import ro.pizzeriaq.qservices.data.entity.OrderStatus;
-import ro.pizzeriaq.qservices.data.entity.Product;
-import ro.pizzeriaq.qservices.service.DTO.HistoryOrderMinimalDTO;
-import ro.pizzeriaq.qservices.service.mappers.HistoryOrderMinimalMapper;
+import ro.pizzeriaq.qservices.data.entities.Order;
+import ro.pizzeriaq.qservices.data.entities.OrderItem;
+import ro.pizzeriaq.qservices.data.entities.OrderStatus;
+import ro.pizzeriaq.qservices.data.entities.Product;
+import ro.pizzeriaq.qservices.data.dtos.HistoryOrderMinimalDto;
+import ro.pizzeriaq.qservices.services.mappers.HistoryOrderMinimalMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -88,7 +88,7 @@ public class HistoryOrderMinimalMapperTest {
 				.orderItems(List.of())
 				.build();
 
-		HistoryOrderMinimalDTO expected = HistoryOrderMinimalDTO.builder()
+		HistoryOrderMinimalDto expected = HistoryOrderMinimalDto.builder()
 				.id(1)
 				.orderStatus(OrderStatus.RECEIVED.name())
 				.orderTimestamp(null)
@@ -114,7 +114,7 @@ public class HistoryOrderMinimalMapperTest {
 				))
 				.build();
 
-		HistoryOrderMinimalDTO expected = HistoryOrderMinimalDTO.builder()
+		HistoryOrderMinimalDto expected = HistoryOrderMinimalDto.builder()
 				.id(1)
 				.orderStatus(OrderStatus.RECEIVED.name())
 				.orderTimestamp(null)
@@ -124,8 +124,8 @@ public class HistoryOrderMinimalMapperTest {
 				.totalPrice(null)
 				.totalPriceWithDiscount(null)
 				.items(List.of(
-						HistoryOrderMinimalDTO.Item.builder().orderItemId(1).productId(1).count(1).build(),
-						HistoryOrderMinimalDTO.Item.builder().orderItemId(2).productId(2).count(2).build()
+						HistoryOrderMinimalDto.Item.builder().orderItemId(1).productId(1).count(1).build(),
+						HistoryOrderMinimalDto.Item.builder().orderItemId(2).productId(2).count(2).build()
 				))
 				.build();
 
@@ -149,7 +149,7 @@ public class HistoryOrderMinimalMapperTest {
 				))
 				.build();
 
-		HistoryOrderMinimalDTO expected = HistoryOrderMinimalDTO.builder()
+		HistoryOrderMinimalDto expected = HistoryOrderMinimalDto.builder()
 				.id(1)
 				.orderStatus(OrderStatus.DELIVERED.name())
 				.orderTimestamp(LocalDateTime.of(2000, 1, 1, 0, 0))
@@ -159,8 +159,8 @@ public class HistoryOrderMinimalMapperTest {
 				.totalPrice(BigDecimal.valueOf(100.0))
 				.totalPriceWithDiscount(BigDecimal.valueOf(90.0))
 				.items(List.of(
-						HistoryOrderMinimalDTO.Item.builder().orderItemId(1).productId(1).count(1).build(),
-						HistoryOrderMinimalDTO.Item.builder().orderItemId(2).productId(2).count(2).build()
+						HistoryOrderMinimalDto.Item.builder().orderItemId(1).productId(1).count(1).build(),
+						HistoryOrderMinimalDto.Item.builder().orderItemId(2).productId(2).count(2).build()
 				))
 				.build();
 

@@ -5,13 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ro.pizzeriaq.qservices.data.entity.OptionList;
-import ro.pizzeriaq.qservices.data.entity.Product;
-import ro.pizzeriaq.qservices.data.entity.ProductCategory;
-import ro.pizzeriaq.qservices.service.DTO.ProductWithOptionsDTO;
-import ro.pizzeriaq.qservices.service.mappers.OptionListMapper;
-import ro.pizzeriaq.qservices.service.mappers.ProductWithOptionsMapper;
-import ro.pizzeriaq.qservices.service.ImageService;
+import ro.pizzeriaq.qservices.data.entities.OptionList;
+import ro.pizzeriaq.qservices.data.entities.Product;
+import ro.pizzeriaq.qservices.data.entities.ProductCategory;
+import ro.pizzeriaq.qservices.data.dtos.ProductWithOptionsDto;
+import ro.pizzeriaq.qservices.services.mappers.OptionListMapper;
+import ro.pizzeriaq.qservices.services.mappers.ProductWithOptionsMapper;
+import ro.pizzeriaq.qservices.services.ImageService;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -110,7 +110,7 @@ public class ProductWithOptionsMapperTest {
 				.category(ProductCategory.builder().id(2).name("Pizza").build())
 				.build();
 
-		ProductWithOptionsDTO expected = ProductWithOptionsDTO.builder()
+		ProductWithOptionsDto expected = ProductWithOptionsDto.builder()
 				.id(10)
 				.name("Pizza")
 				.subtitle("Pizza subtitle")
@@ -140,7 +140,7 @@ public class ProductWithOptionsMapperTest {
 				.category(ProductCategory.builder().id(2).name("Pizza").build())
 				.build();
 
-		ProductWithOptionsDTO expected = ProductWithOptionsDTO.builder()
+		ProductWithOptionsDto expected = ProductWithOptionsDto.builder()
 				.id(10)
 				.name("Pizza")
 				.subtitle("Pizza subtitle")

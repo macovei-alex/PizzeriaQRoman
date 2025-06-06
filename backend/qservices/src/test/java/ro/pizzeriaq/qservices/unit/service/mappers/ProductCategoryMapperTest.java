@@ -1,9 +1,9 @@
 package ro.pizzeriaq.qservices.unit.service.mappers;
 
 import org.junit.jupiter.api.Test;
-import ro.pizzeriaq.qservices.data.entity.ProductCategory;
-import ro.pizzeriaq.qservices.service.DTO.ProductCategoryDTO;
-import ro.pizzeriaq.qservices.service.mappers.ProductCategoryMapper;
+import ro.pizzeriaq.qservices.data.entities.ProductCategory;
+import ro.pizzeriaq.qservices.data.dtos.ProductCategoryDto;
+import ro.pizzeriaq.qservices.services.mappers.ProductCategoryMapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,7 +32,7 @@ public class ProductCategoryMapperTest {
 				.name("Pizza")
 				.build();
 
-		ProductCategoryDTO expected = ProductCategoryDTO.builder()
+		ProductCategoryDto expected = ProductCategoryDto.builder()
 				.id(10)
 				.name("Pizza")
 				.build();

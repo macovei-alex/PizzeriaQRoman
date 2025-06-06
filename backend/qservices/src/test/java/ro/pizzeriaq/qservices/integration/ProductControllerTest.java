@@ -13,9 +13,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
-import ro.pizzeriaq.qservices.service.EntityInitializerService;
-import ro.pizzeriaq.qservices.service.ProductService;
+import ro.pizzeriaq.qservices.data.dtos.ProductDto;
+import ro.pizzeriaq.qservices.services.EntityInitializerService;
+import ro.pizzeriaq.qservices.services.ProductService;
 import ro.pizzeriaq.qservices.utils.TestUtilsService;
 
 import java.util.Comparator;
@@ -122,7 +122,7 @@ class ProductControllerTest {
 	void getProductWithValidIdAndOptionLists1() throws Exception {
 		testUtilsService.withDynamicMockUser((_) -> {
 			var productId = productService.getProducts().stream()
-					.sorted(Comparator.comparing(ProductDTO::getName))
+					.sorted(Comparator.comparing(ProductDto::getName))
 					.filter((p) -> p.getName().equals("Pizza Capriciosa"))
 					.findFirst()
 					.orElseThrow()
@@ -145,7 +145,7 @@ class ProductControllerTest {
 	void getProductWithValidIdAndOptionLists2() throws Exception {
 		testUtilsService.withDynamicMockUser((_) -> {
 			var productId = productService.getProducts().stream()
-					.sorted(Comparator.comparing(ProductDTO::getName))
+					.sorted(Comparator.comparing(ProductDto::getName))
 					.filter((p) -> p.getName().equals("Pizza Margherita"))
 					.findFirst()
 					.orElseThrow()

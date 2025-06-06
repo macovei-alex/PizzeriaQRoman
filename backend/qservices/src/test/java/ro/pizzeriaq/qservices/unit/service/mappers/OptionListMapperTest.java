@@ -1,10 +1,10 @@
 package ro.pizzeriaq.qservices.unit.service.mappers;
 
 import org.junit.jupiter.api.Test;
-import ro.pizzeriaq.qservices.data.entity.Option;
-import ro.pizzeriaq.qservices.data.entity.OptionList;
-import ro.pizzeriaq.qservices.service.DTO.OptionListDTO;
-import ro.pizzeriaq.qservices.service.mappers.OptionListMapper;
+import ro.pizzeriaq.qservices.data.entities.Option;
+import ro.pizzeriaq.qservices.data.entities.OptionList;
+import ro.pizzeriaq.qservices.data.dtos.OptionListDto;
+import ro.pizzeriaq.qservices.services.mappers.OptionListMapper;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -66,7 +66,7 @@ public class OptionListMapperTest {
 				.options(List.of())
 				.build();
 
-		OptionListDTO expected = OptionListDTO.builder()
+		OptionListDto expected = OptionListDto.builder()
 				.id(10)
 				.text("Pizza")
 				.options(List.of())
@@ -87,12 +87,12 @@ public class OptionListMapperTest {
 				))
 				.build();
 
-		OptionListDTO expected = OptionListDTO.builder()
+		OptionListDto expected = OptionListDto.builder()
 				.id(10)
 				.text("Pizza")
 				.options(List.of(
-						OptionListDTO.Option.builder().id(1).name("option1").build(),
-						OptionListDTO.Option.builder().id(2).name("option2").build()
+						OptionListDto.Option.builder().id(1).name("option1").build(),
+						OptionListDto.Option.builder().id(2).name("option2").build()
 				))
 				.build();
 
@@ -125,11 +125,11 @@ public class OptionListMapperTest {
 				))
 				.build();
 
-		OptionListDTO expected = OptionListDTO.builder()
+		OptionListDto expected = OptionListDto.builder()
 				.id(10)
 				.text("Pizza")
 				.options(List.of(
-						OptionListDTO.Option.builder()
+						OptionListDto.Option.builder()
 								.id(1)
 								.name("option1")
 								.additionalDescription("description1")
@@ -137,7 +137,7 @@ public class OptionListMapperTest {
 								.maxCount(3)
 								.price(BigDecimal.valueOf(10.0))
 								.build(),
-						OptionListDTO.Option.builder()
+						OptionListDto.Option.builder()
 								.id(2)
 								.name("option2")
 								.additionalDescription("description2")

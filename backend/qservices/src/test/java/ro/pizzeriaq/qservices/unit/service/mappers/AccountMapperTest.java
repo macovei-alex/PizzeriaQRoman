@@ -1,11 +1,11 @@
 package ro.pizzeriaq.qservices.unit.service.mappers;
 
 import org.junit.jupiter.api.Test;
-import ro.pizzeriaq.qservices.data.entity.Account;
+import ro.pizzeriaq.qservices.data.entities.Account;
 import ro.pizzeriaq.qservices.data.model.KeycloakUser;
-import ro.pizzeriaq.qservices.service.DTO.AccountDto;
-import ro.pizzeriaq.qservices.service.DTO.KeycloakAccountUpdateDto;
-import ro.pizzeriaq.qservices.service.mappers.AccountMapper;
+import ro.pizzeriaq.qservices.data.dtos.AccountDto;
+import ro.pizzeriaq.qservices.data.dtos.KeycloakAccountUpdateDto;
+import ro.pizzeriaq.qservices.services.mappers.AccountMapper;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;

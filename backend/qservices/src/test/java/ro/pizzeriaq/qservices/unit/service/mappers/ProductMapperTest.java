@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ro.pizzeriaq.qservices.data.entity.Product;
-import ro.pizzeriaq.qservices.data.entity.ProductCategory;
-import ro.pizzeriaq.qservices.service.DTO.ProductDTO;
-import ro.pizzeriaq.qservices.service.mappers.ProductMapper;
-import ro.pizzeriaq.qservices.service.ImageService;
+import ro.pizzeriaq.qservices.data.entities.Product;
+import ro.pizzeriaq.qservices.data.entities.ProductCategory;
+import ro.pizzeriaq.qservices.data.dtos.ProductDto;
+import ro.pizzeriaq.qservices.services.mappers.ProductMapper;
+import ro.pizzeriaq.qservices.services.ImageService;
 
 import java.math.BigDecimal;
 
@@ -77,7 +77,7 @@ public class ProductMapperTest {
 				.category(ProductCategory.builder().id(2).build())
 				.build();
 
-		ProductDTO expected = ProductDTO.builder()
+		ProductDto expected = ProductDto.builder()
 				.id(10)
 				.name("Pizza")
 				.subtitle("Pizza subtitle")
@@ -105,7 +105,7 @@ public class ProductMapperTest {
 				.category(ProductCategory.builder().id(2).build())
 				.build();
 
-		ProductDTO expected = ProductDTO.builder()
+		ProductDto expected = ProductDto.builder()
 				.id(10)
 				.name("Pizza")
 				.subtitle("Pizza subtitle")
