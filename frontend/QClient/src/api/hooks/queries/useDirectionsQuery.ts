@@ -14,10 +14,9 @@ export function useDirectionsQuery(origin?: LatLng, destination?: LatLng) {
     queryFn: async ({ signal }) => {
       if (!originRef.current || !destinationRef.current) return [];
       const data = (
-        await api.axios.get<Directions>(
-          api.routes.navigation.directions(originRef.current, destinationRef.current),
-          { signal }
-        )
+        await api.axios.get<Directions>(api.routes.directions(originRef.current, destinationRef.current), {
+          signal,
+        })
       ).data;
       if (data.routes.length) {
         const points = decode(data.routes[0].overview_polyline.points).map(([latitude, longitude]) => ({

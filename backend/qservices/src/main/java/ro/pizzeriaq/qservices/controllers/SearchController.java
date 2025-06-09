@@ -12,14 +12,14 @@ import javax.naming.ServiceUnavailableException;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/accounts/{accountId}/search")
+@RequestMapping("/accounts/{accountId}")
 @AllArgsConstructor
 public class SearchController {
 
 	private final TypesenseQueryService typesenseQueryService;
 
 
-	@GetMapping()
+	@GetMapping("/searches")
 	@AccountIdChecked
 	public TypesenseLookupResponseDto queryPizza(
 			@PathVariable UUID accountId,
@@ -29,14 +29,14 @@ public class SearchController {
 	}
 
 
-	@DeleteMapping()
+	@DeleteMapping("/searches")
 	@AccountIdChecked
 	public void deleteSearchHistory(@PathVariable UUID accountId) {
 		typesenseQueryService.deleteConversationForAccount(accountId);
 	}
 
 
-	@GetMapping("/history")
+	@GetMapping("/search-history")
 	@AccountIdChecked
 	public ResponseEntity<TypesenseConversationResultDto> getConversationHistory(
 			@PathVariable UUID accountId

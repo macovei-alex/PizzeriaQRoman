@@ -29,7 +29,7 @@ export default function TopBar() {
         onPress: () => {
           queryClient.setQueryData<Message[]>(["messages", accountId], () => []);
           api.axios
-            .delete(api.routes.account(accountId).search.self)
+            .delete(api.routes.account(accountId).searches)
             .then(() => queryClient.invalidateQueries({ queryKey: ["messages", accountId] }))
             .catch((error) => logger.error(error.message));
         },

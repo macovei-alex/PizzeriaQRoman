@@ -22,27 +22,23 @@ export const api = {
         address: (addressId: AddressId) => `${accountBase}/addresses/${addressId}`,
         orders: `${accountBase}/orders`,
         order: (orderId: OrderId) => `${accountBase}/orders/${orderId}`,
-        search: {
-          self: `${accountBase}/search`,
-          history: `${accountBase}/search/history`,
-        },
+        searches: `${accountBase}/searches`,
+        searchHistory: `${accountBase}/search-history`,
       };
     },
     categories: "/categories",
     products: "/products",
     product: (productId: ProductId) => `/products/${productId}`,
-    navigation: {
-      directions: (
-        origin: { latitude: number; longitude: number },
-        destination: { latitude: number; longitude: number }
-      ) =>
-        `/navigation/directions?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}`,
+    directions: (
+      origin: { latitude: number; longitude: number },
+      destination: { latitude: number; longitude: number }
+    ) =>
+      `/directions?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}`,
+    locations: {
       address: (latitude: number, longitude: number) =>
-        `/navigation/address?latitude=${latitude}&longitude=${longitude}`,
-      coordinates: (address: string) => `/navigation/coordinates?address=${encodeURIComponent(address)}`,
+        `/locations?latitude=${latitude}&longitude=${longitude}`,
+      coordinates: (address: string) => `/locations?address=${encodeURIComponent(address)}`,
     },
-    notifications: {
-      pushTokens: "/notifications/push-tokens",
-    },
+    devices: "/devices",
   }),
 };

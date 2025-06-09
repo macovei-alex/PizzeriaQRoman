@@ -1,20 +1,18 @@
 package ro.pizzeriaq.qservices.controllers;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ro.pizzeriaq.qservices.data.dtos.navigation.GoogleApiDirections;
-import ro.pizzeriaq.qservices.data.dtos.navigation.GoogleApiLocation;
 import ro.pizzeriaq.qservices.services.GoogleMapsApiService;
 
 import javax.naming.ServiceUnavailableException;
 
 @RestController
-@RequestMapping("/navigation")
 @AllArgsConstructor
 public class NavigationController {
 
@@ -23,25 +21,28 @@ public class NavigationController {
 
 	@GetMapping("/directions")
 	public GoogleApiDirections getDirections(
-			@NotBlank @RequestParam String origin,
-			@NotBlank @RequestParam String destination
+			@RequestParam @NotBlank String origin,
+			@RequestParam @NotBlank  String destination
 	) throws ServiceUnavailableException {
 		return googleMapsApiService.getDirections(origin, destination);
 	}
 
 
-	@GetMapping("/address")
-	public String getAddress(
-			@NotNull @RequestParam Double latitude,
-			@NotNull @RequestParam Double longitude
+	@GetMapping("/locations")
+	public ResponseEntity<?> getAddress(
+			@RequestParam(required = false) String address,
+			@RequestParam(required = false) Double latitude,
+			@RequestParam(required = false) Double longitude
 	) throws ServiceUnavailableException {
-		return googleMapsApiService.getAddress(latitude, longitude);
-	}
+		if (StringUtils.hasText(address)) {
+			return ResponseEntity.ok(googleMapsApiService.getGeocode(address));
+		}
+		else if (latitude != null && longitude != null) {
+			return ResponseEntity.ok(googleMapsApiService.getAddress(latitude, longitude));
+		}
 
-
-	@GetMapping("/coordinates")
-	public GoogleApiLocation getGeocode(@NotBlank @RequestParam String address) throws ServiceUnavailableException {
-		return googleMapsApiService.getGeocode(address);
+		return ResponseEntity.badRequest()
+				.body("Either 'address' or both 'latitude' and 'longitude' must be provided as request parameters.");
 	}
 
 }

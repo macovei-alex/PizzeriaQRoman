@@ -38,7 +38,7 @@ async function registerForPushNotificationsAsync() {
     } else {
       // User accepted push notifications before, but has blocked them since, so we don't want to ask again
       if (lastNotificationToken !== "revoked") {
-        api.axios.delete(api.routes.notifications.pushTokens, { data: { token: lastNotificationToken } });
+        api.axios.delete(api.routes.devices, { data: { token: lastNotificationToken } });
         storage.set("notificationToken", "revoked");
         storage.delete("notificationTokenSent");
       }
@@ -58,13 +58,13 @@ async function registerForPushNotificationsAsync() {
       return lastToken;
     } else if (lastToken === newToken && !tokenSent) {
       // User has push notifications permissions enabled, but token has not been sent to server
-      await api.axios.post(api.routes.notifications.pushTokens, { token: lastToken });
+      await api.axios.post(api.routes.devices, { token: lastToken });
       storage.set("notificationTokenSent", true);
       return lastToken;
     } else if (lastToken !== newToken) {
       // User has just accepted push notifications, so token is sent to server
       storage.set("notificationToken", newToken);
-      await api.axios.post(api.routes.notifications.pushTokens, { token: newToken });
+      await api.axios.post(api.routes.devices, { token: newToken });
       storage.set("notificationTokenSent", true);
       return newToken;
     } else {

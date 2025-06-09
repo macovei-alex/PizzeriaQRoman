@@ -30,12 +30,16 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
-				.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
+				.oauth2ResourceServer(oauth2 -> oauth2.jwt(
+						jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
+				)
 				.oauth2Client(Customizer.withDefaults())
-				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.sessionManagement(session ->
+						session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				)
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/notifications/push-tokens").permitAll()
-						.requestMatchers("/notifications/send").hasAuthority(Authorities.ADMIN.getName())
+						.requestMatchers("/devices").permitAll()
+						.requestMatchers("/notifications").hasAuthority(Authorities.ADMIN.getName())
 						.requestMatchers("/accounts").hasAuthority(Authorities.ADMIN.getName())
 						.anyRequest().authenticated()
 				)

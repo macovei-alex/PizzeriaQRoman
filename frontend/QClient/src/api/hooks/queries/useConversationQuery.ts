@@ -50,7 +50,7 @@ export function useConversationQuery() {
     queryFn: async () => {
       if (!productsQuery.data) throw new Error("Products data is required");
       const response = await api.axios.get<{ hits: { document: MessageDto }[] }>(
-        api.routes.account(accountId).search.history
+        api.routes.account(accountId).searchHistory
       );
       if (response.status === axios.HttpStatusCode.NoContent) return [];
       return response.data.hits

@@ -12,7 +12,7 @@ export function useConversationMutation() {
 
   return useMutation<AxiosResponse<Message[], any>, Error, Message, Message[]>({
     mutationFn: async (newMessage) => {
-      return api.axios.get<Message[]>(api.routes.account(accountId).search.self, {
+      return api.axios.get<Message[]>(api.routes.account(accountId).searches, {
         timeout: 10000,
         params: {
           q: newMessage.message,
