@@ -10,6 +10,9 @@ import ro.pizzeriaq.qservices.data.dtos.PushNotificationTokenDto;
 import ro.pizzeriaq.qservices.services.NotificationsService;
 
 import java.net.URI;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @RestController
 @AllArgsConstructor
@@ -27,13 +30,15 @@ public class NotificationsController {
 	@PostMapping("/devices")
 	public ResponseEntity<Void> registerDevice(@RequestBody @Valid PushNotificationTokenDto notificationToken) {
 		notificationsService.addPushToken(notificationToken.getToken());
-		return ResponseEntity.created(URI.create("/devices/" + notificationToken.getToken())).build();
+		var encodedToken = URLEncoder.encode(notificationToken.getToken(), StandardCharsets.UTF_8);
+		return ResponseEntity.created(URI.create("/devices/" + encodedToken)).build();
 	}
 
 
-	@DeleteMapping("/devices/{notificationToken}")
-	public ResponseEntity<Void> unregisterDevice(@PathVariable @NotBlank String notificationToken) {
-		notificationsService.removePushToken(notificationToken);
+	@DeleteMapping("/devices/{encodedToken}")
+	public ResponseEntity<Void> unregisterDevice(@PathVariable @NotBlank String encodedToken) {
+		var token = URLDecoder.decode(encodedToken, StandardCharsets.UTF_8);
+		notificationsService.removePushToken(token);
 		return ResponseEntity.noContent().build();
 	}
 
