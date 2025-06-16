@@ -46,9 +46,8 @@ public class GoogleMapsApiService {
 				.retrieve()
 				.body(GoogleApiDirections.class);
 
-		if (response == null) {
-			throw new ServiceUnavailableException("Google Maps API service is unavailable");
-		}
+		throwIfInvalid(response);
+
 		return response;
 	}
 
@@ -65,13 +64,7 @@ public class GoogleMapsApiService {
 				.retrieve()
 				.body(GoogleApiGeocode.class);
 
-		if (response == null) {
-			throw new ServiceUnavailableException("Google Maps API service is unavailable");
-		}
-
-		if(response.getStatus().equals("ZERO_RESULTS")) {
-			throw new IllegalArgumentException("Address not found");
-		}
+		throwIfInvalid(response);
 
 		return response.getResults().get(0).getFormattedAddress();
 	}
@@ -89,14 +82,38 @@ public class GoogleMapsApiService {
 				.retrieve()
 				.body(GoogleApiGeocode.class);
 
-		if (response == null) {
-			throw new ServiceUnavailableException("Google Maps API service is unavailable");
-		}
-
-		if(response.getStatus().equals("ZERO_RESULTS")) {
-			throw new IllegalArgumentException("Geocode not found for address: " + address);
-		}
+		throwIfInvalid(response);
 
 		return response.getResults().get(0).getGeometry().getLocation();
+	}
+
+
+	private void throwIfInvalid(GoogleApiGeocode response) throws ServiceUnavailableException {
+		if (response == null) {
+			throw new ServiceUnavailableException("Google Maps Geocode Api service is unavailable");
+		} else if (response.getStatus() == null) {
+			throw new InternalError("Something went wrong with the Google Maps Geocode API request. No status was returned. Check for DTO schema changes.");
+		} else if (response.getStatus().equals("ZERO_RESULTS")) {
+			throw new IllegalArgumentException("Address not found");
+		} else if (response.getStatus().equals("REQUEST_DENIED")) {
+			throw new InternalError("The Google Maps Geocode API request was denied with the following message: "
+					+ response.getErrorMessage()
+			);
+		}
+	}
+
+
+	private void throwIfInvalid(GoogleApiDirections response) throws ServiceUnavailableException {
+		if (response == null) {
+			throw new ServiceUnavailableException("Google Maps Directions API service is unavailable");
+		} else if (response.getStatus() == null) {
+			throw new InternalError("Something went wrong with the Google Maps Directions API request. No status was returned. Check for DTO schema changes.");
+		} else if (response.getStatus().equals("ZERO_RESULTS")) {
+			throw new IllegalArgumentException("Address not found");
+		} else if (response.getStatus().equals("REQUEST_DENIED")) {
+			throw new InternalError("The Google Maps Directions API request was denied with the following message: "
+					+ response.getErrorMessage()
+			);
+		}
 	}
 }

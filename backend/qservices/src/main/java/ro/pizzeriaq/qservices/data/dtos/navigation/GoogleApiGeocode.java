@@ -12,6 +12,9 @@ public class GoogleApiGeocode {
 
 	private String status;
 
+	@JsonProperty("error_message")
+	private String errorMessage;
+
 
 	@Data
 	public static class Result {
