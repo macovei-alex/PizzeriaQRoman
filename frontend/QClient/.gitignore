@@ -39,7 +39,6 @@ yarn-error.*
 *.session.sql
 android/
 ios/
-!dev/**/*/
 .env*
 
 pizzeriaq-firebase-adminsdk-*.json

@@ -14,8 +14,7 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "eslint .",
-    "build-apk": "npx expo run:android --variant release -d && copy .\\android\\app\\build\\outputs\\apk\\release\\app-release.apk .\\dist\\android\\app-release.apk",
-    "install-apk": "adb uninstall com.pizzeriaq && adb install .\\dist\\android\\app-release.apk"
+    "eas-build-pre-install": "node scripts/checkEnvVars.js"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
@@ -77,3 +76,4 @@
   },
   "private": true
 }
+

@@ -1,28 +1,7 @@
 import "dotenv/config";
 import { ExpoConfig } from "@expo/config";
-import { z } from "zod";
-
-const fullEnvSchema = z.object({
-  EXPO_PUBLIC_KEYCLOAK_REALM_URL: z.string().url(),
-  EXPO_PUBLIC_KEYCLOAK_CLIENT_ID: z.string(),
-  EXPO_PUBLIC_API_BASE_URL: z.string().url(),
-  GOOGLE_MAPS_API_KEY: z.string(),
-});
-
-const envUnwrapped = {
-  EXPO_PUBLIC_KEYCLOAK_REALM_URL: process.env.EXPO_PUBLIC_KEYCLOAK_REALM_URL,
-  EXPO_PUBLIC_KEYCLOAK_CLIENT_ID: process.env.EXPO_PUBLIC_KEYCLOAK_CLIENT_ID,
-  EXPO_PUBLIC_API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL,
-  GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
-};
 
 export default (): ExpoConfig => {
-  try {
-    fullEnvSchema.parse(envUnwrapped);
-  } catch (error) {
-    throw new Error("Invalid environment variables: " + error);
-  }
-
   return {
     owner: "mac02",
     name: "PizzeriaQ",
