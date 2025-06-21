@@ -95,7 +95,7 @@ export default function OrderCard({ order, containerStyle }: OrderCardProps) {
           {/* status */}
           <TouchableOpacity
             disabled={order.orderStatus !== "IN_DELIVERY"}
-            onPress={() => navigation.navigate("OrderDeliveryScreen")}
+            onPress={() => navigation.navigate("OrderDeliveryScreen", { orderId: order.id })}
           >
             <Text
               style={[

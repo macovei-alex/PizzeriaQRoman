@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
-import { useCurrentLocation } from "src/hooks/useCurrentLocation";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet } from "react-native";
 import useColorTheme from "src/hooks/useColorTheme";
@@ -10,26 +9,44 @@ import logger from "src/utils/logger";
 import HomeIconSvg from "src/components/svg/HomeIconSvg";
 import CartIconSvg from "src/components/svg/CartIconSvg";
 import { useDirectionsQuery } from "src/api/hooks/queries/useDirectionsQuery";
-import PermissionDenied from "src/components/shared/generic/PermissionDenied";
+import { RootStackParamList } from "src/navigation/RootStackNavigator";
+import { RouteProp, useRoute } from "@react-navigation/native";
+import { useQuery } from "@tanstack/react-query";
+import { mapsCoordinatesManualOptions } from "src/api/hooks/options/mapsCoordinatesManualOptions";
+import { useFullOrderQuery } from "src/api/hooks/queries/useFullOrderQuery";
 
 const DESTINATION = {
   latitude: 45.46958477253526,
   longitude: 28.033678383941893,
 };
 
+type RouteProps = RouteProp<RootStackParamList, "OrderDeliveryScreen">;
+
 export default function OrderDeliveryScreen() {
   logger.render("OrderDeliveryScreen");
 
   const colorTheme = useColorTheme();
-  const { currentLocation, permissionAllowed } = useCurrentLocation();
-  const directionsQuery = useDirectionsQuery(currentLocation?.coords, DESTINATION);
+  const route = useRoute<RouteProps>();
+  const fullOrderQuery = useFullOrderQuery(route.params.orderId);
+  const deliveryCoordinatesQuery = useQuery(
+    mapsCoordinatesManualOptions(fullOrderQuery.data?.address.addressString, !!fullOrderQuery.data)
+  );
+  const deliveryLocation = deliveryCoordinatesQuery.data
+    ? {
+        latitude: deliveryCoordinatesQuery.data.lat,
+        longitude: deliveryCoordinatesQuery.data.lng,
+      }
+    : undefined;
+  const directionsQuery = useDirectionsQuery(deliveryLocation, DESTINATION);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  if (!permissionAllowed) {
-    return <PermissionDenied text="Vă rugăm să permiteți accesul la locație pentru a urmări livrarea." />;
-  }
-  if (currentLocation === null || directionsQuery.isLoading) return <ScreenActivityIndicator />;
+  if (fullOrderQuery.isFetching || deliveryCoordinatesQuery.isFetching || directionsQuery.isFetching)
+    return <ScreenActivityIndicator />;
+  if (fullOrderQuery.isError) return <ErrorComponent onRetry={fullOrderQuery.refetch} />;
+  if (deliveryCoordinatesQuery.isError) return <ErrorComponent onRetry={deliveryCoordinatesQuery.refetch} />;
   if (directionsQuery.isError) return <ErrorComponent onRetry={directionsQuery.refetch} />;
+
+  if (!deliveryLocation) throw new Error("Delivery location is not defined in OrderDeliveryScreen");
 
   const points = directionsQuery.data;
 
@@ -40,8 +57,8 @@ export default function OrderDeliveryScreen() {
         style={styles.map}
         provider={PROVIDER_GOOGLE}
         region={{
-          latitude: currentLocation.coords.latitude,
-          longitude: currentLocation.coords.longitude,
+          latitude: deliveryLocation.latitude,
+          longitude: deliveryLocation.longitude,
           latitudeDelta: 0.02,
           longitudeDelta: 0.02,
         }}
@@ -49,8 +66,8 @@ export default function OrderDeliveryScreen() {
         <Marker
           tracksViewChanges={!isLoaded}
           coordinate={{
-            latitude: currentLocation.coords.latitude,
-            longitude: currentLocation.coords.longitude,
+            latitude: deliveryLocation.latitude,
+            longitude: deliveryLocation.longitude,
           }}
           title="Adresa ta"
         >

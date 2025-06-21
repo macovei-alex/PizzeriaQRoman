@@ -1,6 +1,10 @@
+import { UseQueryOptions } from "@tanstack/react-query";
 import { api } from "src/api";
 
-export function mapsAddressManualOptions(latitude: number, longitude: number) {
+export function mapsAddressManualOptions(
+  latitude: number,
+  longitude: number
+): UseQueryOptions<string, Error> {
   return {
     queryKey: ["navigation", "address", latitude, longitude],
     queryFn: async () =>

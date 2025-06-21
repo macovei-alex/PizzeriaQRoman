@@ -7,6 +7,7 @@ import ChatScreen from "src/screens/shared/global/ChatScreen";
 import OrderDeliveryScreen from "src/screens/shared/global/OrderDeliveryScreen";
 import NewAddressScreen from "src/screens/shared/global/NewAddressScreen";
 import AddressesScreen from "src/screens/shared/global/AddressesScreen";
+import { OrderId } from "src/api/types/order/Order";
 
 export type RootStackParamList = {
   MainTabNavigator: NavigatorScreenParams<MainTabParamList>;
@@ -14,7 +15,7 @@ export type RootStackParamList = {
   NewAddressScreen: undefined;
   OrderConfirmationScreen: undefined;
   ChatScreen: undefined;
-  OrderDeliveryScreen: undefined;
+  OrderDeliveryScreen: { orderId: OrderId };
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
