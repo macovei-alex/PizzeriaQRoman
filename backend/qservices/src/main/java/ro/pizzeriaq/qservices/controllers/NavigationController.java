@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ro.pizzeriaq.qservices.data.dtos.navigation.GoogleApiDirections;
+import ro.pizzeriaq.qservices.data.dtos.navigation.GoogleApiLocation;
 import ro.pizzeriaq.qservices.services.GoogleMapsApiService;
+import ro.pizzeriaq.qservices.services.RestaurantConstantsService;
 
 import javax.naming.ServiceUnavailableException;
 
@@ -17,6 +19,7 @@ import javax.naming.ServiceUnavailableException;
 public class NavigationController {
 
 	private final GoogleMapsApiService googleMapsApiService;
+	private final RestaurantConstantsService restaurantConstantsService;
 
 
 	@GetMapping("/directions")
@@ -43,6 +46,12 @@ public class NavigationController {
 
 		return ResponseEntity.badRequest()
 				.body("Either 'address' or both 'latitude' and 'longitude' must be provided as request parameters.");
+	}
+
+
+	@GetMapping("/locations/restaurant")
+	public GoogleApiLocation getRestaurantLocation() {
+		return restaurantConstantsService.getRestaurantLocation();
 	}
 
 }

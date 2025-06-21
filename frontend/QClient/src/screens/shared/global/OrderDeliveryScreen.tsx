@@ -14,11 +14,7 @@ import { RouteProp, useRoute } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
 import { mapsCoordinatesManualOptions } from "src/api/hooks/options/mapsCoordinatesManualOptions";
 import { useFullOrderQuery } from "src/api/hooks/queries/useFullOrderQuery";
-
-const DESTINATION = {
-  latitude: 45.46958477253526,
-  longitude: 28.033678383941893,
-};
+import useRestaurantLocationQuery from "src/api/hooks/queries/useRestaurantLocation";
 
 type RouteProps = RouteProp<RootStackParamList, "OrderDeliveryScreen">;
 
@@ -27,25 +23,52 @@ export default function OrderDeliveryScreen() {
 
   const colorTheme = useColorTheme();
   const route = useRoute<RouteProps>();
+  const restaurantLocationQuery = useRestaurantLocationQuery();
   const fullOrderQuery = useFullOrderQuery(route.params.orderId);
   const deliveryCoordinatesQuery = useQuery(
     mapsCoordinatesManualOptions(fullOrderQuery.data?.address.addressString, !!fullOrderQuery.data)
   );
+  const restaurantLocation = restaurantLocationQuery.data
+    ? {
+        latitude: restaurantLocationQuery.data.lat,
+        longitude: restaurantLocationQuery.data.lng,
+      }
+    : undefined;
   const deliveryLocation = deliveryCoordinatesQuery.data
     ? {
         latitude: deliveryCoordinatesQuery.data.lat,
         longitude: deliveryCoordinatesQuery.data.lng,
       }
     : undefined;
-  const directionsQuery = useDirectionsQuery(deliveryLocation, DESTINATION);
+  const directionsQuery = useDirectionsQuery(deliveryLocation, restaurantLocation);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  if (fullOrderQuery.isFetching || deliveryCoordinatesQuery.isFetching || directionsQuery.isFetching)
+  if (
+    restaurantLocationQuery.isFetching ||
+    fullOrderQuery.isFetching ||
+    deliveryCoordinatesQuery.isFetching ||
+    directionsQuery.isFetching
+  )
     return <ScreenActivityIndicator />;
-  if (fullOrderQuery.isError) return <ErrorComponent onRetry={fullOrderQuery.refetch} />;
-  if (deliveryCoordinatesQuery.isError) return <ErrorComponent onRetry={deliveryCoordinatesQuery.refetch} />;
-  if (directionsQuery.isError) return <ErrorComponent onRetry={directionsQuery.refetch} />;
 
+  if (
+    restaurantLocationQuery.isError ||
+    fullOrderQuery.isError ||
+    deliveryCoordinatesQuery.isError ||
+    directionsQuery.isError
+  )
+    return (
+      <ErrorComponent
+        onRetry={() => {
+          restaurantLocationQuery.refetch();
+          fullOrderQuery.refetch();
+          deliveryCoordinatesQuery.refetch();
+          directionsQuery.refetch();
+        }}
+      />
+    );
+
+  if (!restaurantLocation) throw new Error("Restaurant location is not defined in OrderDeliveryScreen");
   if (!deliveryLocation) throw new Error("Delivery location is not defined in OrderDeliveryScreen");
 
   const points = directionsQuery.data;
@@ -81,8 +104,8 @@ export default function OrderDeliveryScreen() {
         <Marker
           tracksViewChanges={!isLoaded}
           coordinate={{
-            latitude: DESTINATION.latitude,
-            longitude: DESTINATION.longitude,
+            latitude: restaurantLocation.latitude,
+            longitude: restaurantLocation.longitude,
           }}
           title="Restaurant PizzeriaQ"
         >

@@ -38,6 +38,7 @@ export const api = {
       address: (latitude: number, longitude: number) =>
         `/locations?latitude=${latitude}&longitude=${longitude}`,
       coordinates: (address: string) => `/locations?address=${encodeURIComponent(address)}`,
+      restaurant: "/locations/restaurant",
     },
     devices: "/devices",
   }),

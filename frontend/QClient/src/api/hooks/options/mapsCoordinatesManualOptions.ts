@@ -1,10 +1,6 @@
 import { UseQueryOptions } from "@tanstack/react-query";
 import { api } from "src/api";
-
-type Coordinates = {
-  lat: number;
-  lng: number;
-};
+import { Coordinates } from "src/api/types/Location";
 
 export function mapsCoordinatesManualOptions(
   address?: string,
