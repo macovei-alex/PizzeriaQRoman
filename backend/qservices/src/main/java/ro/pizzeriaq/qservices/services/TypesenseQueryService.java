@@ -91,20 +91,38 @@ public class TypesenseQueryService {
 			@NonNull String naturalLanguageQuery,
 			@NonNull UUID accountId
 	) throws ServiceUnavailableException {
+		TypesenseException lastException = null;
+		for (int attempt = 0; attempt < 2; ++attempt) {
+			try {
+				var conversationId = accountService.getConversationId(accountId);
+				var response = executeQuery(naturalLanguageQuery, conversationId);
+				if (!response.getConversation().getConversationId().equals(conversationId)) {
+					accountService.setConversationId(accountId, response.getConversation().getConversationId());
+				}
+				return response;
 
-		var conversationId = accountService.getConversationId(accountId);
-		try {
-			var response = executeQuery(naturalLanguageQuery, conversationId);
-			if (!response.getConversation().getConversationId().equals(conversationId)) {
-				accountService.setConversationId(accountId, response.getConversation().getConversationId());
+			} catch (TypesenseException e) {
+				if (e.getCause() instanceof HttpStatusCodeException inner) {
+					if (inner.getStatusCode().value() == 400) {
+						// query or conversation id error
+						accountService.setConversationId(accountId, null);
+						lastException = e;
+					}
+					else if (inner.getStatusCode().value() == 404) {
+						// collection not found
+						throw e;
+					} else if (inner.getStatusCode().is5xxServerError()) {
+						// server error
+						throw new ServiceUnavailableException("Typesense service is not responding");
+					}
+				} else {
+					// any other error
+					throw e;
+				}
 			}
-			return response;
-		} catch (TypesenseException e) {
-			if (e.getCause() instanceof HttpStatusCodeException inner && inner.getStatusCode().value() == 404) {
-				accountService.setConversationId(accountId, null);
-			}
-			throw e;
 		}
+
+		throw new TypesenseException("Failed to query Typesense after multiple attempts", lastException);
 	}
 
 
