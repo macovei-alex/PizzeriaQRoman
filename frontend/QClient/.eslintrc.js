@@ -8,7 +8,9 @@ module.exports = {
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:prettier/recommended",
+    "plugin:@typescript-eslint/recommended",
   ],
+  parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaFeatures: {
       tsx: true,
@@ -17,7 +19,7 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: "module",
   },
-  plugins: ["react", "prettier", "react-you-might-not-need-an-effect"],
+  plugins: ["react", "prettier", "react-you-might-not-need-an-effect", "@typescript-eslint"],
   rules: {
     "react/prop-types": "error",
     "prettier/prettier": [
@@ -29,6 +31,7 @@ module.exports = {
       },
     ],
     "react-you-might-not-need-an-effect/you-might-not-need-an-effect": "warn",
+    "@typescript-eslint/no-explicit-any": "off",
   },
   settings: {
     react: {

@@ -142,13 +142,14 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     const response = await promptAsync();
     try {
       if (response?.type !== "success") throw new Error("Bad response type");
+      if (!request?.codeVerifier) throw new Error("Missing code verifier in request");
       const responseTokens = await AuthSession.exchangeCodeAsync(
         {
           clientId: request?.clientId,
           code: response.params.code,
           redirectUri: request?.redirectUri,
           extraParams: {
-            code_verifier: request?.codeVerifier!,
+            code_verifier: request?.codeVerifier,
           },
         },
         discovery
