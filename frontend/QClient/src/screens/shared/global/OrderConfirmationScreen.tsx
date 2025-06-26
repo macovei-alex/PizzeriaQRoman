@@ -1,7 +1,7 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 import { SafeAreaView } from "react-native-safe-area-context";
-import useColorTheme from "src/hooks/useColorTheme";
 import TickCheckboxSvg from "src/components/svg/TickCheckboxSvg";
 import logger from "src/utils/logger";
 import { useNavigation } from "@react-navigation/native";
@@ -17,20 +17,17 @@ export default function OrderConfirmationScreen() {
   logger.render("ConfirmationScreen");
 
   const navigation = useNavigation<OrderConfirmationScreenNavigationProps>();
-  const colorTheme = useColorTheme();
 
   return (
-    <SafeAreaView style={[styles.screen, { backgroundColor: colorTheme.background.navbar }]}>
-      <View style={[styles.container, { backgroundColor: colorTheme.background.primary }]}>
+    <SafeAreaView style={styles.screen}>
+      <View style={styles.container}>
         <TickCheckboxSvg checked={true} style={styles.icon} />
 
-        <Text style={[styles.mainMessageText, { color: colorTheme.text.primary }]}>
-          Comanda dumneavostră va fi preluată în cel mai scurt timp
-        </Text>
+        <Text style={styles.mainMessageText}>Comanda dumneavostră va fi preluată în cel mai scurt timp</Text>
 
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            style={[styles.button, { backgroundColor: colorTheme.background.success }]}
+            style={styles.button}
             onPress={() => {
               navigation.navigate("MainTabNavigator", {
                 screen: "ProfileStackNavigator",
@@ -41,7 +38,7 @@ export default function OrderConfirmationScreen() {
               });
             }}
           >
-            <Text style={[styles.buttonText, { color: colorTheme.text.success }]} numberOfLines={2}>
+            <Text style={styles.buttonText} numberOfLines={2}>
               Către comenzile dumneavoastră
             </Text>
           </TouchableOpacity>
@@ -51,16 +48,18 @@ export default function OrderConfirmationScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   screen: {
     height: "100%",
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: theme.background.navbar,
   },
   container: {
     alignItems: "center",
     width: "90%",
     borderRadius: 20,
+    backgroundColor: theme.background.primary,
   },
   icon: {
     width: 70,
@@ -74,6 +73,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 60,
     textAlign: "center",
+    color: theme.text.primary,
   },
   buttonContainer: {
     marginHorizontal: 32,
@@ -84,10 +84,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 32,
+    backgroundColor: theme.background.success,
   },
   buttonText: {
     fontSize: 18,
     fontWeight: "600",
     textAlign: "center",
+    color: theme.text.success,
   },
-});
+}));

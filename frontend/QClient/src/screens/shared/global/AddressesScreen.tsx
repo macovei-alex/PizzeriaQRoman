@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
-import { Alert, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Alert, RefreshControl, ScrollView, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, useUnistyles } from "react-native-unistyles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { api } from "src/api";
 import useAddressesQuery from "src/api/hooks/queries/useAddressesQuery";
@@ -7,7 +8,6 @@ import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
 import ScreenTitle from "src/components/shared/generic/ScreenTitle";
 import { useAuthContext } from "src/context/AuthContext";
-import useColorTheme from "src/hooks/useColorTheme";
 import logger from "src/utils/logger";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -18,7 +18,7 @@ type NavigationProps = NativeStackNavigationProp<RootStackParamList, "AddressesS
 export default function AddressesScreen() {
   logger.render("AddressesScreen");
 
-  const colorTheme = useColorTheme();
+  const { theme } = useUnistyles();
   const navigation = useNavigation<NavigationProps>();
   const accountId = useAuthContext().account?.id;
   if (!accountId) throw new Error("Account is not defined in AddressesScreen");
@@ -50,18 +50,18 @@ export default function AddressesScreen() {
         ],
         {
           cancelable: false,
-          userInterfaceStyle: colorTheme.name,
+          userInterfaceStyle: theme.name,
         }
       );
     },
-    [accountId, addressesQuery, colorTheme.name]
+    [accountId, addressesQuery, theme.name]
   );
 
   if (addressesQuery.isFetching) return <ScreenActivityIndicator text="Se încarcă adresele" />;
   if (addressesQuery.isError) return <ErrorComponent />;
 
   return (
-    <SafeAreaView style={[styles.contaier, { backgroundColor: colorTheme.background.primary }]}>
+    <SafeAreaView style={styles.contaier}>
       <ScreenTitle title="Adresele mele" containerStyle={styles.screenTitle} />
 
       {/* Addresses */}
@@ -73,7 +73,7 @@ export default function AddressesScreen() {
           <TouchableOpacity
             key={address.id}
             onLongPress={() => showDeleteAddressDialog(address.id)}
-            style={[styles.addressCard, { backgroundColor: colorTheme.background.card }]}
+            style={styles.addressCard}
           >
             <Text style={styles.addressText}>{address.addressString}</Text>
           </TouchableOpacity>
@@ -82,19 +82,20 @@ export default function AddressesScreen() {
 
       {/* New address button */}
       <TouchableOpacity
-        style={[styles.newAddressButton, { backgroundColor: colorTheme.background.accent }]}
+        style={styles.newAddressButton}
         onPress={() => navigation.navigate("NewAddressScreen")}
       >
-        <Text style={[styles.newAddressText, { color: colorTheme.text.onAccent }]}>Adaugă o adresă nouă</Text>
+        <Text style={styles.newAddressText}>Adaugă o adresă nouă</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   contaier: {
     flex: 1,
     paddingBottom: 16,
+    backgroundColor: theme.background.primary,
   },
   screenTitle: {
     marginBottom: 16,
@@ -108,6 +109,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginVertical: 8,
     borderRadius: 10,
+    backgroundColor: theme.background.card,
   },
   addressText: {
     fontSize: 16,
@@ -118,9 +120,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 12,
     borderRadius: 12,
     alignItems: "center",
+    backgroundColor: theme.background.accent,
   },
   newAddressText: {
     fontSize: 18,
     fontWeight: "bold",
+    color: theme.text.onAccent,
   },
-});
+}));

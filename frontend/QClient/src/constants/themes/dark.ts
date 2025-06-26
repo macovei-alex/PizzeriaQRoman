@@ -1,4 +1,4 @@
-import { Theme } from "./theme-type";
+import { Theme } from "./Theme";
 
 const background = {
   primary: "#fcfcfc",

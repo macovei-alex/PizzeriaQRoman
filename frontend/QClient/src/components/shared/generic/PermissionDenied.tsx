@@ -1,37 +1,38 @@
 import { AntDesign } from "@expo/vector-icons";
 import React from "react";
-import { StyleSheet, Text } from "react-native";
+import { Text } from "react-native";
+import { StyleSheet, useUnistyles } from "react-native-unistyles";
 import { SafeAreaView } from "react-native-safe-area-context";
-import useColorTheme from "src/hooks/useColorTheme";
 
 type PermissionDeniedProps = {
   text: string;
 };
 
 export default function PermissionDenied({ text }: PermissionDeniedProps) {
-  const colorTheme = useColorTheme();
-
+  const { theme } = useUnistyles();
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colorTheme.background.primary }]}>
-      <AntDesign name="exclamationcircleo" size={50} color={colorTheme.background.accent} />
-      <Text style={[styles.text, { color: colorTheme.text.primary }]} numberOfLines={4}>
+    <SafeAreaView style={styles.container}>
+      <AntDesign name="exclamationcircleo" size={50} color={theme.background.accent} />
+      <Text style={styles.text} numberOfLines={4}>
         {text}
       </Text>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 16,
     gap: 32,
+    backgroundColor: theme.background.primary,
   },
   text: {
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
+    color: theme.text.primary,
   },
-});
+}));

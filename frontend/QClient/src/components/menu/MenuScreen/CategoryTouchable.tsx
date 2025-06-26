@@ -1,6 +1,6 @@
 import React from "react";
-import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import useColorTheme from "src/hooks/useColorTheme";
+import { Platform, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 import { Category } from "src/api/types/Category";
 import logger from "src/utils/logger";
 
@@ -21,28 +21,21 @@ export default function CategoryTouchable({
 }: HorizontalCategoryProps) {
   logger.render("CategoryTouchable");
 
-  const colorTheme = useColorTheme();
-
   return (
     <View style={style} onLayout={onLayout}>
-      <TouchableOpacity
-        style={[
-          styles.button,
-          { backgroundColor: !highlight ? colorTheme.background.elevated : colorTheme.background.card },
-        ]}
-        onPress={onPress}
-      >
-        <Text style={[styles.text, { color: colorTheme.text.primary }]}>{category.name}</Text>
+      <TouchableOpacity style={styles.button(highlight)} onPress={onPress}>
+        <Text style={styles.text}>{category.name}</Text>
       </TouchableOpacity>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  button: {
+const styles = StyleSheet.create((theme) => ({
+  button: (highlight: boolean) => ({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 12,
+    backgroundColor: !highlight ? theme.background.elevated : theme.background.card,
     ...Platform.select({
       // TODO: Test if this works on iOS
       ios: {
@@ -55,8 +48,9 @@ const styles = StyleSheet.create({
         elevation: 6,
       },
     }),
-  },
+  }),
   text: {
     fontWeight: "bold",
+    color: theme.text.primary,
   },
-});
+}));

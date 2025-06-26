@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
-import { StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
+import { StyleProp, Text, TouchableOpacity, View, ViewStyle } from "react-native";
+import { StyleSheet, useUnistyles } from "react-native-unistyles";
 import { Product, ProductId } from "src/api/types/Product";
-import useColorTheme from "src/hooks/useColorTheme";
 import useProductsQuery from "src/api/hooks/queries/useProductsQuery";
 import logger from "src/utils/logger";
 import { formatDate, formatPrice } from "src/utils/utils";
@@ -29,8 +29,8 @@ export default function OrderCard({ order, containerStyle }: OrderCardProps) {
   logger.render("OrderCard");
 
   const navigation = useNavigation<NavigationProps>();
-  const colorTheme = useColorTheme();
   const productsQuery = useProductsQuery();
+  const { theme } = useUnistyles();
 
   const processedItems = useMemo(() => {
     if (!productsQuery.data) return [];
@@ -48,16 +48,16 @@ export default function OrderCard({ order, containerStyle }: OrderCardProps) {
 
   const orderStatusColors = useMemo(() => {
     return {
-      RECEIVED: colorTheme.background.accent,
-      IN_PREPARATION: colorTheme.background.accent,
+      RECEIVED: theme.background.accent,
+      IN_PREPARATION: theme.background.accent,
       IN_DELIVERY: {
-        text: colorTheme.text.onAccent,
-        border: colorTheme.background.accent,
-        background: colorTheme.background.accent,
+        text: theme.text.onAccent,
+        border: theme.background.accent,
+        background: theme.background.accent,
       },
-      DELIVERED: colorTheme.background.success,
+      DELIVERED: theme.background.success,
     };
-  }, [colorTheme]);
+  }, [theme]);
 
   const orderStatusNames = useMemo(() => {
     return {
@@ -72,7 +72,7 @@ export default function OrderCard({ order, containerStyle }: OrderCardProps) {
   if (productsQuery.isError) return <ErrorComponent />;
 
   return (
-    <View style={[styles.container, { backgroundColor: colorTheme.background.card }, containerStyle]}>
+    <View style={[styles.container, containerStyle]}>
       <View style={styles.leftSideContainer}>
         <RemoteImage
           imageName={processedItems[0].product.imageName}
@@ -135,17 +135,17 @@ export default function OrderCard({ order, containerStyle }: OrderCardProps) {
         )}
 
         <TouchableOpacity
-          style={[styles.moreButtonContainer, { backgroundColor: colorTheme.background.accent }]}
+          style={styles.moreButtonContainer}
           onPress={() => navigation.navigate("FullOrderScreen", { orderId: order.id })}
         >
-          <Text style={[styles.moreButtonText, { color: colorTheme.text.onAccent }]}>Mai multe</Text>
+          <Text style={styles.moreButtonText}>Mai multe</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   container: {
     flexDirection: "row",
     gap: 12,
@@ -154,6 +154,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
     borderRadius: 16,
     marginTop: 8,
+    backgroundColor: theme.background.card,
   },
   leftSideContainer: {
     flexDirection: "column",
@@ -205,8 +206,10 @@ const styles = StyleSheet.create({
     marginBottom: -30,
     marginLeft: 40,
     marginRight: -12,
+    backgroundColor: theme.background.accent,
   },
   moreButtonText: {
     fontSize: 18,
+    color: theme.text.onAccent,
   },
-});
+}));

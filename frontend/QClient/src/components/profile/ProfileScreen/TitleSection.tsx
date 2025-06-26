@@ -1,8 +1,8 @@
-import React, { useMemo } from "react";
-import { ImageBackground, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { ImageBackground, Text, View } from "react-native";
+import { StyleSheet, useUnistyles } from "react-native-unistyles";
 import { images } from "src/constants/images";
 import { useAuthContext } from "src/context/AuthContext";
-import useColorTheme from "src/hooks/useColorTheme";
 import { convertToRGBA } from "src/utils/convertions";
 import logger from "src/utils/logger";
 
@@ -12,27 +12,20 @@ export default function TitleSection() {
   const authContext = useAuthContext();
   if (!authContext.account) throw new Error("Account not found");
 
-  const colorTheme = useColorTheme();
-  const accentRgba = useMemo(() => {
-    const rgba = convertToRGBA(colorTheme.background.accent);
-    if (rgba) return `rgba(${rgba.r},${rgba.g},${rgba.b},0.6)`;
-    else return "rgba(0,0,0,0.6)";
-  }, [colorTheme.background.accent]);
+  const { theme } = useUnistyles();
 
   return (
     <ImageBackground source={images.menuBackground} style={styles.image}>
-      <View style={[styles.overlay, { backgroundColor: accentRgba }]} />
-      <Text style={[styles.titleText, { color: colorTheme.text.onAccent }]} numberOfLines={2}>
+      <View style={styles.overlay()} />
+      <Text style={[styles.titleText, { color: theme.text.onAccent }]} numberOfLines={2}>
         Bună, {authContext.account.givenName}!
       </Text>
-      <Text style={[styles.subtitleText, { color: colorTheme.text.onAccent }]}>
-        Bine ai venit in contul tău!
-      </Text>
+      <Text style={styles.subtitleText}>Bine ai venit in contul tău!</Text>
     </ImageBackground>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   image: {
     width: "100%",
     height: 240,
@@ -50,8 +43,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "500",
     marginTop: 16,
+    color: theme.text.onAccent,
   },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
+  overlay: () => {
+    const rgba = convertToRGBA(theme.background.accent);
+    return {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: rgba ? `rgba(${rgba.r},${rgba.g},${rgba.b},0.6)` : "rgba(0,0,0,0.6)",
+    };
   },
-});
+}));

@@ -1,8 +1,7 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import useColorTheme from "src/hooks/useColorTheme";
 import SvgIcons from "src/components/svg/SvgIcons";
-import { StyleSheet } from "react-native";
+import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import MenuStackNavigator, { MenuStackParamList } from "./MenuStackNavigator";
 import CartStackNavigator, { CartStackParamList } from "./CartStackNavigator";
 import ProfileStackNavigator, { ProfileStackParamList } from "./ProfileStackNavigator";
@@ -24,29 +23,20 @@ export type MainTabParamList = {
 
 const MainTab = createBottomTabNavigator();
 
+const ColoredSvgIcons = withUnistyles(SvgIcons, (theme) => ({
+  stroke: theme.text.primary,
+  fillPrimary: theme.background.primary,
+  fillSecondary: theme.background.primary,
+}));
+
 export default function MainTabNavigator() {
-  const colorTheme = useColorTheme();
-
-  const svgColors = {
-    stroke: colorTheme.text.primary,
-    fillPrimary: colorTheme.background.primary,
-    fillSecondary: colorTheme.background.primary,
-  };
-
   return (
     <MainTab.Navigator
       screenOptions={({ navigation, route }) => ({
         headerShown: false,
-        tabBarStyle: [styles.tabBar, { backgroundColor: colorTheme.background.navbar }],
+        tabBarStyle: styles.tabBar,
         tabBarIcon: ({ focused, color, size }) => {
-          return (
-            <SvgIcons
-              name={routeToIconMap[route.name]}
-              stroke={svgColors.stroke}
-              fillPrimary={svgColors.fillPrimary}
-              fillSecondary={svgColors.fillSecondary}
-            />
-          );
+          return <ColoredSvgIcons name={routeToIconMap[route.name]} />;
         },
       })}
     >
@@ -63,9 +53,10 @@ export default function MainTabNavigator() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   tabBar: {
     borderTopRightRadius: 16,
     borderTopLeftRadius: 16,
+    backgroundColor: theme.background.navbar,
   },
-});
+}));

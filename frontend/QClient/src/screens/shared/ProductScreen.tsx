@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { RefreshControl, ScrollView, StyleSheet } from "react-native";
+import { RefreshControl, ScrollView } from "react-native";
+import { StyleSheet, useUnistyles } from "react-native-unistyles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OptionList from "src/components/shared/ProductScreen/OptionListCard";
-import useColorTheme from "src/hooks/useColorTheme";
 import HorizontalLine from "src/components/shared/generic/HorizontalLine";
 import { Fragment } from "react";
 import TitleSection from "src/components/shared/ProductScreen/TitleSection";
@@ -25,7 +25,8 @@ type RouteProps =
 export default function ProductScreen() {
   logger.render("ProductScreen");
 
-  const colorTheme = useColorTheme();
+  const { theme } = useUnistyles();
+
   const { cart, addCartItem, changeCartItemOptions } = useCartContext();
   const route = useRoute<RouteProps>();
   const productId = route.params.productId;
@@ -61,7 +62,7 @@ export default function ProductScreen() {
 
         {product.optionLists.map((optionList) => (
           <Fragment key={optionList.id}>
-            <HorizontalLine style={styles.horizontalLine} color={colorTheme.text.secondary} />
+            <HorizontalLine style={styles.horizontalLine} color={theme.text.secondary} />
             <OptionList
               optionList={optionList}
               currentOptions={cartItemOptions[optionList.id] || {}}

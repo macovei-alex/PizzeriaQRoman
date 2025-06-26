@@ -1,18 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  Dimensions,
-  LayoutChangeEvent,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Dimensions, LayoutChangeEvent, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 import CategoryTouchable from "./CategoryTouchable";
 import { Category, CategoryId } from "src/api/types/Category";
 import logger from "src/utils/logger";
 import SearchIconSvg from "src/components/svg/SearchIconSvg";
-import useColorTheme from "src/hooks/useColorTheme";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "src/navigation/RootStackNavigator";
@@ -36,7 +28,6 @@ export default function HorizontalCategorySection({
 }: HorizontalCategorySectionProps) {
   logger.render("HorizontalCategorySection");
 
-  const colorTheme = useColorTheme();
   const navigation = useNavigation<NavigationProps>();
 
   const { scrollRef, scrollToPos } = useScrollRef();
@@ -92,7 +83,7 @@ export default function HorizontalCategorySection({
   const currentCategoryId = categoryLimits[limitsIndex]?.categoryId;
 
   return (
-    <View style={[styles.container, { backgroundColor: colorTheme.background.primary }]}>
+    <View style={styles.container}>
       <ScrollView
         horizontal
         ref={scrollRef}
@@ -112,20 +103,18 @@ export default function HorizontalCategorySection({
         ))}
       </ScrollView>
 
-      <TouchableOpacity
-        style={[styles.searchBarContainer, { backgroundColor: colorTheme.background.elevated }]}
-        onPress={() => navigation.navigate("ChatScreen")}
-      >
+      <TouchableOpacity style={styles.searchBarContainer} onPress={() => navigation.navigate("ChatScreen")}>
         <SearchIconSvg style={styles.searchIcon} />
-        <Text style={[styles.searchBarText, { color: colorTheme.text.primary }]}>Caută ce îți dorești</Text>
+        <Text style={styles.searchBarText}>Caută ce îți dorești</Text>
       </TouchableOpacity>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   container: {
     paddingBottom: 12,
+    backgroundColor: theme.background.primary,
   },
   scrollContainer: {
     paddingVertical: 12,
@@ -139,6 +128,7 @@ const styles = StyleSheet.create({
     width: "90%",
     borderRadius: 9999,
     alignItems: "center",
+    backgroundColor: theme.background.elevated,
   },
   searchIcon: {
     width: 40,
@@ -148,5 +138,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     flexGrow: 1,
     left: -20,
+    color: theme.text.primary,
   },
-});
+}));

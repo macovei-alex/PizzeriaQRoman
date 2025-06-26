@@ -5,12 +5,11 @@ import {
   Image,
   ImageBackground,
   Platform,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import useColorTheme from "src/hooks/useColorTheme";
+import { StyleSheet } from "react-native-unistyles";
 import { useAuthContext } from "src/context/AuthContext";
 import { images } from "src/constants/images";
 import * as WebBrowser from "expo-web-browser";
@@ -24,7 +23,6 @@ const AnimatedImageBackground = Animated.createAnimatedComponent(ImageBackground
 export default function LoginScreen() {
   logger.render("LoginScreen");
 
-  const colorTheme = useColorTheme();
   const authContext = useAuthContext();
 
   const logoOpacityAnim = useRef(new Animated.Value(0)).current;
@@ -89,23 +87,12 @@ export default function LoginScreen() {
         </View>
 
         {/* bottom sheet */}
-        <Animated.View
-          style={[
-            styles.bottomSheet,
-            {
-              backgroundColor: colorTheme.background.primary,
-              transform: [{ translateY: bottomSheetTranslationAnim }],
-            },
-          ]}
-        >
-          <Text style={[styles.subText, { color: colorTheme.text.primary }]}>Bine ați venit!</Text>
+        <Animated.View style={styles.bottomSheet(bottomSheetTranslationAnim)}>
+          <Text style={styles.subText}>Bine ați venit!</Text>
 
           {/* sign in button */}
-          <TouchableOpacity
-            onPress={authContext.login}
-            style={[styles.button, { backgroundColor: colorTheme.background.onCard }]}
-          >
-            <Text style={[styles.buttonText, { color: colorTheme.text.primary }]}>Conectare</Text>
+          <TouchableOpacity onPress={authContext.login} style={styles.button}>
+            <Text style={styles.buttonText}>Conectare</Text>
           </TouchableOpacity>
         </Animated.View>
       </View>
@@ -113,7 +100,7 @@ export default function LoginScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   container: {
     flex: 1,
   },
@@ -140,7 +127,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     resizeMode: "stretch",
   },
-  bottomSheet: {
+  bottomSheet: (translateY: Animated.Value) => ({
     position: "absolute",
     bottom: 0,
     width: "100%",
@@ -150,10 +137,13 @@ const styles = StyleSheet.create({
     opacity: 0.88,
     borderTopLeftRadius: 48,
     borderTopRightRadius: 48,
-  },
+    backgroundColor: theme.background.primary,
+    transform: [{ translateY }],
+  }),
   subText: {
     fontSize: 20,
     marginBottom: 24,
+    color: theme.text.primary,
   },
   button: {
     borderRadius: 24,
@@ -161,6 +151,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     marginTop: 8,
     marginBottom: 24,
+    backgroundColor: theme.background.onCard,
     ...Platform.select({
       android: {
         elevation: 2,
@@ -177,5 +168,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
     textAlign: "center",
+    color: theme.text.primary,
   },
-});
+}));

@@ -1,4 +1,5 @@
-import { StyleSheet, ScrollView, Text, TouchableOpacity } from "react-native";
+import { ScrollView, Text, TouchableOpacity } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GoBackButtonSvg from "src/components/svg/GoBackButtonSvg";

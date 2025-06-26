@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import useColorTheme from "src/hooks/useColorTheme";
+import { Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 import logger from "src/utils/logger";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { formatPrice } from "src/utils/utils";
@@ -26,7 +26,6 @@ export default function OrderItemCard({ orderId, orderItem, price }: OrderItemCa
   logger.render("OrderItemCard");
 
   const navigation = useNavigation<NavigationProps>();
-  const colorTheme = useColorTheme();
 
   const selectedOptionsStr = useMemo(
     () =>
@@ -53,7 +52,7 @@ export default function OrderItemCard({ orderId, orderItem, price }: OrderItemCa
         })
       }
     >
-      <View style={[styles.container, { backgroundColor: colorTheme.background.card }]}>
+      <View style={styles.container}>
         {/* image */}
         <View style={styles.imageContainer}>
           <RemoteImage
@@ -66,34 +65,22 @@ export default function OrderItemCard({ orderId, orderItem, price }: OrderItemCa
         {/* info section */}
         <View style={styles.infoSectionContainer}>
           {/* product title */}
-          <Text
-            style={[styles.productNameText, { color: colorTheme.text.primary }]}
-            numberOfLines={2}
-            ellipsizeMode="tail"
-          >
+          <Text style={styles.productNameText} numberOfLines={2} ellipsizeMode="tail">
             {orderItem.count} X {orderItem.product.name}
           </Text>
 
           {/* product subtitle */}
-          <Text
-            style={[styles.productSubtitleText, { color: colorTheme.text.primary }]}
-            numberOfLines={1}
-            ellipsizeMode="tail"
-          >
+          <Text style={styles.productSubtitleText} numberOfLines={1} ellipsizeMode="tail">
             {orderItem.product.subtitle}
           </Text>
 
           {/* product options */}
-          <Text style={[styles.productOptionsText, { color: colorTheme.text.secondary }]}>
-            {selectedOptionsStr}
-          </Text>
+          <Text style={styles.productOptionsText}>{selectedOptionsStr}</Text>
 
           {/* price section */}
           <View style={styles.priceSectionContainer}>
-            <View style={[styles.priceContainer, { backgroundColor: colorTheme.background.accent }]}>
-              <Text style={[styles.priceText, { color: colorTheme.text.onAccent }]}>
-                {formatPrice(price)}
-              </Text>
+            <View style={styles.priceContainer}>
+              <Text style={styles.priceText}>{formatPrice(price)}</Text>
             </View>
           </View>
         </View>
@@ -102,13 +89,14 @@ export default function OrderItemCard({ orderId, orderItem, price }: OrderItemCa
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   container: {
     flexDirection: "row",
     gap: 16,
     margin: 8,
     padding: 12,
     borderRadius: 16,
+    backgroundColor: theme.background.card,
   },
   imageContainer: {
     width: "25%",
@@ -124,9 +112,11 @@ const styles = StyleSheet.create({
   productNameText: {
     fontSize: 20,
     fontWeight: "bold",
+    color: theme.text.primary,
   },
   productSubtitleText: {
     fontSize: 16,
+    color: theme.text.primary,
   },
   productOptionsText: {
     marginTop: 4,
@@ -144,8 +134,10 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 8,
+    backgroundColor: theme.background.accent,
   },
   priceText: {
     fontSize: 18,
+    color: theme.text.onAccent,
   },
-});
+}));

@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, useUnistyles } from "react-native-unistyles";
 import { SafeAreaView } from "react-native-safe-area-context";
-import useColorTheme from "src/hooks/useColorTheme";
 import { Fragment } from "react";
 import logger from "src/utils/logger";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
@@ -24,7 +24,7 @@ type RouteProps = RouteProp<ProfileStackParamList, "OrderItemScreen">;
 export default function OrderItemScreen() {
   logger.render("OrderItemScreen");
 
-  const colorTheme = useColorTheme();
+  const { theme } = useUnistyles();
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<RouteProps>();
   const orderQuery = useFullOrderQuery(route.params.orderId);
@@ -71,24 +71,22 @@ export default function OrderItemScreen() {
         </RemoteImageBackground>
 
         {/* title */}
-        <Text style={[styles.titleText, { color: colorTheme.text.primary }]}>{product.name}</Text>
+        <Text style={styles.titleText}>{product.name}</Text>
 
         {/* subtitle */}
         <View style={styles.subtitleContainer}>
-          <Text style={[styles.subtitleText, { color: colorTheme.text.primary }]}>
+          <Text style={styles.subtitleText}>
             {product.subtitle} - {formatPrice(product.price)}
           </Text>
         </View>
 
         {/* description */}
-        <Text style={[styles.descriptionText, { color: colorTheme.text.secondary }]}>
-          {product.description}
-        </Text>
+        <Text style={styles.descriptionText}>{product.description}</Text>
 
         {/* option lists */}
         {product.optionLists.map((optionList) => (
           <Fragment key={optionList.id}>
-            <HorizontalLine style={styles.horizontalLine} color={colorTheme.text.secondary} />
+            <HorizontalLine style={styles.horizontalLine} color={theme.text.secondary} />
             <OptionListCard optionList={optionList} selectedOptions={selectedOptions[optionList.id] ?? {}} />
           </Fragment>
         ))}
@@ -97,7 +95,7 @@ export default function OrderItemScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   horizontalLine: {
     marginVertical: 24,
     width: "95%",
@@ -118,6 +116,7 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     marginHorizontal: 12,
     marginTop: 12,
+    color: theme.text.primary,
   },
   subtitleContainer: {
     marginTop: -4,
@@ -127,10 +126,12 @@ const styles = StyleSheet.create({
   subtitleText: {
     fontSize: 20,
     fontWeight: "500",
+    color: theme.text.primary,
   },
   descriptionText: {
     marginTop: 20,
     marginHorizontal: 12,
     fontSize: 13,
+    color: theme.text.secondary,
   },
-});
+}));

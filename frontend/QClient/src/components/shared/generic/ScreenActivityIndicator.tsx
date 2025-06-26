@@ -1,31 +1,32 @@
 import React from "react";
-import { ActivityIndicator, StyleSheet, Text } from "react-native";
+import { ActivityIndicator, Text } from "react-native";
+import { StyleSheet, useUnistyles } from "react-native-unistyles";
 import { SafeAreaView } from "react-native-safe-area-context";
-import useColorTheme from "src/hooks/useColorTheme";
 
 type Props = {
   text?: string;
 };
 
 export default function ScreenActivityIndicator({ text }: Props) {
-  const colorTheme = useColorTheme();
-
+  const { theme } = useUnistyles();
   return (
-    <SafeAreaView style={[styles.loadingContainer, { backgroundColor: colorTheme.background.primary }]}>
-      <Text style={[styles.loadingText, { color: colorTheme.text.primary }]}>{text}</Text>
-      <ActivityIndicator size={70} color={colorTheme.background.accent} />
+    <SafeAreaView style={styles.loadingContainer}>
+      <Text style={styles.loadingText}>{text}</Text>
+      <ActivityIndicator size={70} color={theme.background.accent} />
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
+    backgroundColor: theme.background.primary,
   },
   loadingText: {
     fontSize: 24,
     textAlign: "center",
     marginBottom: 20,
+    color: theme.text.primary,
   },
-});
+}));

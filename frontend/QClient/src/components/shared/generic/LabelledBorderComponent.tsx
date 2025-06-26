@@ -1,6 +1,6 @@
 import React from "react";
-import { View, Text, StyleSheet, StyleProp, ViewStyle, TextStyle } from "react-native";
-import useColorTheme from "src/hooks/useColorTheme";
+import { View, Text, StyleProp, ViewStyle, TextStyle } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 
 interface LabelledBorderComponentProps {
   label: string;
@@ -19,18 +19,14 @@ export default function LabelledBorderComponent({
   labelStyle,
   children,
 }: LabelledBorderComponentProps) {
-  const colorTheme = useColorTheme();
-  const flattenedStyle = style ? StyleSheet.flatten(style) : undefined;
+  const flattenedStyle = style ? StyleSheet.flatten(style) : {};
+  const backgroundColor = flattenedStyle?.backgroundColor
+    ? { backgroundColor: flattenedStyle.backgroundColor }
+    : {};
 
   return (
     <View style={[styles.container, style, containerStyle]}>
-      <View
-        style={[
-          styles.labelContainer,
-          { backgroundColor: flattenedStyle?.backgroundColor ?? colorTheme.background.primary },
-          labelContainerStyle,
-        ]}
-      >
+      <View style={[styles.labelContainer, backgroundColor, labelContainerStyle]}>
         <Text style={[styles.label, labelStyle]}>{label}</Text>
       </View>
       {children}
@@ -38,7 +34,7 @@ export default function LabelledBorderComponent({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   container: {
     position: "relative",
     borderWidth: 1,
@@ -53,8 +49,9 @@ const styles = StyleSheet.create({
     left: 16,
     paddingHorizontal: 4,
     zIndex: 1,
+    backgroundColor: theme.background.primary,
   },
   label: {
     fontSize: 12,
   },
-});
+}));

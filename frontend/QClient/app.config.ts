@@ -23,6 +23,8 @@ export default (): ExpoConfig => {
           locationAlwaysAndWhenInUsePermission: "Allow PizzeriaQ to use your location.",
         },
       ],
+      "expo-notifications",
+      "react-native-edge-to-edge",
     ],
     splash: {
       image: "./assets/images/logo.png",

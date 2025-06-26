@@ -1,9 +1,9 @@
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { forwardRef, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { StyleSheet, useUnistyles } from "react-native-unistyles";
 import { Address } from "src/api/types/Address";
-import useColorTheme from "src/hooks/useColorTheme";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
 import { RootStackParamList } from "src/navigation/RootStackNavigator";
 import Dropdown from "react-native-input-select";
@@ -29,7 +29,7 @@ function AdditionalInfoSection(
 ) {
   logger.render("AdditionalInfoSection");
 
-  const colorTheme = useColorTheme();
+  const { theme } = useUnistyles();
   const navigation = useNavigation<NavigationProps>();
   const [address, setAddress] = useState<Address | null>(null);
   const [additionalNotes, setAdditionalNotes] = useState<string | null>(null);
@@ -52,11 +52,10 @@ function AdditionalInfoSection(
   selectedAddressRef.current = address;
 
   const addressDropdownOptions = useMemo<{ value: number; label: React.JSX.Element }[]>(() => {
-    const width = Dimensions.get("window").width - 84;
     return addresses.map((addressOption) => ({
       label: (
         <View>
-          <Text style={[styles.addressPickerLabel, { width }]}>{addressOption.addressString}</Text>
+          <Text style={styles.addressPickerLabel}>{addressOption.addressString}</Text>
         </View>
       ),
       value: addressOption.id,
@@ -70,37 +69,32 @@ function AdditionalInfoSection(
         {addresses &&
           (address ? (
             <Dropdown
-              dropdownStyle={StyleSheet.flatten([
-                styles.addressPickerContainer,
-                { backgroundColor: colorTheme.background.elevated },
-              ])}
+              dropdownStyle={styles.addressPickerContainer}
               dropdownIcon={<></>}
               selectedValue={address.id}
               options={addressDropdownOptions}
               onValueChange={(id) => setAddress(addresses.find((addr) => addr.id === id) || null)}
-              primaryColor={colorTheme.background.success}
+              primaryColor={theme.background.success}
               modalControls={{ modalProps: { animationType: "fade" } }}
             />
           ) : (
             <>
-              <Text style={[styles.noAddressText, { color: colorTheme.text.primary }]}>
-                Nu aveți adrese asociate contului curent
-              </Text>
+              <Text style={styles.noAddressText}>Nu aveți adrese asociate contului curent</Text>
               <TouchableOpacity
-                style={[styles.addAddressButton, { backgroundColor: colorTheme.background.accent }]}
+                style={styles.addAddressButton}
                 onPress={() => navigation.navigate("AddressesScreen")}
               >
-                <Text style={{ color: colorTheme.text.onAccent }}>Adăugați o adresă</Text>
+                <Text style={styles.addAddressText}>Adăugați o adresă</Text>
               </TouchableOpacity>
             </>
           ))}
       </View>
       <View>
-        <Text style={[styles.subsectionTitle, { color: colorTheme.text.primary }]}>Mențiuni speciale</Text>
+        <Text style={styles.subsectionTitle}>Mențiuni speciale</Text>
         <TextInput
-          style={[styles.additionalNotesInput, { backgroundColor: colorTheme.background.elevated }]}
+          style={styles.additionalNotesInput}
           placeholder="Mențiuni speciale..."
-          placeholderTextColor={colorTheme.text.secondary}
+          placeholderTextColor={theme.text.secondary}
           multiline
           onChangeText={setAdditionalNotes}
         >
@@ -113,7 +107,7 @@ function AdditionalInfoSection(
 
 export default forwardRef<AdditionalInfoSectionHandle, AdditionalInfoSectionProps>(AdditionalInfoSection);
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme, runtime) => ({
   container: {
     marginTop: 16,
     paddingVertical: 16,
@@ -127,25 +121,33 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 24,
     borderWidth: 0,
+    backgroundColor: theme.background.elevated,
   },
   addressPickerLabel: {
     fontSize: 16,
     paddingLeft: 4,
+    width: runtime.screen.width - 84,
   },
   subsectionTitle: {
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 12,
+    color: theme.text.primary,
   },
   noAddressText: {
     fontSize: 16,
     marginBottom: 8,
+    color: theme.text.primary,
   },
   addAddressButton: {
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 24,
     alignItems: "center",
+    backgroundColor: theme.background.accent,
+  },
+  addAddressText: {
+    color: theme.text.onAccent,
   },
   additionalNotesInput: {
     paddingVertical: 12,
@@ -154,5 +156,6 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
     borderRadius: 24,
     fontSize: 16,
+    backgroundColor: theme.background.elevated,
   },
-});
+}));

@@ -1,6 +1,6 @@
 import React from "react";
-import { Dimensions, StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
-import useColorTheme from "src/hooks/useColorTheme";
+import { Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, UnistylesRuntime } from "react-native-unistyles";
 
 function calculateScrollProgress(scrollY: number, visibleHeight: number, contentHeight: number) {
   const maxScrollable = contentHeight - visibleHeight;
@@ -10,19 +10,6 @@ function calculateScrollProgress(scrollY: number, visibleHeight: number, content
 
 function interpolate(percent: number, min: number, max: number) {
   return min + (max - min) * percent;
-}
-
-function calculateScrollingStyle(
-  scrollY: number,
-  visibleHeight: number,
-  contentHeight: number,
-  screenWidth: number
-): StyleProp<ViewStyle> {
-  const scrollProgress = calculateScrollProgress(scrollY, visibleHeight, contentHeight);
-  return {
-    width: interpolate(scrollProgress, screenWidth + 50, 240),
-    bottom: interpolate(scrollProgress, -24, -8),
-  };
 }
 
 type MorphingButtonProps = {
@@ -40,25 +27,20 @@ export default function MorphingButton({
   visibleHeight,
   contentHeight,
 }: MorphingButtonProps) {
-  const colorTheme = useColorTheme();
-  const screenWidth = Dimensions.get("screen").width;
-
-  const scrollingStyle = calculateScrollingStyle(scrollY, visibleHeight, contentHeight, screenWidth);
-
   return (
     <View style={styles.floatingButtonContainer}>
       <TouchableOpacity
         onPress={onPress}
-        style={[styles.button, { backgroundColor: colorTheme.background.accent }, scrollingStyle]}
+        style={styles.button(visibleHeight, contentHeight, scrollY)}
         activeOpacity={0.8}
       >
-        <Text style={[styles.buttonText, { color: colorTheme.text.onAccent }]}>{text}</Text>
+        <Text style={styles.buttonText}>{text}</Text>
       </TouchableOpacity>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   floatingButtonContainer: {
     position: "absolute",
     bottom: 24,
@@ -66,12 +48,20 @@ const styles = StyleSheet.create({
     right: 0,
     alignItems: "center",
   },
-  button: {
-    paddingVertical: 12,
-    borderRadius: 24,
-    alignItems: "center",
+  button: (visibleHeight: number, contentHeight: number, scrollY: number) => {
+    const screenWidth = UnistylesRuntime.screen.width;
+    const scrollProgress = calculateScrollProgress(scrollY, visibleHeight, contentHeight);
+    return {
+      paddingVertical: 12,
+      borderRadius: 24,
+      alignItems: "center",
+      backgroundColor: theme.background.accent,
+      width: interpolate(scrollProgress, screenWidth + 50, 240),
+      bottom: interpolate(scrollProgress, -24, -8),
+    };
   },
   buttonText: {
     fontSize: 18,
+    color: theme.text.onAccent,
   },
-});
+}));

@@ -1,14 +1,6 @@
 import React from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import useColorTheme from "src/hooks/useColorTheme";
+import { KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 import logger from "src/utils/logger";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import ScreenTitle from "src/components/shared/generic/ScreenTitle";
@@ -36,7 +28,6 @@ export default function FullOrderScreen() {
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<RouteProps>();
   if (!route.params?.orderId) throw new Error("Order ID is not defined in FullOrderScreen");
-  const colorTheme = useColorTheme();
   const orderQuery = useFullOrderQuery(route.params.orderId);
   const addressQuery = useAddressesQuery();
 
@@ -48,7 +39,7 @@ export default function FullOrderScreen() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.select({ ios: "padding", default: undefined })}
-      style={[styles.screen, { backgroundColor: colorTheme.background.primary }]}
+      style={styles.screen}
     >
       <SafeAreaView>
         <ScrollView>
@@ -63,7 +54,7 @@ export default function FullOrderScreen() {
 
           <View style={styles.cloneOrderContainer}>
             <TouchableOpacity
-              style={[styles.sendOrderButton, { backgroundColor: colorTheme.background.accent }]}
+              style={styles.sendOrderButton}
               onPress={() => {
                 // TODO: Implement copy order functionality
                 navigation.navigate("MainTabNavigator", {
@@ -72,9 +63,7 @@ export default function FullOrderScreen() {
                 });
               }}
             >
-              <Text style={[styles.sendOrderText, { color: colorTheme.text.onAccent }]}>
-                Clonează comanda
-              </Text>
+              <Text style={styles.sendOrderText}>Clonează comanda</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -83,9 +72,10 @@ export default function FullOrderScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   screen: {
     flex: 1,
+    backgroundColor: theme.background.primary,
   },
   titleScreenContainer: {
     marginBottom: 20,
@@ -99,9 +89,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 52,
     paddingVertical: 12,
     borderRadius: 18,
+    backgroundColor: theme.background.accent,
   },
   sendOrderText: {
     fontSize: 22,
     fontWeight: "bold",
+    color: theme.text.onAccent,
   },
-});
+}));

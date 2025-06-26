@@ -1,9 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
+import { StyleSheet, useUnistyles } from "react-native-unistyles";
 import { ProductId } from "src/api/types/Product";
-import useColorTheme from "src/hooks/useColorTheme";
 import { useProductsMap } from "src/hooks/useProductsMap";
 import { RootStackParamList } from "src/navigation/RootStackNavigator";
 import logger from "src/utils/logger";
@@ -19,7 +19,7 @@ type ProductLinkProps = {
 export default function ProductLinks({ productIds }: ProductLinkProps) {
   logger.render("ProductLinks");
 
-  const colorTheme = useColorTheme();
+  const { theme } = useUnistyles();
   const navigation = useNavigation<NavigationProps>();
   const productsMap = useProductsMap();
 
@@ -31,7 +31,7 @@ export default function ProductLinks({ productIds }: ProductLinkProps) {
         return (
           <TouchableOpacity
             key={product.id}
-            style={[styles.linkButton, { backgroundColor: colorTheme.background.accent }]}
+            style={styles.linkButton}
             onPress={() =>
               navigation.navigate("MainTabNavigator", {
                 screen: "MenuStackNavigator",
@@ -47,8 +47,8 @@ export default function ProductLinks({ productIds }: ProductLinkProps) {
               imageVersion={product.imageVersion}
               style={styles.image}
             />
-            <Text style={[styles.linkText, { color: colorTheme.text.onAccent }]}>{product.name}</Text>
-            <Feather style={styles.icon} name="arrow-right" size={24} color={colorTheme.text.onAccent} />
+            <Text style={styles.linkText}>{product.name}</Text>
+            <Feather style={styles.icon} name="arrow-right" size={24} color={theme.text.onAccent} />
           </TouchableOpacity>
         );
       })}
@@ -56,7 +56,7 @@ export default function ProductLinks({ productIds }: ProductLinkProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   linkButton: {
     flexDirection: "row",
     alignItems: "center",
@@ -66,12 +66,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 9999,
     marginVertical: 4,
+    backgroundColor: theme.background.accent,
   },
   linkText: {
     fontSize: 16,
     fontWeight: "600",
     marginLeft: 12,
     flexShrink: 1,
+    color: theme.text.onAccent,
   },
   image: {
     width: 52,
@@ -81,4 +83,4 @@ const styles = StyleSheet.create({
   icon: {
     marginLeft: "auto",
   },
-});
+}));

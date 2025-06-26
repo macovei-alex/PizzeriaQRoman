@@ -1,7 +1,7 @@
 import React from "react";
-import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Alert, TouchableOpacity, View } from "react-native";
+import { StyleSheet, useUnistyles } from "react-native-unistyles";
 import GoBackButtonSvg from "src/components/svg/GoBackButtonSvg";
-import useColorTheme from "src/hooks/useColorTheme";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useQueryClient } from "@tanstack/react-query";
@@ -11,7 +11,9 @@ import { Message } from "src/api/types/Message";
 import logger from "src/utils/logger";
 
 export default function TopBar() {
-  const colorTheme = useColorTheme();
+  logger.render("TopBar");
+
+  const { theme } = useUnistyles();
   const navigation = useNavigation();
   const queryClient = useQueryClient();
   const accountId = useAuthContext().account?.id;
@@ -38,18 +40,18 @@ export default function TopBar() {
   };
 
   return (
-    <View style={[styles.container, { borderColor: colorTheme.text.primary }]}>
+    <View style={styles.container}>
       <TouchableOpacity style={styles.svgContainer} onPress={() => navigation.goBack()}>
         <GoBackButtonSvg style={styles.goBackButton} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.svgContainer} onPress={handleDeleteConversation}>
-        <FontAwesome name="trash-o" size={24} color={colorTheme.text.accent} />
+        <FontAwesome name="trash-o" size={24} color={theme.text.accent} />
       </TouchableOpacity>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   container: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -57,6 +59,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     padding: 12,
     paddingRight: 16,
+    borderColor: theme.text.primary,
   },
   svgContainer: {
     justifyContent: "center",
@@ -66,4 +69,4 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
   },
-});
+}));

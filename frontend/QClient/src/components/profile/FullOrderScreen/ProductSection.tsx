@@ -1,7 +1,7 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 import OrderItemCard from "./OrderItemCard";
-import useColorTheme from "src/hooks/useColorTheme";
 import logger from "src/utils/logger";
 import { formatPrice } from "src/utils/utils";
 import { FullOrderItem } from "src/api/types/order/FullHistoryOrder";
@@ -27,8 +27,6 @@ type ProductSectionProps = {
 export default function ProductSection({ orderId, orderItems }: ProductSectionProps) {
   logger.render("ProductSection");
 
-  const colorTheme = useColorTheme();
-
   const prices = orderItems.map((cartItem) => calculatePrice(cartItem));
   const totalPrice = prices.reduce((acc, price) => acc + price, 0);
 
@@ -38,17 +36,15 @@ export default function ProductSection({ orderId, orderItems }: ProductSectionPr
         <OrderItemCard key={orderItem.id} orderId={orderId} orderItem={orderItem} price={prices[index]} />
       ))}
       <View style={styles.totalPriceContainerContainer}>
-        <View style={[styles.totalPriceContainer, { backgroundColor: colorTheme.background.accent }]}>
-          <Text style={[styles.totalPriceText, { color: colorTheme.text.onAccent }]}>
-            {"Total de comandă: " + formatPrice(totalPrice)}
-          </Text>
+        <View style={styles.totalPriceContainer}>
+          <Text style={styles.totalPriceText}>{"Total de comandă: " + formatPrice(totalPrice)}</Text>
         </View>
       </View>
     </>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   totalPriceContainerContainer: {
     alignItems: "center",
   },
@@ -58,9 +54,11 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderRadius: 18,
     marginVertical: 16,
+    backgroundColor: theme.background.accent,
   },
   totalPriceText: {
     fontSize: 18,
     fontWeight: "bold",
+    color: theme.text.onAccent,
   },
-});
+}));

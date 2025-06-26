@@ -1,7 +1,7 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 import { Address } from "src/api/types/Address";
-import useColorTheme from "src/hooks/useColorTheme";
 import logger from "src/utils/logger";
 
 type AdditionalInfoSectionProps = {
@@ -12,27 +12,20 @@ type AdditionalInfoSectionProps = {
 export default function AdditionalInfoSection({ address, additionalNotes }: AdditionalInfoSectionProps) {
   logger.render("AdditionalInfoSection");
 
-  const colorTheme = useColorTheme();
-
   return (
     <View style={styles.container}>
       <View style={styles.addressSection}>
         <Text style={styles.subsectionTitle}>Adresă de livrare</Text>
-        <View style={[styles.addressContainer, { backgroundColor: colorTheme.background.elevated }]}>
-          <Text style={[styles.addressText, { color: colorTheme.text.primary }]}>
-            {address.addressString}
-          </Text>
+        <View style={styles.addressContainer}>
+          <Text style={styles.addressText}>{address.addressString}</Text>
         </View>
       </View>
 
       {/* additional notes */}
       {additionalNotes && (
         <>
-          <Text style={[styles.subsectionTitle, { color: colorTheme.text.primary }]}>Mențiuni speciale</Text>
-          <Text
-            style={[styles.additionalNotesText, { backgroundColor: colorTheme.background.elevated }]}
-            numberOfLines={10}
-          >
+          <Text style={styles.subsectionTitle}>Mențiuni speciale</Text>
+          <Text style={styles.additionalNotesText} numberOfLines={10}>
             {additionalNotes}
           </Text>
         </>
@@ -41,7 +34,7 @@ export default function AdditionalInfoSection({ address, additionalNotes }: Addi
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   container: {
     marginTop: 16,
     paddingVertical: 8,
@@ -55,14 +48,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 12,
+    color: theme.text.primary,
   },
   addressContainer: {
     paddingHorizontal: 24,
     paddingVertical: 16,
     borderRadius: 24,
+    backgroundColor: theme.background.elevated,
   },
   addressText: {
     fontSize: 16,
+    color: theme.text.primary,
   },
   additionalNotesText: {
     paddingVertical: 12,
@@ -71,5 +67,6 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
     borderRadius: 24,
     fontSize: 16,
+    backgroundColor: theme.background.elevated,
   },
-});
+}));

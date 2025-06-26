@@ -3,8 +3,7 @@ import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet } from "react-native";
-import useColorTheme from "src/hooks/useColorTheme";
+import { StyleSheet, useUnistyles } from "react-native-unistyles";
 import logger from "src/utils/logger";
 import HomeIconSvg from "src/components/svg/HomeIconSvg";
 import CartIconSvg from "src/components/svg/CartIconSvg";
@@ -21,7 +20,8 @@ type RouteProps = RouteProp<RootStackParamList, "OrderDeliveryScreen">;
 export default function OrderDeliveryScreen() {
   logger.render("OrderDeliveryScreen");
 
-  const colorTheme = useColorTheme();
+  const { theme } = useUnistyles();
+
   const route = useRoute<RouteProps>();
   const restaurantLocationQuery = useRestaurantLocationQuery();
   const fullOrderQuery = useFullOrderQuery(route.params.orderId);
@@ -96,9 +96,9 @@ export default function OrderDeliveryScreen() {
         >
           <HomeIconSvg
             style={styles.svgIcons}
-            stroke={colorTheme.text.onAccent}
-            fillPrimary={colorTheme.background.accent}
-            fillSecondary={colorTheme.background.accent}
+            stroke={theme.text.onAccent}
+            fillPrimary={theme.background.accent}
+            fillSecondary={theme.background.accent}
           />
         </Marker>
         <Marker
@@ -111,9 +111,9 @@ export default function OrderDeliveryScreen() {
         >
           <CartIconSvg
             style={styles.svgIcons}
-            stroke={colorTheme.text.onAccent}
-            fillPrimary={colorTheme.background.accent}
-            fillSecondary={colorTheme.background.accent}
+            stroke={theme.text.onAccent}
+            fillPrimary={theme.background.accent}
+            fillSecondary={theme.background.accent}
           />
         </Marker>
         {points && points.length > 0 && <Polyline coordinates={points} strokeWidth={4} strokeColor="red" />}

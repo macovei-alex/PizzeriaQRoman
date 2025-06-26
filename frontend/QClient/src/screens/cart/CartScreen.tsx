@@ -1,14 +1,6 @@
 import React, { useRef, useState } from "react";
-import {
-  KeyboardAvoidingView,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import useColorTheme from "src/hooks/useColorTheme";
+import { KeyboardAvoidingView, RefreshControl, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 import ProductSection from "src/components/cart/CartScreen/ProductSection";
 import { useCartContext } from "src/context/CartContext/CartContext";
 import { showToast } from "src/utils/toast";
@@ -27,7 +19,6 @@ import AdditionalInfoSection, {
 import useAddressesQuery from "src/api/hooks/queries/useAddressesQuery";
 import { useAuthContext } from "src/context/AuthContext";
 import { RootStackParamList } from "src/navigation/RootStackNavigator";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { AxiosError } from "axios";
 import { PlacedOrder } from "src/api/types/order/PlacedOrder";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
@@ -45,7 +36,6 @@ export default function CartScreen() {
   if (!authContext.account) throw new Error("Account is not defined in CartScreen");
   const accountId = authContext.account.id;
   const navigation = useNavigation<NavigationProps>();
-  const colorTheme = useColorTheme();
   const { cart, emptyCart } = useCartContext();
   const queryClient = useQueryClient();
   const addressQuery = useAddressesQuery();
@@ -114,37 +104,31 @@ export default function CartScreen() {
   if (cart.length === 0) return <EmptyCartScreen />;
 
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      style={[styles.screen, { backgroundColor: colorTheme.background.primary }]}
-    >
-      <SafeAreaView>
-        <ScrollView
-          refreshControl={<RefreshControl refreshing={false} onRefresh={() => addressQuery.refetch()} />}
-        >
-          <ScreenTitle title="Coșul meu" containerStyle={styles.titleScreenContainer} />
+    <KeyboardAvoidingView style={styles.screen} behavior="padding">
+      <ScrollView
+        refreshControl={<RefreshControl refreshing={false} onRefresh={() => addressQuery.refetch()} />}
+      >
+        <ScreenTitle title="Coșul meu" containerStyle={styles.titleScreenContainer} />
 
-          <ProductSection />
+        <ProductSection />
 
-          <AdditionalInfoSection addresses={addressQuery.data} ref={additionalSectionRef} />
+        <AdditionalInfoSection addresses={addressQuery.data} ref={additionalSectionRef} />
 
-          <View style={styles.sendOrderContainer}>
-            <TouchableOpacity
-              style={[styles.sendOrderButton, { backgroundColor: colorTheme.background.accent }]}
-              onPress={sendOrder}
-            >
-              <Text style={[styles.sendOrderText, { color: colorTheme.text.onAccent }]}>Trimite comanda</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+        <View style={styles.sendOrderContainer}>
+          <TouchableOpacity style={styles.sendOrderButton} onPress={sendOrder}>
+            <Text style={styles.sendOrderText}>Trimite comanda</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme, runtime) => ({
   screen: {
     flex: 1,
+    backgroundColor: theme.background.primary,
+    paddingTop: runtime.insets.top,
   },
   titleScreenContainer: {
     marginBottom: 20,
@@ -152,15 +136,17 @@ const styles = StyleSheet.create({
   sendOrderContainer: {
     alignItems: "center",
     marginTop: 40,
-    marginBottom: 20,
+    marginBottom: runtime.insets.bottom,
   },
   sendOrderButton: {
     paddingHorizontal: 52,
     paddingVertical: 12,
     borderRadius: 18,
+    backgroundColor: theme.background.accent,
   },
   sendOrderText: {
     fontSize: 22,
     fontWeight: "bold",
+    color: theme.text.onAccent,
   },
-});
+}));

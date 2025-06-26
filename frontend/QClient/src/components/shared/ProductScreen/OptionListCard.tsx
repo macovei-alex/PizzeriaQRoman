@@ -1,6 +1,6 @@
 import React, { memo, useCallback } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import useColorTheme from "src/hooks/useColorTheme";
+import { Text, View } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 import { OptionId, OptionList } from "src/api/types/Product";
 import OptionCard from "./OptionCard";
 import logger from "src/utils/logger";
@@ -16,8 +16,6 @@ type OptionListProps = {
 
 function OptionListCard({ optionList, currentOptions, setCartItemOptions }: OptionListProps) {
   logger.render(`OptionListCard-${optionList.id}`);
-
-  const colorTheme = useColorTheme();
 
   const handleOptionChange = useCallback(
     (optionId: OptionId, newCount: number) => {
@@ -52,7 +50,7 @@ function OptionListCard({ optionList, currentOptions, setCartItemOptions }: Opti
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.titleText, { color: colorTheme.text.primary }]}>{optionList.text}</Text>
+      <Text style={styles.titleText}>{optionList.text}</Text>
       {optionList.options.map((option) => (
         <OptionCard
           key={option.id}
@@ -72,7 +70,7 @@ export default memo(OptionListCard, (prevProps, nextProps) => {
   return true;
 });
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   container: {
     marginHorizontal: 12,
   },
@@ -80,5 +78,6 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
     fontSize: 22,
     marginBottom: 12,
+    color: theme.text.primary,
   },
-});
+}));

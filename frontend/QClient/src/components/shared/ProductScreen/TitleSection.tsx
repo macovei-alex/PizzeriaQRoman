@@ -1,7 +1,7 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 import GoBackButtonSvg from "src/components/svg/GoBackButtonSvg";
-import useColorTheme from "src/hooks/useColorTheme";
 import { ProductWithOptions } from "src/api/types/Product";
 import logger from "src/utils/logger";
 import { useNavigation } from "@react-navigation/native";
@@ -16,7 +16,6 @@ export default function TitleSection({ product }: TitleSectionProps) {
   logger.render("TitleSection");
 
   const navigation = useNavigation();
-  const colorTheme = useColorTheme();
 
   return (
     <>
@@ -29,20 +28,18 @@ export default function TitleSection({ product }: TitleSectionProps) {
           <GoBackButtonSvg />
         </TouchableOpacity>
       </RemoteImageBackground>
-      <Text style={[styles.titleText, { color: colorTheme.text.primary }]}>{product.name}</Text>
+      <Text style={styles.titleText}>{product.name}</Text>
       <View style={styles.subtitleContainer}>
-        <Text style={[styles.subtitleText, { color: colorTheme.text.primary }]}>
+        <Text style={styles.subtitleText}>
           {product.subtitle} - {formatPrice(product.price)}
         </Text>
       </View>
-      <Text style={[styles.descriptionText, { color: colorTheme.text.secondary }]}>
-        {product.description}
-      </Text>
+      <Text style={styles.descriptionText}>{product.description}</Text>
     </>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   image: {
     aspectRatio: 1,
     width: "100%",
@@ -59,6 +56,7 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     marginHorizontal: 12,
     marginTop: 12,
+    color: theme.text.primary,
   },
   subtitleContainer: {
     marginTop: -4,
@@ -68,10 +66,12 @@ const styles = StyleSheet.create({
   subtitleText: {
     fontSize: 20,
     fontWeight: "500",
+    color: theme.text.primary,
   },
   descriptionText: {
     marginTop: 20,
     marginHorizontal: 12,
     fontSize: 13,
+    color: theme.text.secondary,
   },
-});
+}));

@@ -1,6 +1,6 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import useColorTheme from "src/hooks/useColorTheme";
+import { Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 import TickCheckboxSvg from "src/components/svg/TickCheckboxSvg";
 import { Option, OptionId } from "src/api/types/Product";
 import logger from "src/utils/logger";
@@ -17,8 +17,6 @@ type OptionCardProps = {
 export default function OptionCard({ option, currentCount, onOptionChange }: OptionCardProps) {
   logger.render("OptionCard");
 
-  const colorTheme = useColorTheme();
-
   const displayCount = currentCount + (currentCount === 0 ? 1 : 0);
   const shouldDisplayPrice = option.price > 0;
   const priceToDisplay = displayCount * option.price;
@@ -27,7 +25,7 @@ export default function OptionCard({ option, currentCount, onOptionChange }: Opt
     <View style={styles.container}>
       {option.maxCount === 1 ? (
         <TouchableOpacity
-          style={[styles.svgContainer, { borderColor: colorTheme.text.primary }]}
+          style={styles.svgContainer}
           activeOpacity={0.8}
           onPress={() => onOptionChange(option.id, currentCount === 1 ? 0 : 1)}
         >
@@ -37,7 +35,7 @@ export default function OptionCard({ option, currentCount, onOptionChange }: Opt
         <>
           {/* minus */}
           <TouchableOpacity
-            style={[styles.svgContainer, { borderColor: colorTheme.text.primary }]}
+            style={styles.svgContainer}
             disabled={currentCount === 0}
             activeOpacity={0.8}
             onPress={() => onOptionChange(option.id, currentCount - 1)}
@@ -50,7 +48,7 @@ export default function OptionCard({ option, currentCount, onOptionChange }: Opt
 
           {/* plus */}
           <TouchableOpacity
-            style={[styles.svgContainer, { borderColor: colorTheme.text.primary }]}
+            style={styles.svgContainer}
             disabled={currentCount === option.maxCount}
             activeOpacity={0.8}
             onPress={() => onOptionChange(option.id, currentCount + 1)}
@@ -59,19 +57,15 @@ export default function OptionCard({ option, currentCount, onOptionChange }: Opt
           </TouchableOpacity>
         </>
       )}
-      <Text style={[styles.optionNameText, { color: colorTheme.text.primary }]} numberOfLines={2}>
+      <Text style={styles.optionNameText} numberOfLines={2}>
         {option.name}
       </Text>
-      {shouldDisplayPrice && (
-        <Text style={[styles.priceText, { color: colorTheme.text.accent }]}>
-          +{formatPrice(priceToDisplay)}
-        </Text>
-      )}
+      {shouldDisplayPrice && <Text style={styles.priceText}>+{formatPrice(priceToDisplay)}</Text>}
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   container: {
     flexDirection: "row",
     alignItems: "center",
@@ -79,6 +73,7 @@ const styles = StyleSheet.create({
   },
   svgContainer: {
     marginRight: 6,
+    borderColor: theme.text.primary,
   },
   svg: {
     width: 30,
@@ -88,6 +83,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     flexGrow: 1,
     flexShrink: 1,
+    color: theme.text.primary,
   },
   optionCountText: {
     fontSize: 16,
@@ -97,5 +93,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     flexShrink: 0,
+    color: theme.text.accent,
   },
-});
+}));

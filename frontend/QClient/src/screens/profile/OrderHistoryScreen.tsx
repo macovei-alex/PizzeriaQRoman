@@ -1,13 +1,17 @@
 import React, { useMemo } from "react";
-import { ActivityIndicator, RefreshControl, StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ActivityIndicator, RefreshControl, View } from "react-native";
+import { StyleSheet, useUnistyles } from "react-native-unistyles";
 import OrderCard from "src/components/profile/OrderHistoryScreen/OrderCard";
 import ScreenTitle from "src/components/shared/generic/ScreenTitle";
 import useOrderHistoryInfiniteQuery from "src/api/hooks/queries/useOrderHistoryInfiniteQuery";
 import logger from "src/utils/logger";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import { LegendList } from "@legendapp/list";
-import useColorTheme from "src/hooks/useColorTheme";
+
+function CustomActivityIndicator() {
+  const { theme } = useUnistyles();
+  return <ActivityIndicator size="large" color={theme.text.accent} style={styles.loadingIndicator} />;
+}
 
 export default function OrderHistoryScreen() {
   logger.render("OrderHistoryScreen");
@@ -19,7 +23,7 @@ export default function OrderHistoryScreen() {
   if (ordersQuery.isError) return <ErrorComponent />;
 
   return (
-    <SafeAreaView style={styles.screen}>
+    <View style={styles.screen}>
       <ScreenTitle title="Istoricul comenzilor" />
       {ordersQuery.isLoading ? (
         <CustomActivityIndicator />
@@ -27,8 +31,12 @@ export default function OrderHistoryScreen() {
         <LegendList
           data={flattenedOrders}
           keyExtractor={(order) => order.id.toString()}
-          renderItem={({ item: order }) => (
-            <OrderCard key={order.id} order={order} containerStyle={styles.orderCardContainer} />
+          renderItem={({ item: order, index }) => (
+            <OrderCard
+              key={order.id}
+              order={order}
+              containerStyle={styles.orderCardContainer(index === flattenedOrders.length - 1)}
+            />
           )}
           onEndReachedThreshold={0.8}
           onEndReached={() =>
@@ -41,24 +49,21 @@ export default function OrderHistoryScreen() {
           }
         />
       )}
-    </SafeAreaView>
+    </View>
   );
 }
 
-function CustomActivityIndicator() {
-  const colorTheme = useColorTheme();
-  return <ActivityIndicator size="large" color={colorTheme.text.accent} style={styles.loadingIndicator} />;
-}
-
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme, runtime) => ({
   screen: {
     flex: 1,
+    top: runtime.insets.top,
   },
-  orderCardContainer: {
-    marginVertical: 5,
-    marginHorizontal: 10,
-  },
+  orderCardContainer: (isLast: boolean) => ({
+    marginHorizontal: 20,
+    marginTop: 10,
+    marginBottom: isLast ? runtime.insets.bottom : 20,
+  }),
   loadingIndicator: {
     marginVertical: 20,
   },
-});
+}));

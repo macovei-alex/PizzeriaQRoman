@@ -1,7 +1,7 @@
 import React from "react";
-import { View, Text, StyleSheet, LayoutChangeEvent } from "react-native";
+import { View, Text, LayoutChangeEvent } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 import ProductCard from "./ProductCard";
-import useColorTheme from "src/hooks/useColorTheme";
 import { Category, CategoryId } from "src/api/types/Category";
 import { Product } from "src/api/types/Product";
 import logger from "src/utils/logger";
@@ -19,8 +19,6 @@ export default function VerticalCategorySection({
 }: VerticalCategorySectionProps) {
   logger.render("VerticalCategorySection");
 
-  const colorTheme = useColorTheme();
-
   return (
     <View
       key={category.id}
@@ -30,7 +28,7 @@ export default function VerticalCategorySection({
       }}
     >
       <View style={styles.categoryTextContainer}>
-        <Text style={[styles.categoryText, { color: colorTheme.text.primary }]}>{category.name}</Text>
+        <Text style={styles.categoryText}>{category.name}</Text>
       </View>
       {products.map((product) => (
         <ProductCard key={product.id} product={product} />
@@ -39,7 +37,7 @@ export default function VerticalCategorySection({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   categoryTextContainer: {
     marginVertical: 12,
     marginHorizontal: 22,
@@ -47,5 +45,6 @@ const styles = StyleSheet.create({
   categoryText: {
     fontSize: 20,
     fontWeight: 800,
+    color: theme.text.primary,
   },
-});
+}));

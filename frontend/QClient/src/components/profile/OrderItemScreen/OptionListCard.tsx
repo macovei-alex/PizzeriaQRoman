@@ -1,6 +1,6 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import useColorTheme from "src/hooks/useColorTheme";
+import { Text, View } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 import { OptionId, OptionList } from "src/api/types/Product";
 import logger from "src/utils/logger";
 import TickCheckboxSvg from "src/components/svg/TickCheckboxSvg";
@@ -14,11 +14,9 @@ type OptionListProps = {
 export default function OptionListCard({ optionList, selectedOptions }: OptionListProps) {
   logger.render(`OptionListCard-${optionList.id}`);
 
-  const colorTheme = useColorTheme();
-
   return (
     <View style={styles.container}>
-      <Text style={[styles.titleText, { color: colorTheme.text.primary }]}>{optionList.text}</Text>
+      <Text style={styles.titleText}>{optionList.text}</Text>
       {/* options */}
       {optionList.options.map((option) => {
         const currentCount = selectedOptions[option.id] ?? 0;
@@ -29,30 +27,19 @@ export default function OptionListCard({ optionList, selectedOptions }: OptionLi
         return (
           <View key={option.id} style={styles.optionContainer}>
             {option.maxCount === 1 ? (
-              <View style={[styles.svgContainer, { borderColor: colorTheme.text.primary }]}>
+              <View style={styles.svgContainer}>
                 <TickCheckboxSvg checked={currentCount === 1} style={styles.svg} />
               </View>
             ) : (
               <>
-                <Text
-                  style={[
-                    styles.optionCountText,
-                    currentCount > 0 && { color: colorTheme.text.accent, fontWeight: "bold" },
-                  ]}
-                >
-                  {currentCount}
-                </Text>
-                <Text style={styles.optionCountText}>x</Text>
+                <Text style={styles.optionCountText(currentCount > 0)}>{currentCount}</Text>
+                <Text style={styles.optionCountText(false)}>x</Text>
               </>
             )}
-            <Text style={[styles.optionNameText, { color: colorTheme.text.primary }]} numberOfLines={2}>
+            <Text style={styles.optionNameText} numberOfLines={2}>
               {option.name}
             </Text>
-            {shouldDisplayPrice && (
-              <Text style={[styles.priceText, { color: colorTheme.text.accent }]}>
-                +{formatPrice(priceToDisplay)}
-              </Text>
-            )}
+            {shouldDisplayPrice && <Text style={styles.priceText}>+{formatPrice(priceToDisplay)}</Text>}
           </View>
         );
       })}
@@ -60,7 +47,7 @@ export default function OptionListCard({ optionList, selectedOptions }: OptionLi
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   container: {
     marginHorizontal: 12,
   },
@@ -68,6 +55,7 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
     fontSize: 22,
     marginBottom: 12,
+    color: theme.text.primary,
   },
   optionContainer: {
     flexDirection: "row",
@@ -76,6 +64,7 @@ const styles = StyleSheet.create({
   },
   svgContainer: {
     marginRight: 6,
+    borderColor: theme.text.primary,
   },
   svg: {
     width: 30,
@@ -85,14 +74,24 @@ const styles = StyleSheet.create({
     fontSize: 16,
     flexGrow: 1,
     flexShrink: 1,
+    color: theme.text.primary,
   },
-  optionCountText: {
-    fontSize: 16,
-    marginRight: 6,
-  },
+  optionCountText: (isSelectedAtLeastOnce: boolean) =>
+    isSelectedAtLeastOnce
+      ? {
+          fontSize: 16,
+          marginRight: 6,
+          color: theme.text.accent,
+          fontWeight: "bold",
+        }
+      : {
+          fontSize: 16,
+          marginRight: 6,
+        },
   priceText: {
     fontSize: 14,
     fontWeight: "bold",
     flexShrink: 0,
+    color: theme.text.accent,
   },
-});
+}));

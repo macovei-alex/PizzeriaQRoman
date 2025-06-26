@@ -1,12 +1,11 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { FontAwesome } from "@expo/vector-icons";
-import { View, Text, StyleSheet, ActivityIndicator, Platform, TouchableOpacity } from "react-native";
+import { View, Text, ActivityIndicator, Platform, TouchableOpacity } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 import MapView from "react-native-maps";
-import useColorTheme from "src/hooks/useColorTheme";
 import { useCurrentLocation } from "src/hooks/useCurrentLocation";
 import logger from "src/utils/logger";
 import SearchIconSvg from "src/components/svg/SearchIconSvg";
-import { SafeAreaView } from "react-native-safe-area-context";
 import AddressForm, { NewAddress } from "src/components/shared/global/AddressesScreen/AddressForm";
 import { api } from "src/api";
 import { useAuthContext } from "src/context/AuthContext";
@@ -15,13 +14,15 @@ import { useBidirectionalAddressRegionUpdates } from "src/components/shared/glob
 import { showToast } from "src/utils/toast";
 import { useNavigation } from "@react-navigation/native";
 import { useQueryClient } from "@tanstack/react-query";
+import { useUnistyles } from "react-native-unistyles";
 
 export default function NewAddressScreen() {
   logger.render("NewAddressScreen");
 
+  const { theme } = useUnistyles();
+
   const accountId = useAuthContext().account?.id;
   if (!accountId) throw new Error("Account is not defined in NewAddressScreen");
-  const colorTheme = useColorTheme();
   const navigation = useNavigation();
   const queryClient = useQueryClient();
 
@@ -93,22 +94,13 @@ export default function NewAddressScreen() {
         }}
       />
 
-      <SafeAreaView style={styles.floatingContainer} pointerEvents="box-none">
-        <View
-          style={[
-            styles.addressContainer,
-            {
-              backgroundColor: colorTheme.background.primary,
-              borderColor: colorTheme.text.primary,
-              shadowColor: colorTheme.text.primary,
-            },
-          ]}
-        >
+      <View style={styles.floatingContainer} pointerEvents="box-none">
+        <View style={styles.addressContainer}>
           <View style={styles.iconContainer}>
             {fetchingAddress ? (
-              <ActivityIndicator size={32} color={colorTheme.text.primary} />
+              <ActivityIndicator size={32} color={theme.text.primary} />
             ) : (
-              <SearchIconSvg style={styles.searchIcon} stroke={colorTheme.text.primary} />
+              <SearchIconSvg style={styles.searchIcon} stroke={theme.text.primary} />
             )}
           </View>
           <Text style={styles.addressText} numberOfLines={2}>
@@ -116,17 +108,12 @@ export default function NewAddressScreen() {
           </Text>
         </View>
 
-        <FontAwesome name="map-marker" size={48} color={colorTheme.background.accent} />
+        <FontAwesome name="map-marker" size={48} color={theme.background.accent} />
 
-        <TouchableOpacity
-          style={[styles.selectAddressButton, { backgroundColor: colorTheme.background.accent }]}
-          onPress={() => setScreenState("modal-open")}
-        >
-          <Text style={[styles.selectAddressText, { color: colorTheme.text.onAccent }]}>
-            Adăugați detalii
-          </Text>
+        <TouchableOpacity style={styles.selectAddressButton} onPress={() => setScreenState("modal-open")}>
+          <Text style={styles.selectAddressText}>Adăugați detalii</Text>
         </TouchableOpacity>
-      </SafeAreaView>
+      </View>
 
       {screenState === "modal-open" && (
         <AddressForm
@@ -137,14 +124,14 @@ export default function NewAddressScreen() {
 
       {screenState === "sending" && (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size={80} color={colorTheme.background.accent} />
+          <ActivityIndicator size={80} color={theme.background.accent} />
         </View>
       )}
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme, runtime) => ({
   container: {
     flex: 1,
   },
@@ -155,7 +142,9 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     justifyContent: "space-between",
     alignItems: "center",
-    padding: 16,
+    paddingTop: runtime.insets.top + 16,
+    paddingBottom: runtime.insets.bottom + 16,
+    paddingHorizontal: 16,
   },
   addressContainer: {
     flexDirection: "row",
@@ -164,6 +153,9 @@ const styles = StyleSheet.create({
     gap: 12,
     padding: 16,
     borderRadius: 12,
+    backgroundColor: theme.background.primary,
+    borderColor: theme.text.primary,
+    shadowColor: theme.text.primary,
     ...Platform.select({
       android: {
         elevation: 12,
@@ -195,10 +187,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 12,
     paddingVertical: 12,
+    backgroundColor: theme.background.accent,
   },
   selectAddressText: {
     fontSize: 18,
     fontWeight: "bold",
+    color: theme.text.onAccent,
   },
   loadingContainer: {
     ...StyleSheet.absoluteFillObject,
@@ -207,4 +201,4 @@ const styles = StyleSheet.create({
     zIndex: 2,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
-});
+}));

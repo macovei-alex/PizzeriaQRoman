@@ -1,8 +1,8 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 import { useCartContext } from "src/context/CartContext/CartContext";
 import CartItemCard from "./CartItemCard";
-import useColorTheme from "src/hooks/useColorTheme";
 import logger from "src/utils/logger";
 import { formatPrice } from "src/utils/utils";
 import { CartItem } from "src/context/CartContext/types";
@@ -29,7 +29,6 @@ function calculatePrice(item: CartItem) {
 export default function ProductSection() {
   logger.render("ProductSection");
 
-  const colorTheme = useColorTheme();
   const { cart } = useCartContext();
 
   const prices = cart.map((cartItem) => calculatePrice(cartItem));
@@ -41,17 +40,15 @@ export default function ProductSection() {
         <CartItemCard key={cartItem.id} cartItem={cartItem} price={prices[index]} />
       ))}
       <View style={styles.totalPriceContainerContainer}>
-        <View style={[styles.totalPriceContainer, { backgroundColor: colorTheme.background.accent }]}>
-          <Text style={[styles.totalPriceText, { color: colorTheme.text.onAccent }]}>
-            {"Total de comandă: " + formatPrice(totalPrice)}
-          </Text>
+        <View style={styles.totalPriceContainer}>
+          <Text style={styles.totalPriceText}>{"Total de comandă: " + formatPrice(totalPrice)}</Text>
         </View>
       </View>
     </>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   totalPriceContainerContainer: {
     alignItems: "center",
   },
@@ -61,9 +58,11 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderRadius: 18,
     marginVertical: 16,
+    backgroundColor: theme.background.accent,
   },
   totalPriceText: {
     fontSize: 18,
     fontWeight: "bold",
+    color: theme.text.onAccent,
   },
-});
+}));

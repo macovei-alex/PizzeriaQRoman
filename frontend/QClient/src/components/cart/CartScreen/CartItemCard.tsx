@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import useColorTheme from "src/hooks/useColorTheme";
+import { Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 import PlusCircleSvg from "src/components/svg/PlusCircleSvg";
 import MinusCircleSvg from "src/components/svg/MinusCircleSvg";
 import { useCartContext } from "src/context/CartContext/CartContext";
@@ -22,7 +22,6 @@ export default function CartItemCard({ cartItem, price }: CartItemCardProps) {
   logger.render("CartItemCard");
 
   const navigation = useNavigation<NavigationProps>();
-  const colorTheme = useColorTheme();
   const { changeCartItemCount } = useCartContext();
 
   const selectedOptionsStr = useMemo(
@@ -56,7 +55,7 @@ export default function CartItemCard({ cartItem, price }: CartItemCardProps) {
         })
       }
     >
-      <View style={[styles.container, { backgroundColor: colorTheme.background.card }]}>
+      <View style={styles.container}>
         {/* image */}
         <View style={styles.imageContainer}>
           <RemoteImage
@@ -69,34 +68,22 @@ export default function CartItemCard({ cartItem, price }: CartItemCardProps) {
         {/* info section */}
         <View style={styles.infoSectionContainer}>
           {/* product title */}
-          <Text
-            style={[styles.productNameText, { color: colorTheme.text.primary }]}
-            numberOfLines={1}
-            ellipsizeMode="tail"
-          >
+          <Text style={styles.productNameText} numberOfLines={1} ellipsizeMode="tail">
             {cartItem.product.name}
           </Text>
 
           {/* product subtitle */}
-          <Text
-            style={[styles.productSubtitleText, { color: colorTheme.text.primary }]}
-            numberOfLines={1}
-            ellipsizeMode="tail"
-          >
+          <Text style={styles.productSubtitleText} numberOfLines={1} ellipsizeMode="tail">
             {cartItem.product.subtitle}
           </Text>
 
           {/* product options */}
-          <Text style={[styles.productOptionsText, { color: colorTheme.text.secondary }]}>
-            {selectedOptionsStr}
-          </Text>
+          <Text style={styles.productOptionsText}>{selectedOptionsStr}</Text>
 
           {/* price section */}
           <View style={styles.priceSectionContainer}>
-            <View style={[styles.priceContainer, { backgroundColor: colorTheme.background.accent }]}>
-              <Text style={[styles.priceText, { color: colorTheme.text.onAccent }]}>
-                {formatPrice(price)}
-              </Text>
+            <View style={styles.priceContainer}>
+              <Text style={styles.priceText}>{formatPrice(price)}</Text>
             </View>
 
             {/* minus */}
@@ -118,13 +105,14 @@ export default function CartItemCard({ cartItem, price }: CartItemCardProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   container: {
     flexDirection: "row",
     gap: 16,
     margin: 8,
     padding: 12,
     borderRadius: 16,
+    backgroundColor: theme.background.card,
   },
   imageContainer: {
     width: "25%",
@@ -140,14 +128,17 @@ const styles = StyleSheet.create({
   productNameText: {
     fontSize: 20,
     fontWeight: "bold",
+    color: theme.text.primary,
   },
   productSubtitleText: {
     fontSize: 16,
+    color: theme.text.primary,
   },
   productOptionsText: {
     marginTop: 4,
     fontSize: 12,
     fontWeight: "light",
+    color: theme.text.secondary,
   },
   priceSectionContainer: {
     flexDirection: "row",
@@ -160,9 +151,11 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 8,
+    backgroundColor: theme.background.accent,
   },
   priceText: {
     fontSize: 18,
+    color: theme.text.onAccent,
   },
   plusMinusSvg: {
     width: 35,
@@ -173,4 +166,4 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
   },
-});
+}));

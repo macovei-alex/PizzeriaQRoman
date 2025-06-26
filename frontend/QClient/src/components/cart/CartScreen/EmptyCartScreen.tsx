@@ -1,27 +1,28 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { StyleSheet, useUnistyles } from "react-native-unistyles";
 import EmptyCartSvg from "src/components/svg/EmptyCartSvg";
-import useColorTheme from "src/hooks/useColorTheme";
 import logger from "src/utils/logger";
 
 export default function EmptyCartScreen() {
   logger.render("EmptyCartScreen");
 
-  const colorTheme = useColorTheme();
+  const { theme } = useUnistyles();
 
   return (
-    <View style={[styles.container, { backgroundColor: colorTheme.background.primary }]}>
-      <EmptyCartSvg style={styles.image} stroke={colorTheme.text.secondary} />
-      <Text style={[styles.emptyCartText, { color: colorTheme.text.secondary }]}>Coșul este gol</Text>
+    <View style={styles.container}>
+      <EmptyCartSvg style={styles.image} stroke={theme.text.secondary} />
+      <Text style={styles.emptyCartText}>Coșul este gol</Text>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: theme.background.primary,
   },
   image: {
     width: 320,
@@ -31,5 +32,6 @@ const styles = StyleSheet.create({
   emptyCartText: {
     fontSize: 24,
     fontWeight: "600",
+    color: theme.text.secondary,
   },
-});
+}));

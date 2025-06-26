@@ -1,7 +1,7 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 import { Message } from "src/api/types/Message";
-import useColorTheme from "src/hooks/useColorTheme";
 import logger from "src/utils/logger";
 import { formatTime } from "src/utils/utils";
 
@@ -13,10 +13,8 @@ type CharMessageProps = {
 export default function ChatMessage({ message, isThinking }: CharMessageProps) {
   logger.render("ChatMessage");
 
-  const colorTheme = useColorTheme();
-
   return (
-    <View style={[styles.container, { backgroundColor: colorTheme.background.card }]}>
+    <View style={styles.container}>
       <View style={styles.messageDetailsContainer}>
         {message.role === "assistant" && <Text style={styles.senderText}>Bot</Text>}
         <Text style={styles.timeText}>{formatTime(message.timestamp)}</Text>
@@ -26,12 +24,13 @@ export default function ChatMessage({ message, isThinking }: CharMessageProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   container: {
     padding: 12,
     borderRadius: 16,
     minWidth: "100%",
     maxWidth: "100%",
+    backgroundColor: theme.background.card,
   },
   messageDetailsContainer: {
     flexDirection: "row",
@@ -48,4 +47,4 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     justifyContent: "flex-end",
   },
-});
+}));

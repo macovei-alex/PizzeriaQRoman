@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { LayoutChangeEvent, RefreshControl, ScrollView } from "react-native";
+import { LayoutChangeEvent, RefreshControl, ScrollView, View } from "react-native";
 import LogoSection from "src/components/menu/MenuScreen/LogoSection";
 import HorizontalCategorySection from "src/components/menu/MenuScreen/HorizontalCategorySection";
 import VerticalCategorySection from "src/components/menu/MenuScreen/VerticalCategorySection";
@@ -10,9 +9,9 @@ import { Category, CategoryId } from "src/api/types/Category";
 import { Product } from "src/api/types/Product";
 import logger from "src/utils/logger";
 import MenuSkeletonLoader from "src/components/menu/MenuScreen/MenuSkeletonLoader";
-import useColorTheme from "src/hooks/useColorTheme";
 import ErrorComponent from "../../components/shared/generic/ErrorComponent";
 import { useScrollOffsets } from "src/hooks/useScrollOffsets";
+import { StyleSheet } from "react-native-unistyles";
 
 type ProductSplit = {
   category: Category;
@@ -22,7 +21,6 @@ type ProductSplit = {
 export default function MenuScreen() {
   logger.render("MenuScreen");
 
-  const colorTheme = useColorTheme();
   const productsQuery = useProductsQuery();
   const categoryQuery = useCategoriesQuery();
   const scrollRef = useRef<ScrollView>(null);
@@ -64,7 +62,7 @@ export default function MenuScreen() {
   if (!categoryQuery.data) throw new Error("Categories not found");
 
   return (
-    <SafeAreaView style={{ backgroundColor: colorTheme.background.primary }}>
+    <View style={styles.screen}>
       <ScrollView
         ref={scrollRef}
         refreshControl={
@@ -100,6 +98,13 @@ export default function MenuScreen() {
           ))}
         </>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
+
+const styles = StyleSheet.create((theme, runtime) => ({
+  screen: {
+    backgroundColor: theme.background.primary,
+    top: runtime.insets.top,
+  },
+}));

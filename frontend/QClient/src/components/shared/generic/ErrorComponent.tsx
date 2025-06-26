@@ -1,11 +1,11 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "src/constants/images";
 import { useAuthContext } from "src/context/AuthContext";
-import useColorTheme from "src/hooks/useColorTheme";
 
 type ErrorComponentProps = {
   onRetry?: () => void;
@@ -15,12 +15,11 @@ type ErrorComponentProps = {
 export default function ErrorComponent({ onRetry, size = "fullscreen" }: ErrorComponentProps) {
   const authContext = useAuthContext();
   const queryClient = useQueryClient();
-  const colorTheme = useColorTheme();
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colorTheme.background.primary }]}>
+    <SafeAreaView style={styles.container}>
       {/* title */}
-      <Text style={[styles.title, { color: colorTheme.text.primary }]}>Ceva nu a mers bine...</Text>
+      <Text style={styles.title}>Ceva nu a mers bine...</Text>
 
       {/* image */}
       {size === "fullscreen" && <Image source={images.sadChef} style={styles.image} />}
@@ -28,35 +27,31 @@ export default function ErrorComponent({ onRetry, size = "fullscreen" }: ErrorCo
       <View style={styles.buttonSection}>
         {/* retry button */}
         <TouchableOpacity
-          style={[styles.buttonContainer, { backgroundColor: colorTheme.background.accent }]}
+          style={styles.retryButtonContainer}
           onPress={() => {
             queryClient.invalidateQueries({ refetchType: "active" });
             if (onRetry) onRetry();
           }}
         >
-          <Text style={[styles.buttonText, { color: colorTheme.text.onAccent }]}>Reîncercare</Text>
+          <Text style={styles.retryButtonText}>Reîncercare</Text>
         </TouchableOpacity>
 
         {/* disconnect button */}
         <TouchableOpacity
-          style={[
-            styles.buttonContainer,
-            styles.buttonBorder,
-            { backgroundColor: colorTheme.background.primary, borderColor: colorTheme.text.primary },
-          ]}
+          style={styles.disconnectButtonContainer}
           onPress={() => {
             queryClient.invalidateQueries({ refetchType: "none" });
             authContext.logout();
           }}
         >
-          <Text style={[styles.buttonText, { color: colorTheme.text.primary }]}>Deconectare</Text>
+          <Text style={styles.disconnectButtonText}>Deconectare</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   container: {
     flex: 1,
     justifyContent: "center",
@@ -64,10 +59,12 @@ const styles = StyleSheet.create({
     gap: 32,
     paddingVertical: 20,
     paddingHorizontal: 40,
+    backgroundColor: theme.background.primary,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
+    color: theme.text.primary,
   },
   image: {
     width: "100%",
@@ -77,17 +74,30 @@ const styles = StyleSheet.create({
     width: "100%",
     gap: 16,
   },
-  buttonContainer: {
+  retryButtonContainer: {
     padding: 12,
     borderRadius: 12,
     width: "100%",
     alignItems: "center",
+    backgroundColor: theme.background.accent,
   },
-  buttonText: {
+  disconnectButtonContainer: {
+    padding: 12,
+    borderRadius: 12,
+    width: "100%",
+    alignItems: "center",
+    borderWidth: 1,
+    backgroundColor: theme.background.primary,
+    borderColor: theme.text.primary,
+  },
+  retryButtonText: {
     fontSize: 18,
     fontWeight: "400",
+    color: theme.text.onAccent,
   },
-  buttonBorder: {
-    borderWidth: 1,
+  disconnectButtonText: {
+    fontSize: 18,
+    fontWeight: "400",
+    color: theme.text.primary,
   },
-});
+}));

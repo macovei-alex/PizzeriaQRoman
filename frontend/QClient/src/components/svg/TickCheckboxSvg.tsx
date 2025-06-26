@@ -1,7 +1,7 @@
 import Svg, { Circle, Line } from "react-native-svg";
 import React from "react";
 import { StyleProp, ViewStyle } from "react-native";
-import useColorTheme from "src/hooks/useColorTheme";
+import { useUnistyles } from "react-native-unistyles";
 
 type TickCheckboxSvgProps = {
   style?: StyleProp<ViewStyle>;
@@ -9,7 +9,7 @@ type TickCheckboxSvgProps = {
 };
 
 export default function TickCheckboxSvg({ style, checked }: TickCheckboxSvgProps) {
-  const colorTheme = useColorTheme();
+  const { theme } = useUnistyles();
 
   return (
     <Svg style={style} viewBox="0 0 100 100" fill="none">
@@ -17,8 +17,8 @@ export default function TickCheckboxSvg({ style, checked }: TickCheckboxSvgProps
         cx="50"
         cy="50"
         r="50"
-        fill={checked ? colorTheme.background.success : "none"}
-        stroke={!checked ? colorTheme.text.primary : undefined}
+        fill={checked ? theme.background.success : "none"}
+        stroke={!checked ? theme.text.primary : undefined}
       />
       {checked && (
         <>
@@ -27,7 +27,7 @@ export default function TickCheckboxSvg({ style, checked }: TickCheckboxSvgProps
             y1="52"
             x2="48"
             y2="70"
-            stroke={colorTheme.text.success}
+            stroke={theme.text.success}
             strokeWidth="7"
             strokeLinecap="round"
           />
@@ -36,7 +36,7 @@ export default function TickCheckboxSvg({ style, checked }: TickCheckboxSvgProps
             y1="70"
             x2="68"
             y2="30"
-            stroke={colorTheme.text.success}
+            stroke={theme.text.success}
             strokeWidth="7"
             strokeLinecap="round"
           />

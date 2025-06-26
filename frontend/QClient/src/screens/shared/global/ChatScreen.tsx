@@ -1,19 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { KeyboardAvoidingView, Platform, ScrollView, TextInput, TouchableOpacity, View } from "react-native";
+import { StyleSheet, useUnistyles } from "react-native-unistyles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Message, MessageRole } from "src/api/types/Message";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
 import ChatMessage from "src/components/shared/global/ChatScreen/ChatMessage";
 import SearchIconSvg from "src/components/svg/SearchIconSvg";
-import useColorTheme from "src/hooks/useColorTheme";
 import logger from "src/utils/logger";
 import { useConversationQuery } from "src/api/hooks/queries/useConversationQuery";
 import { useAuthContext } from "src/context/AuthContext";
@@ -26,7 +18,8 @@ import ProductLinks from "src/components/shared/global/ChatScreen/ProductLinks";
 export default function ChatScreen() {
   logger.render("ChatScreen");
 
-  const colorTheme = useColorTheme();
+  const { theme } = useUnistyles();
+
   const accountId = useAuthContext().account?.id;
   if (!accountId) throw new Error("Account ID is required");
   const conversationQuery = useConversationQuery();
@@ -85,7 +78,7 @@ export default function ChatScreen() {
   if (conversationQuery.isError || !conversationQuery.data) return <ErrorComponent />;
 
   return (
-    <SafeAreaView style={[styles.screen, { backgroundColor: colorTheme.background.primary }]}>
+    <SafeAreaView style={styles.screen}>
       <KeyboardAvoidingView
         style={styles.screen}
         behavior={Platform.select({ ios: "padding", default: undefined })}
@@ -114,30 +107,19 @@ export default function ChatScreen() {
         </ScrollView>
 
         <View style={styles.inputSectionContainer}>
-          <View
-            style={[
-              styles.inputContainer,
-              {
-                backgroundColor: colorTheme.background.elevated,
-                borderColor: colorTheme.text.primary,
-              },
-            ]}
-          >
+          <View style={styles.inputContainer}>
             <TextInput
               ref={textInputRef}
               placeholder="Scrie un mesaj..."
-              style={[styles.input, { color: colorTheme.text.primary }]}
-              placeholderTextColor={colorTheme.text.secondary}
+              style={styles.input}
+              placeholderTextColor={theme.text.secondary}
               multiline
               value={currentMessage}
               onChangeText={setCurrentMessage}
             />
           </View>
-          <TouchableOpacity
-            style={[styles.sendButton, { backgroundColor: colorTheme.background.card }]}
-            onPress={handleSendMessage}
-          >
-            <SearchIconSvg style={styles.svgIcon} stroke={colorTheme.text.primary} />
+          <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
+            <SearchIconSvg style={styles.svgIcon} stroke={theme.text.primary} />
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -145,9 +127,10 @@ export default function ChatScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   screen: {
     flex: 1,
+    backgroundColor: theme.background.primary,
   },
   messageContainer: {
     maxWidth: "85%",
@@ -175,11 +158,14 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     borderWidth: 1,
     borderRadius: 20,
+    backgroundColor: theme.background.elevated,
+    borderColor: theme.text.primary,
   },
   input: {
     flexGrow: 1,
     paddingVertical: 12,
     paddingHorizontal: 16,
+    color: theme.text.primary,
   },
   sendButton: {
     width: 50,
@@ -188,9 +174,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 9999,
+    backgroundColor: theme.background.card,
   },
   svgIcon: {
     width: 32,
     height: 32,
   },
-});
+}));

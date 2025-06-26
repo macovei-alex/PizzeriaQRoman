@@ -1,7 +1,7 @@
 import React from "react";
 import { ColorValue, StyleProp, ViewStyle } from "react-native";
 import { Svg, G, Path } from "react-native-svg";
-import useColorTheme from "src/hooks/useColorTheme";
+import { useUnistyles } from "react-native-unistyles";
 
 type EmptyCartSvgProps = {
   style?: StyleProp<ViewStyle>;
@@ -9,9 +9,9 @@ type EmptyCartSvgProps = {
 };
 
 export default function EmptyCartSvg({ style, stroke }: EmptyCartSvgProps) {
-  const colorTheme = useColorTheme();
+  const { theme } = useUnistyles();
 
-  stroke = stroke ?? colorTheme.text.primary;
+  stroke = stroke ?? theme.text.primary;
 
   return (
     <Svg style={style} viewBox="0 0 2048 2048">
