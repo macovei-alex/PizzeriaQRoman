@@ -1,0 +1,5 @@
+Problems:
+	- requests to /devices transformed from POST to GET
+	- requests to /products and /categories unauthorized even with correct JWTs attached
+Cause:
+	- usage of http:// instead of https:// when calling APIs through the Nginx proxy
