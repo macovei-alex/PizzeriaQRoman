@@ -3,7 +3,7 @@ import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet, useUnistyles } from "react-native-unistyles";
+import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import logger from "src/utils/logger";
 import HomeIconSvg from "src/components/svg/HomeIconSvg";
 import CartIconSvg from "src/components/svg/CartIconSvg";
@@ -19,8 +19,6 @@ type RouteProps = RouteProp<RootStackParamList, "OrderDeliveryScreen">;
 
 export default function OrderDeliveryScreen() {
   logger.render("OrderDeliveryScreen");
-
-  const { theme } = useUnistyles();
 
   const route = useRoute<RouteProps>();
   const restaurantLocationQuery = useRestaurantLocationQuery();
@@ -94,12 +92,7 @@ export default function OrderDeliveryScreen() {
           }}
           title="Adresa ta"
         >
-          <HomeIconSvg
-            style={styles.svgIcons}
-            stroke={theme.text.onAccent}
-            fillPrimary={theme.background.accent}
-            fillSecondary={theme.background.accent}
-          />
+          <UHomeIconSvg style={styles.svgIcons} />
         </Marker>
         <Marker
           tracksViewChanges={!isLoaded}
@@ -109,18 +102,25 @@ export default function OrderDeliveryScreen() {
           }}
           title="Restaurant PizzeriaQ"
         >
-          <CartIconSvg
-            style={styles.svgIcons}
-            stroke={theme.text.onAccent}
-            fillPrimary={theme.background.accent}
-            fillSecondary={theme.background.accent}
-          />
+          <UCartIconSvg style={styles.svgIcons} />
         </Marker>
         {points && points.length > 0 && <Polyline coordinates={points} strokeWidth={4} strokeColor="red" />}
       </MapView>
     </SafeAreaView>
   );
 }
+
+const UHomeIconSvg = withUnistyles(HomeIconSvg, (theme) => ({
+  stroke: theme.text.onAccent,
+  fillPrimary: theme.background.accent,
+  fillSecondary: theme.background.accent,
+}));
+
+const UCartIconSvg = withUnistyles(CartIconSvg, (theme) => ({
+  stroke: theme.text.onAccent,
+  fillPrimary: theme.background.accent,
+  fillSecondary: theme.background.accent,
+}));
 
 const styles = StyleSheet.create({
   container: {

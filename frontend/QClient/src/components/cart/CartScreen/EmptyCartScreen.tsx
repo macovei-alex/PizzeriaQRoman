@@ -1,21 +1,23 @@
 import React from "react";
 import { Text, View } from "react-native";
-import { StyleSheet, useUnistyles } from "react-native-unistyles";
+import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import EmptyCartSvg from "src/components/svg/EmptyCartSvg";
 import logger from "src/utils/logger";
 
 export default function EmptyCartScreen() {
   logger.render("EmptyCartScreen");
 
-  const { theme } = useUnistyles();
-
   return (
     <View style={styles.container}>
-      <EmptyCartSvg style={styles.image} stroke={theme.text.secondary} />
+      <UEmptyCartSvg style={styles.image} />
       <Text style={styles.emptyCartText}>Coșul este gol</Text>
     </View>
   );
 }
+
+const UEmptyCartSvg = withUnistyles(EmptyCartSvg, (theme) => ({
+  stroke: theme.text.secondary,
+}));
 
 const styles = StyleSheet.create((theme) => ({
   container: {

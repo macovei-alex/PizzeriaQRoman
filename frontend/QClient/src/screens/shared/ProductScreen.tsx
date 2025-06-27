@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { RefreshControl, ScrollView } from "react-native";
-import { StyleSheet, useUnistyles } from "react-native-unistyles";
+import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OptionList from "src/components/shared/ProductScreen/OptionListCard";
 import HorizontalLine from "src/components/shared/generic/HorizontalLine";
@@ -24,8 +24,6 @@ type RouteProps =
 
 export default function ProductScreen() {
   logger.render("ProductScreen");
-
-  const { theme } = useUnistyles();
 
   const { cart, addCartItem, changeCartItemOptions } = useCartContext();
   const route = useRoute<RouteProps>();
@@ -62,7 +60,7 @@ export default function ProductScreen() {
 
         {product.optionLists.map((optionList) => (
           <Fragment key={optionList.id}>
-            <HorizontalLine style={styles.horizontalLine} color={theme.text.secondary} />
+            <UHorizontalLine style={styles.horizontalLine} />
             <OptionList
               optionList={optionList}
               currentOptions={cartItemOptions[optionList.id] || {}}
@@ -90,6 +88,10 @@ export default function ProductScreen() {
     </SafeAreaView>
   );
 }
+
+const UHorizontalLine = withUnistyles(HorizontalLine, (theme) => ({
+  color: theme.text.secondary,
+}));
 
 const styles = StyleSheet.create({
   scrollViewContent: {

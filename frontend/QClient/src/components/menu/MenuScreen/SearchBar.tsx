@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { TextInput, View } from "react-native";
-import { StyleSheet, useUnistyles } from "react-native-unistyles";
+import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import SearchIconSvg from "src/components/svg/SearchIconSvg";
 import logger from "src/utils/logger";
 
@@ -12,15 +12,12 @@ type SearchBarProps = {
 export default function SearchBar({ placeholder, onSearch }: SearchBarProps) {
   logger.render("SearchBar");
 
-  const { theme } = useUnistyles();
   const [text, setText] = useState("");
 
   return (
     <View style={styles.container}>
       <SearchIconSvg style={styles.searchIcon} />
-      <TextInput
-        style={styles.textInput}
-        placeholderTextColor={theme.text.secondary}
+      <StyledTextInput
         placeholder={placeholder}
         value={text}
         onChangeText={(newText) => setText(newText)}
@@ -29,6 +26,16 @@ export default function SearchBar({ placeholder, onSearch }: SearchBarProps) {
     </View>
   );
 }
+
+const StyledTextInput = withUnistyles(TextInput, (theme) => ({
+  style: {
+    textAlign: "center",
+    flexGrow: 1,
+    left: -20,
+    color: theme.text.primary,
+  },
+  placeholderTextColor: theme.text.secondary,
+}));
 
 const styles = StyleSheet.create((theme) => ({
   container: {
@@ -41,11 +48,5 @@ const styles = StyleSheet.create((theme) => ({
   searchIcon: {
     width: 40,
     height: 40,
-  },
-  textInput: {
-    textAlign: "center",
-    flexGrow: 1,
-    left: -20,
-    color: theme.text.primary,
   },
 }));

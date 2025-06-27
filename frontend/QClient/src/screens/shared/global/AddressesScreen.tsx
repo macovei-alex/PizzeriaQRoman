@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { Alert, RefreshControl, ScrollView, Text, TouchableOpacity } from "react-native";
-import { StyleSheet, useUnistyles } from "react-native-unistyles";
+import { StyleSheet, UnistylesRuntime } from "react-native-unistyles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { api } from "src/api";
 import useAddressesQuery from "src/api/hooks/queries/useAddressesQuery";
@@ -18,7 +18,6 @@ type NavigationProps = NativeStackNavigationProp<RootStackParamList, "AddressesS
 export default function AddressesScreen() {
   logger.render("AddressesScreen");
 
-  const { theme } = useUnistyles();
   const navigation = useNavigation<NavigationProps>();
   const accountId = useAuthContext().account?.id;
   if (!accountId) throw new Error("Account is not defined in AddressesScreen");
@@ -50,11 +49,11 @@ export default function AddressesScreen() {
         ],
         {
           cancelable: false,
-          userInterfaceStyle: theme.name,
+          userInterfaceStyle: UnistylesRuntime.themeName,
         }
       );
     },
-    [accountId, addressesQuery, theme.name]
+    [accountId, addressesQuery]
   );
 
   if (addressesQuery.isFetching) return <ScreenActivityIndicator text="Se încarcă adresele" />;

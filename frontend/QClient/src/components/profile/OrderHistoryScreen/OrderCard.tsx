@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
-import { StyleProp, Text, TouchableOpacity, View, ViewStyle } from "react-native";
-import { StyleSheet, useUnistyles } from "react-native-unistyles";
+import { ColorValue, StyleProp, Text, TouchableOpacity, View, ViewStyle } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 import { Product, ProductId } from "src/api/types/Product";
 import useProductsQuery from "src/api/hooks/queries/useProductsQuery";
 import logger from "src/utils/logger";
@@ -12,6 +12,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native";
 import { HistoryOrderMinimal } from "src/api/types/order/HistoryOrderMinimal";
 import { RootStackParamList } from "src/navigation/RootStackNavigator";
+import { OrderStatus } from "src/api/types/order/Order";
 
 const MAX_ITEMS_PER_ORDER = 4;
 
@@ -30,7 +31,6 @@ export default function OrderCard({ order, containerStyle }: OrderCardProps) {
 
   const navigation = useNavigation<NavigationProps>();
   const productsQuery = useProductsQuery();
-  const { theme } = useUnistyles();
 
   const processedItems = useMemo(() => {
     if (!productsQuery.data) return [];
@@ -45,19 +45,6 @@ export default function OrderCard({ order, containerStyle }: OrderCardProps) {
       product: Product;
     }[];
   }, [productsQuery, order]);
-
-  const orderStatusColors = useMemo(() => {
-    return {
-      RECEIVED: theme.background.accent,
-      IN_PREPARATION: theme.background.accent,
-      IN_DELIVERY: {
-        text: theme.text.onAccent,
-        border: theme.background.accent,
-        background: theme.background.accent,
-      },
-      DELIVERED: theme.background.success,
-    };
-  }, [theme]);
 
   const orderStatusNames = useMemo(() => {
     return {
@@ -97,23 +84,7 @@ export default function OrderCard({ order, containerStyle }: OrderCardProps) {
             disabled={order.orderStatus !== "IN_DELIVERY"}
             onPress={() => navigation.navigate("OrderDeliveryScreen", { orderId: order.id })}
           >
-            <Text
-              style={[
-                styles.statusText,
-                order.orderStatus !== "IN_DELIVERY"
-                  ? {
-                      color: orderStatusColors[order.orderStatus],
-                      borderColor: orderStatusColors[order.orderStatus],
-                    }
-                  : {
-                      color: orderStatusColors[order.orderStatus].text,
-                      backgroundColor: orderStatusColors[order.orderStatus].background,
-                      borderColor: orderStatusColors[order.orderStatus].border,
-                    },
-              ]}
-            >
-              {orderStatusNames[order.orderStatus]}
-            </Text>
+            <Text style={styles.statusText(order.orderStatus)}>{orderStatusNames[order.orderStatus]}</Text>
           </TouchableOpacity>
         </View>
 
@@ -187,11 +158,35 @@ const styles = StyleSheet.create((theme) => ({
   dateText: {
     fontSize: 14,
   },
-  statusText: {
-    fontWeight: "600",
-    borderRadius: 9999,
-    borderWidth: 1,
-    paddingHorizontal: 8,
+  statusText: (orderStatus: OrderStatus) => {
+    let colors: { color: ColorValue; borderColor: ColorValue; backgroundColor?: ColorValue } = {
+      color: theme.background.accent,
+      borderColor: theme.background.accent,
+    };
+    if (orderStatus === "IN_PREPARATION") {
+      colors = {
+        color: theme.text.accent,
+        borderColor: theme.background.accent,
+      };
+    } else if (orderStatus === "DELIVERED") {
+      colors = {
+        color: theme.text.success,
+        borderColor: theme.background.success,
+      };
+    } else if (orderStatus === "IN_DELIVERY") {
+      colors = {
+        color: theme.text.onAccent,
+        backgroundColor: theme.background.accent,
+        borderColor: theme.background.accent,
+      };
+    }
+    return {
+      fontWeight: "600",
+      borderRadius: 9999,
+      borderWidth: 1,
+      paddingHorizontal: 8,
+      ...colors,
+    };
   },
   productTitleText: {
     flex: 1,

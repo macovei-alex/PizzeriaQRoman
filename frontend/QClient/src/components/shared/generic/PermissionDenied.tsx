@@ -1,7 +1,7 @@
 import { AntDesign } from "@expo/vector-icons";
 import React from "react";
 import { Text } from "react-native";
-import { StyleSheet, useUnistyles } from "react-native-unistyles";
+import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 type PermissionDeniedProps = {
@@ -9,16 +9,19 @@ type PermissionDeniedProps = {
 };
 
 export default function PermissionDenied({ text }: PermissionDeniedProps) {
-  const { theme } = useUnistyles();
   return (
     <SafeAreaView style={styles.container}>
-      <AntDesign name="exclamationcircleo" size={50} color={theme.background.accent} />
+      <UAntDesign name="exclamationcircleo" size={50} />
       <Text style={styles.text} numberOfLines={4}>
         {text}
       </Text>
     </SafeAreaView>
   );
 }
+
+const UAntDesign = withUnistyles(AntDesign, (theme) => ({
+  color: theme.background.accent,
+}));
 
 const styles = StyleSheet.create((theme) => ({
   container: {

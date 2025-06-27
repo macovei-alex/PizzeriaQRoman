@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React from "react";
 import { Text, TouchableOpacity } from "react-native";
-import { StyleSheet, useUnistyles } from "react-native-unistyles";
+import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import { ProductId } from "src/api/types/Product";
 import { useProductsMap } from "src/hooks/useProductsMap";
 import { RootStackParamList } from "src/navigation/RootStackNavigator";
@@ -19,7 +19,6 @@ type ProductLinkProps = {
 export default function ProductLinks({ productIds }: ProductLinkProps) {
   logger.render("ProductLinks");
 
-  const { theme } = useUnistyles();
   const navigation = useNavigation<NavigationProps>();
   const productsMap = useProductsMap();
 
@@ -48,13 +47,17 @@ export default function ProductLinks({ productIds }: ProductLinkProps) {
               style={styles.image}
             />
             <Text style={styles.linkText}>{product.name}</Text>
-            <Feather style={styles.icon} name="arrow-right" size={24} color={theme.text.onAccent} />
+            <UFeather style={styles.icon} name="arrow-right" size={24} />
           </TouchableOpacity>
         );
       })}
     </>
   );
 }
+
+const UFeather = withUnistyles(Feather, (theme) => ({
+  color: theme.text.onAccent,
+}));
 
 const styles = StyleSheet.create((theme) => ({
   linkButton: {

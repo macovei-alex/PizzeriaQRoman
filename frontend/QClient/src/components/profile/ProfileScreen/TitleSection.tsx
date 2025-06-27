@@ -1,6 +1,6 @@
 import React from "react";
 import { ImageBackground, Text, View } from "react-native";
-import { StyleSheet, useUnistyles } from "react-native-unistyles";
+import { StyleSheet } from "react-native-unistyles";
 import { images } from "src/constants/images";
 import { useAuthContext } from "src/context/AuthContext";
 import { convertToRGBA } from "src/utils/convertions";
@@ -12,12 +12,10 @@ export default function TitleSection() {
   const authContext = useAuthContext();
   if (!authContext.account) throw new Error("Account not found");
 
-  const { theme } = useUnistyles();
-
   return (
     <ImageBackground source={images.menuBackground} style={styles.image}>
       <View style={styles.overlay()} />
-      <Text style={[styles.titleText, { color: theme.text.onAccent }]} numberOfLines={2}>
+      <Text style={styles.titleText} numberOfLines={2}>
         Bună, {authContext.account.givenName}!
       </Text>
       <Text style={styles.subtitleText}>Bine ai venit in contul tău!</Text>
@@ -38,6 +36,7 @@ const styles = StyleSheet.create((theme) => ({
     fontSize: 32,
     fontWeight: "700",
     textAlign: "center",
+    color: theme.text.onAccent,
   },
   subtitleText: {
     fontSize: 20,

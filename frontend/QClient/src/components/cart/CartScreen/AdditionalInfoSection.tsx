@@ -2,7 +2,7 @@ import { CompositeNavigationProp, useNavigation } from "@react-navigation/native
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { forwardRef, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
-import { StyleSheet, useUnistyles } from "react-native-unistyles";
+import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import { Address } from "src/api/types/Address";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
 import { RootStackParamList } from "src/navigation/RootStackNavigator";
@@ -29,7 +29,6 @@ function AdditionalInfoSection(
 ) {
   logger.render("AdditionalInfoSection");
 
-  const { theme } = useUnistyles();
   const navigation = useNavigation<NavigationProps>();
   const [address, setAddress] = useState<Address | null>(null);
   const [additionalNotes, setAdditionalNotes] = useState<string | null>(null);
@@ -68,14 +67,13 @@ function AdditionalInfoSection(
         <Text style={styles.subsectionTitle}>Adresă de livrare</Text>
         {addresses &&
           (address ? (
-            <Dropdown
-              dropdownStyle={styles.addressPickerContainer}
+            <UDropdown
               dropdownIcon={<></>}
+              dropdownStyle={styles.addressPickerContainer}
               selectedValue={address.id}
               options={addressDropdownOptions}
               onValueChange={(id) => setAddress(addresses.find((addr) => addr.id === id) || null)}
-              primaryColor={theme.background.success}
-              modalControls={{ modalProps: { animationType: "fade" } }}
+              modalControls={{ modalProps: { animationType: "slide" } }}
             />
           ) : (
             <>
@@ -91,21 +89,28 @@ function AdditionalInfoSection(
       </View>
       <View>
         <Text style={styles.subsectionTitle}>Mențiuni speciale</Text>
-        <TextInput
+        <UTextInput
           style={styles.additionalNotesInput}
           placeholder="Mențiuni speciale..."
-          placeholderTextColor={theme.text.secondary}
           multiline
           onChangeText={setAdditionalNotes}
         >
           {additionalNotes}
-        </TextInput>
+        </UTextInput>
       </View>
     </View>
   );
 }
 
 export default forwardRef<AdditionalInfoSectionHandle, AdditionalInfoSectionProps>(AdditionalInfoSection);
+
+const UDropdown = withUnistyles(Dropdown, (theme) => ({
+  primaryColor: theme.background.success,
+}));
+
+const UTextInput = withUnistyles(TextInput, (theme) => ({
+  placeholderTextColor: theme.text.secondary,
+}));
 
 const styles = StyleSheet.create((theme, runtime) => ({
   container: {

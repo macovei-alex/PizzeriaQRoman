@@ -8,7 +8,7 @@ import React, {
   useState,
 } from "react";
 import { ActivityIndicator, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { StyleSheet, useUnistyles } from "react-native-unistyles";
+import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import { api } from "src/api";
 import { usePhoneNumberQuery } from "src/api/hooks/queries/usePhoneNumberQuery";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
@@ -23,8 +23,6 @@ export type AccountFormHandle = {
 
 function AccountForm(props: object, ref: ForwardedRef<AccountFormHandle>) {
   logger.render("AccountForm");
-
-  const { theme } = useUnistyles();
 
   const authContext = useAuthContext();
   if (!authContext.account) throw new Error("Account not found in context");
@@ -96,7 +94,7 @@ function AccountForm(props: object, ref: ForwardedRef<AccountFormHandle>) {
   return (
     <View style={styles.container} pointerEvents={isLoading ? "none" : "auto"}>
       <View>
-        {isLoading && <ActivityIndicator size={48} color={theme.background.accent} style={styles.spinner} />}
+        {isLoading && <UActivityIndicator size={48} style={styles.spinner} />}
 
         {/* first name */}
         <LabelledBorderComponent
@@ -179,6 +177,10 @@ function AccountForm(props: object, ref: ForwardedRef<AccountFormHandle>) {
 }
 
 export default forwardRef<AccountFormHandle>(AccountForm);
+
+const UActivityIndicator = withUnistyles(ActivityIndicator, (theme) => ({
+  color: theme.background.accent,
+}));
 
 const styles = StyleSheet.create((theme) => ({
   container: {

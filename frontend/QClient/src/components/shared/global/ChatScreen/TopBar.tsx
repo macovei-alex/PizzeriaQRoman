@@ -1,6 +1,6 @@
 import React from "react";
 import { Alert, TouchableOpacity, View } from "react-native";
-import { StyleSheet, useUnistyles } from "react-native-unistyles";
+import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import GoBackButtonSvg from "src/components/svg/GoBackButtonSvg";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -13,7 +13,6 @@ import logger from "src/utils/logger";
 export default function TopBar() {
   logger.render("TopBar");
 
-  const { theme } = useUnistyles();
   const navigation = useNavigation();
   const queryClient = useQueryClient();
   const accountId = useAuthContext().account?.id;
@@ -45,11 +44,15 @@ export default function TopBar() {
         <GoBackButtonSvg style={styles.goBackButton} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.svgContainer} onPress={handleDeleteConversation}>
-        <FontAwesome name="trash-o" size={24} color={theme.text.accent} />
+        <UFontAwesome name="trash-o" size={24} />
       </TouchableOpacity>
     </View>
   );
 }
+
+const UFontAwesome = withUnistyles(FontAwesome, (theme) => ({
+  color: theme.text.accent,
+}));
 
 const styles = StyleSheet.create((theme) => ({
   container: {

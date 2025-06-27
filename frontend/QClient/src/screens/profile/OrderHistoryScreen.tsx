@@ -1,17 +1,12 @@
 import React, { useMemo } from "react";
 import { ActivityIndicator, RefreshControl, View } from "react-native";
-import { StyleSheet, useUnistyles } from "react-native-unistyles";
+import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import OrderCard from "src/components/profile/OrderHistoryScreen/OrderCard";
 import ScreenTitle from "src/components/shared/generic/ScreenTitle";
 import useOrderHistoryInfiniteQuery from "src/api/hooks/queries/useOrderHistoryInfiniteQuery";
 import logger from "src/utils/logger";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import { LegendList } from "@legendapp/list";
-
-function CustomActivityIndicator() {
-  const { theme } = useUnistyles();
-  return <ActivityIndicator size="large" color={theme.text.accent} style={styles.loadingIndicator} />;
-}
 
 export default function OrderHistoryScreen() {
   logger.render("OrderHistoryScreen");
@@ -26,7 +21,7 @@ export default function OrderHistoryScreen() {
     <View style={styles.screen}>
       <ScreenTitle title="Istoricul comenzilor" />
       {ordersQuery.isLoading ? (
-        <CustomActivityIndicator />
+        <UActivityIndicator />
       ) : (
         <LegendList
           data={flattenedOrders}
@@ -43,7 +38,7 @@ export default function OrderHistoryScreen() {
             ordersQuery.hasNextPage && !ordersQuery.isFetchingNextPage && ordersQuery.fetchNextPage()
           }
           maintainVisibleContentPosition
-          ListFooterComponent={ordersQuery.isFetchingNextPage ? <CustomActivityIndicator /> : null}
+          ListFooterComponent={ordersQuery.isFetchingNextPage ? <UActivityIndicator /> : null}
           refreshControl={
             <RefreshControl refreshing={ordersQuery.isFetching} onRefresh={ordersQuery.refetch} />
           }
@@ -52,6 +47,12 @@ export default function OrderHistoryScreen() {
     </View>
   );
 }
+
+const UActivityIndicator = withUnistyles(ActivityIndicator, (theme) => ({
+  color: theme.text.accent,
+  size: "large" as const,
+  style: styles.loadingIndicator,
+}));
 
 const styles = StyleSheet.create((theme, runtime) => ({
   screen: {

@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { StyleSheet, useUnistyles } from "react-native-unistyles";
+import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Fragment } from "react";
 import logger from "src/utils/logger";
@@ -24,7 +24,6 @@ type RouteProps = RouteProp<ProfileStackParamList, "OrderItemScreen">;
 export default function OrderItemScreen() {
   logger.render("OrderItemScreen");
 
-  const { theme } = useUnistyles();
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<RouteProps>();
   const orderQuery = useFullOrderQuery(route.params.orderId);
@@ -86,7 +85,7 @@ export default function OrderItemScreen() {
         {/* option lists */}
         {product.optionLists.map((optionList) => (
           <Fragment key={optionList.id}>
-            <HorizontalLine style={styles.horizontalLine} color={theme.text.secondary} />
+            <UHorizontalLine style={styles.horizontalLine} />
             <OptionListCard optionList={optionList} selectedOptions={selectedOptions[optionList.id] ?? {}} />
           </Fragment>
         ))}
@@ -94,6 +93,10 @@ export default function OrderItemScreen() {
     </SafeAreaView>
   );
 }
+
+const UHorizontalLine = withUnistyles(HorizontalLine, (theme) => ({
+  color: theme.text.secondary,
+}));
 
 const styles = StyleSheet.create((theme) => ({
   horizontalLine: {

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, TextInput, TouchableOpacity, View } from "react-native";
-import { StyleSheet, useUnistyles } from "react-native-unistyles";
+import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Message, MessageRole } from "src/api/types/Message";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
@@ -17,8 +17,6 @@ import ProductLinks from "src/components/shared/global/ChatScreen/ProductLinks";
 
 export default function ChatScreen() {
   logger.render("ChatScreen");
-
-  const { theme } = useUnistyles();
 
   const accountId = useAuthContext().account?.id;
   if (!accountId) throw new Error("Account ID is required");
@@ -108,24 +106,31 @@ export default function ChatScreen() {
 
         <View style={styles.inputSectionContainer}>
           <View style={styles.inputContainer}>
-            <TextInput
+            <UTextInput
               ref={textInputRef}
               placeholder="Scrie un mesaj..."
               style={styles.input}
-              placeholderTextColor={theme.text.secondary}
               multiline
               value={currentMessage}
               onChangeText={setCurrentMessage}
             />
           </View>
           <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
-            <SearchIconSvg style={styles.svgIcon} stroke={theme.text.primary} />
+            <USearchIconSvg style={styles.svgIcon} />
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
+
+const UTextInput = withUnistyles(TextInput, (theme) => ({
+  placeholderTextColor: theme.text.secondary,
+}));
+
+const USearchIconSvg = withUnistyles(SearchIconSvg, (theme) => ({
+  stroke: theme.text.primary,
+}));
 
 const styles = StyleSheet.create((theme) => ({
   screen: {

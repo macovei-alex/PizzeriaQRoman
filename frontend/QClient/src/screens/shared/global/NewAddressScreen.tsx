@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { View, Text, ActivityIndicator, Platform, TouchableOpacity } from "react-native";
-import { StyleSheet } from "react-native-unistyles";
+import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import MapView from "react-native-maps";
 import { useCurrentLocation } from "src/hooks/useCurrentLocation";
 import logger from "src/utils/logger";
@@ -14,12 +14,9 @@ import { useBidirectionalAddressRegionUpdates } from "src/components/shared/glob
 import { showToast } from "src/utils/toast";
 import { useNavigation } from "@react-navigation/native";
 import { useQueryClient } from "@tanstack/react-query";
-import { useUnistyles } from "react-native-unistyles";
 
 export default function NewAddressScreen() {
   logger.render("NewAddressScreen");
-
-  const { theme } = useUnistyles();
 
   const accountId = useAuthContext().account?.id;
   if (!accountId) throw new Error("Account is not defined in NewAddressScreen");
@@ -98,9 +95,9 @@ export default function NewAddressScreen() {
         <View style={styles.addressContainer}>
           <View style={styles.iconContainer}>
             {fetchingAddress ? (
-              <ActivityIndicator size={32} color={theme.text.primary} />
+              <UFetchingActivityIndicator size={32} />
             ) : (
-              <SearchIconSvg style={styles.searchIcon} stroke={theme.text.primary} />
+              <USearchIconSvg style={styles.searchIcon} />
             )}
           </View>
           <Text style={styles.addressText} numberOfLines={2}>
@@ -108,7 +105,7 @@ export default function NewAddressScreen() {
           </Text>
         </View>
 
-        <FontAwesome name="map-marker" size={48} color={theme.background.accent} />
+        <UFontAwesome name="map-marker" size={48} />
 
         <TouchableOpacity style={styles.selectAddressButton} onPress={() => setScreenState("modal-open")}>
           <Text style={styles.selectAddressText}>Adăugați detalii</Text>
@@ -124,12 +121,28 @@ export default function NewAddressScreen() {
 
       {screenState === "sending" && (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size={80} color={theme.background.accent} />
+          <USendingActivityIndicator size={80} />
         </View>
       )}
     </View>
   );
 }
+
+const UFetchingActivityIndicator = withUnistyles(ActivityIndicator, (theme) => ({
+  color: theme.text.primary,
+}));
+
+const USearchIconSvg = withUnistyles(SearchIconSvg, (theme) => ({
+  stroke: theme.text.primary,
+}));
+
+const UFontAwesome = withUnistyles(FontAwesome, (theme) => ({
+  color: theme.text.accent,
+}));
+
+const USendingActivityIndicator = withUnistyles(ActivityIndicator, (theme) => ({
+  color: theme.text.accent,
+}));
 
 const styles = StyleSheet.create((theme, runtime) => ({
   container: {

@@ -1,6 +1,6 @@
 import React from "react";
 import { ActivityIndicator, Text } from "react-native";
-import { StyleSheet, useUnistyles } from "react-native-unistyles";
+import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 type Props = {
@@ -8,14 +8,17 @@ type Props = {
 };
 
 export default function ScreenActivityIndicator({ text }: Props) {
-  const { theme } = useUnistyles();
   return (
     <SafeAreaView style={styles.loadingContainer}>
       <Text style={styles.loadingText}>{text}</Text>
-      <ActivityIndicator size={70} color={theme.background.accent} />
+      <UActivityIndicator size={70} />
     </SafeAreaView>
   );
 }
+
+const UActivityIndicator = withUnistyles(ActivityIndicator, (theme) => ({
+  color: theme.text.accent,
+}));
 
 const styles = StyleSheet.create((theme) => ({
   loadingContainer: {
