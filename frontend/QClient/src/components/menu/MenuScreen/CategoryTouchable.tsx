@@ -2,7 +2,7 @@ import React from "react";
 import { Platform, Text, TouchableOpacity, View } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 import { Category } from "src/api/types/Category";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 
 type HorizontalCategoryProps = {
   category: Category;

@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native-unistyles";
 import { images } from "src/constants/images";
 import { useAuthContext } from "src/context/AuthContext";
 import { convertToRGBA } from "src/utils/convertions";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 
 export default function TitleSection() {
   logger.render("ProfileTitleSection");

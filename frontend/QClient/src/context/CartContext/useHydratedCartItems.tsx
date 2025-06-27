@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Cart, SerializedCart } from "./types";
 import { storage } from "src/constants/mmkv";
 import { ProductWithOptions } from "src/api/types/Product";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 
 export function logCart(cart: Cart) {
   logger.log(

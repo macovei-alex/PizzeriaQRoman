@@ -3,7 +3,7 @@ import { Text, View } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 import { useCartContext } from "src/context/CartContext/CartContext";
 import CartItemCard from "./CartItemCard";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import { formatPrice } from "src/utils/utils";
 import { CartItem } from "src/context/CartContext/types";
 

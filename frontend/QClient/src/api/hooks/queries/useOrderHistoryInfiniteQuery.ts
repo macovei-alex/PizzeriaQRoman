@@ -2,7 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { api } from "src/api";
 import { OrderStatusSchema } from "src/api/types/order/Order";
 import { useAuthContext } from "src/context/AuthContext";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import { HistoryOrderMinimal, HistoryOrderMinimalDTO } from "../../types/order/HistoryOrderMinimal";
 
 const PAGE_SIZE = 5;

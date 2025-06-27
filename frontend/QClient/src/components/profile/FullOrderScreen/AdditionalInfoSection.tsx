@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 import { Address } from "src/api/types/Address";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 
 type AdditionalInfoSectionProps = {
   address: Address;

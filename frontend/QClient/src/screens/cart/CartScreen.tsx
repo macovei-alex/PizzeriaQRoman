@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native-unistyles";
 import ProductSection from "src/components/cart/CartScreen/ProductSection";
 import { useCartContext } from "src/context/CartContext/CartContext";
 import { showToast } from "src/utils/toast";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import { convertCartItemOptions } from "src/utils/convertions";
 import { useQueryClient } from "@tanstack/react-query";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";

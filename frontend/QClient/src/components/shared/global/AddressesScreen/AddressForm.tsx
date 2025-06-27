@@ -1,9 +1,8 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 import LabelledBorderComponent from "src/components/shared/generic/LabelledBorderComponent";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 
 export type NewAddress = {
   baseString: string;

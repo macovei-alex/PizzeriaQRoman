@@ -8,7 +8,7 @@ import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
 import ScreenTitle from "src/components/shared/generic/ScreenTitle";
 import { useAuthContext } from "src/context/AuthContext";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "src/navigation/RootStackNavigator";

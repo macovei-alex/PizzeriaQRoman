@@ -3,7 +3,7 @@ import { Dimensions, LayoutChangeEvent, ScrollView, Text, TouchableOpacity, View
 import { StyleSheet } from "react-native-unistyles";
 import CategoryTouchable from "./CategoryTouchable";
 import { Category, CategoryId } from "src/api/types/Category";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import SearchIconSvg from "src/components/svg/SearchIconSvg";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";

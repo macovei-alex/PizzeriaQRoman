@@ -8,7 +8,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "src/context/AuthContext";
 import { api } from "src/api";
 import { Message } from "src/api/types/Message";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 
 export default function TopBar() {
   logger.render("TopBar");

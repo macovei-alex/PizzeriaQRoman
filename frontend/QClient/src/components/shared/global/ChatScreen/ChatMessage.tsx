@@ -2,7 +2,7 @@ import React from "react";
 import { Text, View } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 import { Message } from "src/api/types/Message";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import { formatTime } from "src/utils/utils";
 
 type CharMessageProps = {

@@ -3,7 +3,7 @@ import { Platform } from "react-native";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import Constants from "expo-constants";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import axios from "axios";
 import { api } from "src/api";
 import { storage } from "src/constants/mmkv";

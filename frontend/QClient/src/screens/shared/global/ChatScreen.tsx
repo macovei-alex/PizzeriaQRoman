@@ -6,7 +6,7 @@ import { Message, MessageRole } from "src/api/types/Message";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
 import ChatMessage from "src/components/shared/global/ChatScreen/ChatMessage";
 import SearchIconSvg from "src/components/svg/SearchIconSvg";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import { useConversationQuery } from "src/api/hooks/queries/useConversationQuery";
 import { useAuthContext } from "src/context/AuthContext";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";

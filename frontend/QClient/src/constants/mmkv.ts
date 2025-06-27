@@ -1,5 +1,5 @@
 import { MMKV } from "react-native-mmkv";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 
 class CustomStorage extends MMKV {
   setObject<T>(key: string, value: T) {

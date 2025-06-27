@@ -2,7 +2,7 @@ import React from "react";
 import { Text, View } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 import OrderItemCard from "./OrderItemCard";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import { formatPrice } from "src/utils/utils";
 import { FullOrderItem } from "src/api/types/order/FullHistoryOrder";
 import { OrderId } from "src/api/types/order/Order";

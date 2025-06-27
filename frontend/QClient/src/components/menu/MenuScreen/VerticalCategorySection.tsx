@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native-unistyles";
 import ProductCard from "./ProductCard";
 import { Category, CategoryId } from "src/api/types/Category";
 import { Product } from "src/api/types/Product";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 
 type VerticalCategorySectionProps = {
   category: Category;

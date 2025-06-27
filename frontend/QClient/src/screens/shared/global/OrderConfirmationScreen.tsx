@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TickCheckboxSvg from "src/components/svg/TickCheckboxSvg";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "src/navigation/RootStackNavigator";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";

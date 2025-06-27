@@ -6,7 +6,7 @@ import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import { ProductId } from "src/api/types/Product";
 import { useProductsMap } from "src/hooks/useProductsMap";
 import { RootStackParamList } from "src/navigation/RootStackNavigator";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import RemoteImage from "../../generic/RemoteImage";
 import { Feather } from "@expo/vector-icons";
 

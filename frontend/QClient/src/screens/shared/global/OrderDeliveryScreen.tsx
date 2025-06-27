@@ -4,7 +4,7 @@ import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet, withUnistyles } from "react-native-unistyles";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import HomeIconSvg from "src/components/svg/HomeIconSvg";
 import CartIconSvg from "src/components/svg/CartIconSvg";
 import { useDirectionsQuery } from "src/api/hooks/queries/useDirectionsQuery";

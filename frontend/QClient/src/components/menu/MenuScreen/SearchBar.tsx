@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TextInput, View } from "react-native";
 import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import SearchIconSvg from "src/components/svg/SearchIconSvg";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 
 type SearchBarProps = {
   placeholder: string;

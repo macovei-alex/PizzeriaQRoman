@@ -2,7 +2,7 @@ import React from "react";
 import { Text, View } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 import { OptionId, OptionList } from "src/api/types/Product";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import TickCheckboxSvg from "src/components/svg/TickCheckboxSvg";
 import { formatPrice } from "src/utils/utils";
 

@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 import { Product } from "src/api/types/Product";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { MenuStackParamList } from "src/navigation/MenuStackNavigator";
 import { formatPrice } from "src/utils/utils";

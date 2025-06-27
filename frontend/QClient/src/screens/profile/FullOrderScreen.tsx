@@ -1,7 +1,7 @@
 import React from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import ScreenTitle from "src/components/shared/generic/ScreenTitle";
 import { CompositeNavigationProp, RouteProp, useNavigation, useRoute } from "@react-navigation/native";

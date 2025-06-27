@@ -10,7 +10,7 @@ import { useAuthContext } from "src/context/AuthContext";
 import { useCartContext } from "src/context/CartContext/CartContext";
 import { ProfileStackParamList } from "src/navigation/ProfileStackNavigator";
 import { RootStackParamList } from "src/navigation/RootStackNavigator";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 
 type NavigationProps = CompositeNavigationProp<
   NativeStackNavigationProp<ProfileStackParamList, "ProfileScreen">,

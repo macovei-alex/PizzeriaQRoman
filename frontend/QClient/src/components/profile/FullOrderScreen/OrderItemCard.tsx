@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { formatPrice } from "src/utils/utils";
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native";

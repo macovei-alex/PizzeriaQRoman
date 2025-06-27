@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleProp, Text, View, ViewStyle } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import HorizontalLine from "./HorizontalLine";
 
 type ScreenTitleProps = {

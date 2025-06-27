@@ -7,7 +7,7 @@ import { Address } from "src/api/types/Address";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
 import { RootStackParamList } from "src/navigation/RootStackNavigator";
 import Dropdown from "react-native-input-select";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 
 type NavigationProps = CompositeNavigationProp<
   NativeStackNavigationProp<CartStackParamList, "CartScreen">,

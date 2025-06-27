@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native-unistyles";
 import PlusCircleSvg from "src/components/svg/PlusCircleSvg";
 import MinusCircleSvg from "src/components/svg/MinusCircleSvg";
 import { useCartContext } from "src/context/CartContext/CartContext";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { CartStackParamList } from "src/navigation/CartStackNavigator";
 import { formatPrice } from "src/utils/utils";

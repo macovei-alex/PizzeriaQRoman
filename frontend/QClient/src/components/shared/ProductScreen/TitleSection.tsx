@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 import GoBackButtonSvg from "src/components/svg/GoBackButtonSvg";
 import { ProductWithOptions } from "src/api/types/Product";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import { useNavigation } from "@react-navigation/native";
 import { formatPrice } from "src/utils/utils";
 import RemoteImageBackground from "../generic/RemoteImageBackground";

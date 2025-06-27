@@ -4,7 +4,7 @@ import { View, Text, ActivityIndicator, Platform, TouchableOpacity } from "react
 import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import MapView from "react-native-maps";
 import { useCurrentLocation } from "src/hooks/useCurrentLocation";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import SearchIconSvg from "src/components/svg/SearchIconSvg";
 import AddressForm, { NewAddress } from "src/components/shared/global/AddressesScreen/AddressForm";
 import { api } from "src/api";

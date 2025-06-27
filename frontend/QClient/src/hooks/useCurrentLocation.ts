@@ -1,6 +1,6 @@
 import * as Location from "expo-location";
 import { useEffect, useState } from "react";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 
 const precision = 100_000;
 

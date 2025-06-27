@@ -2,7 +2,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import React, { useCallback, useState } from "react";
 import { FlatList, Platform, Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 
 export default function ConsoleScreen() {
   const [, setRefresh] = useState(0);

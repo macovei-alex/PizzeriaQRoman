@@ -7,7 +7,7 @@ import useProductsQuery from "src/api/hooks/queries/useProductsQuery";
 import useCategoriesQuery from "src/api/hooks/queries/useCategoriesQuery";
 import { Category, CategoryId } from "src/api/types/Category";
 import { Product } from "src/api/types/Product";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import MenuSkeletonLoader from "src/components/menu/MenuScreen/MenuSkeletonLoader";
 import ErrorComponent from "../../components/shared/generic/ErrorComponent";
 import { useScrollOffsets } from "src/hooks/useScrollOffsets";

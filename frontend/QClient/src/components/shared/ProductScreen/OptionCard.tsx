@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 import TickCheckboxSvg from "src/components/svg/TickCheckboxSvg";
 import { Option, OptionId } from "src/api/types/Product";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import { formatPrice } from "src/utils/utils";
 import PlusCircleSvg from "src/components/svg/PlusCircleSvg";
 import MinusCircleSvg from "src/components/svg/MinusCircleSvg";

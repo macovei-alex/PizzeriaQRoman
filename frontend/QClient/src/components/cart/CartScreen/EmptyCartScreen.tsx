@@ -2,7 +2,7 @@ import React from "react";
 import { Text, View } from "react-native";
 import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import EmptyCartSvg from "src/components/svg/EmptyCartSvg";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 
 export default function EmptyCartScreen() {
   logger.render("EmptyCartScreen");

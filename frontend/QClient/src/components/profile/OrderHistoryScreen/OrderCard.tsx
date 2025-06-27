@@ -3,7 +3,7 @@ import { ColorValue, StyleProp, Text, TouchableOpacity, View, ViewStyle } from "
 import { StyleSheet } from "react-native-unistyles";
 import { Product, ProductId } from "src/api/types/Product";
 import useProductsQuery from "src/api/hooks/queries/useProductsQuery";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import { formatDate, formatPrice } from "src/utils/utils";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import RemoteImage from "src/components/shared/generic/RemoteImage";

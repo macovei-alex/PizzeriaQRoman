@@ -14,7 +14,7 @@ import { usePhoneNumberQuery } from "src/api/hooks/queries/usePhoneNumberQuery";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import LabelledBorderComponent from "src/components/shared/generic/LabelledBorderComponent";
 import { useAuthContext } from "src/context/AuthContext";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import { showToast } from "src/utils/toast";
 
 export type AccountFormHandle = {

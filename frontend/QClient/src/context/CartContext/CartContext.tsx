@@ -1,5 +1,5 @@
 import { ProductWithOptions } from "src/api/types/Product";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import React, { createContext, ReactNode, useCallback, useContext } from "react";
 import { useAuthContext } from "../AuthContext";
 import { CartItem, CartItemId, CartItemOptions } from "./types";

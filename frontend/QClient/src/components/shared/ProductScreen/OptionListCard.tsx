@@ -3,7 +3,7 @@ import { Text, View } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 import { OptionId, OptionList } from "src/api/types/Product";
 import OptionCard from "./OptionCard";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import equal from "fast-deep-equal";
 import { showToast } from "src/utils/toast";
 import { CartItemOptions } from "src/context/CartContext/types";

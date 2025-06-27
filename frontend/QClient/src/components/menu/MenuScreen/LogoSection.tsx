@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, ImageBackground, Image } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 import { images } from "src/constants/images";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 
 export default function LogoSection() {
   logger.render("LogoSection");

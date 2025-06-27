@@ -4,7 +4,7 @@ import { Platform } from "react-native";
 import { CartContextProvider } from "src/context/CartContext/CartContext";
 import Toast from "react-native-toast-message";
 import { StatusBar } from "expo-status-bar";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import Navigation from "src/navigation/Navigation";
 import { AuthContextProvider } from "src/context/AuthContext";
 import * as Notifications from "expo-notifications";

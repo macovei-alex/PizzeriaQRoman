@@ -13,7 +13,7 @@ import { StyleSheet } from "react-native-unistyles";
 import { useAuthContext } from "src/context/AuthContext";
 import { images } from "src/constants/images";
 import * as WebBrowser from "expo-web-browser";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 
 WebBrowser.maybeCompleteAuthSession();
 

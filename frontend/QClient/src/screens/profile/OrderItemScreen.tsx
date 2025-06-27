@@ -3,7 +3,7 @@ import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Fragment } from "react";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";

@@ -11,7 +11,7 @@ import React, {
 import { api } from "src/api";
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import * as AuthSession from "expo-auth-session";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 import { z } from "zod";
 import * as SecureStore from "expo-secure-store";
 import { ENV } from "src/constants/env";

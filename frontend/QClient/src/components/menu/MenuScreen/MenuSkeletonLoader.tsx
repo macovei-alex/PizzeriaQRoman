@@ -2,7 +2,7 @@ import { Animated, Easing, View } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useEffect, useRef } from "react";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 
 const opacityAnimParams = { min: 0.5, max: 1, duration: 500 };
 

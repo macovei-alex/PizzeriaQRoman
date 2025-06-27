@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native-unistyles";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GoBackButtonSvg from "src/components/svg/GoBackButtonSvg";
-import logger from "src/utils/logger";
+import logger from "src/constants/logger";
 
 export default function TestScreen() {
   logger.render("TestScreen");
