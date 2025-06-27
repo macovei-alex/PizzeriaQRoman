@@ -317,7 +317,7 @@ public class EntityInitializerService {
 				.email(user.email())
 				.isEmailVerified(user.emailVerified())
 				.phoneNumber("0722 222 222")
-				.createdAt(LocalDateTime.ofEpochSecond(user.createdTimestamp() / 1000, 0, ZoneOffset.UTC))
+				.createdAt(user.createdTimestampDate())
 				.build());
 
 		user = keycloakUsers.get(1);
