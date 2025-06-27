@@ -13,7 +13,7 @@ import java.util.UUID;
 @Service
 @Profile("test")
 @AllArgsConstructor
-public class TestUtilsService {
+public class MockUserService {
 
 	private AccountRepository accountRepository;
 

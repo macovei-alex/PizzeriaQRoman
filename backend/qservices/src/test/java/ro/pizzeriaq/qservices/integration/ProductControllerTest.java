@@ -16,7 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import ro.pizzeriaq.qservices.data.dtos.ProductDto;
 import ro.pizzeriaq.qservices.services.EntityInitializerService;
 import ro.pizzeriaq.qservices.services.ProductService;
-import ro.pizzeriaq.qservices.utils.TestUtilsService;
+import ro.pizzeriaq.qservices.utils.MockUserService;
+import ro.pizzeriaq.qservices.config.TestcontainersBase;
 
 import java.util.Comparator;
 
@@ -28,17 +29,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureMockMvc
-class ProductControllerTest {
+class ProductControllerTest extends TestcontainersBase {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProductControllerTest.class);
 
-
 	@Value("${server.servlet.context-path}")
 	private String contextPath;
-
 	@Value("${app.environment}")
 	private String environment;
-
 
 	@Autowired
 	private EntityInitializerService entityInitializerService;
@@ -47,7 +45,7 @@ class ProductControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 	@Autowired
-	private TestUtilsService testUtilsService;
+	private MockUserService mockUserService;
 
 
 	@BeforeAll
@@ -87,7 +85,7 @@ class ProductControllerTest {
 
 	@Test
 	void getAllProducts() throws Exception {
-		testUtilsService.withDynamicMockUser((_) -> {
+		mockUserService.withDynamicMockUser((_) -> {
 			mockMvc.perform(get(contextPath + "/products")
 							.contextPath(contextPath)
 							.accept(MediaType.APPLICATION_JSON))
@@ -100,7 +98,7 @@ class ProductControllerTest {
 
 	@Test
 	void getNonexistentProduct() throws Exception {
-		testUtilsService.withDynamicMockUser((_) -> {
+		mockUserService.withDynamicMockUser((_) -> {
 			mockMvc.perform(get(contextPath + "/products/{id}", Integer.MAX_VALUE)
 							.contextPath(contextPath)
 							.accept(MediaType.APPLICATION_JSON))
@@ -110,7 +108,7 @@ class ProductControllerTest {
 
 	@Test
 	void getProductWithWrongRoute() throws Exception {
-		testUtilsService.withDynamicMockUser((_) -> {
+		mockUserService.withDynamicMockUser((_) -> {
 			mockMvc.perform(get(contextPath + "/products/invalid")
 							.contextPath(contextPath)
 							.accept(MediaType.APPLICATION_JSON))
@@ -120,7 +118,7 @@ class ProductControllerTest {
 
 	@Test
 	void getProductWithValidIdAndOptionLists1() throws Exception {
-		testUtilsService.withDynamicMockUser((_) -> {
+		mockUserService.withDynamicMockUser((_) -> {
 			var productId = productService.getProducts().stream()
 					.sorted(Comparator.comparing(ProductDto::getName))
 					.filter((p) -> p.getName().equals("Pizza Capriciosa"))
@@ -143,7 +141,7 @@ class ProductControllerTest {
 
 	@Test
 	void getProductWithValidIdAndOptionLists2() throws Exception {
-		testUtilsService.withDynamicMockUser((_) -> {
+		mockUserService.withDynamicMockUser((_) -> {
 			var productId = productService.getProducts().stream()
 					.sorted(Comparator.comparing(ProductDto::getName))
 					.filter((p) -> p.getName().equals("Pizza Margherita"))
@@ -166,7 +164,7 @@ class ProductControllerTest {
 
 	@Test
 	void getProductWithValidIdAndNoOptionLists1() throws Exception {
-		testUtilsService.withDynamicMockUser((_) -> {
+		mockUserService.withDynamicMockUser((_) -> {
 			var productId = productService.getProducts().stream()
 					.filter((p) -> p.getName().equals("Pizza Quattro Stagioni"))
 					.findFirst()
@@ -188,7 +186,7 @@ class ProductControllerTest {
 
 	@Test
 	void getProductWithValidIdAndNoOptionLists2() throws Exception {
-		testUtilsService.withDynamicMockUser((_) -> {
+		mockUserService.withDynamicMockUser((_) -> {
 			var productId = productService.getProducts().stream()
 					.filter((p) -> p.getName().equals("Pizza Quattro Formaggi"))
 					.findFirst()

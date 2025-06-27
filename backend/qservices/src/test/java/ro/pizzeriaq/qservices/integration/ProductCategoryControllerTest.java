@@ -14,7 +14,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import ro.pizzeriaq.qservices.services.EntityInitializerService;
 import ro.pizzeriaq.qservices.services.ProductCategoryService;
-import ro.pizzeriaq.qservices.utils.TestUtilsService;
+import ro.pizzeriaq.qservices.utils.MockUserService;
+import ro.pizzeriaq.qservices.config.TestcontainersBase;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -24,17 +25,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureMockMvc
-public class ProductCategoryControllerTest {
+public class ProductCategoryControllerTest extends TestcontainersBase {
 
-	private static final Logger logger = LoggerFactory.getLogger(ProductControllerTest.class);
-
+	private static final Logger logger = LoggerFactory.getLogger(ProductCategoryControllerTest.class);
 
 	@Value("${server.servlet.context-path}")
 	private String contextPath;
-
 	@Value("${app.environment}")
 	private String environment;
-
 
 	@Autowired
 	private EntityInitializerService entityInitializerService;
@@ -43,7 +41,7 @@ public class ProductCategoryControllerTest {
 	@Autowired
 	private ProductCategoryService productCategoryService;
 	@Autowired
-	private TestUtilsService testUtilsService;
+	private MockUserService mockUserService;
 
 
 	@BeforeAll
@@ -76,7 +74,7 @@ public class ProductCategoryControllerTest {
 
 	@Test
 	void getCategories() throws Exception {
-		testUtilsService.withDynamicMockUser((_) -> {
+		mockUserService.withDynamicMockUser((_) -> {
 			mockMvc.perform(get(contextPath + "/categories")
 							.contextPath(contextPath))
 					.andExpect(status().isOk());
