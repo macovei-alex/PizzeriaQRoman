@@ -1,9 +1,9 @@
-declare module "*.jpg" {
+declare module "*.png" {
   const value: number;
   export default value;
 }
 
-declare module "*.png" {
+declare module "*.jpg" {
   const value: number;
   export default value;
 }
