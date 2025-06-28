@@ -1,8 +1,7 @@
 package ro.pizzeriaq.qservices.exceptions.handler;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -20,15 +19,13 @@ import javax.naming.ServiceUnavailableException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-	static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-
-
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<String> handleGeneralException(Exception e) {
-		logger.error("Unexpected error", e);
+		log.error("Unexpected error", e);
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 				.body("An unexpected error occurred: " + e.getMessage());
 	}
@@ -36,7 +33,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
-		logger.error("Illegal argument exception", e);
+		log.error("Illegal argument exception", e);
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 	}
 
@@ -46,63 +43,63 @@ public class GlobalExceptionHandler {
 		Map<String, String> errors = e.getBindingResult().getFieldErrors().stream()
 				.collect(Collectors.toMap(FieldError::getField, (field) -> messageOrDefault(field.getDefaultMessage())));
 
-		logger.error("Invalid data received", e);
+		log.error("Invalid data received", e);
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
 	}
 
 
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public ResponseEntity<String> handleInvalidData(MethodArgumentTypeMismatchException e) {
-		logger.error("Invalid data received", e);
+		log.error("Invalid data received", e);
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 	}
 
 
 	@ExceptionHandler(KeycloakException.class)
 	public ResponseEntity<String> handleKeycloakException(KeycloakException e) {
-		logger.error("Keycloak error", e);
+		log.error("Keycloak error", e);
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
 
 
 	@ExceptionHandler(TypesenseException.class)
 	public ResponseEntity<String> handleTypesenseException(TypesenseException e) {
-		logger.error("Typesense error", e);
+		log.error("Typesense error", e);
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
 
 
 	@ExceptionHandler(ServiceUnavailableException.class)
 	public ResponseEntity<String> handleServiceUnavailableException(ServiceUnavailableException e) {
-		logger.error("Service unavailable", e);
+		log.error("Service unavailable", e);
 		return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(e.getMessage());
 	}
 
 
 	@ExceptionHandler(NoResourceFoundException.class)
 	public ResponseEntity<String> handleNoResourceFoundException(NoResourceFoundException e) {
-		logger.error("Resource not found", e);
+		log.error("Resource not found", e);
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 	}
 
 
 	@ExceptionHandler(PhoneNumberMissingException.class)
 	public ResponseEntity<String> handlePhoneNumberMissingException(PhoneNumberMissingException e) {
-		logger.error("Phone number missing", e);
+		log.error("Phone number missing", e);
 		return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
 	}
 
 
 	@ExceptionHandler(EntityNotFoundException.class)
 	public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException e) {
-		logger.error("Entity not found", e);
+		log.error("Entity not found", e);
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 	}
 
 
 	@ExceptionHandler(AccessDeniedException.class)
 	public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException e) {
-		logger.error("Access denied", e);
+		log.error("Access denied", e);
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
 	}
 

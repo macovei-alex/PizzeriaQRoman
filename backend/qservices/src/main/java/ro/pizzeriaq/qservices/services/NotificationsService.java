@@ -1,7 +1,6 @@
 package ro.pizzeriaq.qservices.services;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -9,11 +8,9 @@ import ro.pizzeriaq.qservices.data.entities.PushToken;
 import ro.pizzeriaq.qservices.repositories.PushTokenRepository;
 import ro.pizzeriaq.qservices.data.dtos.PushNotificationDto;
 
+@Slf4j
 @Service
 public class NotificationsService {
-
-	private static final Logger logger = LoggerFactory.getLogger(NotificationsService.class);
-
 
 	private final PushTokenRepository pushTokenRepository;
 	private final RestClient restClient;
@@ -56,7 +53,7 @@ public class NotificationsService {
 					.retrieve()
 					.toEntity(String.class);
 			if (!response.getStatusCode().is2xxSuccessful()) {
-				logger.error("Failed to send notification to token ( {} ): Status ( {} ), Response ( {} )",
+				log.error("Failed to send notification to token ( {} ): Status ( {} ), Response ( {} )",
 						token.getId(),
 						response.getStatusCode(),
 						response.getBody()

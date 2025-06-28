@@ -3,8 +3,7 @@ package ro.pizzeriaq.qservices.config.interceptors;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -16,11 +15,10 @@ import ro.pizzeriaq.qservices.services.AuthenticationInsightsService;
 import java.util.Arrays;
 import java.util.UUID;
 
+@Slf4j
 @AllArgsConstructor
 @Component
 public class AccountIdCheckingInterceptor implements HandlerInterceptor {
-
-	private static final Logger logger = LoggerFactory.getLogger(AccountIdCheckingInterceptor.class);
 
 
 	private final AuthenticationInsightsService authenticationInsightsService;
@@ -55,7 +53,7 @@ public class AccountIdCheckingInterceptor implements HandlerInterceptor {
 
 		if (accountsSegmentIndex == -1) {
 			// No accounts segment in the route
-			logger.warn("Route ( {} ) does not contain accounts segment. This should never happen. Check for possible interceptors configuration mistakes",
+			log.warn("Route ( {} ) does not contain accounts segment. This should never happen. Check for possible interceptors configuration mistakes",
 					request.getRequestURI()
 			);
 			return true;
@@ -79,7 +77,7 @@ public class AccountIdCheckingInterceptor implements HandlerInterceptor {
 
 		} catch (IllegalArgumentException ex) {
 			// Invalid UUID
-			logger.warn("Invalid accountId format ( {} ) in route ( {} ). This should never happen. Please check @AccountIdChecked annotation locations and remove those where the accountId path variable doesn't exist.",
+			log.warn("Invalid accountId format ( {} ) in route ( {} ). This should never happen. Please check @AccountIdChecked annotation locations and remove those where the accountId path variable doesn't exist.",
 					routeSegments[accountsSegmentIndex + 1],
 					request.getRequestURI()
 			);

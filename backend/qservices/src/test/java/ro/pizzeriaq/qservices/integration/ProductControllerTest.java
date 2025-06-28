@@ -1,11 +1,10 @@
 package ro.pizzeriaq.qservices.integration;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -25,13 +24,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Slf4j
 @SpringBootTest
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureMockMvc
 class ProductControllerTest extends TestcontainersBase {
-
-	private static final Logger logger = LoggerFactory.getLogger(ProductControllerTest.class);
 
 	@Value("${server.servlet.context-path}")
 	private String contextPath;
@@ -50,7 +48,7 @@ class ProductControllerTest extends TestcontainersBase {
 
 	@BeforeAll
 	void setUp() {
-		logger.info("Environment: {}", environment);
+		log.info("Environment: {}", environment);
 		EntityInitializerService.reInitializeEntities(entityInitializerService);
 	}
 

@@ -35,7 +35,7 @@ public class ProductRepositoryTest extends TestcontainersBase {
 
 
 	@BeforeAll
-	void setup() {
+	void setUp() {
 		log.info("Environment: {}", environment);
 		EntityInitializerService.reInitializeEntities(entityInitializerService);
 	}

@@ -1,10 +1,12 @@
 package ro.pizzeriaq.qservices.config;
 
 import dasniko.testcontainers.keycloak.KeycloakContainer;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
 
+@Slf4j
 public abstract class TestcontainersBase {
 
 	static final MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0")
@@ -28,6 +30,7 @@ public abstract class TestcontainersBase {
 		registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
 		registry.add("spring.datasource.username", mysqlContainer::getUsername);
 		registry.add("spring.datasource.password", mysqlContainer::getPassword);
+		log.info("Added MySQL test container settings");
 	}
 
 
@@ -47,6 +50,7 @@ public abstract class TestcontainersBase {
 				"spring.security.oauth2.client.provider.keycloak.issuer-uri",
 				() -> "%s/realms/pizzeriaq".formatted(keycloakContainer.getAuthServerUrl())
 		);
+		log.info("Added Keycloak test container settings");
 	}
 
 }

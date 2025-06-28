@@ -1,19 +1,16 @@
 package ro.pizzeriaq.qservices.services.mappers;
 
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ro.pizzeriaq.qservices.data.entities.Product;
 import ro.pizzeriaq.qservices.data.dtos.ProductWithOptionsDto;
 import ro.pizzeriaq.qservices.services.ImageService;
 
+@Slf4j
 @Component
 @AllArgsConstructor
 public class ProductWithOptionsMapper {
-
-	private static final Logger logger = LoggerFactory.getLogger(ProductWithOptionsMapper.class);
-
 
 	private final ImageService imageService;
 	private final OptionListMapper optionListMapper;
@@ -27,7 +24,7 @@ public class ProductWithOptionsMapper {
 		var imageExists = imageService.imageExists(product.getImageName());
 
 		if (!imageExists) {
-			logger.warn("Image not found: {}. ProductWithOptionsDTO will have null for image name and 0 for image version", product.getImageName());
+			log.warn("Image not found: {}. ProductWithOptionsDTO will have null for image name and 0 for image version", product.getImageName());
 		}
 
 		return ProductWithOptionsDto.builder()
