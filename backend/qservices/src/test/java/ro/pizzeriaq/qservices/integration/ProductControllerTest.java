@@ -14,6 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import ro.pizzeriaq.qservices.config.Container;
 import ro.pizzeriaq.qservices.data.dtos.ProductDto;
 import ro.pizzeriaq.qservices.services.EntityInitializerService;
 import ro.pizzeriaq.qservices.services.ProductService;
@@ -50,8 +51,7 @@ class ProductControllerTest {
 
 	@DynamicPropertySource
 	static void registerContainers(DynamicPropertyRegistry registry) {
-		TestcontainersRegistry.startMySqlContainer(registry);
-		TestcontainersRegistry.startKeycloakContainer(registry);
+		TestcontainersRegistry.start(registry, Container.MySQL, Container.Keycloak);
 	}
 
 

@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import ro.pizzeriaq.qservices.config.Container;
 import ro.pizzeriaq.qservices.config.RepositoryTestConfig;
 import ro.pizzeriaq.qservices.config.TestcontainersRegistry;
 import ro.pizzeriaq.qservices.data.entities.Product;
@@ -41,7 +42,7 @@ public class ProductRepositoryTest {
 
 	@DynamicPropertySource
 	static void registerContainers(DynamicPropertyRegistry registry) {
-		TestcontainersRegistry.startMySqlContainer(registry);
+		TestcontainersRegistry.start(registry, Container.MySQL);
 		RepositoryTestConfig.addDynamicProperties(registry);
 	}
 

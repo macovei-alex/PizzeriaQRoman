@@ -17,6 +17,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.util.MultiValueMap;
+import ro.pizzeriaq.qservices.config.Container;
 import ro.pizzeriaq.qservices.data.dtos.OptionListDto;
 import ro.pizzeriaq.qservices.data.dtos.PlacedOrderDto;
 import ro.pizzeriaq.qservices.data.dtos.ProductDto;
@@ -71,8 +72,7 @@ public class OrderControllerTest {
 
 	@DynamicPropertySource
 	static void registerContainers(DynamicPropertyRegistry registry) {
-		TestcontainersRegistry.startMySqlContainer(registry);
-		TestcontainersRegistry.startKeycloakContainer(registry);
+		TestcontainersRegistry.start(registry, Container.MySQL, Container.Keycloak);
 	}
 
 

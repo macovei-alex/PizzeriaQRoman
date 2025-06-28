@@ -5,6 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.testcontainers.containers.MySQLContainer;
 
+import java.util.Map;
+import java.util.function.Consumer;
+
 @Slf4j
 public abstract class TestcontainersRegistry {
 
@@ -22,19 +25,40 @@ public abstract class TestcontainersRegistry {
 			.withContextPath("/pizzeriaq/auth");
 
 
-	public static void startMySqlContainer(DynamicPropertyRegistry registry) {
+	private static final Map<Container, Consumer<DynamicPropertyRegistry>> startFunctions = Map.of(
+			Container.MySQL, TestcontainersRegistry::startMySqlContainer,
+			Container.Keycloak, TestcontainersRegistry::startKeycloakContainer
+	);
+
+
+	public static void start(DynamicPropertyRegistry registry, Container... containers) {
+		for (var container : containers) {
+			var startFunction = startFunctions.get(container);
+			if (startFunction != null) {
+				startFunction.accept(registry);
+			}
+		}
+	}
+
+
+	private static void startMySqlContainer(DynamicPropertyRegistry registry) {
 		registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
 		registry.add("spring.datasource.username", mysqlContainer::getUsername);
 		registry.add("spring.datasource.password", mysqlContainer::getPassword);
 		log.info("Added MySQL test container properties");
 
-		if (!mysqlContainer.isRunning()) {
-			mysqlContainer.start();
-			log.info("Started MySQL test container");
+		try {
+			if (!mysqlContainer.isRunning()) {
+				mysqlContainer.start();
+				log.info("Started MySQL test container");
+			}
+		} catch (Exception e) {
+			log.error("Failed to start MySQL test container: {}", e.getMessage());
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 
-	public static void startKeycloakContainer(DynamicPropertyRegistry registry) {
+	private static void startKeycloakContainer(DynamicPropertyRegistry registry) {
 		registry.add("keycloak.base-url", keycloakContainer::getAuthServerUrl);
 		registry.add("keycloak.realm", () -> "pizzeriaq");
 		registry.add(
@@ -51,9 +75,14 @@ public abstract class TestcontainersRegistry {
 		);
 		log.info("Added Keycloak test container properties");
 
-		if (!keycloakContainer.isRunning()) {
-			keycloakContainer.start();
-			log.info("Started Keycloak test container");
+		try {
+			if (!keycloakContainer.isRunning()) {
+				keycloakContainer.start();
+				log.info("Started Keycloak test container");
+			}
+		} catch (Exception e) {
+			log.error("Failed to start Keycloak test container: {}", e.getMessage());
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 
