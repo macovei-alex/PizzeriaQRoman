@@ -58,7 +58,7 @@ public class Product {
 	private BigDecimal price;
 
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String imageName;
 
 

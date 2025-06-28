@@ -5,8 +5,6 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
 
-import java.util.concurrent.CompletableFuture;
-
 public abstract class TestcontainersBase {
 
 	static final MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0")

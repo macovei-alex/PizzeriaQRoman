@@ -11,7 +11,6 @@ import ro.pizzeriaq.qservices.repositories.*;
 import javax.naming.ServiceUnavailableException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -151,6 +150,16 @@ public class EntityInitializerService {
 				.description("")
 				.price(BigDecimal.valueOf(5.0))
 				.imageName("sprite.jpg")
+				.build());
+
+		products.add(Product.builder()
+				.category(categories.get(2))
+				.name("Deleted Sprite")
+				.subtitle("0.33L")
+				.description("")
+				.price(BigDecimal.valueOf(5.0))
+				.imageName("sprite.jpg")
+				.isActive(false)
 				.build());
 
 		productRepository.saveAll(products);

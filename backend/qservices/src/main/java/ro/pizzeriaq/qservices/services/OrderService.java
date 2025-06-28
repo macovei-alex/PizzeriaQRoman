@@ -62,8 +62,9 @@ public class OrderService {
 			throw new PhoneNumberMissingException(accountId);
 		}
 
-		var products = productRepository.findAll();
+		var products = productRepository.findAllActive();
 
+		validateOrder(placedOrderDTO, products, account);
 		Order order = generateOrder(placedOrderDTO, products, account);
 
 		orderRepository.save(order);
@@ -72,8 +73,7 @@ public class OrderService {
 	}
 
 
-	private void validateOrder(PlacedOrderDto placedOrderDTO, List<Product> products, Account account)
-			throws IllegalArgumentException {
+	private void validateOrder(PlacedOrderDto placedOrderDTO, List<Product> products, Account account) {
 		if (account.getAddresses().stream()
 				.filter(a -> Objects.equals(a.getId(), placedOrderDTO.getAddressId()))
 				.findFirst()
@@ -94,8 +94,7 @@ public class OrderService {
 	}
 
 
-	private void validateOrderItemOptions(PlacedOrderDto.Item orderItem, Product product)
-			throws IllegalArgumentException {
+	private void validateOrderItemOptions(PlacedOrderDto.Item orderItem, Product product) {
 
 		List<PlacedOrderDto.Item.OptionList> itemOptionLists = orderItem.getOptionLists();
 
@@ -112,8 +111,7 @@ public class OrderService {
 	}
 
 
-	private void validateOptionList(PlacedOrderDto.Item.OptionList itemOptionList, OptionList optionList)
-			throws IllegalArgumentException {
+	private void validateOptionList(PlacedOrderDto.Item.OptionList itemOptionList, OptionList optionList) {
 
 		if (optionList.getMinChoices() > itemOptionList.getOptions().size()
 				|| optionList.getMaxChoices() < itemOptionList.getOptions().size()) {
@@ -151,11 +149,7 @@ public class OrderService {
 	}
 
 
-	private Order generateOrder(PlacedOrderDto placedOrderDTO, List<Product> products, Account account)
-			throws IllegalArgumentException {
-
-		validateOrder(placedOrderDTO, products, account);
-
+	private Order generateOrder(PlacedOrderDto placedOrderDTO, List<Product> products, Account account) {
 		var address = addressRepository.findById(placedOrderDTO.getAddressId()).orElseThrow();
 
 		Order order = Order.builder()

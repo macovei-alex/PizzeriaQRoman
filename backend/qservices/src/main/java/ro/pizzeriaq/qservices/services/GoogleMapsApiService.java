@@ -2,6 +2,7 @@ package ro.pizzeriaq.qservices.services;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import ro.pizzeriaq.qservices.data.dtos.navigation.GoogleApiDirections;
@@ -41,14 +42,18 @@ public class GoogleMapsApiService {
 				.build()
 				.toUriString();
 
-		var response = restClient.get()
-				.uri(uri)
-				.retrieve()
-				.body(GoogleApiDirections.class);
+		try {
+			var response = restClient.get()
+					.uri(uri)
+					.retrieve()
+					.body(GoogleApiDirections.class);
 
-		throwIfInvalid(response);
+			throwIfInvalid(response);
 
-		return response;
+			return response;
+		} catch (ResourceAccessException e) {
+			throw new ServiceUnavailableException("Google maps API service is unavailable: " + e.getMessage());
+		}
 	}
 
 
@@ -59,14 +64,18 @@ public class GoogleMapsApiService {
 				.build()
 				.toUriString();
 
-		var response = restClient.get()
-				.uri(uri)
-				.retrieve()
-				.body(GoogleApiGeocode.class);
+		try {
+			var response = restClient.get()
+					.uri(uri)
+					.retrieve()
+					.body(GoogleApiGeocode.class);
 
-		throwIfInvalid(response);
+			throwIfInvalid(response);
 
-		return response.getResults().get(0).getFormattedAddress();
+			return response.getResults().get(0).getFormattedAddress();
+		} catch (ResourceAccessException e) {
+			throw new ServiceUnavailableException("Google maps API service is unavailable: " + e.getMessage());
+		}
 	}
 
 
@@ -77,14 +86,18 @@ public class GoogleMapsApiService {
 				.build()
 				.toUriString();
 
-		var response = restClient.get()
-				.uri(uri)
-				.retrieve()
-				.body(GoogleApiGeocode.class);
+		try {
+			var response = restClient.get()
+					.uri(uri)
+					.retrieve()
+					.body(GoogleApiGeocode.class);
 
-		throwIfInvalid(response);
+			throwIfInvalid(response);
 
-		return response.getResults().get(0).getGeometry().getLocation();
+			return response.getResults().get(0).getGeometry().getLocation();
+		} catch (ResourceAccessException e) {
+			throw new ServiceUnavailableException("Google maps API service is unavailable: " + e.getMessage());
+		}
 	}
 
 

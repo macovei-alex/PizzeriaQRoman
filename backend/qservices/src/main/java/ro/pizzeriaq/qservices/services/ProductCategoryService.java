@@ -12,12 +12,12 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductCategoryService {
 
-	private final ProductCategoryRepository productRepository;
+	private final ProductCategoryRepository productCategoryRepository;
 	private final ProductCategoryMapper productCategoryMapper;
 
 
 	public List<ProductCategoryDto> getCategories() {
-		return productRepository.findAllOrderBySortIdAsc()
+		return productCategoryRepository.findAllOrderBySortIdAsc()
 				.stream()
 				.map(productCategoryMapper::fromEntity)
 				.toList();
