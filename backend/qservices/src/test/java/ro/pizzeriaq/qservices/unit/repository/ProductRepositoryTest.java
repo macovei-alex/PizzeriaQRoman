@@ -7,9 +7,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
-import ro.pizzeriaq.qservices.config.TestcontainersBase;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import ro.pizzeriaq.qservices.config.RepositoryTestConfig;
+import ro.pizzeriaq.qservices.config.TestcontainersRegistry;
 import ro.pizzeriaq.qservices.data.entities.Product;
 import ro.pizzeriaq.qservices.repositories.ProductRepository;
 import ro.pizzeriaq.qservices.services.EntityInitializerService;
@@ -20,10 +24,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
-@SpringBootTest
+@DataJpaTest
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ProductRepositoryTest extends TestcontainersBase {
+@Import(RepositoryTestConfig.class)
+public class ProductRepositoryTest {
 
 	@Value("app.environment")
 	String environment;
@@ -32,6 +37,13 @@ public class ProductRepositoryTest extends TestcontainersBase {
 	ProductRepository productRepository;
 	@Autowired
 	EntityInitializerService entityInitializerService;
+
+
+	@DynamicPropertySource
+	static void registerContainers(DynamicPropertyRegistry registry) {
+		TestcontainersRegistry.startMySqlContainer(registry);
+		RepositoryTestConfig.addDynamicProperties(registry);
+	}
 
 
 	@BeforeAll

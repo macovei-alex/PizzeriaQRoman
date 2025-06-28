@@ -368,7 +368,7 @@ public class EntityInitializerService {
 
 	@Transactional
 	public void addOrders() {
-		List<Account> accounts = accountRepository.findAll();
+		List<Account> accounts = accountRepository.findAllSortByCreatedAt();
 		List<Product> products = productRepository.findAll();
 		List<Order> orders = new ArrayList<>();
 

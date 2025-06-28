@@ -12,6 +12,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.util.MultiValueMap;
@@ -24,7 +26,7 @@ import ro.pizzeriaq.qservices.services.EntityInitializerService;
 import ro.pizzeriaq.qservices.services.OrderService;
 import ro.pizzeriaq.qservices.services.ProductService;
 import ro.pizzeriaq.qservices.utils.MockUserService;
-import ro.pizzeriaq.qservices.config.TestcontainersBase;
+import ro.pizzeriaq.qservices.config.TestcontainersRegistry;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -44,7 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureMockMvc
-public class OrderControllerTest extends TestcontainersBase {
+public class OrderControllerTest {
 
 	@Value("${server.servlet.context-path}")
 	String contextPath;
@@ -65,6 +67,13 @@ public class OrderControllerTest extends TestcontainersBase {
 	AddressRepository addressRepository;
 	@Autowired
 	MockUserService mockUserService;
+
+
+	@DynamicPropertySource
+	static void registerContainers(DynamicPropertyRegistry registry) {
+		TestcontainersRegistry.startMySqlContainer(registry);
+		TestcontainersRegistry.startKeycloakContainer(registry);
+	}
 
 
 	MockHttpServletRequestBuilder constructDefaultPostRequest(UUID accountId) {

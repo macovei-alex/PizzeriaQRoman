@@ -11,12 +11,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import ro.pizzeriaq.qservices.data.dtos.ProductDto;
 import ro.pizzeriaq.qservices.services.EntityInitializerService;
 import ro.pizzeriaq.qservices.services.ProductService;
 import ro.pizzeriaq.qservices.utils.MockUserService;
-import ro.pizzeriaq.qservices.config.TestcontainersBase;
+import ro.pizzeriaq.qservices.config.TestcontainersRegistry;
 
 import java.util.Comparator;
 
@@ -29,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureMockMvc
-class ProductControllerTest extends TestcontainersBase {
+class ProductControllerTest {
 
 	@Value("${server.servlet.context-path}")
 	String contextPath;
@@ -44,6 +46,13 @@ class ProductControllerTest extends TestcontainersBase {
 	MockMvc mockMvc;
 	@Autowired
 	MockUserService mockUserService;
+
+
+	@DynamicPropertySource
+	static void registerContainers(DynamicPropertyRegistry registry) {
+		TestcontainersRegistry.startMySqlContainer(registry);
+		TestcontainersRegistry.startKeycloakContainer(registry);
+	}
 
 
 	@BeforeAll

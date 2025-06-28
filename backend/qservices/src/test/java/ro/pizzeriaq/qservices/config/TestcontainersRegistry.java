@@ -3,39 +3,38 @@ package ro.pizzeriaq.qservices.config;
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
 
 @Slf4j
-public abstract class TestcontainersBase {
+public abstract class TestcontainersRegistry {
 
-	static final MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0")
+	private TestcontainersRegistry() {
+	}
+
+
+	private static final MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0")
 			.withDatabaseName("pizzeriaq-test")
 			.withUsername("test")
 			.withPassword("test");
 
-	static final KeycloakContainer keycloakContainer = new KeycloakContainer()
+	private static final KeycloakContainer keycloakContainer = new KeycloakContainer()
 			.withRealmImportFile("pizzeriaq-realm-export.json")
 			.withContextPath("/pizzeriaq/auth");
 
 
-	static {
-		mysqlContainer.start();
-		keycloakContainer.start();
-	}
-
-
-	@DynamicPropertySource
-	static void registerMySqlContainer(DynamicPropertyRegistry registry) {
+	public static void startMySqlContainer(DynamicPropertyRegistry registry) {
 		registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
 		registry.add("spring.datasource.username", mysqlContainer::getUsername);
 		registry.add("spring.datasource.password", mysqlContainer::getPassword);
-		log.info("Added MySQL test container settings");
+		log.info("Added MySQL test container properties");
+
+		if (!mysqlContainer.isRunning()) {
+			mysqlContainer.start();
+			log.info("Started MySQL test container");
+		}
 	}
 
-
-	@DynamicPropertySource
-	static void registerKeycloakContainer(DynamicPropertyRegistry registry) {
+	public static void startKeycloakContainer(DynamicPropertyRegistry registry) {
 		registry.add("keycloak.base-url", keycloakContainer::getAuthServerUrl);
 		registry.add("keycloak.realm", () -> "pizzeriaq");
 		registry.add(
@@ -50,7 +49,12 @@ public abstract class TestcontainersBase {
 				"spring.security.oauth2.client.provider.keycloak.issuer-uri",
 				() -> "%s/realms/pizzeriaq".formatted(keycloakContainer.getAuthServerUrl())
 		);
-		log.info("Added Keycloak test container settings");
+		log.info("Added Keycloak test container properties");
+
+		if (!keycloakContainer.isRunning()) {
+			keycloakContainer.start();
+			log.info("Started Keycloak test container");
+		}
 	}
 
 }

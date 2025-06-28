@@ -24,7 +24,7 @@ public class MockUserService {
 
 
 	public void withDynamicMockUser(boolean hasPhoneNumber, ThrowingConsumer<UUID> runnable) throws Exception {
-		var account = accountRepository.findAll().stream()
+		var account = accountRepository.findAllSortByCreatedAt().stream()
 				.filter(a -> hasPhoneNumber || (a.getPhoneNumber() != null && !a.getPhoneNumber().isEmpty()))
 				.findFirst()
 				.orElseThrow(() -> new Exception("No account found with the specified criteria"));

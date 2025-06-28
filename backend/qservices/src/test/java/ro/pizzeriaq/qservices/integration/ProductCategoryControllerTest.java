@@ -10,11 +10,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import ro.pizzeriaq.qservices.services.EntityInitializerService;
 import ro.pizzeriaq.qservices.services.ProductCategoryService;
 import ro.pizzeriaq.qservices.utils.MockUserService;
-import ro.pizzeriaq.qservices.config.TestcontainersBase;
+import ro.pizzeriaq.qservices.config.TestcontainersRegistry;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -25,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureMockMvc
-public class ProductCategoryControllerTest extends TestcontainersBase {
+public class ProductCategoryControllerTest {
 
 	@Value("${server.servlet.context-path}")
 	String contextPath;
@@ -40,6 +42,13 @@ public class ProductCategoryControllerTest extends TestcontainersBase {
 	ProductCategoryService productCategoryService;
 	@Autowired
 	MockUserService mockUserService;
+
+
+	@DynamicPropertySource
+	static void registerContainers(DynamicPropertyRegistry registry) {
+		TestcontainersRegistry.startMySqlContainer(registry);
+		TestcontainersRegistry.startKeycloakContainer(registry);
+	}
 
 
 	@BeforeAll

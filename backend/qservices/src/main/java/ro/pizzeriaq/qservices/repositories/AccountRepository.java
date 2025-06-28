@@ -17,7 +17,7 @@ public interface AccountRepository extends JpaRepository<Account, UUID> {
 
 	@NonNull
 	@Query("SELECT a FROM Account a ORDER BY a.createdAt ASC")
-	List<Account> findAll();
+	List<Account> findAllSortByCreatedAt();
 
 
 	@Query("SELECT a.conversationId FROM Account a WHERE a.id = :accountId")
