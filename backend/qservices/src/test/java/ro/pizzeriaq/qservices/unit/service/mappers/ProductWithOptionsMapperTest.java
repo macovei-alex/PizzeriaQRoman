@@ -23,11 +23,11 @@ import static org.mockito.Mockito.when;
 public class ProductWithOptionsMapperTest {
 
 	@Mock
-	private ImageService imageService;
+	ImageService imageService;
 	@Mock
-	private OptionListMapper optionListMapper;
+	OptionListMapper optionListMapper;
 
-	private ProductWithOptionsMapper productWithOptionsMapper;
+	ProductWithOptionsMapper productWithOptionsMapper;
 
 
 	OptionList nullOptionList() {

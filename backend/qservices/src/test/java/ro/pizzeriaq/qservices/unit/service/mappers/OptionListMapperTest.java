@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class OptionListMapperTest {
 
-	private final OptionListMapper optionListMapper = new OptionListMapper();
+	final OptionListMapper optionListMapper = new OptionListMapper();
 
 
 	Option nullOption() {

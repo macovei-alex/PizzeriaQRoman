@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class HistoryOrderMinimalMapperTest {
 
-	private final HistoryOrderMinimalMapper historyOrderMinimalMapper = new HistoryOrderMinimalMapper();
+	final HistoryOrderMinimalMapper historyOrderMinimalMapper = new HistoryOrderMinimalMapper();
 
 
 	OrderItem nullOrderItem() {

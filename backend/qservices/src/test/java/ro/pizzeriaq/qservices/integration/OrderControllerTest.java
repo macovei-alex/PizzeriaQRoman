@@ -47,34 +47,34 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class OrderControllerTest extends TestcontainersBase {
 
 	@Value("${server.servlet.context-path}")
-	private String contextPath;
+	String contextPath;
 	@Value("${app.environment}")
-	private String environment;
+	String environment;
 
 	@Autowired
-	private EntityInitializerService entityInitializerService;
+	EntityInitializerService entityInitializerService;
 	@Autowired
-	private ProductService productService;
+	ProductService productService;
 	@Autowired
-	private MockMvc mockMvc;
+	MockMvc mockMvc;
 	@Autowired
-	private ObjectMapper objectMapper;
+	ObjectMapper objectMapper;
 	@Autowired
-	private OrderService orderService;
+	OrderService orderService;
 	@Autowired
-	private AddressRepository addressRepository;
+	AddressRepository addressRepository;
 	@Autowired
-	private MockUserService mockUserService;
+	MockUserService mockUserService;
 
 
-	private MockHttpServletRequestBuilder constructDefaultPostRequest(UUID accountId) {
+	MockHttpServletRequestBuilder constructDefaultPostRequest(UUID accountId) {
 		return post(contextPath + "/accounts/" + accountId + "/orders")
 				.contextPath(contextPath)
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON);
 	}
 
-	private MockHttpServletRequestBuilder constructDefaultGetRequest(UUID accountId) {
+	MockHttpServletRequestBuilder constructDefaultGetRequest(UUID accountId) {
 		return get(contextPath + "/accounts/" + accountId + "/orders")
 				.params(MultiValueMap.fromSingleValue(Map.of("page", "0", "pageSize", "100")))
 				.contextPath(contextPath)

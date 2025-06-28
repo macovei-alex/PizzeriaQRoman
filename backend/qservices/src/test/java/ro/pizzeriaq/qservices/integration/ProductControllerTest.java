@@ -32,18 +32,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ProductControllerTest extends TestcontainersBase {
 
 	@Value("${server.servlet.context-path}")
-	private String contextPath;
+	String contextPath;
 	@Value("${app.environment}")
-	private String environment;
+	String environment;
 
 	@Autowired
-	private EntityInitializerService entityInitializerService;
+	EntityInitializerService entityInitializerService;
 	@Autowired
-	private ProductService productService;
+	ProductService productService;
 	@Autowired
-	private MockMvc mockMvc;
+	MockMvc mockMvc;
 	@Autowired
-	private MockUserService mockUserService;
+	MockUserService mockUserService;
 
 
 	@BeforeAll

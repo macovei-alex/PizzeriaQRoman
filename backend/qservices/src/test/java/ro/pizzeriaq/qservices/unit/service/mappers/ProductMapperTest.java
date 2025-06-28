@@ -20,9 +20,9 @@ import static org.mockito.Mockito.when;
 public class ProductMapperTest {
 
 	@Mock
-	private ImageService imageService;
+	ImageService imageService;
 
-	private ProductMapper productMapper;
+	ProductMapper productMapper;
 
 
 	@BeforeEach

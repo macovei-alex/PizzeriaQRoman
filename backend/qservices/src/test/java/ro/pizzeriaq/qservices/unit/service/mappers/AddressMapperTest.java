@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class AddressMapperTest {
 
-	private final AddressMapper addressMapper = new AddressMapper();
+	final AddressMapper addressMapper = new AddressMapper();
 
 	@Test
 	void fromEntityThrows() {

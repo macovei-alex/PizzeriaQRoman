@@ -26,7 +26,7 @@ public abstract class TestcontainersBase {
 
 
 	@DynamicPropertySource
-	protected static void registerMySqlContainer(DynamicPropertyRegistry registry) {
+	static void registerMySqlContainer(DynamicPropertyRegistry registry) {
 		registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
 		registry.add("spring.datasource.username", mysqlContainer::getUsername);
 		registry.add("spring.datasource.password", mysqlContainer::getPassword);
@@ -35,7 +35,7 @@ public abstract class TestcontainersBase {
 
 
 	@DynamicPropertySource
-	protected static void registerKeycloakContainer(DynamicPropertyRegistry registry) {
+	static void registerKeycloakContainer(DynamicPropertyRegistry registry) {
 		registry.add("keycloak.base-url", keycloakContainer::getAuthServerUrl);
 		registry.add("keycloak.realm", () -> "pizzeriaq");
 		registry.add(
