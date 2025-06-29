@@ -66,7 +66,7 @@ public class RepositoryTestConfig {
 
 
 	public static void addDynamicProperties(DynamicPropertyRegistry registry) {
-		registry.add("spring.jpa.show-sql", () -> true);
+		registry.add("spring.jpa.show-sql", () -> false);
 		registry.add("spring.jpa.hibernate.ddl-auto", () -> "update");
 	}
 

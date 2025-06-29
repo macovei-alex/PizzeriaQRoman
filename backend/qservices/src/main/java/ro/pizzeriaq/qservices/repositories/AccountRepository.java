@@ -26,14 +26,14 @@ public interface AccountRepository extends JpaRepository<Account, UUID> {
 			SELECT a FROM Account a
 			WHERE a.isActive = true AND a.id = :id
 	""")
-	Optional<Account> findActiveById(@NonNull UUID id);
+	Optional<Account> findActiveById(UUID id);
 
 
 	@Query("SELECT COUNT(a) > 0 FROM Account a WHERE a.id = :id")
-	boolean existsActiveById(@NonNull UUID id);
+	boolean existsActiveById(UUID id);
 
 
 	@Query("SELECT a.conversationId FROM Account a WHERE a.id = :accountId")
-	Optional<UUID> findConversationIdByAccountId(@NonNull UUID accountId);
+	Optional<UUID> findConversationIdByAccountId(UUID accountId);
 
 }

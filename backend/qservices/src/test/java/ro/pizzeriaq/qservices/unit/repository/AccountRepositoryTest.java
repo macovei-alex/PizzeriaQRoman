@@ -19,6 +19,7 @@ import ro.pizzeriaq.qservices.data.entities.Account;
 import ro.pizzeriaq.qservices.repositories.AccountRepository;
 import ro.pizzeriaq.qservices.services.EntityInitializerService;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
@@ -97,8 +98,35 @@ public class AccountRepositoryTest {
 		accounts.get(0).setConversationId(newConvId);
 		accountRepository.flush();
 
-		var account = accountRepository.findActiveById(accounts.get(0).getId())
-						.orElseThrow();
+		var account = accountRepository.findActiveById(accounts.get(0).getId()).orElseThrow();
 		assertEquals(newConvId, account.getConversationId());
 	}
+
+	@Test
+	@Rollback
+	void createAccount() {
+		var accounts = accountRepository.findAllActiveSortByCreatedAt();
+		assertEquals(2, accounts.size());
+
+		var account = Account.builder()
+				.id(UUID.randomUUID())
+				.email("new-user@email.com")
+				.isEmailVerified(false)
+				.phoneNumber("0770 777 777")
+				.createdAt(LocalDateTime.now())
+				.build();
+		accountRepository.save(account);
+
+		accounts = accountRepository.findAllActiveSortByCreatedAt();
+		assertEquals(3, accounts.size());
+
+		var dbAccount = accountRepository.findActiveById(account.getId()).orElseThrow();
+		assertEquals(account.getId(), dbAccount.getId());
+		assertEquals(account.getEmail(), dbAccount.getEmail());
+		assertFalse(dbAccount.isEmailVerified());
+		assertEquals(account.getPhoneNumber(), dbAccount.getPhoneNumber());
+		assertEquals(account.getCreatedAt(), dbAccount.getCreatedAt());
+		assertTrue(dbAccount.isActive());
+	}
+
 }
