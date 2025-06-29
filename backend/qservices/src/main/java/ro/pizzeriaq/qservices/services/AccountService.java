@@ -28,14 +28,14 @@ public class AccountService {
 	}
 
 
-	public boolean exists(UUID id) {
-		return accountRepository.existsById(id);
+	public boolean existsActive(UUID id) {
+		return accountRepository.existsActiveById(id);
 	}
 
 
 	@Transactional
 	public void update(UUID id, AccountDto accountDto) {
-		var oldAccount = accountRepository.findById(id)
+		var oldAccount = accountRepository.findActiveById(id)
 				.orElseThrow(() -> new EntityNotFoundException("Account not found"));
 
 		try {
@@ -51,7 +51,7 @@ public class AccountService {
 
 
 	public String getPhoneNumber(UUID id) {
-		return accountRepository.findById(id)
+		return accountRepository.findActiveById(id)
 				.orElseThrow(() -> new EntityNotFoundException("Account not found"))
 				.getPhoneNumber();
 	}
@@ -65,6 +65,9 @@ public class AccountService {
 
 	@Transactional
 	public void setConversationId(@NonNull UUID accountId, @Nullable UUID conversationId) {
-		accountRepository.updateConversationIdByAccountId(accountId, conversationId);
+		var account = accountRepository.findActiveById(accountId)
+						.orElseThrow();
+		account.setConversationId(conversationId);
+		accountRepository.flush();
 	}
 }

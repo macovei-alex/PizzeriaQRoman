@@ -56,7 +56,7 @@ public class OrderService {
 
 	@Transactional
 	public void placeOrder(PlacedOrderDto placedOrderDTO, UUID accountId) throws IllegalArgumentException {
-		var account = accountRepository.findById(accountId)
+		var account = accountRepository.findActiveById(accountId)
 				.orElseThrow(() -> new IllegalArgumentException("Account not found for ID:" + accountId));
 		if (account.getPhoneNumber() == null || account.getPhoneNumber().isEmpty()) {
 			throw new PhoneNumberMissingException(accountId);

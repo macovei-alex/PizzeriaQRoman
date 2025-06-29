@@ -32,7 +32,7 @@ public class AddressService {
 
 
 	public AddressDto createAddress(UUID userId, CreateAddressDto address) {
-		var account = accountRepository.findById(userId)
+		var account = accountRepository.findActiveById(userId)
 				.orElseThrow(() -> new EntityNotFoundException("Account with id ( %s ) not found".formatted(userId)));
 
 		var addressTypeName = "Home";

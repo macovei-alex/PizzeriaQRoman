@@ -50,7 +50,7 @@ public class AccountCreationFilter extends OncePerRequestFilter {
 				// synchronized to prevent multiple requests from creating the same account multiple times
 				// possibly add a mutex per account instead of per method in the future for a performance increase
 				synchronized (lock) {
-					if (!accountIdCache.containsKey(id) && !accountService.exists(id)) {
+					if (!accountIdCache.containsKey(id) && !accountService.existsActive(id)) {
 						try {
 							var keycloakUser = keycloakService.getUser(id);
 							accountService.createAccount(keycloakUser);

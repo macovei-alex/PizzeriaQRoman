@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import ro.pizzeriaq.qservices.config.Container;
@@ -23,10 +22,10 @@ import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 @DataJpaTest
-@ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Import(RepositoryTestConfig.class)
 public class ProductRepositoryTest {
@@ -60,19 +59,14 @@ public class ProductRepositoryTest {
 
 
 	@Test
-	void findAllActive() {
+	void findAll() {
 		var products = productRepository.findAllActive();
 
 		assertEquals(8, products.size());
 		assertEquals(9, productRepository.findAll().size());
 
-		assertThat(products.stream()
-				.anyMatch((p) -> p.getName().equals("Sprite"))
-		).isTrue();
-
-		assertThat(products.stream()
-				.noneMatch((p) -> p.getName().equals("Deleted sprite"))
-		).isTrue();
+		assertTrue(products.stream().anyMatch((p) -> p.getName().equals("Sprite")));
+		assertTrue(products.stream().noneMatch((p) -> p.getName().equals("Deleted sprite")));
 	}
 
 	@Test

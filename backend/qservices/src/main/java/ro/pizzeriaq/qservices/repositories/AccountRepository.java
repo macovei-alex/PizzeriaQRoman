@@ -1,10 +1,8 @@
 package ro.pizzeriaq.qservices.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import ro.pizzeriaq.qservices.data.entities.Account;
 
@@ -16,16 +14,26 @@ import java.util.UUID;
 public interface AccountRepository extends JpaRepository<Account, UUID> {
 
 	@NonNull
-	@Query("SELECT a FROM Account a ORDER BY a.createdAt ASC")
-	List<Account> findAllSortByCreatedAt();
+	@Query("""
+		SELECT a FROM Account a
+		WHERE a.isActive = true
+		ORDER BY a.createdAt ASC
+	""")
+	List<Account> findAllActiveSortByCreatedAt();
+
+
+	@Query("""
+			SELECT a FROM Account a
+			WHERE a.isActive = true AND a.id = :id
+	""")
+	Optional<Account> findActiveById(@NonNull UUID id);
+
+
+	@Query("SELECT COUNT(a) > 0 FROM Account a WHERE a.id = :id")
+	boolean existsActiveById(@NonNull UUID id);
 
 
 	@Query("SELECT a.conversationId FROM Account a WHERE a.id = :accountId")
 	Optional<UUID> findConversationIdByAccountId(@NonNull UUID accountId);
-
-
-	@Modifying
-	@Query("UPDATE Account a SET a.conversationId = :conversationId WHERE a.id = :accountId")
-	void updateConversationIdByAccountId(@NonNull UUID accountId, @Nullable UUID conversationId);
 
 }

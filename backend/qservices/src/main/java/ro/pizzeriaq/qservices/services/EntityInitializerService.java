@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -336,6 +337,7 @@ public class EntityInitializerService {
 				.isEmailVerified(user.emailVerified())
 				.phoneNumber("0733 333 333")
 				.createdAt(user.createdTimestampDate())
+				.conversationId(UUID.randomUUID())
 				.build());
 
 		accountRepository.saveAll(accounts);
@@ -368,7 +370,7 @@ public class EntityInitializerService {
 
 	@Transactional
 	public void addOrders() {
-		List<Account> accounts = accountRepository.findAllSortByCreatedAt();
+		List<Account> accounts = accountRepository.findAllActiveSortByCreatedAt();
 		List<Product> products = productRepository.findAll();
 		List<Order> orders = new ArrayList<>();
 

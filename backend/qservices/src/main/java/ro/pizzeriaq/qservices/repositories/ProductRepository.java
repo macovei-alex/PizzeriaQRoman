@@ -34,12 +34,4 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 		WHERE p.id = :id
 	""")
 	Optional<Product> findByIdOptionListsPreload(@Param("id") Integer id);
-
-	// Only works for relations mapped using Set, not List
-//	@EntityGraph("Product.fullPreload")
-//	@Query("""
-//		SELECT p FROM Product p
-//		WHERE p.id = :id
-//	""")
-//	Optional<Product> findByIdFullPreload(@Param("id") Integer id);
 }
