@@ -14,6 +14,7 @@ public class OrderItem_OptionList_Option {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(nullable = false, updatable = false, unique = true)
 	private Integer id;
 
 

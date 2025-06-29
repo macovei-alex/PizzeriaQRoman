@@ -17,6 +17,7 @@ public class OrderItem {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(nullable = false, updatable = false, unique = true)
 	private Integer id;
 
 

@@ -18,6 +18,7 @@ import java.util.UUID;
 public class Account {
 
 	@Id
+	@Column(nullable = false, updatable = false, unique = true)
 	private UUID id;
 
 	@ManyToMany
