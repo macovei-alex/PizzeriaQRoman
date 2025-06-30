@@ -47,7 +47,7 @@ public class OrderService {
 
 	@Transactional(readOnly = true)
 	public HistoryOrderFullDto getFullOrder(int orderId) {
-		var order = orderRepository.findById(orderId)
+		var order = orderRepository.findByIdPreload(orderId)
 				.orElseThrow(() -> new EntityNotFoundException("Order not found for ID: " + orderId));
 		// TODO: Implement mapper
 		return historyOrderFullMapper.fromEntity(order);
