@@ -355,7 +355,7 @@ public class EntityInitializerService {
 		addresses.add(Address.builder()
 				.account(accounts.get(0))
 				.addressType(addressTypes.get(0))
-						.addressString("Example Street 123, City, Country")
+				.addressString("Example Street 123, City, Country")
 				.isPrimary(true)
 				.build());
 		addresses.add(Address.builder()

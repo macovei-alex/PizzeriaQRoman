@@ -19,7 +19,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 		WHERE o.account.id = :accountId
 		ORDER BY o.orderTimestamp DESC, o.id DESC
 	""")
-	List<Order> findByAccountIdOrderByOrderTimestampDesc(UUID accountId, Pageable pageable);
+	List<Order> findByAccountIdSortByOrderTimestampDesc(UUID accountId, Pageable pageable);
 
 
 	@EntityGraph(attributePaths = {"address", "coupon", "orderItems"})

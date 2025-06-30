@@ -96,7 +96,6 @@ public class AccountRepositoryTest {
 
 		var newConvId = UUID.randomUUID();
 		accounts.get(0).setConversationId(newConvId);
-		accountRepository.flush();
 
 		var account = accountRepository.findActiveById(accounts.get(0).getId()).orElseThrow();
 		assertEquals(newConvId, account.getConversationId());

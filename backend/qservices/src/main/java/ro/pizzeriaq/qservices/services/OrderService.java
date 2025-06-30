@@ -37,7 +37,7 @@ public class OrderService {
 
 	@Transactional(readOnly = true)
 	public List<HistoryOrderMinimalDto> getOrdersHistory(UUID accountId, int page, int pageSize) {
-		var orders = orderRepository.findByAccountIdOrderByOrderTimestampDesc(accountId, PageRequest.of(page, pageSize));
+		var orders = orderRepository.findByAccountIdSortByOrderTimestampDesc(accountId, PageRequest.of(page, pageSize));
 
 		return orders.stream()
 				.map(historyOrderMinimalMapper::fromEntity)
