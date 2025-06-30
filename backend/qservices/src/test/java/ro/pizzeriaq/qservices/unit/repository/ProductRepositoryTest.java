@@ -77,6 +77,7 @@ public class ProductRepositoryTest {
 
 		assertEquals(8, products.size());
 		assertTrue(products.stream().allMatch((p) -> Hibernate.isInitialized(p.getCategory())));
+		assertTrue(products.stream().noneMatch((p) -> Hibernate.isInitialized(p.getOptionLists())));
 	}
 
 	@Test
@@ -90,6 +91,7 @@ public class ProductRepositoryTest {
 				.getId()
 		);
 		assertThat(activeProduct).isNotEmpty();
+		assertFalse(Hibernate.isInitialized(activeProduct.get().getCategory()));
 		assertFalse(Hibernate.isInitialized(activeProduct.get().getOptionLists()));
 
 		var inactiveProduct = productRepository.findById(products.stream()
@@ -99,6 +101,7 @@ public class ProductRepositoryTest {
 				.getId()
 		);
 		assertThat(inactiveProduct).isNotEmpty();
+		assertFalse(Hibernate.isInitialized(activeProduct.get().getCategory()));
 		assertFalse(Hibernate.isInitialized(inactiveProduct.get().getOptionLists()));
 	}
 
@@ -113,6 +116,7 @@ public class ProductRepositoryTest {
 				.getId()
 		);
 		assertThat(activeProduct).isNotEmpty();
+		assertTrue(Hibernate.isInitialized(activeProduct.get().getCategory()));
 		assertTrue(Hibernate.isInitialized(activeProduct.get().getOptionLists()));
 
 		var inactiveProduct = productRepository.findByIdOptionListsPreload(products.stream()
@@ -122,6 +126,7 @@ public class ProductRepositoryTest {
 				.getId()
 		);
 		assertThat(inactiveProduct).isNotEmpty();
+		assertTrue(Hibernate.isInitialized(inactiveProduct.get().getCategory()));
 		assertTrue(Hibernate.isInitialized(inactiveProduct.get().getOptionLists()));
 	}
 }
