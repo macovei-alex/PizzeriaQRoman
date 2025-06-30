@@ -114,7 +114,7 @@ public class AccountRepositoryTest {
 				.phoneNumber("0770 777 777")
 				.createdAt(LocalDateTime.now())
 				.build();
-		accountRepository.save(account);
+		accountRepository.saveAndFlush(account);
 
 		accounts = accountRepository.findAllActiveSortByCreatedAt();
 		assertEquals(3, accounts.size());
