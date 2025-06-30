@@ -18,11 +18,13 @@ public abstract class TestcontainersRegistry {
 	private static final MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0")
 			.withDatabaseName("pizzeriaq-test")
 			.withUsername("test")
-			.withPassword("test");
+			.withPassword("test")
+			.withReuse(true);
 
 	private static final KeycloakContainer keycloakContainer = new KeycloakContainer()
 			.withRealmImportFile("pizzeriaq-realm-export.json")
-			.withContextPath("/pizzeriaq/auth");
+			.withContextPath("/pizzeriaq/auth")
+			.withReuse(true);
 
 
 	private static final Map<Container, Consumer<DynamicPropertyRegistry>> startFunctions = Map.of(
