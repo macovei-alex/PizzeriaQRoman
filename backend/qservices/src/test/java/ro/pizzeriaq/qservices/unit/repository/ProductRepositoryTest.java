@@ -1,6 +1,7 @@
 package ro.pizzeriaq.qservices.unit.repository;
 
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -21,8 +22,7 @@ import ro.pizzeriaq.qservices.services.EntityInitializerService;
 import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @DataJpaTest
@@ -60,33 +60,68 @@ public class ProductRepositoryTest {
 
 	@Test
 	void findAll() {
-		var products = productRepository.findAllActive();
+		var activeProducts = productRepository.findAllActive();
 
-		assertEquals(8, products.size());
+		assertEquals(8, activeProducts.size());
 		assertEquals(9, productRepository.findAll().size());
 
-		assertTrue(products.stream().anyMatch((p) -> p.getName().equals("Sprite")));
-		assertTrue(products.stream().noneMatch((p) -> p.getName().equals("Deleted sprite")));
+		assertTrue(activeProducts.stream().allMatch(Product::isActive));
+		assertTrue(activeProducts.stream().anyMatch((p) -> p.getName().equals("Sprite")));
+		assertTrue(activeProducts.stream().noneMatch((p) -> p.getName().equals("Deleted sprite")));
+		assertTrue(activeProducts.stream().noneMatch((p) -> Hibernate.isInitialized(p.getCategory())));
+	}
+
+	@Test
+	void findAllActiveCategoryPreload() {
+		var products = productRepository.findAllActiveCategoryPreload();
+
+		assertEquals(8, products.size());
+		assertTrue(products.stream().allMatch((p) -> Hibernate.isInitialized(p.getCategory())));
 	}
 
 	@Test
 	void findById() {
 		var products = productRepository.findAll();
 
-		var activeProductId = products.stream()
+		var activeProduct = productRepository.findById(products.stream()
 				.filter(Product::isActive)
 				.findFirst()
 				.orElseThrow()
-				.getId();
-		var inactiveProductId = products.stream()
+				.getId()
+		);
+		assertThat(activeProduct).isNotEmpty();
+		assertFalse(Hibernate.isInitialized(activeProduct.get().getOptionLists()));
+
+		var inactiveProduct = productRepository.findById(products.stream()
 				.filter(Predicate.not(Product::isActive))
 				.findFirst()
 				.orElseThrow()
-				.getId();
+				.getId()
+		);
+		assertThat(inactiveProduct).isNotEmpty();
+		assertFalse(Hibernate.isInitialized(inactiveProduct.get().getOptionLists()));
+	}
 
-		assertThat(productRepository.findById(activeProductId)).isNotEmpty();
-		assertThat(productRepository.findById(inactiveProductId)).isNotEmpty();
-		assertThat(productRepository.findByIdOptionListsPreload(activeProductId)).isNotEmpty();
-		assertThat(productRepository.findByIdOptionListsPreload(inactiveProductId)).isNotEmpty();
+	@Test
+	void findByIdOptionListsPreload() {
+		var products = productRepository.findAll();
+
+		var activeProduct = productRepository.findByIdOptionListsPreload(products.stream()
+				.filter(Product::isActive)
+				.findFirst()
+				.orElseThrow()
+				.getId()
+		);
+		assertThat(activeProduct).isNotEmpty();
+		assertTrue(Hibernate.isInitialized(activeProduct.get().getOptionLists()));
+
+		var inactiveProduct = productRepository.findByIdOptionListsPreload(products.stream()
+				.filter(Predicate.not(Product::isActive))
+				.findFirst()
+				.orElseThrow()
+				.getId()
+		);
+		assertThat(inactiveProduct).isNotEmpty();
+		assertTrue(Hibernate.isInitialized(inactiveProduct.get().getOptionLists()));
 	}
 }
