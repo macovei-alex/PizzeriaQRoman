@@ -15,8 +15,8 @@ public class QservicesApplication {
 
 	@Value("${app.environment}")
 	private String environment;
-	@Value("${populate.database:0}")
-	private String populateDatabase;
+	@Value("${dev.repopulate.database:false}")
+	private String repopulateDatabase;
 
 
 	public static void main(String[] args) {
@@ -33,7 +33,7 @@ public class QservicesApplication {
 	@Profile("default")
 	public CommandLineRunner initializeEntities(EntityInitializerService entityInitializerService) {
 		return (_) -> {
-			if (populateDatabase.equals("1")) {
+			if (repopulateDatabase.equals("true")) {
 				EntityInitializerService.reInitializeEntities(entityInitializerService);
 			}
 		};

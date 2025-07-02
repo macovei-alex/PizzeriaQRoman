@@ -15,7 +15,7 @@ public class ImageService {
 
 	private final String folderPath;
 
-	public ImageService(@Value("${images.folder-path}") String folderPath) {
+	public ImageService(@Value("${app.images.folder-path}") String folderPath) {
 		this.folderPath = folderPath;
 	}
 
