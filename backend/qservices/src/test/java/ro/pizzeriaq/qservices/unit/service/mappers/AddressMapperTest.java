@@ -23,7 +23,7 @@ public class AddressMapperTest {
 
 	@Test
 	void fromEntityMinimalWorkingCase() {
-		assertDoesNotThrow(() -> addressMapper.fromEntity(Address.builder().addressType(new AddressType()).build()));
+		assertDoesNotThrow(() -> addressMapper.fromEntity(Address.builder().addressType(AddressType.HOME).build()));
 	}
 
 	@Test
@@ -36,13 +36,13 @@ public class AddressMapperTest {
 		var entity = Address.builder()
 				.id(1)
 				.account(null)
-				.addressType(AddressType.builder().name("name").build())
+				.addressType(AddressType.HOME)
 				.addressString("city, street, streetNumber, block, floor 2, apartment")
 				.isPrimary(true)
 				.build();
 		var expectedDto = AddressDto.builder()
 				.id(1)
-				.addressType("name")
+				.addressType(AddressType.HOME.name())
 				.addressString("city, street, streetNumber, block, floor 2, apartment")
 				.isPrimary(true)
 				.build();
@@ -59,7 +59,7 @@ public class AddressMapperTest {
 		var expectedEntity = Address.builder()
 				.id(null)
 				.account(Account.builder().id(UUID.fromString("00001111-2222-3333-4444-555566667777")).build())
-				.addressType(AddressType.builder().name("addressType").build())
+				.addressType(AddressType.HOME)
 				.addressString("city, street, streetNumber, block, floor 2, apartment")
 				.isPrimary(true)
 				.build();
@@ -67,6 +67,7 @@ public class AddressMapperTest {
 		assertEquals(expectedEntity, addressMapper.fromDto(
 				dto,
 				Account.builder().id(UUID.fromString("00001111-2222-3333-4444-555566667777")).build(),
-				AddressType.builder().name("addressType").build()));
+				AddressType.HOME
+		));
 	}
 }

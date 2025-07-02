@@ -42,6 +42,7 @@ public class Order {
 
 
 	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	private OrderStatus orderStatus;
 
 

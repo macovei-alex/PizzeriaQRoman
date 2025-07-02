@@ -17,9 +17,9 @@ import ro.pizzeriaq.qservices.config.Container;
 import ro.pizzeriaq.qservices.config.RepositoryTestConfig;
 import ro.pizzeriaq.qservices.config.TestcontainersRegistry;
 import ro.pizzeriaq.qservices.data.entities.Address;
+import ro.pizzeriaq.qservices.data.entities.AddressType;
 import ro.pizzeriaq.qservices.repositories.AccountRepository;
 import ro.pizzeriaq.qservices.repositories.AddressRepository;
-import ro.pizzeriaq.qservices.repositories.AddressTypeRepository;
 import ro.pizzeriaq.qservices.services.EntityInitializerService;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,8 +38,6 @@ public class AddressConstraintsTest {
 	AddressRepository addressRepository;
 	@Autowired
 	AccountRepository accountRepository;
-	@Autowired
-	AddressTypeRepository addressTypeRepository;
 	@Autowired
 	EntityInitializerService entityInitializerService;
 
@@ -60,11 +58,10 @@ public class AddressConstraintsTest {
 
 	private Address buildValidAddress() {
 		var account = accountRepository.findAllActiveSortByCreatedAt().get(0);
-		var type = addressTypeRepository.findAll().get(0);
 
 		return Address.builder()
 				.account(account)
-				.addressType(type)
+				.addressType(AddressType.HOME)
 				.addressString("123 Main St")
 				.isPrimary(true)
 				.isActive(true)
@@ -125,11 +122,10 @@ public class AddressConstraintsTest {
 	@Test
 	void isActiveDefaultTrue() {
 		var account = accountRepository.findAllActiveSortByCreatedAt().get(0);
-		var type = addressTypeRepository.findAll().get(0);
 
 		Address address = Address.builder()
 				.account(account)
-				.addressType(type)
+				.addressType(AddressType.WORK)
 				.addressString("456 Secondary St")
 				.isPrimary(false)
 				.build();

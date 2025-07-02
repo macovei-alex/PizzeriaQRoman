@@ -1,6 +1,5 @@
 package ro.pizzeriaq.qservices.services;
 
-
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +23,6 @@ public class EntityInitializerService {
 	private final ProductCategoryRepository categoryRepository;
 	private final OptionListRepository optionListRepository;
 	private final OptionRepository optionRepository;
-	private final AddressTypeRepository addressTypeRepository;
 	private final AddressRepository addressRepository;
 	private final AccountRepository accountRepository;
 	private final OrderRepository orderRepository;
@@ -54,7 +52,6 @@ public class EntityInitializerService {
 		optionRepository.deleteAll();
 		orderRepository.deleteAll();
 		addressRepository.deleteAll();
-		addressTypeRepository.deleteAll();
 		accountRepository.deleteAll();
 
 		orderItemRepository.flush();
@@ -64,7 +61,6 @@ public class EntityInitializerService {
 		optionRepository.flush();
 		orderRepository.flush();
 		addressRepository.flush();
-		addressTypeRepository.flush();
 		accountRepository.flush();
 	}
 
@@ -342,25 +338,16 @@ public class EntityInitializerService {
 
 		accountRepository.saveAll(accounts);
 
-		List<AddressType> addressTypes = new ArrayList<>();
-		addressTypes.add(AddressType.builder()
-				.name("home")
-				.build());
-		addressTypes.add(AddressType.builder()
-				.name("work")
-				.build());
-		addressTypes = addressTypeRepository.saveAll(addressTypes);
-
 		List<Address> addresses = new ArrayList<>();
 		addresses.add(Address.builder()
 				.account(accounts.get(0))
-				.addressType(addressTypes.get(0))
+				.addressType(AddressType.HOME)
 				.addressString("Example Street 123, City, Country")
 				.isPrimary(true)
 				.build());
 		addresses.add(Address.builder()
 				.account(accounts.get(0))
-				.addressType(addressTypes.get(1))
+				.addressType(AddressType.WORK)
 				.addressString("Work Street 456, City, Country")
 				.isPrimary(false)
 				.build());

@@ -15,7 +15,7 @@ public class AddressMapper {
 	public AddressDto fromEntity(@NonNull Address entity) {
 		return AddressDto.builder()
 				.id(entity.getId())
-				.addressType(entity.getAddressType().getName())
+				.addressType(entity.getAddressType().name())
 				.addressString(entity.getAddressString())
 				.isPrimary(entity.isPrimary())
 				.build();

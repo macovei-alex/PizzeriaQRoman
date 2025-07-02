@@ -3,9 +3,9 @@ package ro.pizzeriaq.qservices.services;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ro.pizzeriaq.qservices.data.entities.AddressType;
 import ro.pizzeriaq.qservices.repositories.AccountRepository;
 import ro.pizzeriaq.qservices.repositories.AddressRepository;
-import ro.pizzeriaq.qservices.repositories.AddressTypeRepository;
 import ro.pizzeriaq.qservices.data.dtos.AddressDto;
 import ro.pizzeriaq.qservices.data.dtos.CreateAddressDto;
 import ro.pizzeriaq.qservices.services.mappers.AddressMapper;
@@ -19,7 +19,6 @@ public class AddressService {
 
 	private final AddressRepository addressRepository;
 	private final AccountRepository accountRepository;
-	private final AddressTypeRepository addressTypeRepository;
 	private final AddressMapper addressMapper;
 
 
@@ -35,13 +34,7 @@ public class AddressService {
 		var account = accountRepository.findActiveById(userId)
 				.orElseThrow(() -> new EntityNotFoundException("Account with id ( %s ) not found".formatted(userId)));
 
-		var addressTypeName = "Home";
-		var addressType = addressTypeRepository.findByName(addressTypeName)
-				.orElseThrow(() -> new EntityNotFoundException("Address type with name ( %s ) not found"
-						.formatted(addressTypeName)
-				));
-
-		var newEntity = addressMapper.fromDto(address, account, addressType);
+		var newEntity = addressMapper.fromDto(address, account, AddressType.HOME);
 		newEntity = addressRepository.save(newEntity);
 
 		return addressMapper.fromEntity(newEntity);

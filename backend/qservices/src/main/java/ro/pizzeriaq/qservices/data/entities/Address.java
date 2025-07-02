@@ -30,8 +30,8 @@ public class Address {
 	private List<Order> orders;
 
 
-	@ManyToOne
-	@JoinColumn(name = "id_address_type", nullable = false)
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	private AddressType addressType;
 
 

@@ -133,6 +133,14 @@ class OrderConstraintsTest {
 	}
 
 	@Test
+	void orderStatusNull() {
+		var order = buildValidOrder();
+		order.setOrderStatus(null);
+
+		assertThrows(DataIntegrityViolationException.class, () -> orderRepository.saveAndFlush(order));
+	}
+
+	@Test
 	void orderTimestampNull() {
 		var order = buildValidOrder();
 		order.setOrderTimestamp(null);
