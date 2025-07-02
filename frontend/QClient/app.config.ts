@@ -1,12 +1,39 @@
 import "dotenv/config";
 import { ExpoConfig } from "@expo/config";
 
-export default (): ExpoConfig => {
+type SchemeSuffix = "dev" | "prev" | "prod";
+
+function getSchemeSuffix(): SchemeSuffix {
+  switch (process.env.APP_VARIANT) {
+    case "development":
+      return "dev";
+    case "preview":
+      return "prev";
+    case "production":
+      return "prod";
+    default:
+      throw new Error(
+        `Invalid APP_VARIANT value ( ${process.env.APP_VARIANT} ). Expected 'development', 'preview', or 'production'.`
+      );
+  }
+}
+
+function withDot(suffix: SchemeSuffix): string {
+  return suffix !== "prod" ? `.${suffix}` : "";
+}
+
+function withDash(suffix: SchemeSuffix): string {
+  return suffix !== "prod" ? `-${suffix}` : "";
+}
+
+export default function (): ExpoConfig {
+  const schemeSuffix = getSchemeSuffix();
+
   return {
     owner: "mac02",
-    name: "PizzeriaQ",
+    name: `PizzeriaQ${withDash(schemeSuffix)}`,
     slug: "pizzeriaq",
-    scheme: "com.pizzeriaq",
+    scheme: `com.pizzeriaq.qclient${withDot(schemeSuffix)}`,
     version: "1.0.0",
     orientation: "portrait",
     icon: "./assets/images/icon.png",
@@ -36,7 +63,7 @@ export default (): ExpoConfig => {
         foregroundImage: "./assets/images/icon.png",
         backgroundColor: "#ffffff",
       },
-      package: "com.pizzeriaq",
+      package: `com.pizzeriaq.qclient${withDot(schemeSuffix)}`,
       edgeToEdgeEnabled: false,
       softwareKeyboardLayoutMode: "pan",
       config: {
@@ -67,4 +94,4 @@ export default (): ExpoConfig => {
       },
     },
   };
-};
+}

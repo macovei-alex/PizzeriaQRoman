@@ -33,6 +33,7 @@ module.exports = {
     "react-you-might-not-need-an-effect/you-might-not-need-an-effect": "warn",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-empty-object-type": "off",
+    "@typescript-eslint/no-require-imports": "off",
   },
   settings: {
     react: {

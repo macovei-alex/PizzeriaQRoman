@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const publicEnvSchema = z
+const envPublicSchema = z
   .object({
     EXPO_PUBLIC_KEYCLOAK_REALM_URL: z.string().url(),
     EXPO_PUBLIC_KEYCLOAK_CLIENT_ID: z.string(),
@@ -12,8 +12,9 @@ const publicEnvSchema = z
     API_BASE_URL: env.EXPO_PUBLIC_API_BASE_URL,
   }));
 
-export const ENV = publicEnvSchema.parse({
+export const envParseResult = envPublicSchema.safeParse({
   EXPO_PUBLIC_KEYCLOAK_REALM_URL: process.env.EXPO_PUBLIC_KEYCLOAK_REALM_URL,
   EXPO_PUBLIC_KEYCLOAK_CLIENT_ID: process.env.EXPO_PUBLIC_KEYCLOAK_CLIENT_ID,
   EXPO_PUBLIC_API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL,
 });
+export const ENV = (envParseResult.data ?? {}) as z.infer<typeof envPublicSchema>;

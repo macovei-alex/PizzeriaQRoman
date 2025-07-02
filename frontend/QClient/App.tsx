@@ -10,6 +10,8 @@ import { AuthContextProvider } from "src/context/AuthContext";
 import * as Notifications from "expo-notifications";
 import NotificationProvider from "src/context/NotificationContext";
 import { useUnistyles } from "react-native-unistyles";
+import { constantsParseResult } from "src/constants/constants";
+import { envParseResult } from "src/constants/env";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -33,6 +35,13 @@ const queryClient = new QueryClient({
 
 export default function App() {
   logger.render("App");
+
+  if (!envParseResult.success) {
+    throw new Error(`Invalid env format: ${envParseResult.error.message}`);
+  }
+  if (!constantsParseResult.success) {
+    throw new Error(`Invalid constants format: ${constantsParseResult.error.message}`);
+  }
 
   const { theme } = useUnistyles();
 

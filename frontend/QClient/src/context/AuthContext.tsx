@@ -15,6 +15,7 @@ import logger from "src/constants/logger";
 import { z } from "zod";
 import * as SecureStore from "expo-secure-store";
 import { ENV } from "src/constants/env";
+import { CONSTANTS } from "src/constants/constants";
 
 export type AccountId = string;
 
@@ -90,7 +91,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     {
       clientId: ENV.KEYCLOAK_CLIENT_ID,
       redirectUri: AuthSession.makeRedirectUri({
-        scheme: "com.pizzeriaq",
+        scheme: CONSTANTS.expoConfig.scheme,
         path: "redirect",
       }),
       scopes: ["openid", "profile", "email"],

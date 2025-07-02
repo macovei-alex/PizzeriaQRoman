@@ -1,5 +1,12 @@
-Problems:
-	- requests to /devices transformed from POST to GET
-	- requests to /products and /categories unauthorized even with correct JWTs attached
-Cause:
-	- usage of http:// instead of https:// when calling APIs through the Nginx proxy
+1)
+Effects:
+	- POST request to /devices/{id} transformed in GET request
+	- API requests failing consistently with status code 401 Unauthorized even with valid JWT attached
+Potential causes:
+	- wrong url - http:// instead of https://
+
+2) "Global was not installed" error
+Effects:
+	- runtime error
+Potential causes:
+	- top-level exceptions being thrown - check for possible z.parse(schema) exceptions or the like
