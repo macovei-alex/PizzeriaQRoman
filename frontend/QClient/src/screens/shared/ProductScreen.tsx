@@ -95,7 +95,7 @@ const UHorizontalLine = withUnistyles(HorizontalLine, (theme) => ({
 
 const styles = StyleSheet.create({
   scrollViewContent: {
-    paddingBottom: 80,
+    paddingBottom: 40,
   },
   horizontalLine: {
     marginVertical: 24,
