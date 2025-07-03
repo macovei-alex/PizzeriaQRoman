@@ -1,9 +1,9 @@
-1)
+1) Wrong API protocol
 Effects:
 	- POST request to /devices/{id} transformed in GET request
 	- API requests failing consistently with status code 401 Unauthorized even with valid JWT attached
 Potential causes:
-	- wrong url - http:// instead of https://
+	- wrong API protocol - http:// instead of https://
 
 2) "Global was not installed" error
 Effects:
