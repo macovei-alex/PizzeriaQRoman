@@ -12,6 +12,7 @@ import MenuSkeletonLoader from "src/components/menu/MenuScreen/MenuSkeletonLoade
 import ErrorComponent from "../../components/shared/generic/ErrorComponent";
 import { useScrollOffsets } from "src/hooks/useScrollOffsets";
 import { StyleSheet } from "react-native-unistyles";
+import useRestaurantConstantsQuery from "src/api/hooks/queries/useRestaurantConstantsQuery";
 
 type ProductSplit = {
   category: Category;
@@ -23,6 +24,7 @@ export default function MenuScreen() {
 
   const productsQuery = useProductsQuery();
   const categoryQuery = useCategoriesQuery();
+  const restaurantConstantsQuery = useRestaurantConstantsQuery();
   const scrollRef = useRef<ScrollView>(null);
   const vertical = useScrollOffsets<CategoryId>();
 
@@ -57,9 +59,16 @@ export default function MenuScreen() {
 
   const [scrollY, setScrollY] = useState(0);
 
-  if (productsQuery.isFetching || categoryQuery.isFetching) return <MenuSkeletonLoader />;
-  if (productsQuery.isError || categoryQuery.isError) return <ErrorComponent />;
+  if (productsQuery.isFetching || categoryQuery.isFetching || restaurantConstantsQuery.isFetching) {
+    return <MenuSkeletonLoader />;
+  }
+  if (productsQuery.isError || categoryQuery.isError || restaurantConstantsQuery.isError) {
+    return <ErrorComponent />;
+  }
   if (!categoryQuery.data) throw new Error("Categories not found");
+  if (!restaurantConstantsQuery.data) throw new Error("Restaurant constants not found");
+
+  console.log(restaurantConstantsQuery.data);
 
   return (
     <View style={styles.screen}>
@@ -71,6 +80,7 @@ export default function MenuScreen() {
             onRefresh={() => {
               productsQuery.refetch();
               categoryQuery.refetch();
+              restaurantConstantsQuery.refetch();
             }}
           />
         }
@@ -78,7 +88,7 @@ export default function MenuScreen() {
         onScroll={(event) => setScrollY(event.nativeEvent.contentOffset.y)}
         nestedScrollEnabled
       >
-        <LogoSection />
+        <LogoSection minimumOrderValue={restaurantConstantsQuery.data.minimumOrderValue} />
 
         <HorizontalCategorySection
           categories={categoryQuery.data}

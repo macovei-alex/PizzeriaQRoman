@@ -4,7 +4,11 @@ import { StyleSheet } from "react-native-unistyles";
 import { images } from "src/constants/images";
 import logger from "src/constants/logger";
 
-export default function LogoSection() {
+type LogoSectionProps = {
+  minimumOrderValue: number;
+};
+
+export default function LogoSection({ minimumOrderValue }: LogoSectionProps) {
   logger.render("LogoSection");
 
   return (
@@ -12,7 +16,7 @@ export default function LogoSection() {
       <View style={styles.centerSection}>
         <Image source={images.logo} style={styles.logoImage} />
         <View style={styles.subtextContainer}>
-          <Text style={styles.subtext}>Comanda minimă este de 40 RON</Text>
+          <Text style={styles.subtext}>Comanda minimă este de {minimumOrderValue} RON</Text>
         </View>
       </View>
     </ImageBackground>

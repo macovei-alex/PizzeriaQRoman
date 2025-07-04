@@ -13,7 +13,7 @@ import { RouteProp, useRoute } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
 import { mapsCoordinatesManualOptions } from "src/api/hooks/options/mapsCoordinatesManualOptions";
 import { useFullOrderQuery } from "src/api/hooks/queries/useFullOrderQuery";
-import useRestaurantLocationQuery from "src/api/hooks/queries/useRestaurantLocation";
+import useRestaurantConstantsQuery from "src/api/hooks/queries/useRestaurantConstantsQuery";
 
 type RouteProps = RouteProp<RootStackParamList, "OrderDeliveryScreen">;
 
@@ -21,15 +21,15 @@ export default function OrderDeliveryScreen() {
   logger.render("OrderDeliveryScreen");
 
   const route = useRoute<RouteProps>();
-  const restaurantLocationQuery = useRestaurantLocationQuery();
+  const restaurantConstantsQuery = useRestaurantConstantsQuery();
   const fullOrderQuery = useFullOrderQuery(route.params.orderId);
   const deliveryCoordinatesQuery = useQuery(
     mapsCoordinatesManualOptions(fullOrderQuery.data?.address.addressString, !!fullOrderQuery.data)
   );
-  const restaurantLocation = restaurantLocationQuery.data
+  const restaurantLocation = restaurantConstantsQuery.data
     ? {
-        latitude: restaurantLocationQuery.data.lat,
-        longitude: restaurantLocationQuery.data.lng,
+        latitude: restaurantConstantsQuery.data.location.lat,
+        longitude: restaurantConstantsQuery.data.location.lng,
       }
     : undefined;
   const deliveryLocation = deliveryCoordinatesQuery.data
@@ -42,7 +42,7 @@ export default function OrderDeliveryScreen() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   if (
-    restaurantLocationQuery.isFetching ||
+    restaurantConstantsQuery.isFetching ||
     fullOrderQuery.isFetching ||
     deliveryCoordinatesQuery.isFetching ||
     directionsQuery.isFetching
@@ -50,7 +50,7 @@ export default function OrderDeliveryScreen() {
     return <ScreenActivityIndicator />;
 
   if (
-    restaurantLocationQuery.isError ||
+    restaurantConstantsQuery.isError ||
     fullOrderQuery.isError ||
     deliveryCoordinatesQuery.isError ||
     directionsQuery.isError
@@ -58,7 +58,7 @@ export default function OrderDeliveryScreen() {
     return (
       <ErrorComponent
         onRetry={() => {
-          restaurantLocationQuery.refetch();
+          restaurantConstantsQuery.refetch();
           fullOrderQuery.refetch();
           deliveryCoordinatesQuery.refetch();
           directionsQuery.refetch();
