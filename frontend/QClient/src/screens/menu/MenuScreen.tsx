@@ -68,8 +68,6 @@ export default function MenuScreen() {
   if (!categoryQuery.data) throw new Error("Categories not found");
   if (!restaurantConstantsQuery.data) throw new Error("Restaurant constants not found");
 
-  console.log(restaurantConstantsQuery.data);
-
   return (
     <View style={styles.screen}>
       <ScrollView

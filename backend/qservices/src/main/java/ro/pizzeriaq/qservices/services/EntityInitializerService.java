@@ -10,10 +10,9 @@ import ro.pizzeriaq.qservices.repositories.*;
 import javax.naming.ServiceUnavailableException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.IntStream;
 
 @Service
 @AllArgsConstructor
@@ -67,94 +66,332 @@ public class EntityInitializerService {
 
 	@Transactional
 	public void addProducts() {
-		List<ProductCategory> categories = new ArrayList<>();
-
-		categories.add(ProductCategory.builder().name("Cele mai vândute").sortId(1).build());
-		categories.add(ProductCategory.builder().name("Pizza 1+1 combo").sortId(2).build());
-		categories.add(ProductCategory.builder().name("Băuturi non-alcoolice").sortId(10).build());
-
-		categories = categoryRepository.saveAll(categories);
+		var categoryEntities = List.of(
+				ProductCategory.builder().name("Cele mai vândute").sortId(100).build(),
+				ProductCategory.builder().name("Pizza 1+1 combo").sortId(400).build(),
+				ProductCategory.builder().name("Pizza ⌀ 30 cm").sortId(500).build(),
+				ProductCategory.builder().name("Fă-ți singur pizza").sortId(600).build(),
+				ProductCategory.builder().name("Băuturi non-alcoolice").sortId(700).build(),
+				ProductCategory.builder().name("Băuturi alcoolice").sortId(800).build()
+		);
+		var categories = categoryRepository.saveAll(categoryEntities);
 
 		List<Product> products = new ArrayList<>();
 
 		products.add(Product.builder()
 				.category(categories.get(0))
-				.name("Pizza Capriciosa")
-				.subtitle("1+1 Gratis la alegere")
-				.description("Ingrediente: sos, salam, cabanos, ciuperci, măsline, mozzarella, roșii, ardei - 550g")
-				.price(BigDecimal.valueOf(30.0))
-				.imageName("pizza-capriciosa.jpg")
-				.build());
-
-		products.add(Product.builder()
-				.category(categories.get(0))
-				.name("Pizza Quattro Formaggi")
-				.subtitle("1+1 Gratis la alegere")
-				.description("500g")
-				.price(BigDecimal.valueOf(35.0))
-				.imageName("pizza-quattro-formaggi.jpg")
-				.build());
-
-		products.add(Product.builder()
-				.category(categories.get(0))
-				.name("Pizza Quattro Stagioni")
-				.subtitle("1+1 Gratis la alegere")
-				.description("500g")
-				.price(BigDecimal.valueOf(40.0))
-				.imageName("pizza-quattro-stagioni.jpg")
-				.build());
-
-		products.add(Product.builder()
-				.category(categories.get(1))
 				.name("Pizza Margherita")
 				.subtitle("1+1 Gratis la alegere")
-				.description("500g")
-				.price(BigDecimal.valueOf(30.0))
+				.description("Sos, mozzarella, parmezan, busuioc - 550g")
+				.price(BigDecimal.valueOf(70))
 				.imageName("pizza-margherita.jpg")
 				.build());
 
 		products.add(Product.builder()
-				.category(categories.get(1))
-				.name("Pizza Țărănească")
+				.category(categories.get(0))
+				.name("Pizza Capriciosa")
 				.subtitle("1+1 Gratis la alegere")
-				.description("500g")
-				.price(BigDecimal.valueOf(30.0))
+				.description("Sos, bacon, șuncă, ciuperci, mozzarella, măsline - 550g")
+				.price(BigDecimal.valueOf(70))
+				.imageName("pizza-capriciosa.jpg")
+				.build());
+
+		Supplier<Product.ProductBuilder> productBuilder1 = () -> Product.builder()
+				.category(categories.get(1))
+				.subtitle("1+1 Gratis la alegere")
+				.price(BigDecimal.valueOf(70));
+
+		products.add(productBuilder1.get()
+				.name("Pizza Prosciutto e Funghi")
+				.description("Sos, șuncă, mozzarella, ciuperci - 580g")
+				.imageName("pizza-țărănească.jpg")
+				.build());
+
+		products.add(productBuilder1.get()
+				.name("Pizza Țărănească")
+				.description("Sos, salam, cabanos, ciuperci, măsline, mozzarella, roșii, ardei - 550g")
+				.imageName("pizza-țărănească.jpg")
+				.build());
+
+		products.add(productBuilder1.get()
+				.name("Pizza Diavola")
+				.description("Sos, salam picant, peperoncino, mizzarella, ardei picant - 550g")
+				.imageName("pizza-țărănească.jpg")
+				.build());
+
+		products.add(productBuilder1.get()
+				.name("Pizza Quattro Carne")
+				.description("Sos, bacon, salam, piept de pui, cabanos, mozzarella, ceapă, ardei - 550g")
+				.imageName("pizza-quattro-stagioni.jpg")
+				.build());
+
+		products.add(productBuilder1.get()
+				.name("Pizza Q")
+				.description("Sos, șuncă, salam, cabanos, ciuperci, mozzarella, roșii, ardei, masline - 620g")
+				.imageName("pizza-quattro-stagioni.jpg")
+				.build());
+
+		products.add(productBuilder1.get()
+				.name("Pizza Arrabiatta")
+				.description("Sos, salam picant, cabanos, mozzarella, ceapă, ardei picant - 550g")
+				.imageName("pizza-quattro-stagioni.jpg")
+				.build());
+
+		products.add(productBuilder1.get()
+				.name("Pizza Pollo")
+				.description("Sos, piept de pui, ciuperci, mozzarella, porumb, ardei, roșii - 560g")
+				.imageName("pizza-quattro-stagioni.jpg")
+				.build());
+
+		products.add(productBuilder1.get()
+				.name("Pizza Tradițională")
+				.description("Sos, șuncă, piept de pui, ciuperci, mozzarella, ceapă - 540g")
+				.imageName("pizza-quattro-stagioni.jpg")
+				.build());
+
+		products.add(productBuilder1.get()
+				.name("Pizza Tonno Cipolla")
+				.description("Sos, ton, mozzarella, ceapă, lămâie - 490g")
+				.imageName("pizza-quattro-stagioni.jpg")
+				.build());
+
+		products.add(productBuilder1.get()
+				.name("Pizza Vegetariană")
+				.description("Sos, ciuperci, măsline, porumb, mozzarella, roșii, ceapă, ardei - 550g")
+				.imageName("pizza-quattro-stagioni.jpg")
+				.build());
+
+		products.add(productBuilder1.get()
+				.name("Pizza Smirodava")
+				.description("Sos, bacon, șuncă, salam, ardei, porumb, mozzarella, roșii - 610g")
+				.imageName("pizza-quattro-stagioni.jpg")
+				.build());
+
+		products.add(productBuilder1.get()
+				.name("Pizza Populară")
+				.description("Sos, oregano, mozzarella, salam picant - 530g")
+				.imageName("pizza-quattro-stagioni.jpg")
+				.build());
+
+		products.add(productBuilder1.get()
+				.name("Pizza Magic")
+				.description("Sos, bacon, salam, mozzarella, ardei - 550g")
+				.imageName("pizza-quattro-stagioni.jpg")
+				.build());
+
+		products.add(productBuilder1.get()
+				.name("Pizza Delicioasă")
+				.description("Sos, bacon, cabanos, măsline, mozzarella, parmezan - 550g")
+				.imageName("pizza-quattro-stagioni.jpg")
+				.build());
+
+		products.add(productBuilder1.get()
+				.name("Pizza Prosciutto")
+				.description("Sos, șuncă, mozzarella, măsline - 550g")
+				.imageName("pizza-țărănească.jpg")
+				.build());
+
+		products.add(productBuilder1.get()
+				.name("Pizza Hawaiiană")
+				.description("Sos, șuncă, ananas, mozzarella - 550g")
+				.imageName("pizza-țărănească.jpg")
+				.build());
+
+		products.add(productBuilder1.get()
+				.name("Pizza Quattro Stagioni")
+				.description("Sos, șuncă, salam, ciuperci, mozzarella, ardei, măsline - 560g")
+				.imageName("pizza-quattro-formaggi.jpg")
+				.build());
+
+		products.add(productBuilder1.get()
+				.name("Pizza Quattro Formaggi")
+				.description("Sos, brânză tare, mozzarella, gorgonzola, parmezan - 550g")
+				.imageName("pizza-quattro-formaggi.jpg")
+				.build());
+
+		products.add(productBuilder1.get()
+				.name("Pizza Crispy")
+				.description("Sos, piept de pui, cartofi, mozzarella - 580g")
+				.imageName("pizza-quattro-formaggi.jpg")
+				.build());
+
+		products.add(productBuilder1.get()
+				.name("Pizza de post")
+				.description("Sos, brânză vegetală, ciuperci, măsline, porumb, roșii, ceapă, ardei - 550g")
+				.imageName("pizza-quattro-formaggi.jpg")
+				.build());
+
+		products.add(productBuilder1.get()
+				.name("Pizza de post cu ton")
+				.description("Sos, ton, brânză vegetală, ceapă, lămâie - 490g")
+				.imageName("pizza-quattro-formaggi.jpg")
+				.build());
+
+		products.add(productBuilder1.get()
+				.name("Pizza Carbonara")
+				.description("Smântână, bacon, ciuperci, mozzarella, parmezan - 560g")
+				.imageName("pizza-quattro-formaggi.jpg")
+				.build());
+
+		products.add(productBuilder1.get()
+				.name("Pizza Pollo Albă")
+				.description("Smântână, piept de pui, mozzarella, aredi, porumb - 510g")
+				.imageName("pizza-quattro-formaggi.jpg")
+				.build());
+
+		products.add(productBuilder1.get()
+				.name("Pizza Vegetariană de post")
+				.description("Sos, brânză vegetală, ciuperci, masline, porumb, roșii, ceapă, ardei - 550g")
+				.imageName("pizza-quattro-formaggi.jpg")
+				.build());
+
+		products.add(Product.builder()
+				.category(categories.get(1))
+				.name("Sos picant")
+				.price(BigDecimal.valueOf(2.5))
+				.imageName("pizza-quattro-formaggi.jpg")
+				.build());
+
+		products.add(Product.builder()
+				.category(categories.get(1))
+				.name("Sos dulce")
+				.price(BigDecimal.valueOf(2.5))
+				.imageName("pizza-quattro-formaggi.jpg")
+				.build());
+
+		products.add(Product.builder()
+				.category(categories.get(2))
+				.name("Pizza Prosciutto e Funghi")
+				.description("Sos, șuncă, mozzarella, ciuperci - 580g")
+				.price(BigDecimal.valueOf(42))
+				.imageName("pizza-quattro-formaggi.jpg")
+				.build());
+
+		products.add(Product.builder()
+				.category(categories.get(2))
+				.name("Pizza Țărănească")
+				.description("Sos, salam, cabanos, ciuperci, măsline, mozzarella, roșii, ardei - 550g")
+				.price(BigDecimal.valueOf(42))
 				.imageName("pizza-țărănească.jpg")
 				.build());
 
 		products.add(Product.builder()
 				.category(categories.get(2))
-				.name("Pepsi")
-				.subtitle("0.33L")
-				.description("")
-				.price(BigDecimal.valueOf(5.0))
+				.name("Pizza Diavola")
+				.description("Sos, salam picant, peperoncino, mizzarella, ardei picant - 550g")
+				.price(BigDecimal.valueOf(42))
+				.imageName("pizza-țărănească.jpg")
+				.build());
+
+		products.add(Product.builder()
+				.category(categories.get(2))
+				.name("Pizza Quattro Carne")
+				.description("Sos, bacon, salam, piept de pui, cabanos, mozzarella, ceapă, ardei - 550g")
+				.price(BigDecimal.valueOf(42))
+				.imageName("pizza-quattro-stagioni.jpg")
+				.build());
+
+		products.add(Product.builder()
+				.category(categories.get(2))
+				.name("Pizza Q")
+				.description("Sos, șuncă, salam, cabanos, ciuperci, mozzarella, roșii, ardei, masline - 620g")
+				.price(BigDecimal.valueOf(42))
+				.imageName("pizza-quattro-stagioni.jpg")
+				.build());
+
+		products.add(Product.builder()
+				.category(categories.get(2))
+				.name("Pizza Pollo")
+				.description("Sos, piept de pui, ciuperci, mozzarella, porumb, ardei, roșii - 560g")
+				.price(BigDecimal.valueOf(42))
+				.imageName("pizza-quattro-stagioni.jpg")
+				.build());
+
+		products.add(Product.builder()
+				.category(categories.get(2))
+				.name("Coca-cola zero zahar")
+				.subtitle("330ml")
+				.price(BigDecimal.valueOf(9.5))
 				.imageName("pepsi.jpg")
 				.build());
 
 		products.add(Product.builder()
-				.category(categories.get(2))
-				.name("Fanta Portocale")
-				.subtitle("0.33L")
-				.description("")
-				.price(BigDecimal.valueOf(5.0))
+				.category(categories.get(4))
+				.name("Coca-cola")
+				.subtitle("330ml")
+				.price(BigDecimal.valueOf(9.5))
+				.imageName("pepsi.jpg")
+				.build());
+
+		products.add(Product.builder()
+				.category(categories.get(4))
+				.name("Fanta")
+				.subtitle("330ml")
+				.price(BigDecimal.valueOf(9.5))
 				.imageName("fanta-portocale.jpg")
 				.build());
 
 		products.add(Product.builder()
-				.category(categories.get(2))
+				.category(categories.get(4))
 				.name("Sprite")
-				.subtitle("0.33L")
-				.description("")
-				.price(BigDecimal.valueOf(5.0))
+				.subtitle("330ml")
+				.price(BigDecimal.valueOf(9.5))
 				.imageName("sprite.jpg")
 				.build());
 
 		products.add(Product.builder()
-				.category(categories.get(2))
+				.category(categories.get(4))
+				.name("Fuze tea")
+				.subtitle("500ml")
+				.price(BigDecimal.valueOf(9.5))
+				.imageName("sprite.jpg")
+				.build());
+
+		products.add(Product.builder()
+				.category(categories.get(4))
+				.name("Cappy pulpy")
+				.subtitle("330ml")
+				.price(BigDecimal.valueOf(9.5))
+				.imageName("sprite.jpg")
+				.build());
+
+		products.add(Product.builder()
+				.category(categories.get(4))
+				.name("Dorna plata")
+				.subtitle("500ml")
+				.price(BigDecimal.valueOf(8.5))
+				.imageName("pepsi.jpg")
+				.build());
+
+		products.add(Product.builder()
+				.category(categories.get(4))
+				.name("Dorna carbogazoasa")
+				.subtitle("500ml")
+				.price(BigDecimal.valueOf(8.5))
+				.imageName("pepsi.jpg")
+				.build());
+
+		products.add(Product.builder()
+				.category(categories.get(5))
+				.name("Bere heineken")
+				.subtitle("500ml")
+				.price(BigDecimal.valueOf(10.5))
+				.imageName("pepsi.jpg")
+				.build());
+
+		products.add(Product.builder()
+				.category(categories.get(5))
+				.name("Bere timisoreana")
+				.subtitle("500ml")
+				.price(BigDecimal.valueOf(9.5))
+				.imageName("pepsi.jpg")
+				.build());
+
+		products.add(Product.builder()
+				.category(categories.get(5))
 				.name("Deleted Sprite")
-				.subtitle("0.33L")
-				.description("")
-				.price(BigDecimal.valueOf(5.0))
+				.subtitle("330ml / 500ml")
+				.price(BigDecimal.valueOf(9.5))
 				.imageName("sprite.jpg")
 				.isActive(false)
 				.build());
@@ -166,139 +403,171 @@ public class EntityInitializerService {
 	@Transactional
 	public void addOptionLists() {
 		List<OptionList> optionLists = new ArrayList<>();
-
-		optionLists.add(OptionList.builder()
+		Supplier<OptionList.OptionListBuilder> singleChoiceOL = () -> OptionList.builder()
 				.options(new ArrayList<>())
-				.text("Prima Pizza cu Margine Umplută cu Brânză Ricotta?")
 				.minChoices(1)
-				.maxChoices(1)
-				.build());
-
-		optionLists.add(OptionList.builder()
+				.maxChoices(1);
+		Supplier<OptionList.OptionListBuilder> multipleChoiceOL = () -> OptionList.builder()
 				.options(new ArrayList<>())
-				.text("Alege a Doua Pizza")
-				.minChoices(1)
-				.maxChoices(1)
-				.build());
-
-		optionLists.add(OptionList.builder()
-				.options(new ArrayList<>())
-				.text("A Doua Pizza cu Margine Umplută cu Brânză Ricotta")
-				.minChoices(1)
-				.maxChoices(1)
-				.build());
-
-		optionLists.add(OptionList.builder()
-				.options(new ArrayList<>())
-				.text("Dorești sos?")
 				.minChoices(0)
-				.maxChoices(4)
-				.build());
+				.maxChoices(100);
+
+		optionLists.add(singleChoiceOL.get().text("Alege a doua pizza").build());
+		optionLists.add(singleChoiceOL.get().text("Alege tipul de blat").build());
+		optionLists.add(singleChoiceOL.get().text("Alege tipul de blat pentru prima pizza").build());
+		optionLists.add(singleChoiceOL.get().text("Alege tipul de blat pentru a doua pizza").build());
+		optionLists.add(multipleChoiceOL.get().maxChoices(4).text("Vrei sos?").build());
+		optionLists.add(multipleChoiceOL.get().text("Adaugă extra topping la prima pizza").build());
+		optionLists.add(multipleChoiceOL.get().text("Adaugă extra topping pentru a doua pizza").build());
+		optionLists.add(multipleChoiceOL.get().text("Adaugă extra topping").build());
+		optionLists.add(multipleChoiceOL.get().text("Adaugă extra băutură").build());
 
 		optionLists = optionListRepository.saveAll(optionLists);
 
 		List<Option> options1 = new ArrayList<>();
-		options1.add(Option.builder()
-				.name("cu brânză Ricotta")
-				.price(BigDecimal.valueOf(8.0))
-				.minCount(1)
-				.maxCount(1)
-				.build());
+		Supplier<Option.OptionBuilder> optionBuilder1 = () -> Option.builder()
+				.price(BigDecimal.valueOf(0))
+				.minCount(0)
+				.maxCount(1);
 
-		options1.add(Option.builder()
-				.name("fără brânză Ricotta")
-				.price(BigDecimal.valueOf(0.0))
-				.minCount(1)
-				.maxCount(1)
-				.build());
+		options1.add(optionBuilder1.get().name("Margherita").build());
+		options1.add(optionBuilder1.get().name("Capriciosa").build());
+		options1.add(optionBuilder1.get().name("Prosciutto e Funghi").build());
+		options1.add(optionBuilder1.get().name("Quattro Stagioni").build());
+		options1.add(optionBuilder1.get().name("Țărănească").build());
+		options1.add(optionBuilder1.get().name("Quattro Carne").build());
+		options1.add(optionBuilder1.get().name("Pizza Q").build());
+		options1.add(optionBuilder1.get().name("Quattro Formaggi").build());
+		options1.add(optionBuilder1.get().name("Hawaiiană").build());
+		options1.add(optionBuilder1.get().name("Prosciutto").build());
+		options1.add(optionBuilder1.get().name("Arrabiatta").build());
+		options1.add(optionBuilder1.get().name("Pollo").build());
+		options1.add(optionBuilder1.get().name("Tradițională").build());
+		options1.add(optionBuilder1.get().name("Tonno Cipolla").build());
+		options1.add(optionBuilder1.get().name("Vegetariană").build());
+		options1.add(optionBuilder1.get().name("Smirodava").build());
+		options1.add(optionBuilder1.get().name("Populară").build());
+		options1.add(optionBuilder1.get().name("Magic").build());
+		options1.add(optionBuilder1.get().name("Delicioasă").build());
+		options1.add(optionBuilder1.get().name("Crispy").build());
+		options1.add(optionBuilder1.get().name("Pollo Albă").build());
+		options1.add(optionBuilder1.get().name("Carbonara").build());
+		options1.add(optionBuilder1.get().name("De post cu ton").build());
 
 		optionLists.get(0).getOptions().addAll(options1);
-		optionLists.get(2).getOptions().addAll(options1);
 		optionRepository.saveAll(options1);
 
 		List<Option> options2 = new ArrayList<>();
 
 		options2.add(Option.builder()
-				.name("Margherita")
-				.price(BigDecimal.valueOf(30.0))
-				.minCount(1)
+				.name("Blat simplu")
+				.price(BigDecimal.valueOf(0))
+				.minCount(0)
 				.maxCount(1)
 				.build());
 
 		options2.add(Option.builder()
-				.name("Capriciosa")
-				.price(BigDecimal.valueOf(40.0))
-				.minCount(1)
-				.maxCount(1)
-				.build());
-
-		options2.add(Option.builder()
-				.name("Prosciutto e Funghi")
-				.price(BigDecimal.valueOf(50.0))
-				.minCount(1)
-				.maxCount(1)
-				.build());
-
-		options2.add(Option.builder()
-				.name("Quattro Stagioni")
-				.price(BigDecimal.valueOf(60.0))
-				.minCount(1)
+				.name("Margine umplută cu brânză Ricotta")
+				.price(BigDecimal.valueOf(8))
+				.minCount(0)
 				.maxCount(1)
 				.build());
 
 		optionLists.get(1).getOptions().addAll(options2);
+		optionLists.get(2).getOptions().addAll(options2);
+		optionLists.get(3).getOptions().addAll(options2);
 		optionRepository.saveAll(options2);
 
 		List<Option> options3 = new ArrayList<>();
-
-		options3.add(Option.builder()
-				.name("Sos dulce")
-				.price(BigDecimal.valueOf(0.0))
+		Supplier<Option.OptionBuilder> optionBuilder3 = () -> Option.builder()
+				.price(BigDecimal.valueOf(2.5))
 				.minCount(0)
-				.maxCount(4)
-				.build());
+				.maxCount(4);
 
-		options3.add(Option.builder()
-				.name("Sos Picant")
-				.price(BigDecimal.valueOf(0.0))
-				.minCount(0)
-				.maxCount(4)
-				.build());
+		options3.add(optionBuilder3.get().name("Sos dulce").build());
+		options3.add(optionBuilder3.get().name("Sos picant").build());
+		options3.add(optionBuilder3.get().name("Maioneză").build());
+		options3.add(optionBuilder3.get().name("Maioneză cu usturoi").build());
 
-		options3.add(Option.builder()
-				.name("Maioneză")
-				.price(BigDecimal.valueOf(0.0))
-				.minCount(0)
-				.maxCount(4)
-				.build());
-
-		options3.add(Option.builder()
-				.name("Maioneză cu usturoi")
-				.price(BigDecimal.valueOf(0.0))
-				.minCount(0)
-				.maxCount(4)
-				.build());
-
-		optionLists.get(3).getOptions().addAll(options3);
+		optionLists.get(4).getOptions().addAll(options3);
 		optionRepository.saveAll(options3);
+
+		var options4 = new ArrayList<Option>();
+		Supplier<Option.OptionBuilder> optionBuilder4 = () -> Option.builder()
+				.price(BigDecimal.valueOf(4))
+				.minCount(0)
+				.maxCount(100);
+
+		options4.add(optionBuilder4.get().name("Salam nepicant").build());
+		options4.add(optionBuilder4.get().name("Crispy de pui").build());
+		options4.add(optionBuilder4.get().name("Șuncă Praga").build());
+		options4.add(optionBuilder4.get().name("Bacon").build());
+		options4.add(optionBuilder4.get().name("Cabanos").build());
+		options4.add(optionBuilder4.get().name("Ton").build());
+		options4.add(optionBuilder4.get().name("Salam picant").build());
+		options4.add(optionBuilder4.get().name("Mozzarella").build());
+		options4.add(optionBuilder4.get().name("Cașcaval").build());
+		options4.add(optionBuilder4.get().name("Gorgonzola").build());
+		options4.add(optionBuilder4.get().name("Parmezan").build());
+		options4.add(optionBuilder4.get().name("Roșii").build());
+		options4.add(optionBuilder4.get().name("Măsline").build());
+		options4.add(optionBuilder4.get().name("Ardei iute").build());
+		options4.add(optionBuilder4.get().name("Ardei").build());
+		options4.add(optionBuilder4.get().name("Ceapă").build());
+		options4.add(optionBuilder4.get().name("Ciuperci").build());
+		options4.add(optionBuilder4.get().name("Ananas").build());
+		options4.add(optionBuilder4.get().name("Porumb").build());
+		options4.add(optionBuilder4.get().name("Piept de pui (pastramă)").build());
+
+		optionLists.get(5).getOptions().addAll(options4);
+		optionLists.get(6).getOptions().addAll(options4);
+		optionLists.get(7).getOptions().addAll(options4);
+		optionRepository.saveAll(options4);
+
+		List<Option> options5 = new ArrayList<>();
+		Supplier<Option.OptionBuilder> optionBuilder5 = () -> Option.builder()
+				.price(BigDecimal.valueOf(9))
+				.minCount(0)
+				.maxCount(100);
+
+		options5.add(optionBuilder5.get().name("Coca-Cola - 330ml").build());
+		options5.add(optionBuilder5.get().name("Cocal-Cola Zero - 330ml").build());
+		options5.add(optionBuilder5.get().name("Bere Timișoreana - 500ml").build());
+		options5.add(optionBuilder5.get().name("Bere Heineken - 500ml").price(BigDecimal.valueOf(10)).build());
+		options5.add(optionBuilder5.get().name("Cappy Pulpy - 300ml").build());
+		options5.add(optionBuilder5.get().name("Cappy Pulpy - 330ml").build());
+
+		optionLists.get(8).getOptions().addAll(options5);
+		optionRepository.saveAll(options5);
 	}
 
 
 	@Transactional
 	public void bindOptionsToProducts() {
-		List<Product> products = productRepository.findAll();
-		List<OptionList> optionLists = optionListRepository.findAll();
+		var products = productRepository.findAll();
+		var optionLists = optionListRepository.findAll();
 
-		var product1 = products.stream().filter((p) -> p.getName().equals("Pizza Capriciosa")).findFirst().orElseThrow();
+		var pizza1Plus1OptionListIndices = Set.of(0, 2, 3, 4, 5, 6, 8);
+		products.stream()
+				.filter((p) -> p.getCategory().getName().equals("Pizza 1+1"))
+				.forEach((p) -> p.getOptionLists().addAll(
+								IntStream.range(0, optionLists.size())
+										.filter(pizza1Plus1OptionListIndices::contains)
+										.mapToObj(optionLists::get)
+										.toList()
+						)
+				);
 
-		product1.getOptionLists().add(optionLists.get(0));
-		product1.getOptionLists().add(optionLists.get(1));
-		product1.getOptionLists().add(optionLists.get(3));
-
-		var product2 = products.stream().filter((p) -> p.getName().equals("Pizza Margherita")).findFirst().orElseThrow();
-
-		product2.getOptionLists().add(optionLists.get(1));
-		product2.getOptionLists().add(optionLists.get(2));
+		var pizza30cmOptionListIndices = Set.of(0, 1, 4, 7, 8);
+		products.stream()
+				.filter((p) -> p.getCategory().getName().equals("Pizza ⌀ 30 cm"))
+				.forEach((p) -> p.getOptionLists().addAll(
+								IntStream.range(0, optionLists.size())
+										.filter(pizza30cmOptionListIndices::contains)
+										.mapToObj(optionLists::get)
+										.toList()
+						)
+				);
 	}
 
 
@@ -342,13 +611,13 @@ public class EntityInitializerService {
 		addresses.add(Address.builder()
 				.account(accounts.get(0))
 				.addressType(AddressType.HOME)
-				.addressString("Example Street 123, City, Country")
+				.addressString("Romania, Roman, Strada Libertății nr. 10")
 				.isPrimary(true)
 				.build());
 		addresses.add(Address.builder()
 				.account(accounts.get(0))
 				.addressType(AddressType.WORK)
-				.addressString("Work Street 456, City, Country")
+				.addressString("Romania, Roman, Strada Ștefan cel Mare nr. 244")
 				.isPrimary(false)
 				.build());
 		addressRepository.saveAll(addresses);
