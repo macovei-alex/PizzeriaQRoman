@@ -62,8 +62,8 @@ public class ProductRepositoryTest {
 	void findAll() {
 		var activeProducts = productRepository.findAllActive();
 
-		assertEquals(8, activeProducts.size());
-		assertEquals(9, productRepository.findAll().size());
+		assertEquals(44, activeProducts.size());
+		assertEquals(45, productRepository.findAll().size());
 
 		assertTrue(activeProducts.stream().allMatch(Product::isActive));
 		assertTrue(activeProducts.stream().anyMatch((p) -> p.getName().equals("Sprite")));
@@ -75,7 +75,7 @@ public class ProductRepositoryTest {
 	void findAllActiveCategoryPreload() {
 		var products = productRepository.findAllActiveCategoryPreload();
 
-		assertEquals(8, products.size());
+		assertEquals(44, products.size());
 		assertTrue(products.stream().allMatch((p) -> Hibernate.isInitialized(p.getCategory())));
 		assertTrue(products.stream().noneMatch((p) -> Hibernate.isInitialized(p.getOptionLists())));
 	}

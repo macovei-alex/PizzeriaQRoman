@@ -15,13 +15,14 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import ro.pizzeriaq.qservices.config.Container;
+import ro.pizzeriaq.qservices.config.TestcontainersRegistry;
 import ro.pizzeriaq.qservices.data.dtos.ProductDto;
+import ro.pizzeriaq.qservices.data.dtos.ProductWithOptionsDto;
 import ro.pizzeriaq.qservices.services.EntityInitializerService;
 import ro.pizzeriaq.qservices.services.ProductService;
 import ro.pizzeriaq.qservices.utils.MockUserService;
-import ro.pizzeriaq.qservices.config.TestcontainersRegistry;
 
-import java.util.Comparator;
+import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -67,6 +68,17 @@ class ProductControllerTest {
 	}
 
 
+	ProductWithOptionsDto getProductByFilter(Predicate<ProductDto> predicate) {
+		var productId = productService.getProducts().stream()
+				.filter(predicate)
+				.findFirst()
+				.orElseThrow()
+				.getId();
+
+		return productService.getProduct(productId);
+	}
+
+
 	@Test
 	void contextLoads() {
 		assertThat(mockMvc).isNotNull();
@@ -99,7 +111,7 @@ class ProductControllerTest {
 					.andExpect(status().isOk())
 					.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 					.andExpect(jsonPath("$").isArray())
-					.andExpect(jsonPath("$.length()").value(8));
+					.andExpect(jsonPath("$.length()").value(44));
 		});
 	}
 
@@ -125,15 +137,11 @@ class ProductControllerTest {
 
 	@Test
 	void getProductWithValidIdAndOptionLists1() throws Exception {
-		mockUserService.withDynamicMockUser((_) -> {
-			var productId = productService.getProducts().stream()
-					.sorted(Comparator.comparing(ProductDto::getName))
-					.filter((p) -> p.getName().equals("Pizza Capriciosa"))
-					.findFirst()
-					.orElseThrow()
-					.getId();
-			var product = productService.getProduct(productId);
+		var product = getProductByFilter(
+				(p) -> p.getName().equals("Pizza Capriciosa") && p.getSubtitle().contains("1+1")
+		);
 
+		mockUserService.withDynamicMockUser((_) -> {
 			mockMvc.perform(get(contextPath + "/products/{id}", product.getId())
 							.contextPath(contextPath)
 							.accept(MediaType.APPLICATION_JSON))
@@ -142,21 +150,17 @@ class ProductControllerTest {
 					.andExpect(jsonPath("$.id").value(product.getId()))
 					.andExpect(jsonPath("$.name").value("Pizza Capriciosa"))
 					.andExpect(jsonPath("$.optionLists").isArray())
-					.andExpect(jsonPath("$.optionLists.length()").value(3));
+					.andExpect(jsonPath("$.optionLists.length()").value(7));
 		});
 	}
 
 	@Test
 	void getProductWithValidIdAndOptionLists2() throws Exception {
-		mockUserService.withDynamicMockUser((_) -> {
-			var productId = productService.getProducts().stream()
-					.sorted(Comparator.comparing(ProductDto::getName))
-					.filter((p) -> p.getName().equals("Pizza Margherita"))
-					.findFirst()
-					.orElseThrow()
-					.getId();
-			var product = productService.getProduct(productId);
+		var product = getProductByFilter(
+				(p) -> p.getName().equals("Pizza Margherita") && p.getSubtitle().contains("1+1")
+		);
 
+		mockUserService.withDynamicMockUser((_) -> {
 			mockMvc.perform(get(contextPath + "/products/{id}", product.getId())
 							.contextPath(contextPath)
 							.accept(MediaType.APPLICATION_JSON))
@@ -165,27 +169,22 @@ class ProductControllerTest {
 					.andExpect(jsonPath("$.id").value(product.getId()))
 					.andExpect(jsonPath("$.name").value("Pizza Margherita"))
 					.andExpect(jsonPath("$.optionLists").isArray())
-					.andExpect(jsonPath("$.optionLists.length()").value(2));
+					.andExpect(jsonPath("$.optionLists.length()").value(7));
 		});
 	}
 
 	@Test
 	void getProductWithValidIdAndNoOptionLists1() throws Exception {
-		mockUserService.withDynamicMockUser((_) -> {
-			var productId = productService.getProducts().stream()
-					.filter((p) -> p.getName().equals("Pizza Quattro Stagioni"))
-					.findFirst()
-					.orElseThrow()
-					.getId();
-			var product = productService.getProduct(productId);
+		var product = getProductByFilter((p) -> p.getName().equals("Coca-Cola"));
 
+		mockUserService.withDynamicMockUser((_) -> {
 			mockMvc.perform(get(contextPath + "/products/{id}", product.getId())
 							.contextPath(contextPath)
 							.accept(MediaType.APPLICATION_JSON))
 					.andExpect(status().isOk())
 					.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 					.andExpect(jsonPath("$.id").value(product.getId()))
-					.andExpect(jsonPath("$.name").value("Pizza Quattro Stagioni"))
+					.andExpect(jsonPath("$.name").value("Coca-Cola"))
 					.andExpect(jsonPath("$.optionLists").isArray())
 					.andExpect(jsonPath("$.optionLists.length()").value(0));
 		});
@@ -193,21 +192,16 @@ class ProductControllerTest {
 
 	@Test
 	void getProductWithValidIdAndNoOptionLists2() throws Exception {
-		mockUserService.withDynamicMockUser((_) -> {
-			var productId = productService.getProducts().stream()
-					.filter((p) -> p.getName().equals("Pizza Quattro Formaggi"))
-					.findFirst()
-					.orElseThrow()
-					.getId();
-			var product = productService.getProduct(productId);
+		var product = getProductByFilter((p) -> p.getName().equals("Coca-Cola Zero Zahăr"));
 
+		mockUserService.withDynamicMockUser((_) -> {
 			mockMvc.perform(get(contextPath + "/products/{id}", product.getId())
 							.contextPath(contextPath)
 							.accept(MediaType.APPLICATION_JSON))
 					.andExpect(status().isOk())
 					.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 					.andExpect(jsonPath("$.id").value(product.getId()))
-					.andExpect(jsonPath("$.name").value("Pizza Quattro Formaggi"))
+					.andExpect(jsonPath("$.name").value("Coca-Cola Zero Zahăr"))
 					.andExpect(jsonPath("$.optionLists").isArray())
 					.andExpect(jsonPath("$.optionLists.length()").value(0));
 		});

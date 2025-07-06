@@ -1,5 +1,6 @@
 package ro.pizzeriaq.qservices.repositories;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -27,10 +28,9 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
 
 	@Query("""
-		SELECT DISTINCT p FROM Product p
-		JOIN FETCH p.category
-		LEFT JOIN FETCH p.optionLists
+		SELECT p FROM Product p
 		WHERE p.id = :id
 	""")
+	@EntityGraph(attributePaths = {"category", "optionLists"})
 	Optional<Product> findByIdOptionListsPreload(Integer id);
 }

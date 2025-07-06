@@ -10,9 +10,12 @@ import ro.pizzeriaq.qservices.repositories.*;
 import javax.naming.ServiceUnavailableException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
 import java.util.function.Supplier;
-import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
@@ -67,8 +70,7 @@ public class EntityInitializerService {
 	@Transactional
 	public void addProducts() {
 		var categoryEntities = List.of(
-				ProductCategory.builder().name("Cele mai vândute").sortId(100).build(),
-				ProductCategory.builder().name("Pizza 1+1 combo").sortId(400).build(),
+				ProductCategory.builder().name("Pizza 1+1 Combo").sortId(400).build(),
 				ProductCategory.builder().name("Pizza ⌀ 30 cm").sortId(500).build(),
 				ProductCategory.builder().name("Fă-ți singur pizza").sortId(600).build(),
 				ProductCategory.builder().name("Băuturi non-alcoolice").sortId(700).build(),
@@ -78,28 +80,22 @@ public class EntityInitializerService {
 
 		List<Product> products = new ArrayList<>();
 
-		products.add(Product.builder()
+		Supplier<Product.ProductBuilder> productBuilder1 = () -> Product.builder()
 				.category(categories.get(0))
-				.name("Pizza Margherita")
 				.subtitle("1+1 Gratis la alegere")
+				.price(BigDecimal.valueOf(70));
+
+		products.add(productBuilder1.get()
+				.name("Pizza Margherita")
 				.description("Sos, mozzarella, parmezan, busuioc - 550g")
-				.price(BigDecimal.valueOf(70))
 				.imageName("pizza-margherita.jpg")
 				.build());
 
-		products.add(Product.builder()
-				.category(categories.get(0))
+		products.add(productBuilder1.get()
 				.name("Pizza Capriciosa")
-				.subtitle("1+1 Gratis la alegere")
 				.description("Sos, bacon, șuncă, ciuperci, mozzarella, măsline - 550g")
-				.price(BigDecimal.valueOf(70))
 				.imageName("pizza-capriciosa.jpg")
 				.build());
-
-		Supplier<Product.ProductBuilder> productBuilder1 = () -> Product.builder()
-				.category(categories.get(1))
-				.subtitle("1+1 Gratis la alegere")
-				.price(BigDecimal.valueOf(70));
 
 		products.add(productBuilder1.get()
 				.name("Pizza Prosciutto e Funghi")
@@ -246,85 +242,77 @@ public class EntityInitializerService {
 				.build());
 
 		products.add(Product.builder()
-				.category(categories.get(1))
+				.category(categories.get(0))
 				.name("Sos picant")
 				.price(BigDecimal.valueOf(2.5))
 				.imageName("pizza-quattro-formaggi.jpg")
 				.build());
 
 		products.add(Product.builder()
-				.category(categories.get(1))
+				.category(categories.get(0))
 				.name("Sos dulce")
 				.price(BigDecimal.valueOf(2.5))
 				.imageName("pizza-quattro-formaggi.jpg")
 				.build());
 
-		products.add(Product.builder()
-				.category(categories.get(2))
+		Supplier<Product.ProductBuilder> productBuilder2 = () -> Product.builder()
+				.category(categories.get(1))
+				.price(BigDecimal.valueOf(42));
+
+		products.add(productBuilder2.get()
 				.name("Pizza Prosciutto e Funghi")
 				.description("Sos, șuncă, mozzarella, ciuperci - 580g")
-				.price(BigDecimal.valueOf(42))
 				.imageName("pizza-quattro-formaggi.jpg")
 				.build());
 
-		products.add(Product.builder()
-				.category(categories.get(2))
+		products.add(productBuilder2.get()
 				.name("Pizza Țărănească")
 				.description("Sos, salam, cabanos, ciuperci, măsline, mozzarella, roșii, ardei - 550g")
-				.price(BigDecimal.valueOf(42))
 				.imageName("pizza-țărănească.jpg")
 				.build());
 
-		products.add(Product.builder()
-				.category(categories.get(2))
+		products.add(productBuilder2.get()
 				.name("Pizza Diavola")
 				.description("Sos, salam picant, peperoncino, mizzarella, ardei picant - 550g")
-				.price(BigDecimal.valueOf(42))
 				.imageName("pizza-țărănească.jpg")
 				.build());
 
-		products.add(Product.builder()
-				.category(categories.get(2))
+		products.add(productBuilder2.get()
 				.name("Pizza Quattro Carne")
 				.description("Sos, bacon, salam, piept de pui, cabanos, mozzarella, ceapă, ardei - 550g")
-				.price(BigDecimal.valueOf(42))
 				.imageName("pizza-quattro-stagioni.jpg")
 				.build());
 
-		products.add(Product.builder()
-				.category(categories.get(2))
+		products.add(productBuilder2.get()
 				.name("Pizza Q")
 				.description("Sos, șuncă, salam, cabanos, ciuperci, mozzarella, roșii, ardei, masline - 620g")
-				.price(BigDecimal.valueOf(42))
 				.imageName("pizza-quattro-stagioni.jpg")
 				.build());
 
-		products.add(Product.builder()
-				.category(categories.get(2))
+		products.add(productBuilder2.get()
 				.name("Pizza Pollo")
 				.description("Sos, piept de pui, ciuperci, mozzarella, porumb, ardei, roșii - 560g")
-				.price(BigDecimal.valueOf(42))
 				.imageName("pizza-quattro-stagioni.jpg")
 				.build());
 
 		products.add(Product.builder()
-				.category(categories.get(2))
-				.name("Coca-cola zero zahar")
+				.category(categories.get(3))
+				.name("Coca-Cola Zero Zahăr")
 				.subtitle("330ml")
 				.price(BigDecimal.valueOf(9.5))
 				.imageName("pepsi.jpg")
 				.build());
 
 		products.add(Product.builder()
-				.category(categories.get(4))
-				.name("Coca-cola")
+				.category(categories.get(3))
+				.name("Coca-Cola")
 				.subtitle("330ml")
 				.price(BigDecimal.valueOf(9.5))
 				.imageName("pepsi.jpg")
 				.build());
 
 		products.add(Product.builder()
-				.category(categories.get(4))
+				.category(categories.get(3))
 				.name("Fanta")
 				.subtitle("330ml")
 				.price(BigDecimal.valueOf(9.5))
@@ -332,7 +320,7 @@ public class EntityInitializerService {
 				.build());
 
 		products.add(Product.builder()
-				.category(categories.get(4))
+				.category(categories.get(3))
 				.name("Sprite")
 				.subtitle("330ml")
 				.price(BigDecimal.valueOf(9.5))
@@ -340,24 +328,32 @@ public class EntityInitializerService {
 				.build());
 
 		products.add(Product.builder()
-				.category(categories.get(4))
-				.name("Fuze tea")
+				.category(categories.get(3))
+				.name("Fuze Tea")
 				.subtitle("500ml")
 				.price(BigDecimal.valueOf(9.5))
 				.imageName("sprite.jpg")
 				.build());
 
 		products.add(Product.builder()
-				.category(categories.get(4))
-				.name("Cappy pulpy")
+				.category(categories.get(3))
+				.name("Cappy Pulpy")
 				.subtitle("330ml")
 				.price(BigDecimal.valueOf(9.5))
 				.imageName("sprite.jpg")
 				.build());
 
 		products.add(Product.builder()
-				.category(categories.get(4))
-				.name("Dorna plata")
+				.category(categories.get(3))
+				.name("Dorna plată")
+				.subtitle("500ml")
+				.price(BigDecimal.valueOf(8.5))
+				.imageName("pepsi.jpg")
+				.build());
+
+		products.add(Product.builder()
+				.category(categories.get(3))
+				.name("Dorna carbogazoasă")
 				.subtitle("500ml")
 				.price(BigDecimal.valueOf(8.5))
 				.imageName("pepsi.jpg")
@@ -365,30 +361,22 @@ public class EntityInitializerService {
 
 		products.add(Product.builder()
 				.category(categories.get(4))
-				.name("Dorna carbogazoasa")
-				.subtitle("500ml")
-				.price(BigDecimal.valueOf(8.5))
-				.imageName("pepsi.jpg")
-				.build());
-
-		products.add(Product.builder()
-				.category(categories.get(5))
-				.name("Bere heineken")
+				.name("Bere Heineken")
 				.subtitle("500ml")
 				.price(BigDecimal.valueOf(10.5))
 				.imageName("pepsi.jpg")
 				.build());
 
 		products.add(Product.builder()
-				.category(categories.get(5))
-				.name("Bere timisoreana")
+				.category(categories.get(4))
+				.name("Bere Timișoreana")
 				.subtitle("500ml")
 				.price(BigDecimal.valueOf(9.5))
 				.imageName("pepsi.jpg")
 				.build());
 
 		products.add(Product.builder()
-				.category(categories.get(5))
+				.category(categories.get(4))
 				.name("Deleted Sprite")
 				.subtitle("330ml / 500ml")
 				.price(BigDecimal.valueOf(9.5))
@@ -545,29 +533,17 @@ public class EntityInitializerService {
 	@Transactional
 	public void bindOptionsToProducts() {
 		var products = productRepository.findAll();
-		var optionLists = optionListRepository.findAll();
+		var optionLists = optionListRepository.findAll().stream()
+				.sorted(Comparator.comparing(OptionList::getId))
+				.toList();
 
-		var pizza1Plus1OptionListIndices = Set.of(0, 2, 3, 4, 5, 6, 8);
 		products.stream()
-				.filter((p) -> p.getCategory().getName().equals("Pizza 1+1"))
-				.forEach((p) -> p.getOptionLists().addAll(
-								IntStream.range(0, optionLists.size())
-										.filter(pizza1Plus1OptionListIndices::contains)
-										.mapToObj(optionLists::get)
-										.toList()
-						)
-				);
+				.filter((p) -> p.getCategory().getName().equals("Pizza 1+1 Combo"))
+				.forEach((p) -> p.getOptionLists().addAll(Stream.of(0, 2, 3, 4, 5, 6, 8).map(optionLists::get).toList()));
 
-		var pizza30cmOptionListIndices = Set.of(0, 1, 4, 7, 8);
 		products.stream()
 				.filter((p) -> p.getCategory().getName().equals("Pizza ⌀ 30 cm"))
-				.forEach((p) -> p.getOptionLists().addAll(
-								IntStream.range(0, optionLists.size())
-										.filter(pizza30cmOptionListIndices::contains)
-										.mapToObj(optionLists::get)
-										.toList()
-						)
-				);
+				.forEach((p) -> p.getOptionLists().addAll(Stream.of(1, 4, 7, 8).map(optionLists::get).toList()));
 	}
 
 
