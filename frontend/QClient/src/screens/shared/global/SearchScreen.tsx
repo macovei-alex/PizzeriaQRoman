@@ -30,8 +30,8 @@ export default function SearchScreen() {
       </View>
 
       <View style={styles.productLinksContainer}>
-        {productMatches.map((product) => (
-          <ProductLink key={product.id} product={product} />
+        {productMatches.map((product, index) => (
+          <ProductLink key={index} product={product} index={index} />
         ))}
       </View>
     </SafeAreaView>

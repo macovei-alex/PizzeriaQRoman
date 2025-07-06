@@ -39,7 +39,11 @@ export function useDebounceSearch(searchQuery: string, delay: number) {
     let isMounted = true;
     debouncedSearch.delayedExecute(productsQuery.data, searchQuery).then((results) => {
       if (isMounted) {
-        setMatches(results);
+        setMatches((prev) => {
+          if (prev.length !== results.length) return results;
+          if (prev.some((product, index) => results[index] !== product)) return results;
+          return prev;
+        });
       }
     });
     return () => {
