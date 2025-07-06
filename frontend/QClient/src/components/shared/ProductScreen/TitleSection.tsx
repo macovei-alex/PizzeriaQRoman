@@ -30,23 +30,23 @@ export default function TitleSection({ product }: TitleSectionProps) {
       </RemoteImageBackground>
       <Text style={styles.titleText}>{product.name}</Text>
       <View style={styles.subtitleContainer}>
-        <Text style={styles.subtitleText}>
-          {product.subtitle} - {formatPrice(product.price)}
-        </Text>
+        <Text style={styles.subtitleText}>{product.subtitle}</Text>
+        <Text style={styles.subtitleText}>-</Text>
+        <Text style={styles.priceText}>{formatPrice(product.price)}</Text>
       </View>
       <Text style={styles.descriptionText}>{product.description}</Text>
     </>
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const styles = StyleSheet.create((theme, runtime) => ({
   image: {
     aspectRatio: 1,
     width: "100%",
   },
   goBackButton: {
     position: "absolute",
-    top: 20,
+    top: runtime.insets.top + 4,
     left: 20,
     width: 38,
     height: 38,
@@ -59,11 +59,19 @@ const styles = StyleSheet.create((theme) => ({
     color: theme.text.primary,
   },
   subtitleContainer: {
-    marginTop: -4,
-    marginHorizontal: 8,
-    alignItems: "center",
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    paddingHorizontal: 16,
+    gap: 6,
   },
   subtitleText: {
+    flexShrink: 1,
+    fontSize: 20,
+    fontWeight: "500",
+    color: theme.text.primary,
+  },
+  priceText: {
     fontSize: 20,
     fontWeight: "500",
     color: theme.text.primary,
@@ -71,7 +79,7 @@ const styles = StyleSheet.create((theme) => ({
   descriptionText: {
     marginTop: 20,
     marginHorizontal: 12,
-    fontSize: 13,
+    fontSize: 14,
     color: theme.text.secondary,
   },
 }));

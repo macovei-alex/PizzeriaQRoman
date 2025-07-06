@@ -71,6 +71,7 @@ export default function MenuScreen() {
   return (
     <View style={styles.screen}>
       <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
         ref={scrollRef}
         refreshControl={
           <RefreshControl
@@ -114,5 +115,8 @@ const styles = StyleSheet.create((theme, runtime) => ({
   screen: {
     backgroundColor: theme.background.primary,
     top: runtime.insets.top,
+  },
+  scrollViewContent: {
+    paddingBottom: 28,
   },
 }));

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { RefreshControl, ScrollView } from "react-native";
 import { StyleSheet, withUnistyles } from "react-native-unistyles";
-import { SafeAreaView } from "react-native-safe-area-context";
 import OptionList from "src/components/shared/ProductScreen/OptionListCard";
 import HorizontalLine from "src/components/shared/generic/HorizontalLine";
 import { Fragment } from "react";
@@ -46,7 +45,7 @@ export default function ProductScreen() {
   const product = productQuery.data;
 
   return (
-    <SafeAreaView>
+    <>
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={productQuery.isFetching} onRefresh={productQuery.refetch} />
@@ -85,7 +84,7 @@ export default function ProductScreen() {
         visibleHeight={visibleHeight}
         contentHeight={contentHeight}
       />
-    </SafeAreaView>
+    </>
   );
 }
 
@@ -95,7 +94,7 @@ const UHorizontalLine = withUnistyles(HorizontalLine, (theme) => ({
 
 const styles = StyleSheet.create({
   scrollViewContent: {
-    paddingBottom: 40,
+    paddingBottom: 80,
   },
   horizontalLine: {
     marginVertical: 24,
