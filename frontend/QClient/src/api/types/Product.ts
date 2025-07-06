@@ -24,12 +24,16 @@ export type OptionList = {
 export type Product = {
   id: ProductId;
   name: string;
-  subtitle: string;
-  description: string;
+  subtitle: string | null;
+  description: string | null;
   price: number;
   imageName: string;
   imageVersion: number;
   categoryId: CategoryId;
+};
+
+export type ProductWithIngredients = Product & {
+  ingredients: Set<string>;
 };
 
 export type ProductWithOptions = Product & {

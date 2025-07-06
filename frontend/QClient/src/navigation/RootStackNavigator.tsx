@@ -3,18 +3,18 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import MainTabNavigator, { MainTabParamList } from "./MainTabNavigator";
 import OrderConfirmationScreen from "src/screens/shared/global/OrderConfirmationScreen";
 import { NavigatorScreenParams } from "@react-navigation/native";
-import ChatScreen from "src/screens/shared/global/ChatScreen";
 import OrderDeliveryScreen from "src/screens/shared/global/OrderDeliveryScreen";
 import NewAddressScreen from "src/screens/shared/global/NewAddressScreen";
 import AddressesScreen from "src/screens/shared/global/AddressesScreen";
 import { OrderId } from "src/api/types/order/Order";
+import SearchScreen from "src/screens/shared/global/SearchScreen";
 
 export type RootStackParamList = {
   MainTabNavigator: NavigatorScreenParams<MainTabParamList>;
   AddressesScreen: undefined;
   NewAddressScreen: undefined;
   OrderConfirmationScreen: undefined;
-  ChatScreen: undefined;
+  SearchScreen: undefined;
   OrderDeliveryScreen: { orderId: OrderId };
 };
 
@@ -35,8 +35,8 @@ export default function RootStackNavigator() {
         options={{ presentation: "fullScreenModal" }}
       />
       <RootStack.Screen
-        name="ChatScreen"
-        component={ChatScreen}
+        name="SearchScreen"
+        component={SearchScreen}
         options={{ presentation: "fullScreenModal" }}
       />
       <RootStack.Screen

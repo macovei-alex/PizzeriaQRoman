@@ -1,10 +1,11 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type TFunction = (...args: any[]) => Promise<any>;
 
 export function useDebounced<T extends TFunction>(func: T, delay: number) {
   type TFunctionReturn = Awaited<ReturnType<T>>;
 
+  const funcRef = useRef<T>(func);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [executing, setExecuting] = useState(false);
   const pendingPromiseRef = useRef<{
@@ -12,35 +13,26 @@ export function useDebounced<T extends TFunction>(func: T, delay: number) {
     reject: (reason?: any) => void;
   } | null>(null);
 
-  const executeFunction = useCallback(
-    (...args: Parameters<T>) => {
-      setExecuting(true);
-      func(...args)
-        .then((res) => {
-          if (pendingPromiseRef.current) {
-            pendingPromiseRef.current.resolve(res);
-            pendingPromiseRef.current = null;
-          }
-        })
-        .catch((err) => {
-          if (pendingPromiseRef.current) {
-            pendingPromiseRef.current.reject(err);
-            pendingPromiseRef.current = null;
-          }
-        })
-        .finally(() => setExecuting(false));
-    },
-    [func]
-  );
+  funcRef.current = func;
+
+  const executeFunction = useCallback((...args: Parameters<T>) => {
+    setExecuting(true);
+    funcRef
+      .current(...args)
+      .then((res) => pendingPromiseRef.current?.resolve(res))
+      .catch((err) => pendingPromiseRef.current?.reject(err))
+      .finally(() => {
+        setExecuting(false);
+        pendingPromiseRef.current = null;
+      });
+  }, []);
 
   const delayedExecute = useCallback(
     (...args: Parameters<T>) => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
-        if (pendingPromiseRef.current) {
-          pendingPromiseRef.current.reject(new Error("Debounced call cancelled"));
-          pendingPromiseRef.current = null;
-        }
+        pendingPromiseRef.current?.reject(new Error("Debounced call cancelled"));
+        pendingPromiseRef.current = null;
       }
 
       return new Promise<TFunctionReturn>((resolve, reject) => {
@@ -59,8 +51,25 @@ export function useDebounced<T extends TFunction>(func: T, delay: number) {
     [delay, executeFunction]
   );
 
-  return {
-    delayedExecute,
-    executing,
-  };
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      if (pendingPromiseRef.current) {
+        pendingPromiseRef.current.reject(new Error("Component unmounted"));
+        pendingPromiseRef.current = null;
+      }
+    };
+  }, []);
+
+  const debouncedObject = useMemo(
+    () => ({
+      delayedExecute,
+      executing,
+    }),
+    [delayedExecute, executing]
+  );
+
+  return debouncedObject;
 }

@@ -103,7 +103,7 @@ export default function HorizontalCategorySection({
         ))}
       </ScrollView>
 
-      <TouchableOpacity style={styles.searchBarContainer} onPress={() => navigation.navigate("ChatScreen")}>
+      <TouchableOpacity style={styles.searchBarContainer} onPress={() => navigation.navigate("SearchScreen")}>
         <SearchIconSvg style={styles.searchIcon} />
         <Text style={styles.searchBarText}>Caută ce îți dorești</Text>
       </TouchableOpacity>
