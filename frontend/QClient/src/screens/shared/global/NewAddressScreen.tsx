@@ -29,11 +29,17 @@ export default function NewAddressScreen() {
     useBidirectionalAddressRegionUpdates(mapRef);
   const shouldSetNewRegion = useRef(false);
 
-  const { currentLocation: startLocation, permissionAllowed } = useCurrentLocation();
+  const { currentLocation: startLocation, permissionState } = useCurrentLocation();
   const isStartLocationLoaded = useRef(false);
 
   useEffect(() => {
-    if (isStartLocationLoaded.current || !startLocation || !permissionAllowed) return;
+    if (!isStartLocationLoaded.current && permissionState === "denied") {
+      setRegion({ ...region });
+      shouldSetNewRegion.current = true;
+      isStartLocationLoaded.current = true;
+    }
+
+    if (isStartLocationLoaded.current || !startLocation || permissionState !== "granted") return;
     const newRegion = {
       latitude: startLocation.coords.latitude,
       longitude: startLocation.coords.longitude,
@@ -44,7 +50,12 @@ export default function NewAddressScreen() {
     mapRef.current?.animateToRegion(newRegion);
     isStartLocationLoaded.current = true;
     shouldSetNewRegion.current = false;
-  }, [startLocation, permissionAllowed, setRegion]);
+
+    // React hooks lint rule requires "region" to be in the dependency array, but we only care
+    // about the initial region set in the "useBidirectionalAddressRegionUpdates" hook. This is
+    // safe (as far as tested) and only used to trigger the initial adddress string update.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [startLocation, permissionState, setRegion]);
 
   const handleAddressFormClose = useCallback(
     (newAddress: NewAddress, doSend: boolean) => {
@@ -79,6 +90,8 @@ export default function NewAddressScreen() {
     [accountId, address, setAddress, queryClient, navigation]
   );
 
+  const openModal = useCallback(() => setScreenState("modal-open"), []);
+
   return (
     <View style={styles.container}>
       <MapView
@@ -92,7 +105,8 @@ export default function NewAddressScreen() {
       />
 
       <View style={styles.floatingContainer} pointerEvents="box-none">
-        <View style={styles.addressContainer}>
+        {/* top section */}
+        <TouchableOpacity style={styles.addressContainer} onPress={openModal}>
           <View style={styles.iconContainer}>
             {fetchingAddress ? (
               <UFetchingActivityIndicator size={32} />
@@ -103,11 +117,11 @@ export default function NewAddressScreen() {
           <Text style={styles.addressText} numberOfLines={2}>
             {address}
           </Text>
-        </View>
+        </TouchableOpacity>
 
         <UFontAwesome name="map-marker" size={48} />
 
-        <TouchableOpacity style={styles.selectAddressButton} onPress={() => setScreenState("modal-open")}>
+        <TouchableOpacity style={styles.selectAddressButton} onPress={openModal}>
           <Text style={styles.selectAddressText}>Adăugați detalii</Text>
         </TouchableOpacity>
       </View>

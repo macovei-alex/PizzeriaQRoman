@@ -18,8 +18,8 @@ export function useBidirectionalAddressRegionUpdates(mapRef: RefObject<MapView |
     fetchingState2: fetchingAddress,
   } = useBidirectionalStateUpdates<Region, string>({
     initialState1: {
-      latitude: 45.4361,
-      longitude: 28.0134,
+      latitude: 46.92485692655237,
+      longitude: 26.937895583196728,
       latitudeDelta: 0.01,
       longitudeDelta: 0.01,
     },

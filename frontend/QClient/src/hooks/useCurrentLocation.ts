@@ -2,6 +2,8 @@ import * as Location from "expo-location";
 import { useEffect, useState } from "react";
 import logger from "src/constants/logger";
 
+type PermissionState = "granted" | "denied" | "pending";
+
 const precision = 100_000;
 
 function roundCoordinates(coords?: Location.LocationObjectCoords) {
@@ -14,7 +16,7 @@ function roundCoordinates(coords?: Location.LocationObjectCoords) {
 
 export function useCurrentLocation() {
   const [currentLocation, setCurrentLocation] = useState<Location.LocationObject | null>(null);
-  const [permissionAllowed, setPermissionAllowed] = useState(true);
+  const [permissionState, setPermissionState] = useState<PermissionState>("pending");
 
   useEffect(() => {
     let subscription: Location.LocationSubscription | null = null;
@@ -23,12 +25,12 @@ export function useCurrentLocation() {
     async function startListening() {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        setPermissionAllowed(false);
+        setPermissionState("denied");
         logger.warn("Permission to access location was denied");
         return;
       }
 
-      setPermissionAllowed(true);
+      setPermissionState("granted");
 
       const location = await Location.getLastKnownPositionAsync();
       setCurrentLocation((prev) => prev ?? location);
@@ -58,6 +60,6 @@ export function useCurrentLocation() {
 
   return {
     currentLocation,
-    permissionAllowed,
+    permissionState,
   };
 }
