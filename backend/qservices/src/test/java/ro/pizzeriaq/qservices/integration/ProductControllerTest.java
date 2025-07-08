@@ -192,7 +192,7 @@ class ProductControllerTest {
 
 	@Test
 	void getProductWithValidIdAndNoOptionLists2() throws Exception {
-		var product = getProductByFilter((p) -> p.getName().equals("Coca-Cola Zero Zahăr"));
+		var product = getProductByFilter((p) -> p.getName().equals("Fanta"));
 
 		mockUserService.withDynamicMockUser((_) -> {
 			mockMvc.perform(get(contextPath + "/products/{id}", product.getId())
@@ -201,7 +201,7 @@ class ProductControllerTest {
 					.andExpect(status().isOk())
 					.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 					.andExpect(jsonPath("$.id").value(product.getId()))
-					.andExpect(jsonPath("$.name").value("Coca-Cola Zero Zahăr"))
+					.andExpect(jsonPath("$.name").value("Fanta"))
 					.andExpect(jsonPath("$.optionLists").isArray())
 					.andExpect(jsonPath("$.optionLists.length()").value(0));
 		});

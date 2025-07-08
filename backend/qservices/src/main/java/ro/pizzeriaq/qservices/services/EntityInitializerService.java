@@ -100,7 +100,7 @@ public class EntityInitializerService {
 		products.add(productBuilder1.get()
 				.name("Pizza Prosciutto e Funghi")
 				.description("Sos, șuncă, mozzarella, ciuperci - 580g")
-				.imageName("pizza-țărănească.jpg")
+				.imageName("pizza-prosciutto-e-funghi.jpg")
 				.build());
 
 		products.add(productBuilder1.get()
@@ -112,91 +112,91 @@ public class EntityInitializerService {
 		products.add(productBuilder1.get()
 				.name("Pizza Diavola")
 				.description("Sos, salam picant, peperoncino, mizzarella, ardei picant - 550g")
-				.imageName("pizza-țărănească.jpg")
+				.imageName("pizza-diavola.jpg")
 				.build());
 
 		products.add(productBuilder1.get()
 				.name("Pizza Quattro Carne")
 				.description("Sos, bacon, salam, piept de pui, cabanos, mozzarella, ceapă, ardei - 550g")
-				.imageName("pizza-quattro-stagioni.jpg")
+				.imageName("pizza-quattro-carne.jpg")
 				.build());
 
 		products.add(productBuilder1.get()
 				.name("Pizza Q")
 				.description("Sos, șuncă, salam, cabanos, ciuperci, mozzarella, roșii, ardei, masline - 620g")
-				.imageName("pizza-quattro-stagioni.jpg")
+				.imageName("pizza-q.jpg")
 				.build());
 
 		products.add(productBuilder1.get()
 				.name("Pizza Arrabiatta")
 				.description("Sos, salam picant, cabanos, mozzarella, ceapă, ardei picant - 550g")
-				.imageName("pizza-quattro-stagioni.jpg")
+				.imageName("pizza-arrabiatta.jpg")
 				.build());
 
 		products.add(productBuilder1.get()
 				.name("Pizza Pollo")
 				.description("Sos, piept de pui, ciuperci, mozzarella, porumb, ardei, roșii - 560g")
-				.imageName("pizza-quattro-stagioni.jpg")
+				.imageName("pizza-pollo.jpg")
 				.build());
 
 		products.add(productBuilder1.get()
 				.name("Pizza Tradițională")
 				.description("Sos, șuncă, piept de pui, ciuperci, mozzarella, ceapă - 540g")
-				.imageName("pizza-quattro-stagioni.jpg")
+				.imageName("pizza-tradițională.jpg")
 				.build());
 
 		products.add(productBuilder1.get()
 				.name("Pizza Tonno Cipolla")
 				.description("Sos, ton, mozzarella, ceapă, lămâie - 490g")
-				.imageName("pizza-quattro-stagioni.jpg")
+				.imageName("pizza-tonno-cipolla.jpg")
 				.build());
 
 		products.add(productBuilder1.get()
 				.name("Pizza Vegetariană")
 				.description("Sos, ciuperci, măsline, porumb, mozzarella, roșii, ceapă, ardei - 550g")
-				.imageName("pizza-quattro-stagioni.jpg")
+				.imageName("pizza-vegetariană.jpg")
 				.build());
 
 		products.add(productBuilder1.get()
 				.name("Pizza Smirodava")
 				.description("Sos, bacon, șuncă, salam, ardei, porumb, mozzarella, roșii - 610g")
-				.imageName("pizza-quattro-stagioni.jpg")
+				.imageName("pizza-smirodava.jpg")
 				.build());
 
 		products.add(productBuilder1.get()
 				.name("Pizza Populară")
 				.description("Sos, oregano, mozzarella, salam picant - 530g")
-				.imageName("pizza-quattro-stagioni.jpg")
+				.imageName("pizza-populară.jpg")
 				.build());
 
 		products.add(productBuilder1.get()
 				.name("Pizza Magic")
 				.description("Sos, bacon, salam, mozzarella, ardei - 550g")
-				.imageName("pizza-quattro-stagioni.jpg")
+				.imageName("pizza-magic.jpg")
 				.build());
 
 		products.add(productBuilder1.get()
-				.name("Pizza Delicioasă")
+				.name("Pizza Deliciosa")
 				.description("Sos, bacon, cabanos, măsline, mozzarella, parmezan - 550g")
-				.imageName("pizza-quattro-stagioni.jpg")
+				.imageName("pizza-deliciosa.jpg")
 				.build());
 
 		products.add(productBuilder1.get()
 				.name("Pizza Prosciutto")
 				.description("Sos, șuncă, mozzarella, măsline - 550g")
-				.imageName("pizza-țărănească.jpg")
+				.imageName("pizza-prosciutto.jpg")
 				.build());
 
 		products.add(productBuilder1.get()
-				.name("Pizza Hawaiiană")
+				.name("Pizza Hawaii")
 				.description("Sos, șuncă, ananas, mozzarella - 550g")
-				.imageName("pizza-țărănească.jpg")
+				.imageName("pizza-hawaii.jpg")
 				.build());
 
 		products.add(productBuilder1.get()
 				.name("Pizza Quattro Stagioni")
 				.description("Sos, șuncă, salam, ciuperci, mozzarella, ardei, măsline - 560g")
-				.imageName("pizza-quattro-formaggi.jpg")
+				.imageName("pizza-quattro-stagioni.jpg")
 				.build());
 
 		products.add(productBuilder1.get()
@@ -208,51 +208,51 @@ public class EntityInitializerService {
 		products.add(productBuilder1.get()
 				.name("Pizza Crispy")
 				.description("Sos, piept de pui, cartofi, mozzarella - 580g")
-				.imageName("pizza-quattro-formaggi.jpg")
+				.imageName("pizza-crispy.jpg")
 				.build());
 
 		products.add(productBuilder1.get()
 				.name("Pizza de post")
 				.description("Sos, brânză vegetală, ciuperci, măsline, porumb, roșii, ceapă, ardei - 550g")
-				.imageName("pizza-quattro-formaggi.jpg")
+				.imageName("pizza-de-post.jpg")
 				.build());
 
 		products.add(productBuilder1.get()
 				.name("Pizza de post cu ton")
 				.description("Sos, ton, brânză vegetală, ceapă, lămâie - 490g")
-				.imageName("pizza-quattro-formaggi.jpg")
+				.imageName("pizza-de-post-cu-ton.jpg")
 				.build());
 
 		products.add(productBuilder1.get()
 				.name("Pizza Carbonara")
 				.description("Smântână, bacon, ciuperci, mozzarella, parmezan - 560g")
-				.imageName("pizza-quattro-formaggi.jpg")
+				.imageName("pizza-carbonara.jpg")
 				.build());
 
 		products.add(productBuilder1.get()
-				.name("Pizza Pollo Albă")
+				.name("Pizza Pollo White")
 				.description("Smântână, piept de pui, mozzarella, aredi, porumb - 510g")
-				.imageName("pizza-quattro-formaggi.jpg")
+				.imageName("pizza-pollo-white.jpg")
 				.build());
 
 		products.add(productBuilder1.get()
 				.name("Pizza Vegetariană de post")
 				.description("Sos, brânză vegetală, ciuperci, masline, porumb, roșii, ceapă, ardei - 550g")
-				.imageName("pizza-quattro-formaggi.jpg")
+				.imageName("pizza-vegetariană-de-post.jpg")
 				.build());
 
 		products.add(Product.builder()
 				.category(categories.get(0))
 				.name("Sos picant")
 				.price(BigDecimal.valueOf(2.5))
-				.imageName("pizza-quattro-formaggi.jpg")
+				.imageName("sos-picant.jpg")
 				.build());
 
 		products.add(Product.builder()
 				.category(categories.get(0))
 				.name("Sos dulce")
 				.price(BigDecimal.valueOf(2.5))
-				.imageName("pizza-quattro-formaggi.jpg")
+				.imageName("sos-dulce.jpg")
 				.build());
 
 		Supplier<Product.ProductBuilder> productBuilder2 = () -> Product.builder()
@@ -262,7 +262,7 @@ public class EntityInitializerService {
 		products.add(productBuilder2.get()
 				.name("Pizza Prosciutto e Funghi")
 				.description("Sos, șuncă, mozzarella, ciuperci - 580g")
-				.imageName("pizza-quattro-formaggi.jpg")
+				.imageName("pizza-prosciutto-e-funghi.jpg")
 				.build());
 
 		products.add(productBuilder2.get()
@@ -274,33 +274,33 @@ public class EntityInitializerService {
 		products.add(productBuilder2.get()
 				.name("Pizza Diavola")
 				.description("Sos, salam picant, peperoncino, mizzarella, ardei picant - 550g")
-				.imageName("pizza-țărănească.jpg")
+				.imageName("pizza-diavola.jpg")
 				.build());
 
 		products.add(productBuilder2.get()
 				.name("Pizza Quattro Carne")
 				.description("Sos, bacon, salam, piept de pui, cabanos, mozzarella, ceapă, ardei - 550g")
-				.imageName("pizza-quattro-stagioni.jpg")
+				.imageName("pizza-quattro-carne.jpg")
 				.build());
 
 		products.add(productBuilder2.get()
 				.name("Pizza Q")
 				.description("Sos, șuncă, salam, cabanos, ciuperci, mozzarella, roșii, ardei, masline - 620g")
-				.imageName("pizza-quattro-stagioni.jpg")
+				.imageName("pizza-q.jpg")
 				.build());
 
 		products.add(productBuilder2.get()
 				.name("Pizza Pollo")
 				.description("Sos, piept de pui, ciuperci, mozzarella, porumb, ardei, roșii - 560g")
-				.imageName("pizza-quattro-stagioni.jpg")
+				.imageName("pizza-pollo.jpg")
 				.build());
 
 		products.add(Product.builder()
 				.category(categories.get(3))
-				.name("Coca-Cola Zero Zahăr")
+				.name("Coca-Cola Zero")
 				.subtitle("330ml")
 				.price(BigDecimal.valueOf(9.5))
-				.imageName("pepsi.jpg")
+				.imageName("coca-cola-zero.jpg")
 				.build());
 
 		products.add(Product.builder()
@@ -308,7 +308,7 @@ public class EntityInitializerService {
 				.name("Coca-Cola")
 				.subtitle("330ml")
 				.price(BigDecimal.valueOf(9.5))
-				.imageName("pepsi.jpg")
+				.imageName("coca-cola.jpg")
 				.build());
 
 		products.add(Product.builder()
@@ -316,7 +316,7 @@ public class EntityInitializerService {
 				.name("Fanta")
 				.subtitle("330ml")
 				.price(BigDecimal.valueOf(9.5))
-				.imageName("fanta-portocale.jpg")
+				.imageName("fanta.jpg")
 				.build());
 
 		products.add(Product.builder()
@@ -332,7 +332,7 @@ public class EntityInitializerService {
 				.name("Fuze Tea")
 				.subtitle("500ml")
 				.price(BigDecimal.valueOf(9.5))
-				.imageName("sprite.jpg")
+				.imageName("fuze-tea.jpg")
 				.build());
 
 		products.add(Product.builder()
@@ -340,7 +340,7 @@ public class EntityInitializerService {
 				.name("Cappy Pulpy")
 				.subtitle("330ml")
 				.price(BigDecimal.valueOf(9.5))
-				.imageName("sprite.jpg")
+				.imageName("cappy-pulpy.jpg")
 				.build());
 
 		products.add(Product.builder()
@@ -348,7 +348,7 @@ public class EntityInitializerService {
 				.name("Dorna plată")
 				.subtitle("500ml")
 				.price(BigDecimal.valueOf(8.5))
-				.imageName("pepsi.jpg")
+				.imageName("dorna-plată.jpg")
 				.build());
 
 		products.add(Product.builder()
@@ -356,7 +356,7 @@ public class EntityInitializerService {
 				.name("Dorna carbogazoasă")
 				.subtitle("500ml")
 				.price(BigDecimal.valueOf(8.5))
-				.imageName("pepsi.jpg")
+				.imageName("dorna-carbogazoasă.jpg")
 				.build());
 
 		products.add(Product.builder()
@@ -364,7 +364,7 @@ public class EntityInitializerService {
 				.name("Bere Heineken")
 				.subtitle("500ml")
 				.price(BigDecimal.valueOf(10.5))
-				.imageName("pepsi.jpg")
+				.imageName("bere-heineken.jpg")
 				.build());
 
 		products.add(Product.builder()
@@ -372,7 +372,7 @@ public class EntityInitializerService {
 				.name("Bere Timișoreana")
 				.subtitle("500ml")
 				.price(BigDecimal.valueOf(9.5))
-				.imageName("pepsi.jpg")
+				.imageName("bere-timișoreana.jpg")
 				.build());
 
 		products.add(Product.builder()
@@ -426,7 +426,7 @@ public class EntityInitializerService {
 		options1.add(optionBuilder1.get().name("Quattro Carne").build());
 		options1.add(optionBuilder1.get().name("Pizza Q").build());
 		options1.add(optionBuilder1.get().name("Quattro Formaggi").build());
-		options1.add(optionBuilder1.get().name("Hawaiiană").build());
+		options1.add(optionBuilder1.get().name("Hawaii").build());
 		options1.add(optionBuilder1.get().name("Prosciutto").build());
 		options1.add(optionBuilder1.get().name("Arrabiatta").build());
 		options1.add(optionBuilder1.get().name("Pollo").build());
@@ -436,9 +436,9 @@ public class EntityInitializerService {
 		options1.add(optionBuilder1.get().name("Smirodava").build());
 		options1.add(optionBuilder1.get().name("Populară").build());
 		options1.add(optionBuilder1.get().name("Magic").build());
-		options1.add(optionBuilder1.get().name("Delicioasă").build());
+		options1.add(optionBuilder1.get().name("Delicioasa").build());
 		options1.add(optionBuilder1.get().name("Crispy").build());
-		options1.add(optionBuilder1.get().name("Pollo Albă").build());
+		options1.add(optionBuilder1.get().name("Pollo White").build());
 		options1.add(optionBuilder1.get().name("Carbonara").build());
 		options1.add(optionBuilder1.get().name("De post cu ton").build());
 
@@ -551,12 +551,13 @@ public class EntityInitializerService {
 	public void addAccounts() {
 		List<KeycloakUser> keycloakUsers;
 		try {
-			keycloakUsers = keycloakService.getUsers();
+			keycloakUsers = keycloakService.getUsers().stream()
+					.sorted(Comparator.comparing(KeycloakUser::createdTimestamp))
+					.toList();
 		} catch (ServiceUnavailableException e) {
 			throw new RuntimeException(e);
 		}
 
-		keycloakUsers.sort(Comparator.comparing(KeycloakUser::createdTimestamp));
 		if (keycloakUsers.size() < 2) {
 			throw new RuntimeException("Not enough users in Keycloak: a minimum of 2 users required");
 		}
