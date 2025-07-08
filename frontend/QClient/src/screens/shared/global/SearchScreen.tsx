@@ -22,7 +22,7 @@ export default function SearchScreen() {
       <View style={styles.inputContainer}>
         <UTextInput
           ref={inputRef}
-          placeholder="Introduceți ingrediente..."
+          placeholder="Introduceți produse sau ingrediente..."
           style={styles.input}
           value={currentMessage}
           onChangeText={setCurrentMessage}

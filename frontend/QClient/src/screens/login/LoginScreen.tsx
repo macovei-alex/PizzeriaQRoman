@@ -87,7 +87,9 @@ export default function LoginScreen() {
         </View>
 
         {/* bottom sheet */}
-        <Animated.View style={styles.bottomSheet(bottomSheetTranslationAnim)}>
+        <Animated.View
+          style={[styles.bottomSheet, { transform: [{ translateY: bottomSheetTranslationAnim }] }]}
+        >
           <Text style={styles.subText}>Bine ați venit!</Text>
 
           {/* sign in button */}
@@ -100,7 +102,7 @@ export default function LoginScreen() {
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
+const styles = StyleSheet.create((theme, runtime) => ({
   container: {
     flex: 1,
   },
@@ -127,19 +129,19 @@ const styles = StyleSheet.create((theme) => ({
     borderRadius: 12,
     resizeMode: "stretch",
   },
-  bottomSheet: (translateY: Animated.Value) => ({
+  bottomSheet: {
     position: "absolute",
     bottom: 0,
     width: "100%",
-    paddingVertical: 24,
+    paddingTop: 24,
+    paddingBottom: 24 + runtime.insets.bottom,
     paddingHorizontal: 32,
     alignItems: "center",
     opacity: 0.88,
     borderTopLeftRadius: 48,
     borderTopRightRadius: 48,
     backgroundColor: theme.background.primary,
-    transform: [{ translateY }],
-  }),
+  },
   subText: {
     fontSize: 20,
     marginBottom: 24,
