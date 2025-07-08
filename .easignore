@@ -1,12 +1,12 @@
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
 # dependencies
-node_modules/
+node_modules
 
 # Expo
-.expo/
-dist/
-web-build/
+.expo
+dist
+web-build
 
 # Native
 *.orig.*
@@ -34,14 +34,19 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-.vscode/
+.vscode
 
 *.session.sql
-android/
-ios/
+android
+ios
+backend
+docs
+.git
+maestro
 
 pizzeriaq-firebase-adminsdk-*.json
 credentials.json
 !google-services.json
-/backend
-/doc
+
+LICENSE
+README.md
