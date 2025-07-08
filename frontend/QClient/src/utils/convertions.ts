@@ -43,11 +43,14 @@ export function convertToRGBA(color: ColorValue): RGBA | null {
   return null;
 }
 
-export function tokenizeIngredientsList(ingredientsText: string): string[] {
-  return ingredientsText
+export function tokenize(input: string | string[]): string[] {
+  const inputString = typeof input === "string" ? input : input.join(" ");
+  const tokens = inputString
     .normalize("NFD")
     .toLowerCase()
+    .replace("-", " ")
     .replace(/[^a-z0-9\s]/g, "")
     .split(/\s+/)
     .filter(Boolean);
+  return tokens;
 }

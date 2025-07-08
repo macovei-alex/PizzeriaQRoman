@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "src/api";
 import { Product, ProductWithIngredients } from "src/api/types/Product";
-import { tokenizeIngredientsList } from "src/utils/convertions";
+import { tokenize } from "src/utils/convertions";
 
 export default function useProductsQuery() {
   return useQuery<ProductWithIngredients[], Error>({
@@ -9,7 +9,7 @@ export default function useProductsQuery() {
       const products = (await api.axios.get<Product[]>(api.routes.products)).data;
       return products.map((p) => ({
         ...p,
-        ingredients: new Set(p.description ? tokenizeIngredientsList(p.description) : []),
+        ingredients: new Set(tokenize([p.name, p.subtitle ?? "", p.description ?? ""])),
       }));
     },
     queryKey: ["products"],

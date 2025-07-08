@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useProductsQuery from "src/api/hooks/queries/useProductsQuery";
 import { ProductWithIngredients } from "src/api/types/Product";
 import { useDebounced } from "./useDebounced";
-import { tokenizeIngredientsList } from "src/utils/convertions";
+import { tokenize } from "src/utils/convertions";
 
 function ingredientScore(userIngredients: string[], productIngredients: Set<string>): number {
   const intersection = new Set(userIngredients.filter((x) => productIngredients.has(x)));
@@ -14,13 +14,20 @@ export function useDebounceSearch(searchQuery: string, delay: number) {
   const productsQuery = useProductsQuery();
   const [matches, setMatches] = useState<ProductWithIngredients[]>([]);
 
+  const searchableProducts = useMemo(
+    () =>
+      productsQuery.data?.filter(
+        (p) => p.subtitle?.includes("1+1") || !p.name.toLowerCase().startsWith("pizza")
+      ),
+    [productsQuery.data]
+  );
+
   const debouncedSearch = useDebounced(async (products: ProductWithIngredients[], searchQuery: string) => {
     if (products.length === 0 || !searchQuery) return [];
 
-    const userIngredients = tokenizeIngredientsList(searchQuery);
+    const userIngredients = tokenize(searchQuery);
 
     return products
-      .filter((p) => p.subtitle?.includes("1+1"))
       .map((product) => ({
         product,
         score: ingredientScore(userIngredients, product.ingredients),
@@ -31,13 +38,13 @@ export function useDebounceSearch(searchQuery: string, delay: number) {
   }, delay);
 
   useEffect(() => {
-    if (!productsQuery.data || productsQuery.data.length === 0 || !searchQuery) {
+    if (!searchableProducts || searchableProducts.length === 0 || !searchQuery) {
       setMatches([]);
       return;
     }
 
     let isMounted = true;
-    debouncedSearch.delayedExecute(productsQuery.data, searchQuery).then((results) => {
+    debouncedSearch.delayedExecute(searchableProducts, searchQuery).then((results) => {
       if (isMounted) {
         setMatches((prev) => {
           if (prev.length !== results.length) return results;
@@ -49,7 +56,7 @@ export function useDebounceSearch(searchQuery: string, delay: number) {
     return () => {
       isMounted = false;
     };
-  }, [debouncedSearch, productsQuery.data, searchQuery]);
+  }, [debouncedSearch, searchableProducts, searchQuery]);
 
   return matches;
 }
