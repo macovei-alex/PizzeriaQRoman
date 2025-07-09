@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { RefObject, useEffect, useMemo, useState } from "react";
 import { Dimensions, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 import CategoryTouchable from "./CategoryTouchable";
@@ -18,7 +18,7 @@ type HorizontalCategorySectionProps = {
   categories: Category[];
   verticalOffsets: Map<CategoryId, number>;
   onCategoryPress: (categoryId: CategoryId) => void;
-  scrollYRef: React.RefObject<number>;
+  scrollYRef: RefObject<number>;
 };
 
 export default function HorizontalCategorySection({

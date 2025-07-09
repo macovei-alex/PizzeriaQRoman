@@ -1,6 +1,8 @@
-import React from "react";
+import React, { RefObject } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { StyleSheet, UnistylesRuntime } from "react-native-unistyles";
+import logger from "src/constants/logger";
+import { usePollingScrollValue } from "src/hooks/usePollingScrollValue";
 
 function calculateScrollProgress(scrollY: number, visibleHeight: number, contentHeight: number) {
   const maxScrollable = contentHeight - visibleHeight;
@@ -15,7 +17,7 @@ function interpolate(percent: number, min: number, max: number) {
 type MorphingButtonProps = {
   text: string;
   onPress: () => void;
-  scrollY: number;
+  scrollYRef: RefObject<number>;
   visibleHeight: number;
   contentHeight: number;
 };
@@ -23,15 +25,19 @@ type MorphingButtonProps = {
 export default function MorphingButton({
   text,
   onPress,
-  scrollY,
+  scrollYRef,
   visibleHeight,
   contentHeight,
 }: MorphingButtonProps) {
+  logger.render("MorphingButton");
+
+  const scrollValue = usePollingScrollValue(scrollYRef, 0);
+
   return (
     <View style={styles.floatingButtonContainer}>
       <TouchableOpacity
         onPress={onPress}
-        style={styles.button(visibleHeight, contentHeight, scrollY)}
+        style={styles.button(visibleHeight, contentHeight, scrollValue)}
         activeOpacity={0.8}
       >
         <Text style={styles.buttonText}>{text}</Text>

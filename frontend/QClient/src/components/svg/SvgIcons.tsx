@@ -12,22 +12,19 @@ export type SvgIconProps = {
   fillSecondary?: ColorValue;
 };
 
-const iconsHolder: Readonly<Record<string, React.FC<SvgIconProps>>> = {
+const iconsHolder: Record<string, React.FC<SvgIconProps>> = {
   home: HomeIconSvg,
   search: SearchIconSvg,
   menu: SearchIconSvg,
   cart: CartIconSvg,
   profile: ProfileIconSvg,
-};
+} as const;
 
 type SvgIconsProps = SvgIconProps & { name: string };
 
 export default function SvgIcons({ name, style, stroke, fillPrimary, fillSecondary }: SvgIconsProps) {
   const svgIcon = iconsHolder[name];
-
-  if (!svgIcon) {
-    throw new Error(`SvgIcons: Icon ${name} not found`);
-  }
+  if (!svgIcon) throw new Error(`SvgIcons: Icon ${name} not found`);
 
   return React.createElement(svgIcon, { style, stroke, fillPrimary, fillSecondary });
 }

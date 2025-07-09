@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { RefreshControl, ScrollView } from "react-native";
 import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import OptionList from "src/components/shared/ProductScreen/OptionListCard";
@@ -34,7 +34,7 @@ export default function ProductScreen() {
   const productQuery = useProductWithOptionsQuery(productId);
   const [cartItemOptions, setCartItemOptions] = useState<CartItemOptions>(cartItem?.options ?? {});
 
-  const [scrollY, setScrollY] = useState(0);
+  const scrollYRef = useRef(0);
   const [visibleHeight, setVisibleHeight] = useState(0);
   const [contentHeight, setContentHeight] = useState(0);
 
@@ -51,7 +51,7 @@ export default function ProductScreen() {
           <RefreshControl refreshing={productQuery.isFetching} onRefresh={productQuery.refetch} />
         }
         contentContainerStyle={styles.scrollViewContent}
-        onScroll={(e) => setScrollY(e.nativeEvent.contentOffset.y)}
+        onScroll={(e) => (scrollYRef.current = e.nativeEvent.contentOffset.y)}
         onLayout={(e) => setVisibleHeight(e.nativeEvent.layout.height)}
         onContentSizeChange={(_, h) => setContentHeight(h)}
       >
@@ -80,7 +80,7 @@ export default function ProductScreen() {
             showToast("Produs actualizat în coș");
           }
         }}
-        scrollY={scrollY}
+        scrollYRef={scrollYRef}
         visibleHeight={visibleHeight}
         contentHeight={contentHeight}
       />
