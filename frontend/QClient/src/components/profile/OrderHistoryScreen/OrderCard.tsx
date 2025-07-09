@@ -46,14 +46,12 @@ export default function OrderCard({ order, containerStyle }: OrderCardProps) {
     }[];
   }, [productsQuery, order]);
 
-  const orderStatusNames = useMemo(() => {
-    return {
-      RECEIVED: "Comandă primită",
-      IN_PREPARATION: "În preparare",
-      IN_DELIVERY: "În livrare",
-      DELIVERED: "Livrată",
-    };
-  }, []);
+  const orderStatusNames = {
+    RECEIVED: "Comandă primită",
+    IN_PREPARATION: "În preparare",
+    IN_DELIVERY: "În livrare",
+    DELIVERED: "Livrată",
+  };
 
   if (productsQuery.isFetching) return null;
   if (productsQuery.isError) return <ErrorComponent />;

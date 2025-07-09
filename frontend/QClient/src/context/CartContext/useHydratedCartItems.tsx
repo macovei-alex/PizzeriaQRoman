@@ -25,13 +25,14 @@ export function useHydratedCartItems(accountId: AccountId | null) {
   const [cart, setCart] = useState<Cart>([]);
   const nextId = useRef(0);
 
-  const uniqueProductids = useMemo(
-    () => [...new Set(serializedCart.map((item) => item.productId))],
+  const uniqueProductQueries = useMemo(
+    () =>
+      [...new Set(serializedCart.map((item) => item.productId))].map((id) => productWithOptionsOptions(id)),
     [serializedCart]
   );
 
   const products = useQueries({
-    queries: uniqueProductids.map((id) => productWithOptionsOptions(id)),
+    queries: uniqueProductQueries,
     combine: (results: QueriesResults<ProductWithOptions[]>) => {
       const allFetched = results.every((q) => q.status === "success");
       const data = allFetched ? results.map((q) => q.data as ProductWithOptions) : [];
