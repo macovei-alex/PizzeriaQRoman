@@ -59,14 +59,13 @@ export default function MenuScreen() {
 
   const [scrollY, setScrollY] = useState(0);
 
-  if (productsQuery.isFetching || categoryQuery.isFetching || restaurantConstantsQuery.isFetching) {
+  if (productsQuery.isFetching || categoryQuery.isFetching) {
     return <MenuSkeletonLoader />;
   }
   if (productsQuery.isError || categoryQuery.isError || restaurantConstantsQuery.isError) {
     return <ErrorComponent />;
   }
   if (!categoryQuery.data) throw new Error("Categories not found");
-  if (!restaurantConstantsQuery.data) throw new Error("Restaurant constants not found");
 
   return (
     <View style={styles.screen}>
@@ -87,7 +86,7 @@ export default function MenuScreen() {
         onScroll={(event) => setScrollY(event.nativeEvent.contentOffset.y)}
         nestedScrollEnabled
       >
-        <LogoSection minimumOrderValue={restaurantConstantsQuery.data.minimumOrderValue} />
+        <LogoSection minimumOrderValue={restaurantConstantsQuery.data?.minimumOrderValue} />
 
         <HorizontalCategorySection
           categories={categoryQuery.data}

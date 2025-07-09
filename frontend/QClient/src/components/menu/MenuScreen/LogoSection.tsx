@@ -1,23 +1,37 @@
-import React from "react";
-import { View, Text, ImageBackground, Image } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { View, Text, ImageBackground, Image, Animated } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 import { images } from "src/constants/images";
 import logger from "src/constants/logger";
 
 type LogoSectionProps = {
-  minimumOrderValue: number;
+  minimumOrderValue?: number;
 };
 
 export default function LogoSection({ minimumOrderValue }: LogoSectionProps) {
   logger.render("LogoSection");
 
+  const scaleAnim = useRef(new Animated.Value(0));
+
+  useEffect(() => {
+    if (minimumOrderValue !== undefined) {
+      Animated.spring(scaleAnim.current, {
+        toValue: 1,
+        useNativeDriver: true,
+        bounciness: 10,
+      }).start();
+    }
+  }, [minimumOrderValue]);
+
   return (
     <ImageBackground source={images.menuBackground} style={styles.imageBackground}>
       <View style={styles.centerSection}>
         <Image source={images.logo} style={styles.logoImage} />
-        <View style={styles.subtextContainer}>
-          <Text style={styles.subtext}>Comanda minimă este de {minimumOrderValue} RON</Text>
-        </View>
+        {minimumOrderValue !== undefined && (
+          <Animated.View style={[styles.subtextContainer, { transform: [{ scale: scaleAnim.current }] }]}>
+            <Text style={styles.subtext}>Comanda minimă este de {minimumOrderValue} RON</Text>
+          </Animated.View>
+        )}
       </View>
     </ImageBackground>
   );
