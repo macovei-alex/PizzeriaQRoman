@@ -2,12 +2,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import { api } from "src/api";
 import { Message } from "src/api/types/Message";
-import { useAuthContext } from "src/context/AuthContext";
 import logger from "src/constants/logger";
+import { useValidAccountId } from "src/context/AuthContext";
 
 export function useConversationMutation() {
-  const accountId = useAuthContext().account?.id;
-  if (!accountId) throw new Error("Account ID is required");
+  const accountId = useValidAccountId();
   const queryClient = useQueryClient();
 
   return useMutation<AxiosResponse<Message[], any>, Error, Message, Message[]>({

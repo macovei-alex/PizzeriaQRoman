@@ -75,6 +75,12 @@ export function useAuthContext() {
   return context;
 }
 
+export function useValidAccountId() {
+  const authContext = useAuthContext();
+  if (!authContext.account?.id) throw new Error("Account ID is not defined in AuthContext");
+  return authContext.account.id;
+}
+
 const authAxios = axios.create({
   baseURL: ENV.KEYCLOAK_REALM_URL,
   withCredentials: false,

@@ -7,7 +7,7 @@ import useAddressesQuery from "src/api/hooks/queries/useAddressesQuery";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
 import ScreenTitle from "src/components/shared/generic/ScreenTitle";
-import { useAuthContext } from "src/context/AuthContext";
+import { useValidAccountId } from "src/context/AuthContext";
 import logger from "src/constants/logger";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -19,9 +19,7 @@ export default function AddressesScreen() {
   logger.render("AddressesScreen");
 
   const navigation = useNavigation<NavigationProps>();
-  const accountId = useAuthContext().account?.id;
-  if (!accountId) throw new Error("Account is not defined in AddressesScreen");
-
+  const accountId = useValidAccountId();
   const addressesQuery = useAddressesQuery();
 
   const showDeleteAddressDialog = useCallback(

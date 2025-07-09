@@ -8,7 +8,7 @@ import logger from "src/constants/logger";
 import SearchIconSvg from "src/components/svg/SearchIconSvg";
 import AddressForm, { NewAddress } from "src/components/shared/global/AddressesScreen/AddressForm";
 import { api } from "src/api";
-import { useAuthContext } from "src/context/AuthContext";
+import { useValidAccountId } from "src/context/AuthContext";
 import { CreatedAddress } from "src/api/types/Address";
 import { useBidirectionalAddressRegionUpdates } from "src/components/shared/global/AddressesScreen/useBidirectionalAddressRegionUpdates";
 import { showToast } from "src/utils/toast";
@@ -18,8 +18,7 @@ import { useQueryClient } from "@tanstack/react-query";
 export default function NewAddressScreen() {
   logger.render("NewAddressScreen");
 
-  const accountId = useAuthContext().account?.id;
-  if (!accountId) throw new Error("Account is not defined in NewAddressScreen");
+  const accountId = useValidAccountId();
   const navigation = useNavigation();
   const queryClient = useQueryClient();
 

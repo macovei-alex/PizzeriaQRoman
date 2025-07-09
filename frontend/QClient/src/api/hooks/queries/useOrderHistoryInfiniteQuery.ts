@@ -1,16 +1,14 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { api } from "src/api";
 import { OrderStatusSchema } from "src/api/types/order/Order";
-import { useAuthContext } from "src/context/AuthContext";
+import { useValidAccountId } from "src/context/AuthContext";
 import logger from "src/constants/logger";
 import { HistoryOrderMinimal, HistoryOrderMinimalDTO } from "../../types/order/HistoryOrderMinimal";
 
 const PAGE_SIZE = 5;
 
 export default function useOrderHistoryInfiniteQuery() {
-  const authContext = useAuthContext();
-  if (!authContext.account) throw new Error("Account is not defined in useOrderHistoryQuery");
-  const accountId = authContext.account.id;
+  const accountId = useValidAccountId();
 
   return useInfiniteQuery<HistoryOrderMinimal[], Error>({
     queryKey: ["order-history", accountId],

@@ -1,15 +1,13 @@
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { OrderId, OrderStatusSchema } from "../../types/order/Order";
 import { api } from "../..";
-import { useAuthContext } from "src/context/AuthContext";
 import { FullHistoryOrder, FullHistoryOrderDTO } from "../../types/order/FullHistoryOrder";
 import { ProductWithOptions } from "../../types/Product";
 import { useMemo } from "react";
+import { useValidAccountId } from "src/context/AuthContext";
 
 export function useFullOrderQuery(orderId: OrderId) {
-  const authContext = useAuthContext();
-  if (!authContext.account) throw new Error("Account is not defined in useFullOrderQuery");
-  const accountId = authContext.account.id;
+  const accountId = useValidAccountId();
 
   const orderQuery = useQuery<FullHistoryOrderDTO, Error>({
     queryKey: ["orders", orderId],

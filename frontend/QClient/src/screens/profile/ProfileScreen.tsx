@@ -21,8 +21,6 @@ export default function ProfileScreen() {
   logger.render("ProfileScreen");
 
   const authContext = useAuthContext();
-  const accountId = authContext.account?.id;
-  if (!accountId) throw new Error("Account is not defined in ProfileScreen");
   const cartContext = useCartContext();
   const navigation = useNavigation<NavigationProps>();
 

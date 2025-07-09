@@ -17,7 +17,7 @@ import AdditionalInfoSection, {
   AdditionalInfoSectionHandle,
 } from "src/components/cart/CartScreen/AdditionalInfoSection";
 import useAddressesQuery from "src/api/hooks/queries/useAddressesQuery";
-import { useAuthContext } from "src/context/AuthContext";
+import { useValidAccountId } from "src/context/AuthContext";
 import { RootStackParamList } from "src/navigation/RootStackNavigator";
 import { AxiosError } from "axios";
 import { PlacedOrder } from "src/api/types/order/PlacedOrder";
@@ -53,9 +53,7 @@ type NavigationProps = CompositeNavigationProp<
 export default function CartScreen() {
   logger.render("CartScreen");
 
-  const authContext = useAuthContext();
-  if (!authContext.account) throw new Error("Account is not defined in CartScreen");
-  const accountId = authContext.account.id;
+  const accountId = useValidAccountId();
   const navigation = useNavigation<NavigationProps>();
   const { cart, emptyCart } = useCartContext();
   const queryClient = useQueryClient();
