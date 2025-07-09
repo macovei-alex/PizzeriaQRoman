@@ -10,6 +10,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "src/navigation/RootStackNavigator";
 import useScrollRef from "src/hooks/useScrollRef";
 import { useScrollOffsets } from "src/hooks/useScrollOffsets";
+import { usePollingScrollValue } from "src/hooks/usePollingScrollValue";
 
 type NavigationProps = NativeStackNavigationProp<RootStackParamList, "MainTabNavigator">;
 
@@ -17,20 +18,20 @@ type HorizontalCategorySectionProps = {
   categories: Category[];
   verticalOffsets: Map<CategoryId, number>;
   onCategoryPress: (categoryId: CategoryId) => void;
-  scrollY: number;
+  scrollYRef: React.RefObject<number>;
 };
 
 export default function HorizontalCategorySection({
   categories,
   verticalOffsets,
   onCategoryPress,
-  scrollY,
+  scrollYRef,
 }: HorizontalCategorySectionProps) {
   logger.render("HorizontalCategorySection");
 
   const navigation = useNavigation<NavigationProps>();
 
-  const { scrollRef, scrollToPos } = useScrollRef();
+  const { scrollRef: horizontalScrollRef, scrollToPos } = useScrollRef();
   const horizontal = useScrollOffsets<CategoryId>();
 
   const categoryLimits = useMemo(() => {
@@ -55,25 +56,26 @@ export default function HorizontalCategorySection({
   }, [verticalOffsets]);
 
   const [limitsIndex, setLimitsIndex] = useState(0);
+  const verticalScrollValue = usePollingScrollValue(scrollYRef);
 
   useEffect(() => {
     const windowWidth = Dimensions.get("window").width;
     const currentLimits = categoryLimits[limitsIndex];
     if (!currentLimits) return;
-    if (scrollY < currentLimits.min && limitsIndex > 0) {
+    if (verticalScrollValue < currentLimits.min && limitsIndex > 0) {
       const categoryId = categoryLimits[limitsIndex - 1].categoryId;
       const horizontalOffset = horizontal.offsets.get(categoryId);
       if (!horizontalOffset) return;
       setLimitsIndex(limitsIndex - 1);
       scrollToPos({ x: horizontalOffset - windowWidth / 2 + 50 });
-    } else if (currentLimits.max < scrollY && limitsIndex < categoryLimits.length - 1) {
+    } else if (currentLimits.max < verticalScrollValue && limitsIndex < categoryLimits.length - 1) {
       const categoryId = categoryLimits[limitsIndex + 1].categoryId;
       const horizontalOffset = horizontal.offsets.get(categoryId);
       if (!horizontalOffset) return;
       setLimitsIndex(limitsIndex + 1);
       scrollToPos({ x: horizontalOffset - windowWidth / 2 + 50 });
     }
-  }, [scrollY, limitsIndex, categoryLimits, scrollToPos, horizontal.offsets]);
+  }, [verticalScrollValue, limitsIndex, categoryLimits, scrollToPos, horizontal.offsets]);
 
   const currentCategoryId = categoryLimits[limitsIndex]?.categoryId;
 
@@ -81,7 +83,7 @@ export default function HorizontalCategorySection({
     <View style={styles.container}>
       <ScrollView
         horizontal
-        ref={scrollRef}
+        ref={horizontalScrollRef}
         style={styles.scrollContainer}
         nestedScrollEnabled
         showsHorizontalScrollIndicator={false}

@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef } from "react";
 import { LayoutChangeEvent, RefreshControl, ScrollView, View } from "react-native";
 import LogoSection from "src/components/menu/MenuScreen/LogoSection";
 import HorizontalCategorySection from "src/components/menu/MenuScreen/HorizontalCategorySection";
@@ -45,7 +45,7 @@ export default function MenuScreen() {
     return productsSplit;
   }, [productsQuery.data, categoryQuery.data]);
 
-  const [scrollY, setScrollY] = useState(0);
+  const scrollYRef = useRef<number>(0);
 
   if (productsQuery.isFetching || categoryQuery.isFetching) {
     return <MenuSkeletonLoader />;
@@ -71,7 +71,7 @@ export default function MenuScreen() {
           />
         }
         stickyHeaderIndices={[1]}
-        onScroll={(event) => setScrollY(event.nativeEvent.contentOffset.y)}
+        onScroll={(event) => (scrollYRef.current = event.nativeEvent.contentOffset.y)}
         scrollEventThrottle={50}
         nestedScrollEnabled
       >
@@ -83,7 +83,7 @@ export default function MenuScreen() {
           onCategoryPress={(categoryId: CategoryId) =>
             scrollRef.current?.scrollTo({ y: vertical.offsets.get(categoryId) })
           }
-          scrollY={scrollY}
+          scrollYRef={scrollYRef}
         />
 
         <>
