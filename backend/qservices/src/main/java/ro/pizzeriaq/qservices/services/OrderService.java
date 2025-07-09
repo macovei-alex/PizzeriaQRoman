@@ -2,6 +2,7 @@ package ro.pizzeriaq.qservices.services;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class OrderService {
@@ -67,11 +69,19 @@ public class OrderService {
 		validateOrder(placedOrderDTO, products, account);
 		Order order = generateOrder(placedOrderDTO, products, account);
 
-		if (!order.getTotalPriceWithDiscount().equals(placedOrderDTO.getExpectedPrice())) {
+		var priceDifference = order.getTotalPriceWithDiscount().subtract(placedOrderDTO.getClientExpectedPrice());
+		if (priceDifference.abs().doubleValue() >= 0.01) {
 			throw new PriceNotMatchingException(
-					"Expected price does not match the calculated total price. ",
-					placedOrderDTO.getExpectedPrice(),
+					"The client expected price does not match the calculated total price. ",
+					placedOrderDTO.getClientExpectedPrice(),
 					order.getTotalPriceWithDiscount()
+			);
+		} else if (!order.getTotalPriceWithDiscount().equals(placedOrderDTO.getClientExpectedPrice())) {
+			log.warn("The client expected price does not match the calculated total price, but the difference is small. " +
+					"Client expected: {}, Calculated: {}. Difference: {}",
+					placedOrderDTO.getClientExpectedPrice(),
+					order.getTotalPriceWithDiscount(),
+					priceDifference
 			);
 		}
 

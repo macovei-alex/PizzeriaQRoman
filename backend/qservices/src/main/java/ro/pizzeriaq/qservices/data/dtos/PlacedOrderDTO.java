@@ -18,7 +18,7 @@ public class PlacedOrderDto {
 	private int addressId;
 
 	@NotNull
-	private BigDecimal expectedPrice;
+	private BigDecimal clientExpectedPrice;
 
 	@Valid
 	@NotEmpty(message = "The list of items in an order cannot be null or empty")

@@ -8,11 +8,12 @@ import { images } from "src/constants/images";
 import { useAuthContext } from "src/context/AuthContext";
 
 type ErrorComponentProps = {
+  message?: string;
   onRetry?: () => void;
   size?: "fullscreen" | "small";
 };
 
-export default function ErrorComponent({ onRetry, size = "fullscreen" }: ErrorComponentProps) {
+export default function ErrorComponent({ message, onRetry, size = "fullscreen" }: ErrorComponentProps) {
   const authContext = useAuthContext();
   const queryClient = useQueryClient();
 
@@ -24,15 +25,12 @@ export default function ErrorComponent({ onRetry, size = "fullscreen" }: ErrorCo
       {/* image */}
       {size === "fullscreen" && <Image source={images.sadChef} style={styles.image} />}
 
+      {/* message */}
+      {message && <Text style={styles.message}>{message}</Text>}
+
       <View style={styles.buttonSection}>
         {/* retry button */}
-        <TouchableOpacity
-          style={styles.retryButtonContainer}
-          onPress={() => {
-            queryClient.invalidateQueries({ refetchType: "active" });
-            if (onRetry) onRetry();
-          }}
-        >
+        <TouchableOpacity style={styles.retryButtonContainer} onPress={() => onRetry && onRetry()}>
           <Text style={styles.retryButtonText}>Reîncercare</Text>
         </TouchableOpacity>
 
@@ -69,6 +67,13 @@ const styles = StyleSheet.create((theme) => ({
   image: {
     width: "100%",
     aspectRatio: 1,
+  },
+  message: {
+    maxWidth: "90%",
+    textAlign: "center",
+    fontSize: 18,
+    fontWeight: "bold",
+    color: theme.text.primary,
   },
   buttonSection: {
     width: "100%",

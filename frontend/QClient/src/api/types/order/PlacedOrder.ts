@@ -18,4 +18,5 @@ export type PlacedOrder = {
     optionLists: PlacedOrderOptionList[];
   }[];
   additionalNotes: string | null;
+  clientExpectedPrice: number;
 };

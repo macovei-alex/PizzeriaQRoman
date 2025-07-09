@@ -269,7 +269,7 @@ public class OrderControllerTest {
 							)
 							.toList()
 					)
-					.expectedPrice(products.stream()
+					.clientExpectedPrice(products.stream()
 							.map(ProductDto::getPrice)
 							.reduce(BigDecimal.ZERO,
 									(acc, price) -> acc.add(price.multiply(BigDecimal.valueOf(2)))
@@ -287,8 +287,9 @@ public class OrderControllerTest {
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$").isArray())
 					.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
-					.andExpect(jsonPath("$[0].totalPrice").value(placedOrderDTO.getExpectedPrice().doubleValue()))
-					.andExpect(jsonPath("$[0].totalPriceWithDiscount").value(placedOrderDTO.getExpectedPrice().doubleValue()))
+					.andExpect(jsonPath("$[0].totalPrice").value(placedOrderDTO.getClientExpectedPrice().doubleValue()))
+					.andExpect(jsonPath("$[0].totalPriceWithDiscount")
+							.value(placedOrderDTO.getClientExpectedPrice().doubleValue()))
 					.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
 		});
 	}
@@ -310,7 +311,7 @@ public class OrderControllerTest {
 							)
 							.toList()
 					)
-					.expectedPrice(products.stream()
+					.clientExpectedPrice(products.stream()
 							.map(ProductDto::getPrice)
 							.reduce(BigDecimal.ZERO,
 									(acc, price) -> acc.add(price.multiply(BigDecimal.valueOf(10)))
@@ -328,9 +329,9 @@ public class OrderControllerTest {
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$").isArray())
 					.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
-					.andExpect(jsonPath("$[0].totalPrice").value(placedOrderDTO.getExpectedPrice().doubleValue()))
+					.andExpect(jsonPath("$[0].totalPrice").value(placedOrderDTO.getClientExpectedPrice().doubleValue()))
 					.andExpect(jsonPath("$[0].totalPriceWithDiscount")
-							.value(placedOrderDTO.getExpectedPrice().doubleValue()))
+							.value(placedOrderDTO.getClientExpectedPrice().doubleValue()))
 					.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
 		});
 	}
@@ -374,7 +375,7 @@ public class OrderControllerTest {
 							})
 							.toList()
 					)
-					.expectedPrice(products.stream()
+					.clientExpectedPrice(products.stream()
 							.map((product) -> product.getPrice()
 									.add(!product.getOptionLists().isEmpty()
 											? product.getOptionLists().get(0).getOptions().get(0).getPrice()
@@ -395,9 +396,9 @@ public class OrderControllerTest {
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$").isArray())
 					.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
-					.andExpect(jsonPath("$[0].totalPrice").value(placedOrderDTO.getExpectedPrice().doubleValue()))
+					.andExpect(jsonPath("$[0].totalPrice").value(placedOrderDTO.getClientExpectedPrice().doubleValue()))
 					.andExpect(jsonPath("$[0].totalPriceWithDiscount")
-							.value(placedOrderDTO.getExpectedPrice().doubleValue()))
+							.value(placedOrderDTO.getClientExpectedPrice().doubleValue()))
 					.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
 		});
 	}
@@ -446,7 +447,7 @@ public class OrderControllerTest {
 							})
 							.toList()
 					)
-					.expectedPrice(products.stream()
+					.clientExpectedPrice(products.stream()
 							.map((product) -> {
 								OptionListDto.Option option = !product.getOptionLists().isEmpty()
 										? product.getOptionLists().get(0).getOptions().get(0)
@@ -469,9 +470,9 @@ public class OrderControllerTest {
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$").isArray())
 					.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
-					.andExpect(jsonPath("$[0].totalPrice").value(placedOrderDTO.getExpectedPrice().doubleValue()))
+					.andExpect(jsonPath("$[0].totalPrice").value(placedOrderDTO.getClientExpectedPrice().doubleValue()))
 					.andExpect(jsonPath("$[0].totalPriceWithDiscount")
-							.value(placedOrderDTO.getExpectedPrice().doubleValue()))
+							.value(placedOrderDTO.getClientExpectedPrice().doubleValue()))
 					.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
 		});
 	}

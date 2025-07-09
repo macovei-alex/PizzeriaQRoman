@@ -59,8 +59,12 @@ export default function CartScreen() {
   const queryClient = useQueryClient();
   const addressQuery = useAddressesQuery();
   const restaurantConstantsQuery = useRestaurantConstantsQuery();
+  const [sendOrderError, setSendOrderError] = useState<string | null>(null);
   const [sendingOrder, setSendingOrder] = useState(false);
   const additionalSectionRef = useRef<AdditionalInfoSectionHandle>(null);
+
+  const prices = useMemo(() => cart.map((cartItem) => calculatePrice(cartItem)), [cart]);
+  const totalPrice = prices.reduce((acc, price) => acc + price, 0);
 
   function sendOrder() {
     if (cart.length === 0) return;
@@ -77,6 +81,7 @@ export default function CartScreen() {
         optionLists: convertCartItemOptions(cartItem.options),
       })),
       additionalNotes: additionalSectionRef.current.getAdditionalNotes(),
+      clientExpectedPrice: totalPrice,
     };
 
     setSendingOrder(true);
@@ -88,23 +93,31 @@ export default function CartScreen() {
           emptyCart();
           navigation.navigate("OrderConfirmationScreen");
         } else {
+          setSendOrderError("Comanda nu a putut fi trimisă. Vă rugăm să reîncercați.");
           logger.error("Error sending order:", res.data);
         }
         queryClient.invalidateQueries({ queryKey: ["order-history"] });
         queryClient.prefetchInfiniteQuery({ queryKey: ["order-history"], initialPageParam: 0 });
       })
       .catch((error: AxiosError) => {
-        if (
-          error.response?.status === 417 &&
-          typeof error.response?.data === "string" &&
-          error.response.data.toLowerCase().includes("phone number is missing")
-        ) {
-          showToast("Vă rugăm să introduceți un număr de telefon");
-          navigation.navigate("MainTabNavigator", {
-            screen: "ProfileStackNavigator",
-            params: { screen: "ProfileScreen" },
-          });
+        if (error.response?.status === 417 && typeof error.response?.data === "string") {
+          if (error.response.data.toLowerCase().includes("phone number is missing")) {
+            showToast("Vă rugăm să introduceți un număr de telefon");
+            navigation.navigate("MainTabNavigator", {
+              screen: "ProfileStackNavigator",
+              params: { screen: "ProfileScreen" },
+            });
+          } else if (error.response.data.toLowerCase().includes("price does not match")) {
+            setSendOrderError(
+              "Prețul comenzii nu se potrivește cu cel calculat în sistem. Vă rugăm să reîncercați."
+            );
+            queryClient.invalidateQueries({ queryKey: ["products"] });
+          }
         } else {
+          setSendOrderError("A apărut o eroare la trimiterea comenzii. Vă rugăm să reîncercați.");
+          queryClient.invalidateQueries({ queryKey: ["products"] });
+          queryClient.invalidateQueries({ queryKey: ["addresses"] });
+          queryClient.invalidateQueries({ queryKey: ["restaurant-constants"] });
           logger.error(
             "Error sending order:",
             error.response?.data ?? "Response data missing. Request data: " + error.request?.data
@@ -114,10 +127,10 @@ export default function CartScreen() {
       .finally(() => setSendingOrder(false));
   }
 
-  const prices = useMemo(() => cart.map((cartItem) => calculatePrice(cartItem)), [cart]);
-  const totalPrice = prices.reduce((acc, price) => acc + price, 0);
-
   if (sendingOrder) return <ScreenActivityIndicator text="Se trimite comanda..." />;
+  if (sendOrderError)
+    return <ErrorComponent message={sendOrderError} onRetry={() => setSendOrderError(null)} />;
+
   if (addressQuery.isFetching) return <ScreenActivityIndicator text="Se încarcă adresele..." />;
   if (addressQuery.isError) return <ErrorComponent />;
   if (!addressQuery.data) throw new Error("Addresses not found");
