@@ -24,8 +24,11 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
 	@Query("""
 		SELECT o FROM Order o
+		JOIN Account a ON o.account.id = a.id
 		WHERE o.id = :orderId
+			AND o.account.id = :accountId
+			AND a.isActive = true
 	""")
-	@EntityGraph(attributePaths = {"address", "coupon", "orderItems"})
-	Optional<Order> findByIdPreload(int orderId);
+	@EntityGraph(attributePaths = {"account", "address", "coupon", "orderItems"})
+	Optional<Order> findByIdPreload(int orderId, UUID accountId);
 }

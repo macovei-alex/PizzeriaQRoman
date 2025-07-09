@@ -87,7 +87,7 @@ public class OrderRepositoryTest {
 			for (var order : account.getOrders()) {
 				entityManager.detach(order);
 
-				var preloadedOrder = orderRepository.findByIdPreload(order.getId()).orElseThrow();
+				var preloadedOrder = orderRepository.findByIdPreload(order.getId(), account.getId()).orElseThrow();
 
 				assertTrue(Hibernate.isInitialized(preloadedOrder.getAccount()));
 				assertNull(preloadedOrder.getCoupon());

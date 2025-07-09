@@ -34,8 +34,8 @@ public class OrderController {
 
 	@GetMapping("{orderId}")
 	@AccountIdChecked
-	public HistoryOrderFullDto getOrderDetails(@PathVariable int orderId) {
-		return orderService.getFullOrder(orderId);
+	public HistoryOrderFullDto getOrderDetails(@PathVariable UUID accountId, @PathVariable int orderId) {
+		return orderService.getFullOrder(orderId, accountId);
 	}
 
 

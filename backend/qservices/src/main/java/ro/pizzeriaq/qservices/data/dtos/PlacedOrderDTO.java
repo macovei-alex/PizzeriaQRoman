@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -15,6 +16,9 @@ public class PlacedOrderDto {
 	private String additionalNotes;
 
 	private int addressId;
+
+	@NotNull
+	private BigDecimal expectedPrice;
 
 	@Valid
 	@NotEmpty(message = "The list of items in an order cannot be null or empty")

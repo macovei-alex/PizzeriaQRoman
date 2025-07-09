@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.pizzeriaq.qservices.data.entities.*;
 import ro.pizzeriaq.qservices.exceptions.PhoneNumberMissingException;
+import ro.pizzeriaq.qservices.exceptions.PriceNotMatchingException;
 import ro.pizzeriaq.qservices.repositories.*;
 import ro.pizzeriaq.qservices.data.dtos.HistoryOrderFullDto;
 import ro.pizzeriaq.qservices.data.dtos.HistoryOrderMinimalDto;
@@ -46,10 +47,9 @@ public class OrderService {
 
 
 	@Transactional(readOnly = true)
-	public HistoryOrderFullDto getFullOrder(int orderId) {
-		var order = orderRepository.findByIdPreload(orderId)
+	public HistoryOrderFullDto getFullOrder(int orderId, UUID accountId) {
+		var order = orderRepository.findByIdPreload(orderId, accountId)
 				.orElseThrow(() -> new EntityNotFoundException("Order not found for ID: " + orderId));
-		// TODO: Implement mapper
 		return historyOrderFullMapper.fromEntity(order);
 	}
 
@@ -66,6 +66,14 @@ public class OrderService {
 
 		validateOrder(placedOrderDTO, products, account);
 		Order order = generateOrder(placedOrderDTO, products, account);
+
+		if (!order.getTotalPriceWithDiscount().equals(placedOrderDTO.getExpectedPrice())) {
+			throw new PriceNotMatchingException(
+					"Expected price does not match the calculated total price. ",
+					placedOrderDTO.getExpectedPrice(),
+					order.getTotalPriceWithDiscount()
+			);
+		}
 
 		orderRepository.save(order);
 		orderItemRepository.saveAll(order.getOrderItems());

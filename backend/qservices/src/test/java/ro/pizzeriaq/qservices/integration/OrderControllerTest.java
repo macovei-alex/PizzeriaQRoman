@@ -230,7 +230,8 @@ public class OrderControllerTest {
 			mockMvc.perform(constructDefaultPostRequest(accountId)
 							.content(objectMapper.writeValueAsString(placedOrderDTO)))
 					.andExpect(status().isBadRequest())
-					.andExpect(jsonPath("$.['items[0].optionLists']").value("The list of options for any item cannot be null, only empty if no options were selected"));
+					.andExpect(jsonPath("$.['items[0].optionLists']")
+							.value("The list of options for any item cannot be null, only empty if no options were selected"));
 		});
 	}
 
@@ -265,15 +266,18 @@ public class OrderControllerTest {
 									.count(2)
 									.optionLists(List.of())
 									.build()
-							).toList()
+							)
+							.toList()
+					)
+					.expectedPrice(products.stream()
+							.map(ProductDto::getPrice)
+							.reduce(BigDecimal.ZERO,
+									(acc, price) -> acc.add(price.multiply(BigDecimal.valueOf(2)))
+							)
 					)
 					.build();
 
 			var historyOrders = orderService.getOrdersHistory(accountId, 0, 100);
-
-			BigDecimal expectedPrice = products.stream()
-					.map(ProductDto::getPrice)
-					.reduce(BigDecimal.ZERO, (acc, price) -> acc.add(price.multiply(BigDecimal.valueOf(2))));
 
 			mockMvc.perform(constructDefaultPostRequest(accountId)
 							.content(objectMapper.writeValueAsString(placedOrderDTO)))
@@ -283,8 +287,8 @@ public class OrderControllerTest {
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$").isArray())
 					.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
-					.andExpect(jsonPath("$[0].totalPrice").value(expectedPrice.floatValue()))
-					.andExpect(jsonPath("$[0].totalPriceWithDiscount").value(expectedPrice.floatValue()))
+					.andExpect(jsonPath("$[0].totalPrice").value(placedOrderDTO.getExpectedPrice().doubleValue()))
+					.andExpect(jsonPath("$[0].totalPriceWithDiscount").value(placedOrderDTO.getExpectedPrice().doubleValue()))
 					.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
 		});
 	}
@@ -302,13 +306,17 @@ public class OrderControllerTest {
 									.productId(product.getId())
 									.count(10)
 									.optionLists(List.of())
-									.build())
-							.toList())
+									.build()
+							)
+							.toList()
+					)
+					.expectedPrice(products.stream()
+							.map(ProductDto::getPrice)
+							.reduce(BigDecimal.ZERO,
+									(acc, price) -> acc.add(price.multiply(BigDecimal.valueOf(10)))
+							)
+					)
 					.build();
-
-			BigDecimal expectedPrice = products.stream()
-					.map(ProductDto::getPrice)
-					.reduce(BigDecimal.ZERO, (acc, price) -> acc.add(price.multiply(BigDecimal.valueOf(10))));
 
 			var historyOrders = orderService.getOrdersHistory(accountId, 0, 100);
 
@@ -320,8 +328,9 @@ public class OrderControllerTest {
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$").isArray())
 					.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
-					.andExpect(jsonPath("$[0].totalPrice").value(expectedPrice.floatValue()))
-					.andExpect(jsonPath("$[0].totalPriceWithDiscount").value(expectedPrice.floatValue()))
+					.andExpect(jsonPath("$[0].totalPrice").value(placedOrderDTO.getExpectedPrice().doubleValue()))
+					.andExpect(jsonPath("$[0].totalPriceWithDiscount")
+							.value(placedOrderDTO.getExpectedPrice().doubleValue()))
 					.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
 		});
 	}
@@ -363,16 +372,18 @@ public class OrderControllerTest {
 								orderItem.setOptionLists(List.of(optionListDTO));
 								return orderItem;
 							})
-							.toList())
+							.toList()
+					)
+					.expectedPrice(products.stream()
+							.map((product) -> product.getPrice()
+									.add(!product.getOptionLists().isEmpty()
+											? product.getOptionLists().get(0).getOptions().get(0).getPrice()
+											: BigDecimal.ZERO)
+									.multiply(BigDecimal.valueOf(3))
+							)
+							.reduce(BigDecimal.ZERO, BigDecimal::add)
+					)
 					.build();
-
-			BigDecimal expectedPrice = products.stream()
-					.map((product) -> product.getPrice()
-							.add(!product.getOptionLists().isEmpty()
-									? product.getOptionLists().get(0).getOptions().get(0).getPrice()
-									: BigDecimal.ZERO)
-							.multiply(BigDecimal.valueOf(3)))
-					.reduce(BigDecimal.ZERO, BigDecimal::add);
 
 			var historyOrders = orderService.getOrdersHistory(accountId, 0, 100);
 
@@ -384,8 +395,9 @@ public class OrderControllerTest {
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$").isArray())
 					.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
-					.andExpect(jsonPath("$[0].totalPrice").value(expectedPrice.floatValue()))
-					.andExpect(jsonPath("$[0].totalPriceWithDiscount").value(expectedPrice.floatValue()))
+					.andExpect(jsonPath("$[0].totalPrice").value(placedOrderDTO.getExpectedPrice().doubleValue()))
+					.andExpect(jsonPath("$[0].totalPriceWithDiscount")
+							.value(placedOrderDTO.getExpectedPrice().doubleValue()))
 					.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
 		});
 	}
@@ -400,6 +412,7 @@ public class OrderControllerTest {
 					.toList();
 
 			AtomicInteger optionCounter = new AtomicInteger(0);
+			AtomicInteger expectedPriceOptionCounter = new AtomicInteger(0);
 
 			PlacedOrderDto placedOrderDTO = PlacedOrderDto.builder()
 					.addressId(address.getId())
@@ -431,22 +444,20 @@ public class OrderControllerTest {
 								orderItem.setOptionLists(List.of(optionListDTO));
 								return orderItem;
 							})
-							.toList())
+							.toList()
+					)
+					.expectedPrice(products.stream()
+							.map((product) -> {
+								OptionListDto.Option option = !product.getOptionLists().isEmpty()
+										? product.getOptionLists().get(0).getOptions().get(0)
+										: OptionListDto.Option.builder().price(BigDecimal.ZERO).maxCount(1).build();
+								return product.getPrice()
+										.add(option.getPrice().multiply(BigDecimal.valueOf(option.getMaxCount())))
+										.multiply(BigDecimal.valueOf(expectedPriceOptionCounter.incrementAndGet()));
+							})
+							.reduce(BigDecimal.ZERO, BigDecimal::add)
+					)
 					.build();
-
-			optionCounter.set(0);
-
-			BigDecimal expectedPrice = products.stream()
-					.map((product) -> {
-						OptionListDto.Option option = !product.getOptionLists().isEmpty()
-								? product.getOptionLists().get(0).getOptions().get(0)
-								: OptionListDto.Option.builder().price(BigDecimal.ZERO).maxCount(1).build();
-						System.out.println("Product: " + product.getName() + " Option: " + option.getName());
-						return product.getPrice()
-								.add(option.getPrice().multiply(BigDecimal.valueOf(option.getMaxCount())))
-								.multiply(BigDecimal.valueOf(optionCounter.incrementAndGet()));
-					})
-					.reduce(BigDecimal.ZERO, BigDecimal::add);
 
 			var historyOrders = orderService.getOrdersHistory(accountId, 0, 100);
 
@@ -458,8 +469,9 @@ public class OrderControllerTest {
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$").isArray())
 					.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
-					.andExpect(jsonPath("$[0].totalPrice").value(expectedPrice.floatValue()))
-					.andExpect(jsonPath("$[0].totalPriceWithDiscount").value(expectedPrice.floatValue()))
+					.andExpect(jsonPath("$[0].totalPrice").value(placedOrderDTO.getExpectedPrice().doubleValue()))
+					.andExpect(jsonPath("$[0].totalPriceWithDiscount")
+							.value(placedOrderDTO.getExpectedPrice().doubleValue()))
 					.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
 		});
 	}

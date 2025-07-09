@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
-import ro.pizzeriaq.qservices.exceptions.AccessDeniedException;
-import ro.pizzeriaq.qservices.exceptions.KeycloakException;
-import ro.pizzeriaq.qservices.exceptions.PhoneNumberMissingException;
-import ro.pizzeriaq.qservices.exceptions.TypesenseException;
+import ro.pizzeriaq.qservices.exceptions.*;
 
 import javax.naming.ServiceUnavailableException;
 import java.util.Map;
@@ -101,6 +98,15 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException e) {
 		log.error("Access denied", e);
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+	}
+
+
+	@ExceptionHandler(PriceNotMatchingException.class)
+	public ResponseEntity<String> handlePriceDoesNotMatchException(PriceNotMatchingException e) {
+		log.error("Price does not match. Expected ( {} ), received ( {} )",
+				e.getExpectedPrice(), e.getActualPrice(), e
+		);
+		return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
 	}
 
 
