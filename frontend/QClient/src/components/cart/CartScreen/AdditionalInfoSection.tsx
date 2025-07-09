@@ -1,6 +1,6 @@
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import React, { forwardRef, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { ForwardedRef, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import { Address } from "src/api/types/Address";
@@ -14,19 +14,17 @@ type NavigationProps = CompositeNavigationProp<
   NativeStackNavigationProp<RootStackParamList>
 >;
 
-type AdditionalInfoSectionProps = {
-  addresses: Address[];
-};
-
 export type AdditionalInfoSectionHandle = {
   getAddress: () => Address | null;
   getAdditionalNotes: () => string | null;
 };
 
-function AdditionalInfoSection(
-  { addresses }: AdditionalInfoSectionProps,
-  ref: React.Ref<AdditionalInfoSectionHandle>
-) {
+type AdditionalInfoSectionProps = {
+  addresses: Address[];
+  ref: ForwardedRef<AdditionalInfoSectionHandle>;
+};
+
+export default function AdditionalInfoSection({ addresses, ref }: AdditionalInfoSectionProps) {
   logger.render("AdditionalInfoSection");
 
   const navigation = useNavigation<NavigationProps>();
@@ -101,8 +99,6 @@ function AdditionalInfoSection(
     </View>
   );
 }
-
-export default forwardRef<AdditionalInfoSectionHandle, AdditionalInfoSectionProps>(AdditionalInfoSection);
 
 const UDropdown = withUnistyles(Dropdown, (theme) => ({
   primaryColor: theme.background.success,

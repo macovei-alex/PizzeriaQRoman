@@ -1,12 +1,4 @@
-import React, {
-  ForwardedRef,
-  forwardRef,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from "react";
+import React, { ForwardedRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { ActivityIndicator, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import { api } from "src/api";
@@ -21,7 +13,11 @@ export type AccountFormHandle = {
   handleRefresh: () => Promise<void>;
 };
 
-function AccountForm(props: object, ref: ForwardedRef<AccountFormHandle>) {
+type AccountFormProps = {
+  ref: ForwardedRef<AccountFormHandle>;
+};
+
+export default function AccountForm({ ref }: AccountFormProps) {
   logger.render("AccountForm");
 
   const authContext = useAuthContext();
@@ -175,8 +171,6 @@ function AccountForm(props: object, ref: ForwardedRef<AccountFormHandle>) {
     </View>
   );
 }
-
-export default forwardRef<AccountFormHandle>(AccountForm);
 
 const UActivityIndicator = withUnistyles(ActivityIndicator, (theme) => ({
   color: theme.background.accent,
