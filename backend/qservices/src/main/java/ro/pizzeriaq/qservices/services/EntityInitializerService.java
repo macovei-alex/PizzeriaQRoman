@@ -523,7 +523,6 @@ public class EntityInitializerService {
 		options5.add(optionBuilder5.get().name("Bere Timișoreana - 500ml").build());
 		options5.add(optionBuilder5.get().name("Bere Heineken - 500ml").price(BigDecimal.valueOf(10)).build());
 		options5.add(optionBuilder5.get().name("Cappy Pulpy - 300ml").build());
-		options5.add(optionBuilder5.get().name("Cappy Pulpy - 330ml").build());
 
 		optionLists.get(8).getOptions().addAll(options5);
 		optionRepository.saveAll(options5);
@@ -538,7 +537,7 @@ public class EntityInitializerService {
 				.toList();
 
 		products.stream()
-				.filter((p) -> p.getCategory().getName().equals("Pizza 1+1 Combo"))
+				.filter((p) -> p.getCategory().getName().equals("Pizza 1+1 Combo") && p.getName().contains("Pizza"))
 				.forEach((p) -> p.getOptionLists().addAll(Stream.of(0, 2, 3, 4, 5, 6, 8).map(optionLists::get).toList()));
 
 		products.stream()
