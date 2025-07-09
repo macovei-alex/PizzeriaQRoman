@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { KeyboardAvoidingView, RefreshControl, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 import ProductSection from "src/components/cart/CartScreen/ProductSection";
@@ -23,6 +23,27 @@ import { AxiosError } from "axios";
 import { PlacedOrder } from "src/api/types/order/PlacedOrder";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import EmptyCartScreen from "src/components/cart/CartScreen/EmptyCartScreen";
+import { CartItem } from "src/context/CartContext/types";
+import useRestaurantConstantsQuery from "src/api/hooks/queries/useRestaurantConstantsQuery";
+
+function calculatePrice(item: CartItem) {
+  let price = item.product.price;
+  for (const [optionListId, optionList] of Object.entries(item.options)) {
+    for (const [optionId, optionCount] of Object.entries(optionList)) {
+      const list = item.product.optionLists.find((list) => list.id === Number(optionListId));
+      if (!list) {
+        throw new Error(`Option list not found: ${optionListId}`);
+      }
+      const option = list.options.find((option) => option.id === Number(optionId));
+      if (!option) {
+        throw new Error(`Option not found: ${optionId}`);
+      }
+
+      price += option.price * optionCount;
+    }
+  }
+  return price * item.count;
+}
 
 type NavigationProps = CompositeNavigationProp<
   NativeStackNavigationProp<CartStackParamList, "CartScreen">,
@@ -39,20 +60,16 @@ export default function CartScreen() {
   const { cart, emptyCart } = useCartContext();
   const queryClient = useQueryClient();
   const addressQuery = useAddressesQuery();
+  const restaurantConstantsQuery = useRestaurantConstantsQuery();
   const [sendingOrder, setSendingOrder] = useState(false);
   const additionalSectionRef = useRef<AdditionalInfoSectionHandle>(null);
 
   function sendOrder() {
-    if (cart.length === 0) {
-      showToast("Coșul este gol");
-      return;
-    }
+    if (cart.length === 0) return;
     if (!additionalSectionRef.current?.getAddress()) {
       showToast("Selectați o adresă de livrare");
       return;
     }
-
-    setSendingOrder(true);
 
     const order: PlacedOrder = {
       addressId: additionalSectionRef.current.getAddress()!.id,
@@ -63,6 +80,8 @@ export default function CartScreen() {
       })),
       additionalNotes: additionalSectionRef.current.getAdditionalNotes(),
     };
+
+    setSendingOrder(true);
 
     api.axios
       .post(api.routes.account(accountId).orders, order)
@@ -97,11 +116,19 @@ export default function CartScreen() {
       .finally(() => setSendingOrder(false));
   }
 
+  const prices = useMemo(() => cart.map((cartItem) => calculatePrice(cartItem)), [cart]);
+  const totalPrice = prices.reduce((acc, price) => acc + price, 0);
+
   if (sendingOrder) return <ScreenActivityIndicator text="Se trimite comanda..." />;
   if (addressQuery.isFetching) return <ScreenActivityIndicator text="Se încarcă adresele..." />;
   if (addressQuery.isError) return <ErrorComponent />;
   if (!addressQuery.data) throw new Error("Addresses not found");
   if (cart.length === 0) return <EmptyCartScreen />;
+
+  const isOrderButtonEnabled =
+    !sendingOrder &&
+    totalPrice >= (restaurantConstantsQuery.data?.minimumOrderValue ?? 0) &&
+    additionalSectionRef.current?.getAddress() !== null;
 
   return (
     <KeyboardAvoidingView style={styles.screen} behavior="padding">
@@ -110,12 +137,16 @@ export default function CartScreen() {
       >
         <ScreenTitle title="Coșul meu" containerStyle={styles.titleScreenContainer} />
 
-        <ProductSection />
+        <ProductSection totalPrice={totalPrice} prices={prices} />
 
         <AdditionalInfoSection addresses={addressQuery.data} ref={additionalSectionRef} />
 
         <View style={styles.sendOrderContainer}>
-          <TouchableOpacity style={styles.sendOrderButton} onPress={sendOrder}>
+          <TouchableOpacity
+            style={styles.sendOrderButton(isOrderButtonEnabled)}
+            onPress={sendOrder}
+            disabled={!isOrderButtonEnabled}
+          >
             <Text style={styles.sendOrderText}>Trimite comanda</Text>
           </TouchableOpacity>
         </View>
@@ -138,12 +169,13 @@ const styles = StyleSheet.create((theme, runtime) => ({
     marginTop: 40,
     marginBottom: runtime.insets.bottom,
   },
-  sendOrderButton: {
+  sendOrderButton: (isEnabled: boolean) => ({
     paddingHorizontal: 52,
     paddingVertical: 12,
     borderRadius: 18,
     backgroundColor: theme.background.accent,
-  },
+    opacity: isEnabled ? 1 : 0.5,
+  }),
   sendOrderText: {
     fontSize: 22,
     fontWeight: "bold",

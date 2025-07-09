@@ -5,34 +5,16 @@ import { useCartContext } from "src/context/CartContext/CartContext";
 import CartItemCard from "./CartItemCard";
 import logger from "src/constants/logger";
 import { formatPrice } from "src/utils/utils";
-import { CartItem } from "src/context/CartContext/types";
 
-function calculatePrice(item: CartItem) {
-  let price = item.product.price;
-  for (const [optionListId, optionList] of Object.entries(item.options)) {
-    for (const [optionId, optionCount] of Object.entries(optionList)) {
-      const list = item.product.optionLists.find((list) => list.id === Number(optionListId));
-      if (!list) {
-        throw new Error(`Option list not found: ${optionListId}`);
-      }
-      const option = list.options.find((option) => option.id === Number(optionId));
-      if (!option) {
-        throw new Error(`Option not found: ${optionId}`);
-      }
+type ProductSectionProps = {
+  totalPrice: number;
+  prices: number[];
+};
 
-      price += option.price * optionCount;
-    }
-  }
-  return price * item.count;
-}
-
-export default function ProductSection() {
+export default function ProductSection({ totalPrice, prices }: ProductSectionProps) {
   logger.render("ProductSection");
 
   const { cart } = useCartContext();
-
-  const prices = cart.map((cartItem) => calculatePrice(cartItem));
-  const totalPrice = prices.reduce((acc, price) => acc + price, 0);
 
   return (
     <>
