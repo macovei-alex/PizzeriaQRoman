@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from "react";
+import React, { memo } from "react";
 import { Text, View } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 import { OptionId, OptionList } from "src/api/types/Product";
@@ -17,36 +17,33 @@ type OptionListProps = {
 function OptionListCard({ optionList, currentOptions, setCartItemOptions }: OptionListProps) {
   logger.render(`OptionListCard-${optionList.id}`);
 
-  const handleOptionChange = useCallback(
-    (optionId: OptionId, newCount: number) => {
-      const option = optionList.options.find((option) => option.id === optionId);
-      if (!option) throw new Error(`Option not found: ${optionId}`);
+  const handleOptionChange = (optionId: OptionId, newCount: number) => {
+    const option = optionList.options.find((option) => option.id === optionId);
+    if (!option) throw new Error(`Option not found: ${optionId}`);
 
-      if (newCount < 0 || newCount > option.maxCount) throw new Error(`Invalid option count: ${newCount}`);
+    if (newCount < 0 || newCount > option.maxCount) throw new Error(`Invalid option count: ${newCount}`);
 
-      const choiceCount = Object.values(currentOptions || {}).reduce(
-        (acc, count) => acc + (count !== 0 ? 1 : 0),
-        0
-      );
-      if (choiceCount === optionList.maxChoices && (currentOptions[optionId] ?? 0) === 0) {
-        showToast(`Poți alege maxim ${optionList.maxChoices} opțiuni din această listă`);
-        return;
-      }
+    const choiceCount = Object.values(currentOptions || {}).reduce(
+      (acc, count) => acc + (count !== 0 ? 1 : 0),
+      0
+    );
+    if (choiceCount === optionList.maxChoices && (currentOptions[optionId] ?? 0) === 0) {
+      showToast(`Poți alege maxim ${optionList.maxChoices} opțiuni din această listă`);
+      return;
+    }
 
-      setCartItemOptions((prev) => {
-        if (!!prev[optionList.id] && newCount === prev[optionList.id][optionId]) return prev;
+    setCartItemOptions((prev) => {
+      if (!!prev[optionList.id] && newCount === prev[optionList.id][optionId]) return prev;
 
-        const newOptionCounts = { ...prev[optionList.id], [optionId]: newCount };
-        if (newCount === 0) delete newOptionCounts[optionId];
+      const newOptionCounts = { ...prev[optionList.id], [optionId]: newCount };
+      if (newCount === 0) delete newOptionCounts[optionId];
 
-        const newOptions = { ...prev, [optionList.id]: newOptionCounts };
-        if (Object.keys(newOptionCounts).length === 0) delete newOptions[optionList.id];
+      const newOptions = { ...prev, [optionList.id]: newOptionCounts };
+      if (Object.keys(newOptionCounts).length === 0) delete newOptions[optionList.id];
 
-        return newOptions;
-      });
-    },
-    [currentOptions, setCartItemOptions, optionList.maxChoices, optionList.id, optionList.options]
-  );
+      return newOptions;
+    });
+  };
 
   return (
     <View style={styles.container}>

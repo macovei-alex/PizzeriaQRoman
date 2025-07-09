@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Dimensions, LayoutChangeEvent, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useMemo, useState } from "react";
+import { Dimensions, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 import CategoryTouchable from "./CategoryTouchable";
 import { Category, CategoryId } from "src/api/types/Category";
@@ -32,11 +32,6 @@ export default function HorizontalCategorySection({
 
   const { scrollRef, scrollToPos } = useScrollRef();
   const horizontal = useScrollOffsets<CategoryId>();
-  const updateHorizontalOffsets = useCallback(
-    (categoryId: CategoryId, event: LayoutChangeEvent) =>
-      horizontal.addOffset(categoryId, event.nativeEvent.layout.x),
-    [horizontal]
-  );
 
   const categoryLimits = useMemo(() => {
     if (verticalOffsets.size === 0) return [];
@@ -97,7 +92,7 @@ export default function HorizontalCategorySection({
             key={category.id}
             category={category}
             onPress={() => onCategoryPress(category.id)}
-            onLayout={(event) => updateHorizontalOffsets(category.id, event)}
+            onLayout={(event) => horizontal.addOffset(category.id, event.nativeEvent.layout.x)}
             highlight={category.id === currentCategoryId}
           />
         ))}

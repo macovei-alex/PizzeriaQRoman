@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { Alert, RefreshControl, ScrollView, Text, TouchableOpacity } from "react-native";
 import { StyleSheet, UnistylesRuntime } from "react-native-unistyles";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -22,37 +22,34 @@ export default function AddressesScreen() {
   const accountId = useValidAccountId();
   const addressesQuery = useAddressesQuery();
 
-  const showDeleteAddressDialog = useCallback(
-    async (addressId: number) => {
-      const deleteAddress = async () => {
-        try {
-          await api.axios.delete(api.routes.account(accountId).address(addressId));
-          await addressesQuery.refetch();
-        } catch (error) {
-          console.error(error);
-        }
-      };
-      Alert.alert(
-        "Confirmare",
-        "Doriți să ștergeți adresa?",
-        [
-          {
-            text: "Anulează",
-            style: "cancel",
-          },
-          {
-            text: "Confirmă",
-            onPress: deleteAddress,
-          },
-        ],
+  const showDeleteAddressDialog = async (addressId: number) => {
+    const deleteAddress = async () => {
+      try {
+        await api.axios.delete(api.routes.account(accountId).address(addressId));
+        await addressesQuery.refetch();
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    Alert.alert(
+      "Confirmare",
+      "Doriți să ștergeți adresa?",
+      [
         {
-          cancelable: false,
-          userInterfaceStyle: UnistylesRuntime.themeName,
-        }
-      );
-    },
-    [accountId, addressesQuery]
-  );
+          text: "Anulează",
+          style: "cancel",
+        },
+        {
+          text: "Confirmă",
+          onPress: deleteAddress,
+        },
+      ],
+      {
+        cancelable: false,
+        userInterfaceStyle: UnistylesRuntime.themeName,
+      }
+    );
+  };
 
   if (addressesQuery.isFetching) return <ScreenActivityIndicator text="Se încarcă adresele" />;
   if (addressesQuery.isError) return <ErrorComponent />;

@@ -1,4 +1,4 @@
-import React, { ForwardedRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
+import React, { ForwardedRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { ActivityIndicator, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import { api } from "src/api";
@@ -31,16 +31,13 @@ export default function AccountForm({ ref }: AccountFormProps) {
     email: account.email,
     phoneNumber: phoneNumberQuery.data ?? "",
   });
-  const resetAccountData = useCallback(
-    () =>
-      setAccountData({
-        firstName: account.givenName,
-        lastName: account.familyName,
-        email: account.email,
-        phoneNumber: phoneNumberQuery.data ?? "",
-      }),
-    [account, phoneNumberQuery.data]
-  );
+  const resetAccountData = () =>
+    setAccountData({
+      firstName: account.givenName,
+      lastName: account.familyName,
+      email: account.email,
+      phoneNumber: phoneNumberQuery.data ?? "",
+    });
   const [updatingInfo, setUpdatingInfo] = useState(false);
   const abortController = useRef<AbortController | null>(null);
 
@@ -61,7 +58,7 @@ export default function AccountForm({ ref }: AccountFormProps) {
     [phoneNumberQuery.data]
   );
 
-  const handleInfoUpdate = useCallback(async () => {
+  const handleInfoUpdate = async () => {
     setUpdatingInfo(true);
     try {
       if (abortController.current) abortController.current.abort();
@@ -80,7 +77,7 @@ export default function AccountForm({ ref }: AccountFormProps) {
       setUpdatingInfo(false);
       abortController.current = null;
     }
-  }, [authContext, account, accountData, phoneNumberQuery, resetAccountData]);
+  };
 
   if (phoneNumberQuery.isError) return <ErrorComponent size="small" />;
 

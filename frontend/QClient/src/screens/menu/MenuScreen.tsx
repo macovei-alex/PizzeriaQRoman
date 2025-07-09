@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { LayoutChangeEvent, RefreshControl, ScrollView, View } from "react-native";
 import LogoSection from "src/components/menu/MenuScreen/LogoSection";
 import HorizontalCategorySection from "src/components/menu/MenuScreen/HorizontalCategorySection";
@@ -27,18 +27,6 @@ export default function MenuScreen() {
   const restaurantConstantsQuery = useRestaurantConstantsQuery();
   const scrollRef = useRef<ScrollView>(null);
   const vertical = useScrollOffsets<CategoryId>();
-
-  // Save the position of each category for the scroll to position from the horizontal menu
-  const updateVerticalOffsets = useCallback(
-    (categoryId: CategoryId, event: LayoutChangeEvent) =>
-      vertical.addOffset(categoryId, event.nativeEvent.layout.y - 120),
-    [vertical]
-  );
-
-  const scrollVertically = useCallback(
-    (categoryId: CategoryId) => scrollRef.current?.scrollTo({ y: vertical.offsets.get(categoryId) }),
-    [vertical.offsets]
-  );
 
   // Split products by category
   const productsPerCategory = useMemo(() => {
@@ -84,6 +72,7 @@ export default function MenuScreen() {
         }
         stickyHeaderIndices={[1]}
         onScroll={(event) => setScrollY(event.nativeEvent.contentOffset.y)}
+        scrollEventThrottle={50}
         nestedScrollEnabled
       >
         <LogoSection minimumOrderValue={restaurantConstantsQuery.data?.minimumOrderValue} />
@@ -91,7 +80,9 @@ export default function MenuScreen() {
         <HorizontalCategorySection
           categories={categoryQuery.data}
           verticalOffsets={vertical.offsets}
-          onCategoryPress={scrollVertically}
+          onCategoryPress={(categoryId: CategoryId) =>
+            scrollRef.current?.scrollTo({ y: vertical.offsets.get(categoryId) })
+          }
           scrollY={scrollY}
         />
 
@@ -101,7 +92,9 @@ export default function MenuScreen() {
               key={category.id}
               category={category}
               products={products}
-              onLayout={updateVerticalOffsets}
+              onLayout={(categoryId: CategoryId, event: LayoutChangeEvent) =>
+                vertical.addOffset(categoryId, event.nativeEvent.layout.y - 120)
+              }
             />
           ))}
         </>

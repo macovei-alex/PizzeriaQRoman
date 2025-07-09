@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { View, Text, ActivityIndicator, Platform, TouchableOpacity } from "react-native";
 import { StyleSheet, withUnistyles } from "react-native-unistyles";
@@ -56,40 +56,37 @@ export default function NewAddressScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startLocation, permissionState, setRegion]);
 
-  const handleAddressFormClose = useCallback(
-    (newAddress: NewAddress, doSend: boolean) => {
-      setScreenState("modal-closed");
-      if (address !== newAddress.baseString) {
-        setAddress(newAddress.baseString);
-        shouldSetNewRegion.current = false;
-      }
-      if (!doSend) return;
+  const handleAddressFormClose = (newAddress: NewAddress, doSend: boolean) => {
+    setScreenState("modal-closed");
+    if (address !== newAddress.baseString) {
+      setAddress(newAddress.baseString);
+      shouldSetNewRegion.current = false;
+    }
+    if (!doSend) return;
 
-      setScreenState("sending");
-      api.axios
-        .post<any, any, CreatedAddress>(api.routes.account(accountId).addresses, {
-          addressString:
-            newAddress.baseString +
-            (newAddress.block ? ", Blocul " + newAddress.block : "") +
-            (newAddress.floor ? ", Etajul " + newAddress.floor : "") +
-            (newAddress.apartment ? ", Apartamentul " + newAddress.apartment : ""),
-          primary: true,
-        })
-        .then(() => {
-          showToast("Adresa a fost salvată");
-          queryClient.invalidateQueries({ queryKey: ["addresses"] });
-          navigation.goBack();
-        })
-        .catch((error) => {
-          showToast("Adresa nu a putut fi salvată din cauza unei erori");
-          logger.error(error);
-        })
-        .finally(() => setScreenState("modal-closed"));
-    },
-    [accountId, address, setAddress, queryClient, navigation]
-  );
+    setScreenState("sending");
+    api.axios
+      .post<any, any, CreatedAddress>(api.routes.account(accountId).addresses, {
+        addressString:
+          newAddress.baseString +
+          (newAddress.block ? ", Blocul " + newAddress.block : "") +
+          (newAddress.floor ? ", Etajul " + newAddress.floor : "") +
+          (newAddress.apartment ? ", Apartamentul " + newAddress.apartment : ""),
+        primary: true,
+      })
+      .then(() => {
+        showToast("Adresa a fost salvată");
+        queryClient.invalidateQueries({ queryKey: ["addresses"] });
+        navigation.goBack();
+      })
+      .catch((error) => {
+        showToast("Adresa nu a putut fi salvată din cauza unei erori");
+        logger.error(error);
+      })
+      .finally(() => setScreenState("modal-closed"));
+  };
 
-  const openModal = useCallback(() => setScreenState("modal-open"), []);
+  const openModal = () => setScreenState("modal-open");
 
   return (
     <View style={styles.container}>
