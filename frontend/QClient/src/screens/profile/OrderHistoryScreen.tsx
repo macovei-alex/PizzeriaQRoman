@@ -3,7 +3,7 @@ import { ActivityIndicator, RefreshControl, View } from "react-native";
 import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import OrderCard from "src/components/profile/OrderHistoryScreen/OrderCard";
 import ScreenTitle from "src/components/shared/generic/ScreenTitle";
-import useOrderHistoryInfiniteQuery from "src/api/hooks/queries/useOrderHistoryInfiniteQuery";
+import useOrderHistoryInfiniteQuery from "src/api/queries/orderHistoryInfiniteQuery";
 import logger from "src/constants/logger";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import { LegendList } from "@legendapp/list";

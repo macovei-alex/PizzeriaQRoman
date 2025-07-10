@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import useProductsQuery from "src/api/hooks/queries/useProductsQuery";
+import useProductsQuery from "src/api/queries/productsQuery";
 import { ProductWithIngredients } from "src/api/types/Product";
 import { useDebounced } from "./useDebounced";
 import { tokenize } from "src/utils/convertions";

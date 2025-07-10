@@ -1,8 +1,8 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { RefObject } from "react";
 import MapView, { Region } from "react-native-maps";
-import { mapsAddressManualOptions } from "src/api/hooks/options/mapsAddressManualOptions";
-import { mapsCoordinatesManualOptions } from "src/api/hooks/options/mapsCoordinatesManualOptions";
+import { mapsAddressManualOptions } from "src/api/queries/mapsAddressManualQuery";
+import { mapsCoordinatesManualOptions } from "src/api/queries/mapsCoordinatesManualQuery";
 import { useBidirectionalStateUpdates } from "src/hooks/useBidirectionalStateUpdates";
 import logger from "src/constants/logger";
 

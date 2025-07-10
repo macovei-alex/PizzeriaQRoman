@@ -2,7 +2,7 @@ import React, { ForwardedRef, useEffect, useImperativeHandle, useRef, useState }
 import { ActivityIndicator, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import { api } from "src/api";
-import { usePhoneNumberQuery } from "src/api/hooks/queries/usePhoneNumberQuery";
+import { usePhoneNumberQuery } from "src/api/queries/phoneNumberQuery";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import LabelledBorderComponent from "src/components/shared/generic/LabelledBorderComponent";
 import { useAuthContext } from "src/context/AuthContext";

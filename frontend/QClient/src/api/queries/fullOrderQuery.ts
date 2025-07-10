@@ -1,8 +1,8 @@
 import { useQueries, useQuery } from "@tanstack/react-query";
-import { OrderId, OrderStatusSchema } from "../../types/order/Order";
-import { api } from "../..";
-import { FullHistoryOrder, FullHistoryOrderDTO } from "../../types/order/FullHistoryOrder";
-import { ProductWithOptions } from "../../types/Product";
+import { OrderId, OrderStatusSchema } from "../types/order/Order";
+import { api } from "..";
+import { FullHistoryOrder, FullHistoryOrderDTO } from "../types/order/FullHistoryOrder";
+import { ProductWithOptions } from "../types/Product";
 import { useMemo } from "react";
 import { useValidAccountId } from "src/context/AuthContext";
 

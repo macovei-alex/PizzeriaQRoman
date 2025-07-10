@@ -1,16 +1,23 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { InfiniteData, useInfiniteQuery, UseInfiniteQueryOptions } from "@tanstack/react-query";
 import { api } from "src/api";
 import { OrderStatusSchema } from "src/api/types/order/Order";
 import { useValidAccountId } from "src/context/AuthContext";
 import logger from "src/constants/logger";
-import { HistoryOrderMinimal, HistoryOrderMinimalDTO } from "../../types/order/HistoryOrderMinimal";
+import { HistoryOrderMinimal, HistoryOrderMinimalDTO } from "../types/order/HistoryOrderMinimal";
 
 const PAGE_SIZE = 5;
 
-export default function useOrderHistoryInfiniteQuery() {
-  const accountId = useValidAccountId();
-
-  return useInfiniteQuery<HistoryOrderMinimal[], Error>({
+export function orderHistoryInfiniteQueryOptions(
+  accountId: string
+): UseInfiniteQueryOptions<
+  HistoryOrderMinimal[],
+  Error,
+  InfiniteData<HistoryOrderMinimal[]>,
+  HistoryOrderMinimal[],
+  string[],
+  number
+> {
+  return {
     queryKey: ["order-history", accountId],
     queryFn: async ({ pageParam }) => {
       const response = await api.axios.get<HistoryOrderMinimalDTO[]>(api.routes.account(accountId).orders, {
@@ -37,5 +44,10 @@ export default function useOrderHistoryInfiniteQuery() {
     },
     getNextPageParam: (lastPage, allPages) => (lastPage.length < PAGE_SIZE ? undefined : allPages.length),
     initialPageParam: 0,
-  });
+  };
+}
+
+export default function useOrderHistoryInfiniteQuery() {
+  const accountId = useValidAccountId();
+  return useInfiniteQuery(orderHistoryInfiniteQueryOptions(accountId));
 }

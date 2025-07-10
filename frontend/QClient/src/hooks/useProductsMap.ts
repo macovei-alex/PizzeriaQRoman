@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import useProductsQuery from "src/api/hooks/queries/useProductsQuery";
+import useProductsQuery from "src/api/queries/productsQuery";
 import { Product, ProductId } from "src/api/types/Product";
 
 export function useProductsMap() {

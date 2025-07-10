@@ -3,8 +3,8 @@ import { LayoutChangeEvent, RefreshControl, ScrollView, View } from "react-nativ
 import LogoSection from "src/components/menu/MenuScreen/LogoSection";
 import HorizontalCategorySection from "src/components/menu/MenuScreen/HorizontalCategorySection";
 import VerticalCategorySection from "src/components/menu/MenuScreen/VerticalCategorySection";
-import useProductsQuery from "src/api/hooks/queries/useProductsQuery";
-import useCategoriesQuery from "src/api/hooks/queries/useCategoriesQuery";
+import useProductsQuery from "src/api/queries/productsQuery";
+import useCategoriesQuery from "src/api/queries/categoriesQuery";
 import { Category, CategoryId } from "src/api/types/Category";
 import { Product } from "src/api/types/Product";
 import logger from "src/constants/logger";
@@ -12,7 +12,7 @@ import MenuSkeletonLoader from "src/components/menu/MenuScreen/MenuSkeletonLoade
 import ErrorComponent from "../../components/shared/generic/ErrorComponent";
 import { useScrollOffsets } from "src/hooks/useScrollOffsets";
 import { StyleSheet } from "react-native-unistyles";
-import useRestaurantConstantsQuery from "src/api/hooks/queries/useRestaurantConstantsQuery";
+import useRestaurantConstantsQuery from "src/api/queries/restaurantConstantsQuery";
 
 type ProductSplit = {
   category: Category;

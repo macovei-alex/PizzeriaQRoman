@@ -16,7 +16,7 @@ import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivit
 import AdditionalInfoSection, {
   AdditionalInfoSectionHandle,
 } from "src/components/cart/CartScreen/AdditionalInfoSection";
-import useAddressesQuery from "src/api/hooks/queries/useAddressesQuery";
+import useAddressesQuery, { addressesQueryOptions } from "src/api/queries/addressesQuery";
 import { useValidAccountId } from "src/context/AuthContext";
 import { RootStackParamList } from "src/navigation/RootStackNavigator";
 import { AxiosError } from "axios";
@@ -24,7 +24,11 @@ import { PlacedOrder } from "src/api/types/order/PlacedOrder";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import EmptyCartScreen from "src/components/cart/CartScreen/EmptyCartScreen";
 import { CartItem } from "src/context/CartContext/types";
-import useRestaurantConstantsQuery from "src/api/hooks/queries/useRestaurantConstantsQuery";
+import useRestaurantConstantsQuery, {
+  restaurantConstantsQueryOptions,
+} from "src/api/queries/restaurantConstantsQuery";
+import { orderHistoryInfiniteQueryOptions } from "src/api/queries/orderHistoryInfiniteQuery";
+import { productsQueryOptions } from "src/api/queries/productsQuery";
 
 function calculatePrice(item: CartItem) {
   let price = item.product.price;
@@ -96,8 +100,8 @@ export default function CartScreen() {
           setSendOrderError("Comanda nu a putut fi trimisă. Vă rugăm să reîncercați.");
           logger.error("Error sending order:", res.data);
         }
-        queryClient.invalidateQueries({ queryKey: ["order-history"] });
-        queryClient.prefetchInfiniteQuery({ queryKey: ["order-history"], initialPageParam: 0 });
+        queryClient.invalidateQueries(orderHistoryInfiniteQueryOptions(accountId));
+        queryClient.prefetchInfiniteQuery(orderHistoryInfiniteQueryOptions(accountId));
       })
       .catch((error: AxiosError) => {
         if (error.response?.status === 417 && typeof error.response?.data === "string") {
@@ -111,13 +115,13 @@ export default function CartScreen() {
             setSendOrderError(
               "Prețul comenzii nu se potrivește cu cel calculat în sistem. Vă rugăm să reîncercați."
             );
-            queryClient.invalidateQueries({ queryKey: ["products"] });
+            queryClient.invalidateQueries(productsQueryOptions());
           }
         } else {
           setSendOrderError("A apărut o eroare la trimiterea comenzii. Vă rugăm să reîncercați.");
-          queryClient.invalidateQueries({ queryKey: ["products"] });
-          queryClient.invalidateQueries({ queryKey: ["addresses"] });
-          queryClient.invalidateQueries({ queryKey: ["restaurant-constants"] });
+          queryClient.invalidateQueries(productsQueryOptions());
+          queryClient.invalidateQueries(addressesQueryOptions(accountId));
+          queryClient.invalidateQueries(restaurantConstantsQueryOptions());
           logger.error(
             "Error sending order:",
             error.response?.data ?? "Response data missing. Request data: " + error.request?.data

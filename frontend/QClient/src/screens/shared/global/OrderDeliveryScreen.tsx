@@ -7,13 +7,13 @@ import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import logger from "src/constants/logger";
 import HomeIconSvg from "src/components/svg/HomeIconSvg";
 import CartIconSvg from "src/components/svg/CartIconSvg";
-import { useDirectionsQuery } from "src/api/hooks/queries/useDirectionsQuery";
+import { useDirectionsQuery } from "src/api/queries/directionsQuery";
 import { RootStackParamList } from "src/navigation/RootStackNavigator";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
-import { mapsCoordinatesManualOptions } from "src/api/hooks/options/mapsCoordinatesManualOptions";
-import { useFullOrderQuery } from "src/api/hooks/queries/useFullOrderQuery";
-import useRestaurantConstantsQuery from "src/api/hooks/queries/useRestaurantConstantsQuery";
+import { mapsCoordinatesManualOptions } from "src/api/queries/mapsCoordinatesManualQuery";
+import { useFullOrderQuery } from "src/api/queries/fullOrderQuery";
+import useRestaurantConstantsQuery from "src/api/queries/restaurantConstantsQuery";
 
 type RouteProps = RouteProp<RootStackParamList, "OrderDeliveryScreen">;
 

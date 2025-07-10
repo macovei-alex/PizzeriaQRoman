@@ -14,6 +14,7 @@ import { useBidirectionalAddressRegionUpdates } from "src/components/shared/glob
 import { showToast } from "src/utils/toast";
 import { useNavigation } from "@react-navigation/native";
 import { useQueryClient } from "@tanstack/react-query";
+import { addressesQueryOptions } from "src/api/queries/addressesQuery";
 
 export default function NewAddressScreen() {
   logger.render("NewAddressScreen");
@@ -76,7 +77,7 @@ export default function NewAddressScreen() {
       })
       .then(() => {
         showToast("Adresa a fost salvată");
-        queryClient.invalidateQueries({ queryKey: ["addresses"] });
+        queryClient.invalidateQueries(addressesQueryOptions(accountId));
         navigation.goBack();
       })
       .catch((error) => {
@@ -85,8 +86,6 @@ export default function NewAddressScreen() {
       })
       .finally(() => setScreenState("modal-closed"));
   };
-
-  const openModal = () => setScreenState("modal-open");
 
   return (
     <View style={styles.container}>
@@ -102,7 +101,7 @@ export default function NewAddressScreen() {
 
       <View style={styles.floatingContainer} pointerEvents="box-none">
         {/* top section */}
-        <TouchableOpacity style={styles.addressContainer} onPress={openModal}>
+        <TouchableOpacity style={styles.addressContainer} onPress={() => setScreenState("modal-open")}>
           <View style={styles.iconContainer}>
             {fetchingAddress ? (
               <UFetchingActivityIndicator size={32} />
@@ -117,7 +116,7 @@ export default function NewAddressScreen() {
 
         <UFontAwesome name="map-marker" size={48} />
 
-        <TouchableOpacity style={styles.selectAddressButton} onPress={openModal}>
+        <TouchableOpacity style={styles.selectAddressButton} onPress={() => setScreenState("modal-open")}>
           <Text style={styles.selectAddressText}>Adăugați detalii</Text>
         </TouchableOpacity>
       </View>

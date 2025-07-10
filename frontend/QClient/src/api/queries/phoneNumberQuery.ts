@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { AccountId } from "src/context/AuthContext";
-import { api } from "../..";
+import { api } from "..";
 
 export function usePhoneNumberQuery(accountId: AccountId) {
   return useQuery<string, Error>({

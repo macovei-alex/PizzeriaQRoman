@@ -3,7 +3,7 @@ import { Alert, RefreshControl, ScrollView, Text, TouchableOpacity } from "react
 import { StyleSheet, UnistylesRuntime } from "react-native-unistyles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { api } from "src/api";
-import useAddressesQuery from "src/api/hooks/queries/useAddressesQuery";
+import useAddressesQuery from "src/api/queries/addressesQuery";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import ScreenActivityIndicator from "src/components/shared/generic/ScreenActivityIndicator";
 import ScreenTitle from "src/components/shared/generic/ScreenTitle";

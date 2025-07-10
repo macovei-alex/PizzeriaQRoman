@@ -1,6 +1,6 @@
-import { UseQueryOptions } from "@tanstack/react-query";
-import { api } from "src/api";
-import { ProductWithOptions } from "src/api/types/Product";
+import { useQuery, UseQueryOptions } from "@tanstack/react-query";
+import { ProductId, ProductWithOptions } from "src/api/types/Product";
+import { api } from "..";
 
 export function productWithOptionsOptions(
   productId: number | null
@@ -13,4 +13,8 @@ export function productWithOptionsOptions(
     queryKey: ["product", productId],
     enabled: !!productId,
   };
+}
+
+export default function useProductWithOptionsQuery(productId: ProductId) {
+  return useQuery<ProductWithOptions, Error>(productWithOptionsOptions(productId));
 }
