@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import ro.pizzeriaq.qservices.exceptions.*;
+import ro.pizzeriaq.qservices.exceptions.response.LogicalErrorCode;
+import ro.pizzeriaq.qservices.exceptions.response.LogicalErrorResponse;
 
 import javax.naming.ServiceUnavailableException;
 import java.util.Map;
@@ -53,9 +55,14 @@ public class GlobalExceptionHandler {
 
 
 	@ExceptionHandler(KeycloakException.class)
-	public ResponseEntity<String> handleKeycloakException(KeycloakException e) {
+	public ResponseEntity<LogicalErrorResponse> handleKeycloakException(KeycloakException e) {
 		log.error("Keycloak error", e);
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+				LogicalErrorResponse.builder()
+						.code(LogicalErrorCode.KEYCLOAK_ERROR)
+						.message(e.getMessage())
+						.build()
+		);
 	}
 
 
@@ -81,9 +88,14 @@ public class GlobalExceptionHandler {
 
 
 	@ExceptionHandler(PhoneNumberMissingException.class)
-	public ResponseEntity<String> handlePhoneNumberMissingException(PhoneNumberMissingException e) {
+	public ResponseEntity<LogicalErrorResponse> handlePhoneNumberMissingException(PhoneNumberMissingException e) {
 		log.error("Phone number missing", e);
-		return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
+		return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(
+				LogicalErrorResponse.builder()
+						.code(LogicalErrorCode.PHONE_NUMBER_MISSING)
+						.message(e.getMessage())
+						.build()
+		);
 	}
 
 
@@ -102,12 +114,17 @@ public class GlobalExceptionHandler {
 
 
 	@ExceptionHandler(PriceNotMatchingException.class)
-	public ResponseEntity<String> handlePriceDoesNotMatchException(PriceNotMatchingException e) {
+	public ResponseEntity<LogicalErrorResponse> handlePriceDoesNotMatchException(PriceNotMatchingException e) {
 		log.error("The client expected price does not match the calculated price."
 						+ "Client expected ( {} ), calculated ( {} )",
 				e.getExpectedPrice(), e.getActualPrice(), e
 		);
-		return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
+		return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(
+				LogicalErrorResponse.builder()
+						.code(LogicalErrorCode.PRICE_MISMATCH)
+						.message(e.getMessage())
+						.build()
+		);
 	}
 
 

@@ -9,6 +9,7 @@ import { orderHistoryInfiniteQueryOptions } from "src/api/queries/orderHistoryIn
 import { productsQueryOptions } from "src/api/queries/productsQuery";
 import { restaurantConstantsQueryOptions } from "src/api/queries/restaurantConstantsQuery";
 import { Address } from "src/api/types/Address";
+import { LogicalErrorSchema } from "src/api/types/LogicalError";
 import { PlacedOrder } from "src/api/types/order/PlacedOrder";
 import logger from "src/constants/logger";
 import { useValidAccountId } from "src/context/AuthContext";
@@ -36,20 +37,27 @@ export function useSendOrder(totalPrice: number) {
   const handleSendOrderError = (error: Error) => {
     if (!isAxiosError(error)) {
       setError("A apărut o eroare neprevăzută la trimiterea comenzii. Vă rugăm să reîncercați.");
-      logger.error("Unexpected error sending order:", error);
+      logger.error("Unexpected error sending order is not an AxiosError:", error);
       return;
     }
 
-    if (error.response?.status === 417 && typeof error.response?.data === "string") {
-      const responseString = error.response.data.toLowerCase();
+    if (error.response?.status === 417) {
+      const { data: logicalError, success } = LogicalErrorSchema.safeParse(error.response.data);
+      if (!success) {
+        setError("A apărut o eroare neprevăzută la trimiterea comenzii. Vă rugăm să reîncercați.");
+        logger.error("Logical error response is not valid:", error.response.data);
+        return;
+      }
 
-      if (responseString.includes("phone number") && responseString.includes("missing")) {
+      if (logicalError.code === "PHONE_NUMBER_MISSING") {
+        logger.warn(logicalError.message);
         showToast("Vă rugăm să introduceți un număr de telefon");
         navigation.navigate("MainTabNavigator", {
           screen: "ProfileStackNavigator",
           params: { screen: "ProfileScreen" },
         });
-      } else if (responseString.includes("price") && responseString.includes("match")) {
+      } else if (logicalError.code === "PRICE_MISMATCH") {
+        logger.warn(logicalError.message);
         setError("Prețul comenzii nu se potrivește cu cel calculat în sistem. Vă rugăm să reîncercați.");
         queryClient.invalidateQueries(productsQueryOptions());
       }
