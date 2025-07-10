@@ -17,6 +17,6 @@ export type PlacedOrder = {
     count: number;
     optionLists: PlacedOrderOptionList[];
   }[];
-  additionalNotes: string | null;
+  additionalNotes: string | null | undefined;
   clientExpectedPrice: number;
 };

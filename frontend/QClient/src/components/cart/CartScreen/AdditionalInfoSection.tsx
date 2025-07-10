@@ -15,8 +15,8 @@ type NavigationProps = CompositeNavigationProp<
 >;
 
 export type AdditionalInfoSectionHandle = {
-  getAddress: () => Address | null;
-  getAdditionalNotes: () => string | null;
+  getAddress: () => Address | undefined;
+  getAdditionalNotes: () => string | undefined;
 };
 
 type AdditionalInfoSectionProps = {
@@ -28,8 +28,8 @@ export default function AdditionalInfoSection({ addresses, ref }: AdditionalInfo
   logger.render("AdditionalInfoSection");
 
   const navigation = useNavigation<NavigationProps>();
-  const [address, setAddress] = useState<Address | null>(null);
-  const [additionalNotes, setAdditionalNotes] = useState<string | null>(null);
+  const [address, setAddress] = useState<Address | undefined>(undefined);
+  const [additionalNotes, setAdditionalNotes] = useState<string | undefined>(undefined);
 
   useImperativeHandle(
     ref,
@@ -45,7 +45,7 @@ export default function AdditionalInfoSection({ addresses, ref }: AdditionalInfo
     setAddress(addresses.find((address) => address.primary) || addresses[0]);
   }, [addresses]);
 
-  const selectedAddressRef = useRef<Address | null>(null);
+  const selectedAddressRef = useRef<Address | undefined>(undefined);
   selectedAddressRef.current = address;
 
   const addressDropdownOptions = useMemo<{ value: number; label: React.JSX.Element }[]>(() => {
@@ -70,7 +70,7 @@ export default function AdditionalInfoSection({ addresses, ref }: AdditionalInfo
               dropdownStyle={styles.addressPickerContainer}
               selectedValue={address.id}
               options={addressDropdownOptions}
-              onValueChange={(id) => setAddress(addresses.find((addr) => addr.id === id) || null)}
+              onValueChange={(id) => setAddress(addresses.find((addr) => addr.id === id))}
               modalControls={{ modalProps: { animationType: "slide" } }}
             />
           ) : (
