@@ -66,13 +66,6 @@ public class GlobalExceptionHandler {
 	}
 
 
-	@ExceptionHandler(TypesenseException.class)
-	public ResponseEntity<String> handleTypesenseException(TypesenseException e) {
-		log.error("Typesense error", e);
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-	}
-
-
 	@ExceptionHandler(ServiceUnavailableException.class)
 	public ResponseEntity<String> handleServiceUnavailableException(ServiceUnavailableException e) {
 		log.error("Service unavailable", e);
