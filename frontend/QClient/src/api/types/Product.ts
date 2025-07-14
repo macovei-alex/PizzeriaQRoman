@@ -38,4 +38,5 @@ export type ProductWithIngredients = Product & {
 
 export type ProductWithOptions = Product & {
   optionLists: OptionList[];
+  isActive: boolean;
 };

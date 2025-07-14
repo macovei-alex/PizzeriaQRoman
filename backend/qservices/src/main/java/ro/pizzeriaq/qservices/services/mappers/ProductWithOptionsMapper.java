@@ -26,6 +26,9 @@ public class ProductWithOptionsMapper {
 		if (!imageExists) {
 			log.warn("Image not found: {}. ProductWithOptionsDTO will have null for image name and 0 for image version", product.getImageName());
 		}
+		if (!product.isActive()) {
+			log.warn("Product with ID {} is not active", product.getId());
+		}
 
 		return ProductWithOptionsDto.builder()
 				.id(product.getId())
@@ -37,6 +40,7 @@ public class ProductWithOptionsMapper {
 				.imageVersion(imageExists ? imageService.getImageTimestamp(product.getImageName()) : 0)
 				.categoryId(product.getCategory().getId())
 				.optionLists(product.getOptionLists().stream().map(optionListMapper::fromEntity).toList())
+				.isActive(product.isActive())
 				.build();
 	}
 }

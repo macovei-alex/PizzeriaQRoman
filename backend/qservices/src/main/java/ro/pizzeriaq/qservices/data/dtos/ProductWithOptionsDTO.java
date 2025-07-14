@@ -22,4 +22,7 @@ public class ProductWithOptionsDto {
 	private int categoryId;
 	private List<OptionListDto> optionLists;
 
+	@Builder.Default
+	private boolean isActive = true;
+
 }

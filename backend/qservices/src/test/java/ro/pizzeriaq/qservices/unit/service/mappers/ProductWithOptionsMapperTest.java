@@ -153,4 +153,36 @@ public class ProductWithOptionsMapperTest {
 
 		assertEquals(expected, productWithOptionsMapper.fromEntity(product));
 	}
+
+	@Test
+	void inactiveEntity() {
+		when(imageService.imageExists("generic-pizza.jpg"))
+				.thenReturn(true);
+
+		Product product = Product.builder()
+				.id(10)
+				.name("Pizza")
+				.subtitle("Pizza subtitle")
+				.description("Pizza description")
+				.price(BigDecimal.valueOf(30.0))
+				.imageName("generic-pizza.jpg")
+				.optionLists(List.of())
+				.category(ProductCategory.builder().id(2).name("Pizza").build())
+				.isActive(false)
+				.build();
+
+		ProductWithOptionsDto expected = ProductWithOptionsDto.builder()
+				.id(10)
+				.name("Pizza")
+				.subtitle("Pizza subtitle")
+				.description("Pizza description")
+				.price(BigDecimal.valueOf(30.0))
+				.imageName("generic-pizza.jpg")
+				.categoryId(2)
+				.optionLists(List.of())
+				.isActive(false)
+				.build();
+
+		assertEquals(expected, productWithOptionsMapper.fromEntity(product));
+	}
 }
