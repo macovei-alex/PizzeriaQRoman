@@ -67,7 +67,7 @@ export default function CartScreen() {
     additionalSectionRef.current?.getAddress() !== null;
 
   return (
-    <KeyboardAvoidingView style={styles.screen} behavior="padding">
+    <KeyboardAvoidingView style={styles.screen} behavior="height" keyboardVerticalOffset={100}>
       <ScrollView
         refreshControl={<RefreshControl refreshing={false} onRefresh={() => addressQuery.refetch()} />}
       >

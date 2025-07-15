@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native-unistyles";
 import { Product, ProductId } from "src/api/types/Product";
 import useProductsQuery from "src/api/queries/productsQuery";
 import logger from "src/constants/logger";
-import { formatDate, formatPrice } from "src/utils/utils";
+import { formatPrice } from "src/utils/utils";
 import ErrorComponent from "src/components/shared/generic/ErrorComponent";
 import RemoteImage from "src/components/shared/generic/RemoteImage";
 import { ProfileStackParamList } from "src/navigation/ProfileStackNavigator";
@@ -75,7 +75,7 @@ export default function OrderCard({ order, containerStyle }: OrderCardProps) {
       <View style={styles.rightSideContainer}>
         <View style={styles.infoHeader}>
           {/* delivery date */}
-          <Text style={styles.dateText}>{formatDate(order.deliveryTimestamp)}</Text>
+          {/* <Text style={styles.dateText}>{formatDate(order.deliveryTimestamp)}</Text> */}
 
           {/* status */}
           <TouchableOpacity
@@ -150,7 +150,7 @@ const styles = StyleSheet.create((theme) => ({
   },
   infoHeader: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     marginBottom: 8,
   },
   dateText: {
