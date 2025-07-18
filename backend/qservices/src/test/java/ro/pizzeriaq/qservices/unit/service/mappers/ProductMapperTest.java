@@ -1,10 +1,6 @@
 package ro.pizzeriaq.qservices.unit.service.mappers;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import ro.pizzeriaq.qservices.data.entities.Product;
 import ro.pizzeriaq.qservices.data.entities.ProductCategory;
 import ro.pizzeriaq.qservices.data.dtos.ProductDto;
@@ -14,22 +10,13 @@ import ro.pizzeriaq.qservices.services.ImageService;
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
 public class ProductMapperTest {
 
-	@Mock
-	ImageService imageService;
-
-	ProductMapper productMapper;
-
-
-	@BeforeEach
-	void setup() {
-		assertNotNull(imageService);
-		productMapper = new ProductMapper(imageService);
-	}
+	final ImageService imageService = mock(ImageService.class);
+	final ProductMapper productMapper = new ProductMapper(imageService);
 
 
 	@Test
@@ -40,14 +27,17 @@ public class ProductMapperTest {
 	@Test
 	void throwCases() {
 		assertThrows(NullPointerException.class, () -> productMapper.fromEntity(Product.builder().build()));
+
 		assertThrows(NullPointerException.class, () -> productMapper.fromEntity(Product.builder()
 				.id(null)
 				.category(ProductCategory.builder().id(1).build())
 				.build()));
+
 		assertThrows(NullPointerException.class, () -> productMapper.fromEntity(Product.builder()
 				.id(1)
 				.category(null)
 				.build()));
+
 		assertThrows(NullPointerException.class, () -> productMapper.fromEntity(Product.builder()
 				.id(1)
 				.category(ProductCategory.builder().id(null).build())
@@ -64,8 +54,7 @@ public class ProductMapperTest {
 
 	@Test
 	void entityValid() {
-		when(imageService.imageExists("generic-pizza.jpg"))
-				.thenReturn(true);
+		when(imageService.imageExists("generic-pizza.jpg")).thenReturn(true);
 
 		Product product = Product.builder()
 				.id(10)

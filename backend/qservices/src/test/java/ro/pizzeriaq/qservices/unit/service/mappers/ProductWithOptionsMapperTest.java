@@ -1,10 +1,6 @@
 package ro.pizzeriaq.qservices.unit.service.mappers;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import ro.pizzeriaq.qservices.data.entities.OptionList;
 import ro.pizzeriaq.qservices.data.entities.Product;
 import ro.pizzeriaq.qservices.data.entities.ProductCategory;
@@ -17,31 +13,19 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
 public class ProductWithOptionsMapperTest {
 
-	@Mock
-	ImageService imageService;
-	@Mock
-	OptionListMapper optionListMapper;
-
-	ProductWithOptionsMapper productWithOptionsMapper;
+	final ImageService imageService = mock(ImageService.class);
+	final OptionListMapper optionListMapper = mock(OptionListMapper.class);
+	final ProductWithOptionsMapper productWithOptionsMapper
+			= new ProductWithOptionsMapper(imageService, optionListMapper);
 
 
 	OptionList nullOptionList() {
 		return null;
-	}
-
-	@BeforeEach
-	void setup() {
-		if (productWithOptionsMapper == null) {
-			productWithOptionsMapper = new ProductWithOptionsMapper(imageService, optionListMapper);
-		}
-		assertNotNull(productWithOptionsMapper);
-		assertNotNull(imageService);
-		assertNotNull(optionListMapper);
 	}
 
 
