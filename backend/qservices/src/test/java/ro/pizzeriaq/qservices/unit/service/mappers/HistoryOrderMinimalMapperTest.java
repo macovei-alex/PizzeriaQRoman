@@ -1,11 +1,11 @@
 package ro.pizzeriaq.qservices.unit.service.mappers;
 
 import org.junit.jupiter.api.Test;
+import ro.pizzeriaq.qservices.data.dtos.HistoryOrderMinimalDto;
 import ro.pizzeriaq.qservices.data.entities.Order;
 import ro.pizzeriaq.qservices.data.entities.OrderItem;
 import ro.pizzeriaq.qservices.data.entities.OrderStatus;
 import ro.pizzeriaq.qservices.data.entities.Product;
-import ro.pizzeriaq.qservices.data.dtos.HistoryOrderMinimalDto;
 import ro.pizzeriaq.qservices.services.mappers.HistoryOrderMinimalMapper;
 
 import java.math.BigDecimal;
@@ -23,55 +23,52 @@ public class HistoryOrderMinimalMapperTest {
 		return null;
 	}
 
+
+	Order.OrderBuilder minimalValidOrderBuilder() {
+		return Order.builder()
+				.id(1)
+				.orderStatus(OrderStatus.RECEIVED)
+				.orderItems(List.of());
+	}
+
 	@Test
 	void throwCases() {
-		assertThrows(NullPointerException.class, () -> historyOrderMinimalMapper.fromEntity(Order.builder()
-				.id(null)
-				.orderStatus(OrderStatus.RECEIVED)
-				.orderItems(List.of())
+		assertThrows(NullPointerException.class, () -> historyOrderMinimalMapper.fromEntity(minimalValidOrderBuilder()
+				.id(null).build()));
+
+		assertThrows(NullPointerException.class, () -> historyOrderMinimalMapper.fromEntity(minimalValidOrderBuilder()
+				.orderStatus(null).build()));
+
+		assertThrows(NullPointerException.class, () -> historyOrderMinimalMapper.fromEntity(minimalValidOrderBuilder()
+				.orderItems(null).build()));
+
+		assertThrows(NullPointerException.class, () -> historyOrderMinimalMapper.fromEntity(minimalValidOrderBuilder()
+				.orderItems(List.of(nullOrderItem())).build()));
+
+		assertThrows(NullPointerException.class, () -> historyOrderMinimalMapper.fromEntity(minimalValidOrderBuilder()
+				.orderItems(List.of(
+						OrderItem.builder().id(null).product(Product.builder().id(1).build()).count(1).build()
+				))
 				.build()));
-		assertThrows(NullPointerException.class, () -> historyOrderMinimalMapper.fromEntity(Order.builder()
-				.id(1)
-				.orderStatus(null)
-				.orderItems(List.of())
-				.build()));
-		assertThrows(NullPointerException.class, () -> historyOrderMinimalMapper.fromEntity(Order.builder()
-				.id(1)
-				.orderStatus(OrderStatus.RECEIVED)
-				.orderItems(null)
-				.build()));
-		assertThrows(NullPointerException.class, () -> historyOrderMinimalMapper.fromEntity(Order.builder()
-				.id(1)
-				.orderStatus(OrderStatus.RECEIVED)
-				.orderItems(List.of(nullOrderItem()))
-				.build()));
-		assertThrows(NullPointerException.class, () -> historyOrderMinimalMapper.fromEntity(Order.builder()
-				.id(1)
-				.orderStatus(OrderStatus.RECEIVED)
-				.orderItems(List.of(OrderItem.builder().id(null).product(Product.builder().id(1).build()).count(1).build()))
-				.build()));
-		assertThrows(NullPointerException.class, () -> historyOrderMinimalMapper.fromEntity(Order.builder()
-				.id(1)
-				.orderStatus(OrderStatus.RECEIVED)
+
+		assertThrows(NullPointerException.class, () -> historyOrderMinimalMapper.fromEntity(minimalValidOrderBuilder()
 				.orderItems(List.of(OrderItem.builder().id(1).product(null).count(1).build()))
 				.build()));
-		assertThrows(NullPointerException.class, () -> historyOrderMinimalMapper.fromEntity(Order.builder()
-				.id(1)
-				.orderStatus(OrderStatus.RECEIVED)
-				.orderItems(List.of(OrderItem.builder().id(1).product(Product.builder().id(null).build()).count(1).build()))
+
+		assertThrows(NullPointerException.class, () -> historyOrderMinimalMapper.fromEntity(minimalValidOrderBuilder()
+				.orderItems(List.of(
+						OrderItem.builder().id(1).product(
+								Product.builder().id(null).build()
+						).count(1).build()
+				))
 				.build()));
 	}
 
 	@Test
 	void minimalValidCases() {
-		assertDoesNotThrow(() -> historyOrderMinimalMapper.fromEntity(Order.builder()
-				.id(1)
-				.orderStatus(OrderStatus.RECEIVED)
-				.orderItems(List.of())
-				.build()));
-		assertDoesNotThrow(() -> historyOrderMinimalMapper.fromEntity(Order.builder()
-				.id(1)
-				.orderStatus(OrderStatus.RECEIVED)
+		assertDoesNotThrow(() -> historyOrderMinimalMapper.fromEntity(minimalValidOrderBuilder().build()));
+
+		assertDoesNotThrow(() -> historyOrderMinimalMapper.fromEntity(minimalValidOrderBuilder()
 				.orderItems(List.of(OrderItem.builder()
 						.id(1)
 						.product(Product.builder().id(1).build())
