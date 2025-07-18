@@ -15,8 +15,7 @@ public class HistoryOrderFullMapper {
 
 
 	public HistoryOrderFullDto fromEntity(@NonNull Order order) {
-		// TODO: Test HistoryOrderFullMapper
-		return HistoryOrderFullDto.builder()
+		var dto = HistoryOrderFullDto.builder()
 				.id(order.getId())
 				.orderStatus(order.getOrderStatus().name())
 				.orderTimestamp(order.getOrderTimestamp())
@@ -28,6 +27,18 @@ public class HistoryOrderFullMapper {
 				.address(addressMapper.fromEntity(order.getAddress()))
 				.items(order.getOrderItems().stream().map(this::mapOrderItem).toList())
 				.build();
+
+		if (dto.getTotalPrice() == null) {
+			throw new NullPointerException("Total price cannot be null");
+		}
+		if (dto.getTotalPriceWithDiscount() == null) {
+			throw new NullPointerException("Total price with discount cannot be null");
+		}
+		if (dto.getOrderTimestamp() == null) {
+			throw new NullPointerException("Order timestamp cannot be null");
+		}
+
+		return dto;
 	}
 
 
