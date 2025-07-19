@@ -27,17 +27,28 @@ public class MockUserService {
 
 
 	public void withDynamicMockUser(Predicate<Account> condition, ThrowingConsumer<UUID> runnable) throws Exception {
-		var account = accountRepository.findAllActiveSortByCreatedAt().stream()
-				.filter(condition)
-				.findFirst()
-				.orElseThrow(() -> new Exception("No account found with the specified criteria"));
-		var auth = new UsernamePasswordAuthenticationToken(account.getId(), "unchecked-password", List.of());
+		var accountId = getDynamicAccountId(condition);
+		var auth = new UsernamePasswordAuthenticationToken(accountId, "unchecked-password", List.of());
 		SecurityContextHolder.getContext().setAuthentication(auth);
 		try {
-			runnable.consume(account.getId());
+			runnable.consume(accountId);
 		} finally {
 			SecurityContextHolder.clearContext();
 		}
+	}
+
+
+	public UUID getDynamicAccountId(Predicate<Account> condition) throws Exception {
+		return accountRepository.findAllActiveSortByCreatedAt().stream()
+				.filter(condition)
+				.findFirst()
+				.orElseThrow(() -> new Exception("No account found with the specified criteria"))
+				.getId();
+	}
+
+
+	public UUID getDynamicAccountIdWithPhoneNumber() throws Exception {
+		return getDynamicAccountId((a) -> StringUtils.hasText(a.getPhoneNumber()));
 	}
 
 }

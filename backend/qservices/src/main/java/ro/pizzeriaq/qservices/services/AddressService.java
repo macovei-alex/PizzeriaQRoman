@@ -3,6 +3,7 @@ package ro.pizzeriaq.qservices.services;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ro.pizzeriaq.qservices.data.entities.AddressType;
 import ro.pizzeriaq.qservices.repositories.AccountRepository;
 import ro.pizzeriaq.qservices.repositories.AddressRepository;
@@ -22,6 +23,7 @@ public class AddressService {
 	private final AddressMapper addressMapper;
 
 
+	@Transactional
 	public List<AddressDto> getAddressesForAccount(UUID accountId) {
 		return addressRepository.findAllActiveByAccountId(accountId)
 				.stream()
@@ -30,6 +32,7 @@ public class AddressService {
 	}
 
 
+	@Transactional
 	public AddressDto createAddress(UUID userId, CreateAddressDto address) {
 		var account = accountRepository.findActiveById(userId)
 				.orElseThrow(() -> new EntityNotFoundException("Account with id ( %s ) not found".formatted(userId)));
@@ -41,6 +44,7 @@ public class AddressService {
 	}
 
 
+	@Transactional
 	public void deleteAddress(int addressId) {
 		var address = addressRepository.findById(addressId)
 				.orElseThrow(() -> new EntityNotFoundException("Address with id ( %s ) not found".formatted(addressId)));

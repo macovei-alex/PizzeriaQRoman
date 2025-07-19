@@ -11,7 +11,6 @@ import ro.pizzeriaq.qservices.data.dtos.CreateAddressDto;
 import java.util.List;
 import java.util.UUID;
 
-// TODO: Address tests
 @RestController
 @RequestMapping("/accounts/{accountId}/addresses")
 @AllArgsConstructor
