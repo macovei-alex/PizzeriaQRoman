@@ -5,14 +5,12 @@ import org.hibernate.Hibernate;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import ro.pizzeriaq.qservices.config.Container;
+import ro.pizzeriaq.qservices.config.DataJpaTestConfig;
 import ro.pizzeriaq.qservices.config.RepositoryTestConfig;
 import ro.pizzeriaq.qservices.config.TestcontainersRegistry;
 import ro.pizzeriaq.qservices.data.entities.Product;
@@ -25,9 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-@DataJpaTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Import(RepositoryTestConfig.class)
+@DataJpaTestConfig
 public class ProductRepositoryTest {
 
 	@Value("app.environment")

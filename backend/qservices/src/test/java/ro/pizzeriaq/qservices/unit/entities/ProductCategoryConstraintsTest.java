@@ -1,30 +1,28 @@
 package ro.pizzeriaq.qservices.unit.entities;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.jpa.JpaSystemException;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import ro.pizzeriaq.qservices.config.Container;
+import ro.pizzeriaq.qservices.config.DataJpaTestConfig;
 import ro.pizzeriaq.qservices.config.RepositoryTestConfig;
 import ro.pizzeriaq.qservices.config.TestcontainersRegistry;
 import ro.pizzeriaq.qservices.data.entities.ProductCategory;
 import ro.pizzeriaq.qservices.repositories.ProductCategoryRepository;
 import ro.pizzeriaq.qservices.services.EntityInitializerService;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Slf4j
-@DataJpaTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Import(RepositoryTestConfig.class)
-@Rollback
+@DataJpaTestConfig
 class ProductCategoryConstraintsTest {
 
 	@Value("${app.environment}")

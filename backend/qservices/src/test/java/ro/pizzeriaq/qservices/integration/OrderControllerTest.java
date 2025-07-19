@@ -129,7 +129,7 @@ public class OrderControllerTest {
 	void badPayload1() throws Exception {
 		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) ->
 				mockMvc.perform(constructDefaultPostRequest(accountId))
-						.andExpect(status().isInternalServerError())
+						.andExpect(status().isBadRequest())
 		);
 	}
 
@@ -138,7 +138,7 @@ public class OrderControllerTest {
 		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) ->
 				mockMvc.perform(constructDefaultPostRequest(accountId)
 								.content(""))
-						.andExpect(status().isInternalServerError())
+						.andExpect(status().isBadRequest())
 		);
 	}
 

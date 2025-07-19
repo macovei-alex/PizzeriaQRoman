@@ -23,7 +23,7 @@ public class AddressService {
 	private final AddressMapper addressMapper;
 
 
-	@Transactional
+	@Transactional(readOnly = true)
 	public List<AddressDto> getAddressesForAccount(UUID accountId) {
 		return addressRepository.findAllActiveByAccountId(accountId)
 				.stream()
