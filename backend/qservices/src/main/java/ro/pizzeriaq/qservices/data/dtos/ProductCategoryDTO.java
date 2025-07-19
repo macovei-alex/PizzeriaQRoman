@@ -1,16 +1,10 @@
 package ro.pizzeriaq.qservices.data.dtos;
 
-import lombok.*;
+import lombok.Builder;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
 @Builder
-public class ProductCategoryDto {
-
-	private int id;
-	private String name;
-
+public record ProductCategoryDto(
+		int id,
+		String name
+) {
 }

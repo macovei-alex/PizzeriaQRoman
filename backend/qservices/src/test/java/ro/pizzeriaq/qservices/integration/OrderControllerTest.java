@@ -204,7 +204,7 @@ public class OrderControllerTest {
 	@Test
 	void badPayloadValidation4() throws Exception {
 		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) -> {
-			var productId = productService.getProducts().stream().findFirst().orElseThrow().getId();
+			var productId = productService.getProducts().stream().findFirst().orElseThrow().id();
 
 			PlacedOrderDto placedOrderDTO = PlacedOrderDto.builder()
 					.items(List.of(
@@ -221,7 +221,7 @@ public class OrderControllerTest {
 	@Test
 	void badPayloadValidation5() throws Exception {
 		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) -> {
-			var productId = productService.getProducts().stream().findFirst().orElseThrow().getId();
+			var productId = productService.getProducts().stream().findFirst().orElseThrow().id();
 
 			PlacedOrderDto placedOrderDTO = PlacedOrderDto.builder()
 					.items(List.of(
@@ -249,7 +249,7 @@ public class OrderControllerTest {
 							.addressId(address.getId())
 							.items(products.stream()
 									.map((p) -> PlacedOrderDto.Item.builder()
-											.productId(p.getId())
+											.productId(p.id())
 											.count(2)
 											.optionLists(List.of())
 											.build()
@@ -257,7 +257,7 @@ public class OrderControllerTest {
 									.toList()
 							)
 							.clientExpectedPrice(products.stream()
-									.map(ProductDto::getPrice)
+									.map(ProductDto::price)
 									.reduce(BigDecimal.ZERO,
 											(acc, price) -> acc.add(price.multiply(BigDecimal.valueOf(2)))
 									)
@@ -302,7 +302,7 @@ public class OrderControllerTest {
 					.addressId(address.getId())
 					.items(products.stream()
 							.map((p) -> PlacedOrderDto.Item.builder()
-									.productId(p.getId())
+									.productId(p.id())
 									.count(2)
 									.optionLists(List.of())
 									.build()
@@ -310,7 +310,7 @@ public class OrderControllerTest {
 							.toList()
 					)
 					.clientExpectedPrice(products.stream()
-							.map(ProductDto::getPrice)
+							.map(ProductDto::price)
 							.reduce(BigDecimal.ZERO,
 									(acc, price) -> acc.add(price.multiply(BigDecimal.valueOf(2)))
 							)
@@ -344,7 +344,7 @@ public class OrderControllerTest {
 					.addressId(address.getId())
 					.items(products.stream()
 							.map(product -> PlacedOrderDto.Item.builder()
-									.productId(product.getId())
+									.productId(product.id())
 									.count(10)
 									.optionLists(List.of())
 									.build()
@@ -352,7 +352,7 @@ public class OrderControllerTest {
 							.toList()
 					)
 					.clientExpectedPrice(products.stream()
-							.map(ProductDto::getPrice)
+							.map(ProductDto::price)
 							.reduce(BigDecimal.ZERO,
 									(acc, price) -> acc.add(price.multiply(BigDecimal.valueOf(10)))
 							)
@@ -381,7 +381,7 @@ public class OrderControllerTest {
 		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) -> {
 			var address = addressRepository.findAllActiveByAccountId(accountId).get(0);
 			var products = productService.getProducts().stream()
-					.map((product) -> productService.getProduct(product.getId()))
+					.map((product) -> productService.getProduct(product.id()))
 					.limit(5)
 					.toList();
 
@@ -448,7 +448,7 @@ public class OrderControllerTest {
 		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) -> {
 			var address = addressRepository.findAllActiveByAccountId(accountId).get(0);
 			var products = productService.getProducts().stream()
-					.map((product) -> productService.getProduct(product.getId()))
+					.map((product) -> productService.getProduct(product.id()))
 					.limit(5)
 					.toList();
 

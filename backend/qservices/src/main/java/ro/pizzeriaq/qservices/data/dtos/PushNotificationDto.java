@@ -1,14 +1,11 @@
 package ro.pizzeriaq.qservices.data.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
 
-@Data
-@AllArgsConstructor
-public class PushNotificationDto {
-
-	private String to;
-	private String title;
-	private String body;
-
+@Builder
+public record PushNotificationDto(
+		String to,
+		String title,
+		String body
+) {
 }

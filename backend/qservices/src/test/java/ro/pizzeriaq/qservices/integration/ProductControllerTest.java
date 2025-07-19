@@ -73,7 +73,7 @@ class ProductControllerTest {
 				.filter(predicate)
 				.findFirst()
 				.orElseThrow()
-				.getId();
+				.id();
 
 		return productService.getProduct(productId);
 	}
@@ -138,7 +138,7 @@ class ProductControllerTest {
 	@Test
 	void getProductWithValidIdAndOptionLists1() throws Exception {
 		var product = getProductByFilter(
-				(p) -> p.getName().equals("Pizza Capriciosa") && p.getSubtitle().contains("1+1")
+				(p) -> p.name().equals("Pizza Capriciosa") && p.subtitle().contains("1+1")
 		);
 
 		mockUserService.withDynamicMockUserWithPhoneNumber((_) -> {
@@ -157,7 +157,7 @@ class ProductControllerTest {
 	@Test
 	void getProductWithValidIdAndOptionLists2() throws Exception {
 		var product = getProductByFilter(
-				(p) -> p.getName().equals("Pizza Margherita") && p.getSubtitle().contains("1+1")
+				(p) -> p.name().equals("Pizza Margherita") && p.subtitle().contains("1+1")
 		);
 
 		mockUserService.withDynamicMockUserWithPhoneNumber((_) -> {
@@ -175,7 +175,7 @@ class ProductControllerTest {
 
 	@Test
 	void getProductWithValidIdAndNoOptionLists1() throws Exception {
-		var product = getProductByFilter((p) -> p.getName().equals("Coca-Cola"));
+		var product = getProductByFilter((p) -> p.name().equals("Coca-Cola"));
 
 		mockUserService.withDynamicMockUserWithPhoneNumber((_) -> {
 			mockMvc.perform(get(contextPath + "/products/{id}", product.getId())
@@ -192,7 +192,7 @@ class ProductControllerTest {
 
 	@Test
 	void getProductWithValidIdAndNoOptionLists2() throws Exception {
-		var product = getProductByFilter((p) -> p.getName().equals("Fanta"));
+		var product = getProductByFilter((p) -> p.name().equals("Fanta"));
 
 		mockUserService.withDynamicMockUserWithPhoneNumber((_) -> {
 			mockMvc.perform(get(contextPath + "/products/{id}", product.getId())

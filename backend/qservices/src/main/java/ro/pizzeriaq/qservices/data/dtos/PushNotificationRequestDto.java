@@ -1,15 +1,11 @@
 package ro.pizzeriaq.qservices.data.dtos;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+import lombok.Builder;
 
-@Data
-public class PushNotificationRequestDto {
-
-	@NotBlank
-	private String title;
-
-	@NotBlank
-	private String body;
-
+@Builder
+public record PushNotificationRequestDto(
+		@NotBlank String title,
+		@NotBlank String body
+) {
 }

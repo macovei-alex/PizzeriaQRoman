@@ -23,14 +23,14 @@ public class NotificationsController {
 
 	@PostMapping("/notifications")
 	public void sendNotification(@RequestBody @Valid PushNotificationRequestDto notificationRequest) {
-		notificationsService.sendNotification(notificationRequest.getTitle(), notificationRequest.getBody());
+		notificationsService.sendNotification(notificationRequest.title(), notificationRequest.body());
 	}
 
 
 	@PostMapping("/devices")
 	public ResponseEntity<Void> registerDevice(@RequestBody @Valid PushNotificationTokenDto notificationToken) {
-		notificationsService.addPushToken(notificationToken.getToken());
-		var encodedToken = URLEncoder.encode(notificationToken.getToken(), StandardCharsets.UTF_8);
+		notificationsService.addPushToken(notificationToken.token());
+		var encodedToken = URLEncoder.encode(notificationToken.token(), StandardCharsets.UTF_8);
 		return ResponseEntity.created(URI.create("/devices/" + encodedToken)).build();
 	}
 

@@ -43,13 +43,12 @@ public class NotificationsService {
 
 	public void sendNotification(String title, String body) {
 		var tokens = pushTokenRepository.findAll();
-		var sharedNotification = new PushNotificationDto(null, title, body);
 
 		for (var token : tokens) {
-			sharedNotification.setTo(token.getId());
+			var notification = new PushNotificationDto(token.getId(), title, body);
 			var response = restClient
 					.post()
-					.body(sharedNotification)
+					.body(notification)
 					.retrieve()
 					.toEntity(String.class);
 			if (!response.getStatusCode().is2xxSuccessful()) {
