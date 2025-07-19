@@ -47,8 +47,6 @@ public class Account {
 	@Column(length = 20)
 	private String phoneNumber;
 
-	private UUID conversationId;
-
 	@Column(nullable = false)
 	@ColumnDefault("1")
 	@Builder.Default

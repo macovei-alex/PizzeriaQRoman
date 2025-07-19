@@ -81,7 +81,7 @@ public class ProductCategoryControllerTest {
 
 	@Test
 	void getCategories() throws Exception {
-		mockUserService.withDynamicMockUser((_) -> {
+		mockUserService.withDynamicMockUserWithPhoneNumber((_) -> {
 			mockMvc.perform(get(contextPath + "/categories")
 							.contextPath(contextPath))
 					.andExpect(status().isOk());

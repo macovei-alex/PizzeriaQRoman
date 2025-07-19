@@ -32,8 +32,4 @@ public interface AccountRepository extends JpaRepository<Account, UUID> {
 	@Query("SELECT COUNT(a) > 0 FROM Account a WHERE a.id = :id")
 	boolean existsActiveById(UUID id);
 
-
-	@Query("SELECT a.conversationId FROM Account a WHERE a.id = :accountId")
-	Optional<UUID> findConversationIdByAccountId(UUID accountId);
-
 }

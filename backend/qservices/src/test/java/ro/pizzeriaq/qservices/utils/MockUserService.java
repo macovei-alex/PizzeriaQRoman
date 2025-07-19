@@ -21,7 +21,7 @@ public class MockUserService {
 	private AccountRepository accountRepository;
 
 
-	public void withDynamicMockUser(ThrowingConsumer<UUID> runnable) throws Exception {
+	public void withDynamicMockUserWithPhoneNumber(ThrowingConsumer<UUID> runnable) throws Exception {
 		withDynamicMockUser((a) -> StringUtils.hasText(a.getPhoneNumber()), runnable);
 	}
 

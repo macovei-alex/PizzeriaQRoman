@@ -104,7 +104,7 @@ class ProductControllerTest {
 
 	@Test
 	void getAllProducts() throws Exception {
-		mockUserService.withDynamicMockUser((_) -> {
+		mockUserService.withDynamicMockUserWithPhoneNumber((_) -> {
 			mockMvc.perform(get(contextPath + "/products")
 							.contextPath(contextPath)
 							.accept(MediaType.APPLICATION_JSON))
@@ -117,7 +117,7 @@ class ProductControllerTest {
 
 	@Test
 	void getNonexistentProduct() throws Exception {
-		mockUserService.withDynamicMockUser((_) -> {
+		mockUserService.withDynamicMockUserWithPhoneNumber((_) -> {
 			mockMvc.perform(get(contextPath + "/products/{id}", Integer.MAX_VALUE)
 							.contextPath(contextPath)
 							.accept(MediaType.APPLICATION_JSON))
@@ -127,7 +127,7 @@ class ProductControllerTest {
 
 	@Test
 	void getProductWithWrongRoute() throws Exception {
-		mockUserService.withDynamicMockUser((_) -> {
+		mockUserService.withDynamicMockUserWithPhoneNumber((_) -> {
 			mockMvc.perform(get(contextPath + "/products/invalid")
 							.contextPath(contextPath)
 							.accept(MediaType.APPLICATION_JSON))
@@ -141,7 +141,7 @@ class ProductControllerTest {
 				(p) -> p.getName().equals("Pizza Capriciosa") && p.getSubtitle().contains("1+1")
 		);
 
-		mockUserService.withDynamicMockUser((_) -> {
+		mockUserService.withDynamicMockUserWithPhoneNumber((_) -> {
 			mockMvc.perform(get(contextPath + "/products/{id}", product.getId())
 							.contextPath(contextPath)
 							.accept(MediaType.APPLICATION_JSON))
@@ -160,7 +160,7 @@ class ProductControllerTest {
 				(p) -> p.getName().equals("Pizza Margherita") && p.getSubtitle().contains("1+1")
 		);
 
-		mockUserService.withDynamicMockUser((_) -> {
+		mockUserService.withDynamicMockUserWithPhoneNumber((_) -> {
 			mockMvc.perform(get(contextPath + "/products/{id}", product.getId())
 							.contextPath(contextPath)
 							.accept(MediaType.APPLICATION_JSON))
@@ -177,7 +177,7 @@ class ProductControllerTest {
 	void getProductWithValidIdAndNoOptionLists1() throws Exception {
 		var product = getProductByFilter((p) -> p.getName().equals("Coca-Cola"));
 
-		mockUserService.withDynamicMockUser((_) -> {
+		mockUserService.withDynamicMockUserWithPhoneNumber((_) -> {
 			mockMvc.perform(get(contextPath + "/products/{id}", product.getId())
 							.contextPath(contextPath)
 							.accept(MediaType.APPLICATION_JSON))
@@ -194,7 +194,7 @@ class ProductControllerTest {
 	void getProductWithValidIdAndNoOptionLists2() throws Exception {
 		var product = getProductByFilter((p) -> p.getName().equals("Fanta"));
 
-		mockUserService.withDynamicMockUser((_) -> {
+		mockUserService.withDynamicMockUserWithPhoneNumber((_) -> {
 			mockMvc.perform(get(contextPath + "/products/{id}", product.getId())
 							.contextPath(contextPath)
 							.accept(MediaType.APPLICATION_JSON))

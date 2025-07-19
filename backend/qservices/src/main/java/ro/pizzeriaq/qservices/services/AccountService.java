@@ -2,8 +2,6 @@ package ro.pizzeriaq.qservices.services;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.pizzeriaq.qservices.data.model.KeycloakUser;
@@ -56,18 +54,4 @@ public class AccountService {
 				.getPhoneNumber();
 	}
 
-
-	@Nullable
-	public UUID getConversationId(@NonNull UUID accountId) {
-		return accountRepository.findConversationIdByAccountId(accountId).orElse(null);
-	}
-
-
-	@Transactional
-	public void setConversationId(@NonNull UUID accountId, @Nullable UUID conversationId) {
-		var account = accountRepository.findActiveById(accountId)
-						.orElseThrow();
-		account.setConversationId(conversationId);
-		accountRepository.flush();
-	}
 }
