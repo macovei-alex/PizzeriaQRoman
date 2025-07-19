@@ -1,8 +1,6 @@
 package ro.pizzeriaq.qservices.unit.data.dtos;
 
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import ro.pizzeriaq.qservices.config.BaseDtoTest;
@@ -11,9 +9,6 @@ import ro.pizzeriaq.qservices.data.dtos.CreateAddressDto;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CreateAddressDtoTest extends BaseDtoTest {
-
-	Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-
 
 	@ParameterizedTest
 	@ValueSource(strings = {
@@ -30,7 +25,9 @@ public class CreateAddressDtoTest extends BaseDtoTest {
 					"""
 	})
 	void deserializationErrors(String json) {
-		assertThrows(MismatchedInputException.class, () -> objectMapper.readValue(json, CreateAddressDto.class));
+		assertThrows(MismatchedInputException.class, () ->
+				objectMapper.readValue(json, CreateAddressDto.class)
+		);
 	}
 
 	@ParameterizedTest
@@ -53,7 +50,7 @@ public class CreateAddressDtoTest extends BaseDtoTest {
 					}
 					"""
 	})
-	void invalidJsonBy1Violation(String json) throws Exception {
+	void invalidBy1Violation(String json) throws Exception {
 		var dto = objectMapper.readValue(json, CreateAddressDto.class);
 		var violations = validator.validate(dto);
 

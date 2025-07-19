@@ -69,17 +69,17 @@ public class OrderService {
 		validateOrder(placeOrderDTO, products, account);
 		Order order = generateOrder(placeOrderDTO, products, account);
 
-		var priceDifference = order.getTotalPriceWithDiscount().subtract(placeOrderDTO.getClientExpectedPrice());
+		var priceDifference = order.getTotalPriceWithDiscount().subtract(placeOrderDTO.clientExpectedPrice());
 		if (priceDifference.abs().doubleValue() >= 0.01) {
 			throw new PriceNotMatchingException(
 					"The client expected price does not match the calculated total price. ",
-					placeOrderDTO.getClientExpectedPrice(),
+					placeOrderDTO.clientExpectedPrice(),
 					order.getTotalPriceWithDiscount()
 			);
-		} else if (!order.getTotalPriceWithDiscount().equals(placeOrderDTO.getClientExpectedPrice())) {
+		} else if (!order.getTotalPriceWithDiscount().equals(placeOrderDTO.clientExpectedPrice())) {
 			log.warn("The client expected price does not match the calculated total price, but the difference is small. " +
 					"Client expected: {}, Calculated: {}. Difference: {}",
-					placeOrderDTO.getClientExpectedPrice(),
+					placeOrderDTO.clientExpectedPrice(),
 					order.getTotalPriceWithDiscount(),
 					priceDifference
 			);
@@ -93,19 +93,19 @@ public class OrderService {
 
 	private void validateOrder(PlaceOrderDto placeOrderDTO, List<Product> products, Account account) {
 		if (account.getAddresses().stream()
-				.filter(a -> Objects.equals(a.getId(), placeOrderDTO.getAddressId()))
+				.filter(a -> Objects.equals(a.getId(), placeOrderDTO.addressId()))
 				.findFirst()
 				.isEmpty()
 		) {
-			throw new IllegalArgumentException("Address not found for ID: " + placeOrderDTO.getAddressId());
+			throw new IllegalArgumentException("Address not found for ID: " + placeOrderDTO.additionalNotes());
 		}
 
-		for (PlaceOrderDto.Item orderItem : placeOrderDTO.getItems()) {
+		for (PlaceOrderDto.Item orderItem : placeOrderDTO.items()) {
 			Product product = products.stream()
-					.filter(p -> p.getId() == orderItem.getProductId())
+					.filter(p -> p.getId() == orderItem.productId())
 					.findFirst()
 					.orElseThrow(() -> new IllegalArgumentException(
-							"Product not found for ID: " + orderItem.getProductId()
+							"Product not found for ID: " + orderItem.productId()
 					));
 			validateOrderItemOptions(orderItem, product);
 		}
@@ -114,14 +114,14 @@ public class OrderService {
 
 	private void validateOrderItemOptions(PlaceOrderDto.Item orderItem, Product product) {
 
-		List<PlaceOrderDto.Item.OptionList> itemOptionLists = orderItem.getOptionLists();
+		List<PlaceOrderDto.Item.OptionList> itemOptionLists = orderItem.optionLists();
 
 		for (PlaceOrderDto.Item.OptionList itemOptionList : itemOptionLists) {
 			OptionList optionList = product.getOptionLists().stream()
-					.filter(ol -> ol.getId() == itemOptionList.getOptionListId())
+					.filter(ol -> ol.getId() == itemOptionList.optionListId())
 					.findFirst()
 					.orElseThrow(() -> new IllegalArgumentException(
-							"OptionList not found for ID: " + itemOptionList.getOptionListId()
+							"OptionList not found for ID: " + itemOptionList.optionListId()
 					));
 
 			validateOptionList(itemOptionList, optionList);
@@ -131,36 +131,36 @@ public class OrderService {
 
 	private void validateOptionList(PlaceOrderDto.Item.OptionList itemOptionList, OptionList optionList) {
 
-		if (optionList.getMinChoices() > itemOptionList.getOptions().size()
-				|| optionList.getMaxChoices() < itemOptionList.getOptions().size()) {
+		if (optionList.getMinChoices() > itemOptionList.options().size()
+				|| optionList.getMaxChoices() < itemOptionList.options().size()) {
 			throw new IllegalArgumentException(String.format(
 					"OptionList with ID ( %d ) has too many options." +
 							"Expected an option count in the range [ %d, %d ] but got ( %d ) options instead",
-					itemOptionList.getOptionListId(),
+					itemOptionList.optionListId(),
 					optionList.getMinChoices(),
 					optionList.getMaxChoices(),
-					itemOptionList.getOptions().size()
+					itemOptionList.options().size()
 			));
 		}
 
-		for (PlaceOrderDto.Item.OptionList.Option itemOption : itemOptionList.getOptions()) {
+		for (PlaceOrderDto.Item.OptionList.Option itemOption : itemOptionList.options()) {
 			Option option = optionList.getOptions().stream()
-					.filter(o -> o.getId() == itemOption.getOptionId())
+					.filter(o -> o.getId() == itemOption.optionId())
 					.findFirst()
 					.orElseThrow(() -> new IllegalArgumentException(
-							"Option not found for ID: " + itemOption.getOptionId()
+							"Option not found for ID: " + itemOption.optionId()
 					));
 
-			if (option.getMinCount() > itemOption.getCount()
-					|| option.getMaxCount() < itemOption.getCount()) {
+			if (option.getMinCount() > itemOption.count()
+					|| option.getMaxCount() < itemOption.count()) {
 				throw new IllegalArgumentException(String.format(
 						"Option with ID ( %d ) from OptionList with ID ( %d ) has too big of a count." +
 								"Expected a count in the range [ %d, %d ] but got a count of ( %d ) instead",
 						option.getId(),
-						itemOptionList.getOptionListId(),
+						itemOptionList.optionListId(),
 						option.getMinCount(),
 						option.getMaxCount(),
-						itemOption.getCount()
+						itemOption.count()
 				));
 			}
 		}
@@ -168,7 +168,7 @@ public class OrderService {
 
 
 	private Order generateOrder(PlaceOrderDto placeOrderDTO, List<Product> products, Account account) {
-		var address = addressRepository.findById(placeOrderDTO.getAddressId()).orElseThrow();
+		var address = addressRepository.findById(placeOrderDTO.addressId()).orElseThrow();
 
 		Order order = Order.builder()
 				.id(null)
@@ -179,18 +179,18 @@ public class OrderService {
 				.estimatedPreparationTime(null)
 				.orderTimestamp(LocalDateTime.now())
 				.deliveryTimestamp(null)
-				.additionalNotes(placeOrderDTO.getAdditionalNotes())
+				.additionalNotes(placeOrderDTO.additionalNotes())
 				.totalPrice(BigDecimal.ZERO)
 				.totalPriceWithDiscount(BigDecimal.ZERO)
 				.build();
 
-		for (PlaceOrderDto.Item placedOrderItemDTO : placeOrderDTO.getItems()) {
+		for (PlaceOrderDto.Item placedOrderItemDTO : placeOrderDTO.items()) {
 			Product product = products.stream()
-					.filter(p -> p.getId() == placedOrderItemDTO.getProductId())
+					.filter(p -> p.getId() == placedOrderItemDTO.productId())
 					.findFirst()
 					.orElseThrow(() -> new IllegalArgumentException(String.format(
 							"Product not found for OrderItem with ID ( %d )",
-							placedOrderItemDTO.getProductId()
+							placedOrderItemDTO.productId()
 					)));
 
 			OrderItem orderItem = generateOrderItem(placedOrderItemDTO, product);
@@ -211,42 +211,42 @@ public class OrderService {
 				.order(null)
 				.product(product)
 				.options(new ArrayList<>())
-				.count(placedItem.getCount())
+				.count(placedItem.count())
 				.build();
 
 		BigDecimal totalPrice = product.getPrice();
 
-		for (PlaceOrderDto.Item.OptionList itemOptionList : placedItem.getOptionLists()) {
+		for (PlaceOrderDto.Item.OptionList itemOptionList : placedItem.optionLists()) {
 			OptionList optionList = product.getOptionLists().stream()
-					.filter((ol) -> ol.getId() == itemOptionList.getOptionListId())
+					.filter((ol) -> ol.getId() == itemOptionList.optionListId())
 					.findFirst()
 					.orElse(null);
 
 			// Bad OptionList IDs were already sanitized during validation
 			assert optionList != null;
 
-			for (PlaceOrderDto.Item.OptionList.Option itemOption : itemOptionList.getOptions()) {
+			for (PlaceOrderDto.Item.OptionList.Option itemOption : itemOptionList.options()) {
 				Option option = optionList.getOptions().stream()
-						.filter((o) -> o.getId() == itemOption.getOptionId())
+						.filter((o) -> o.getId() == itemOption.optionId())
 						.findFirst()
 						.orElse(null);
 
 				// Bad Option IDs were already sanitized during validation
 				assert option != null;
 
-				totalPrice = totalPrice.add(option.getPrice().multiply(BigDecimal.valueOf(itemOption.getCount())));
+				totalPrice = totalPrice.add(option.getPrice().multiply(BigDecimal.valueOf(itemOption.count())));
 
 				orderItem.getOptions().add(OrderItem_OptionList_Option.builder()
 						.id(null)
 						.orderItem(orderItem)
 						.optionList(optionList)
 						.option(option)
-						.count(itemOption.getCount())
+						.count(itemOption.count())
 						.build());
 			}
 		}
 
-		totalPrice = totalPrice.multiply(BigDecimal.valueOf(placedItem.getCount()));
+		totalPrice = totalPrice.multiply(BigDecimal.valueOf(placedItem.count()));
 
 		orderItem.setTotalPrice(totalPrice);
 		orderItem.setTotalPriceWithDiscount(totalPrice);

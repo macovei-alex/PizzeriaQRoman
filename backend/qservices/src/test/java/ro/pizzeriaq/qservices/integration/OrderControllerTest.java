@@ -327,9 +327,9 @@ public class OrderControllerTest {
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$").isArray())
 					.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
-					.andExpect(jsonPath("$[0].totalPrice").value(placeOrderDTO.getClientExpectedPrice().doubleValue()))
+					.andExpect(jsonPath("$[0].totalPrice").value(placeOrderDTO.clientExpectedPrice().doubleValue()))
 					.andExpect(jsonPath("$[0].totalPriceWithDiscount")
-							.value(placeOrderDTO.getClientExpectedPrice().doubleValue()))
+							.value(placeOrderDTO.clientExpectedPrice().doubleValue()))
 					.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
 		});
 	}
@@ -340,7 +340,7 @@ public class OrderControllerTest {
 			var address = addressRepository.findAllActiveByAccountId(accountId).get(0);
 			var products = productService.getProducts();
 
-			PlaceOrderDto placeOrderDTO = PlaceOrderDto.builder()
+			var placeOrderDTO = PlaceOrderDto.builder()
 					.addressId(address.getId())
 					.items(products.stream()
 							.map(product -> PlaceOrderDto.Item.builder()
@@ -369,9 +369,9 @@ public class OrderControllerTest {
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$").isArray())
 					.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
-					.andExpect(jsonPath("$[0].totalPrice").value(placeOrderDTO.getClientExpectedPrice().doubleValue()))
+					.andExpect(jsonPath("$[0].totalPrice").value(placeOrderDTO.clientExpectedPrice().doubleValue()))
 					.andExpect(jsonPath("$[0].totalPriceWithDiscount")
-							.value(placeOrderDTO.getClientExpectedPrice().doubleValue()))
+							.value(placeOrderDTO.clientExpectedPrice().doubleValue()))
 					.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
 		});
 	}
@@ -385,22 +385,21 @@ public class OrderControllerTest {
 					.limit(5)
 					.toList();
 
-			PlaceOrderDto placeOrderDTO = PlaceOrderDto.builder()
+			var placeOrderDTO = PlaceOrderDto.builder()
 					.addressId(address.getId())
 					.items(products.stream()
 							.map(product -> {
-								var orderItem = PlaceOrderDto.Item.builder()
+								var orderItemBuilder = PlaceOrderDto.Item.builder()
 										.productId(product.id())
 										.count(3)
-										.optionLists(List.of())
-										.build();
+										.optionLists(List.of());
 
 								if (product.optionLists().isEmpty()) {
-									return orderItem;
+									return orderItemBuilder.build();
 								}
 
 								OptionListDto optionList = product.optionLists().get(0);
-								PlaceOrderDto.Item.OptionList optionListDTO = PlaceOrderDto.Item.OptionList.builder()
+								var optionListDTO = PlaceOrderDto.Item.OptionList.builder()
 										.optionListId(optionList.getId())
 										.options(List.of(
 												PlaceOrderDto.Item.OptionList.Option.builder()
@@ -410,8 +409,9 @@ public class OrderControllerTest {
 										))
 										.build();
 
-								orderItem.setOptionLists(List.of(optionListDTO));
-								return orderItem;
+								return orderItemBuilder
+										.optionLists(List.of(optionListDTO))
+										.build();
 							})
 							.toList()
 					)
@@ -436,9 +436,9 @@ public class OrderControllerTest {
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$").isArray())
 					.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
-					.andExpect(jsonPath("$[0].totalPrice").value(placeOrderDTO.getClientExpectedPrice().doubleValue()))
+					.andExpect(jsonPath("$[0].totalPrice").value(placeOrderDTO.clientExpectedPrice().doubleValue()))
 					.andExpect(jsonPath("$[0].totalPriceWithDiscount")
-							.value(placeOrderDTO.getClientExpectedPrice().doubleValue()))
+							.value(placeOrderDTO.clientExpectedPrice().doubleValue()))
 					.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
 		});
 	}
@@ -455,18 +455,17 @@ public class OrderControllerTest {
 			AtomicInteger optionCounter = new AtomicInteger(0);
 			AtomicInteger expectedPriceOptionCounter = new AtomicInteger(0);
 
-			PlaceOrderDto placeOrderDTO = PlaceOrderDto.builder()
+			var placeOrderDTO = PlaceOrderDto.builder()
 					.addressId(address.getId())
 					.items(products.stream()
 							.map(product -> {
-								var orderItem = PlaceOrderDto.Item.builder()
+								var orderItemBuilder = PlaceOrderDto.Item.builder()
 										.productId(product.id())
 										.count(optionCounter.incrementAndGet())
-										.optionLists(List.of())
-										.build();
+										.optionLists(List.of());
 
 								if (product.optionLists().isEmpty()) {
-									return orderItem;
+									return orderItemBuilder.build();
 								}
 
 								OptionListDto optionList = product.optionLists().get(0);
@@ -482,8 +481,9 @@ public class OrderControllerTest {
 										))
 										.build();
 
-								orderItem.setOptionLists(List.of(optionListDTO));
-								return orderItem;
+								return orderItemBuilder
+										.optionLists(List.of(optionListDTO))
+										.build();
 							})
 							.toList()
 					)
@@ -510,9 +510,9 @@ public class OrderControllerTest {
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$").isArray())
 					.andExpect(jsonPath("$.length()").value(historyOrders.size() + 1))
-					.andExpect(jsonPath("$[0].totalPrice").value(placeOrderDTO.getClientExpectedPrice().doubleValue()))
+					.andExpect(jsonPath("$[0].totalPrice").value(placeOrderDTO.clientExpectedPrice().doubleValue()))
 					.andExpect(jsonPath("$[0].totalPriceWithDiscount")
-							.value(placeOrderDTO.getClientExpectedPrice().doubleValue()))
+							.value(placeOrderDTO.clientExpectedPrice().doubleValue()))
 					.andExpect(jsonPath("$[0].orderStatus").value(OrderStatus.RECEIVED.name()));
 		});
 	}

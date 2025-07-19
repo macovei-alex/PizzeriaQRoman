@@ -4,63 +4,58 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.Builder;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-@Data
 @Builder
-public class PlaceOrderDto {
+public record PlaceOrderDto(
+		String additionalNotes,
+		int addressId,
 
-	private String additionalNotes;
-
-	private int addressId;
-
-	@NotNull
-	private BigDecimal clientExpectedPrice;
-
-	@Valid
-	@NotEmpty(message = "The list of items in an order cannot be null or empty")
-	private List<Item> items;
-
-
-	@Data
-	@Builder
-	public static class Item {
-
-		@Min(value = 1, message = "You cannot order a product with the ID less than or equal to 0")
-		private int productId;
-
-		@Min(value = 1, message = "You cannot order an amount of items less than or equal to 0")
-		private int count;
+		@NotNull
+		BigDecimal clientExpectedPrice,
 
 		@Valid
-		@NotNull(message = "The list of options for any item cannot be null, only empty if no options were selected")
-		private List<OptionList> optionLists;
+		@NotEmpty(message = "The list of items in an order cannot be null or empty")
+		List<Item> items
+) {
 
+	@Builder
+	public record Item(
+			@Min(value = 1, message = "You cannot order a product with the ID less than or equal to 0")
+			int productId,
 
-		@Data
-		@Builder
-		public static class OptionList {
+			@Min(value = 1, message = "You cannot order an amount of items less than or equal to 0")
+			int count,
 
-			@Min(value = 1, message = "You cannot add an option list with the ID less than or equal to 0")
-			private int optionListId;
-
-			@NotEmpty(message = "An option list cannot be null or empty")
 			@Valid
-			private List<Option> options;
+			@NotNull(message = "The list of options for any item cannot be null, only empty if no options were selected")
+			List<OptionList> optionLists
+	) {
 
+		@Builder
+		public record OptionList(
 
-			@Data
+				@Min(value = 1, message = "You cannot add an option list with the ID less than or equal to 0")
+				int optionListId,
+
+				@NotEmpty(message = "An option list cannot be null or empty")
+				@Valid
+				List<Option> options
+		) {
+
 			@Builder
-			public static class Option {
+			public record Option(
 
-				@Min(value = 1, message = "You cannot add an option with the ID less than or equal to 0")
-				private int optionId;
+					@Min(value = 1, message = "You cannot add an option with the ID less than or equal to 0")
+					int optionId,
 
-				@Min(value = 1, message = "You have an amount of options less than or equal to 0")
-				private int count;
+					@Min(value = 1, message = "You have an amount of options less than or equal to 0")
+					int count
+
+			) {
 			}
 		}
 	}
