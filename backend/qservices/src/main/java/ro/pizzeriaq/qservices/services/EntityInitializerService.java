@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -576,9 +575,8 @@ public class EntityInitializerService {
 				.id(user.id())
 				.email(user.email())
 				.isEmailVerified(user.emailVerified())
-				.phoneNumber("0733 333 333")
+				.phoneNumber(null)
 				.createdAt(user.createdTimestampDate())
-				.conversationId(UUID.randomUUID())
 				.build());
 
 		accountRepository.saveAll(accounts);
@@ -596,6 +594,14 @@ public class EntityInitializerService {
 				.addressString("Romania, Roman, Strada Ștefan cel Mare nr. 244")
 				.isPrimary(false)
 				.build());
+
+		addresses.add(Address.builder()
+				.account(accounts.get(1))
+				.addressType(AddressType.WORK)
+				.addressString("Romania, Roman, Strada Ștefan cel Mare nr. 244")
+				.isPrimary(false)
+				.build());
+
 		addressRepository.saveAll(addresses);
 	}
 

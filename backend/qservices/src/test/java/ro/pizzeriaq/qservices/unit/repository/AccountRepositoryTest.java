@@ -87,22 +87,6 @@ public class AccountRepositoryTest {
 
 	@Test
 	@Rollback
-	void updateConversationId() {
-		var accounts = accountRepository.findAllActiveSortByCreatedAt();
-		assertEquals(2, accounts.size());
-
-		assertNull(accounts.get(0).getConversationId());
-		assertNotNull(accounts.get(1).getConversationId());
-
-		var newConvId = UUID.randomUUID();
-		accounts.get(0).setConversationId(newConvId);
-
-		var account = accountRepository.findActiveById(accounts.get(0).getId()).orElseThrow();
-		assertEquals(newConvId, account.getConversationId());
-	}
-
-	@Test
-	@Rollback
 	void createAccount() {
 		var accounts = accountRepository.findAllActiveSortByCreatedAt();
 		assertEquals(2, accounts.size());

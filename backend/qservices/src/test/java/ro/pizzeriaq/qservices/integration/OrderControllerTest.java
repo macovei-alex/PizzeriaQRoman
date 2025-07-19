@@ -17,17 +17,19 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 import ro.pizzeriaq.qservices.config.Container;
+import ro.pizzeriaq.qservices.config.TestcontainersRegistry;
 import ro.pizzeriaq.qservices.data.dtos.OptionListDto;
 import ro.pizzeriaq.qservices.data.dtos.PlacedOrderDto;
 import ro.pizzeriaq.qservices.data.dtos.ProductDto;
 import ro.pizzeriaq.qservices.data.entities.OrderStatus;
+import ro.pizzeriaq.qservices.exceptions.response.LogicalErrorCode;
 import ro.pizzeriaq.qservices.repositories.AddressRepository;
 import ro.pizzeriaq.qservices.services.EntityInitializerService;
 import ro.pizzeriaq.qservices.services.OrderService;
 import ro.pizzeriaq.qservices.services.ProductService;
 import ro.pizzeriaq.qservices.utils.MockUserService;
-import ro.pizzeriaq.qservices.config.TestcontainersRegistry;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -233,6 +235,44 @@ public class OrderControllerTest {
 					.andExpect(jsonPath("$.['items[0].optionLists']")
 							.value("The list of options for any item cannot be null, only empty if no options were selected"));
 		});
+	}
+
+	@Test
+	void userWithNoPhoneNumber() throws Exception {
+		mockUserService.withDynamicMockUser(
+				(a) -> !StringUtils.hasText(a.getPhoneNumber()),
+				(accountId) -> {
+					var address = addressRepository.findAllActiveByAccountId(accountId).get(0);
+					var products = productService.getProducts().stream().limit(2).toList();
+
+					PlacedOrderDto placedOrderDTO = PlacedOrderDto.builder()
+							.addressId(address.getId())
+							.items(products.stream()
+									.map((p) -> PlacedOrderDto.Item.builder()
+											.productId(p.getId())
+											.count(2)
+											.optionLists(List.of())
+											.build()
+									)
+									.toList()
+							)
+							.clientExpectedPrice(products.stream()
+									.map(ProductDto::getPrice)
+									.reduce(BigDecimal.ZERO,
+											(acc, price) -> acc.add(price.multiply(BigDecimal.valueOf(2)))
+									)
+							)
+							.build();
+
+					mockMvc.perform(constructDefaultPostRequest(accountId)
+									.content(objectMapper.writeValueAsString(placedOrderDTO)))
+							.andExpect(status().isExpectationFailed())
+							.andExpect(jsonPath("$.code").value(LogicalErrorCode.PHONE_NUMBER_MISSING.name()))
+							.andExpect(jsonPath("$.message")
+									.value("Phone number is missing for account with id: %s".formatted(accountId))
+							);
+				}
+		);
 	}
 
 	@Test
