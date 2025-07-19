@@ -103,6 +103,7 @@ public class ProductWithOptionsMapperTest {
 				.imageName("generic-pizza.jpg")
 				.categoryId(2)
 				.optionLists(List.of())
+				.isActive(true)
 				.build();
 
 		assertEquals(expected, productWithOptionsMapper.fromEntity(product));
@@ -133,6 +134,7 @@ public class ProductWithOptionsMapperTest {
 				.imageName(null)
 				.categoryId(2)
 				.optionLists(List.of())
+				.isActive(true)
 				.build();
 
 		assertEquals(expected, productWithOptionsMapper.fromEntity(product));

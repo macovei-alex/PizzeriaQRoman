@@ -142,12 +142,12 @@ class ProductControllerTest {
 		);
 
 		mockUserService.withDynamicMockUserWithPhoneNumber((_) -> {
-			mockMvc.perform(get(contextPath + "/products/{id}", product.getId())
+			mockMvc.perform(get(contextPath + "/products/{id}", product.id())
 							.contextPath(contextPath)
 							.accept(MediaType.APPLICATION_JSON))
 					.andExpect(status().isOk())
 					.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-					.andExpect(jsonPath("$.id").value(product.getId()))
+					.andExpect(jsonPath("$.id").value(product.id()))
 					.andExpect(jsonPath("$.name").value("Pizza Capriciosa"))
 					.andExpect(jsonPath("$.optionLists").isArray())
 					.andExpect(jsonPath("$.optionLists.length()").value(7));
@@ -161,12 +161,12 @@ class ProductControllerTest {
 		);
 
 		mockUserService.withDynamicMockUserWithPhoneNumber((_) -> {
-			mockMvc.perform(get(contextPath + "/products/{id}", product.getId())
+			mockMvc.perform(get(contextPath + "/products/{id}", product.id())
 							.contextPath(contextPath)
 							.accept(MediaType.APPLICATION_JSON))
 					.andExpect(status().isOk())
 					.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-					.andExpect(jsonPath("$.id").value(product.getId()))
+					.andExpect(jsonPath("$.id").value(product.id()))
 					.andExpect(jsonPath("$.name").value("Pizza Margherita"))
 					.andExpect(jsonPath("$.optionLists").isArray())
 					.andExpect(jsonPath("$.optionLists.length()").value(7));
@@ -178,12 +178,12 @@ class ProductControllerTest {
 		var product = getProductByFilter((p) -> p.name().equals("Coca-Cola"));
 
 		mockUserService.withDynamicMockUserWithPhoneNumber((_) -> {
-			mockMvc.perform(get(contextPath + "/products/{id}", product.getId())
+			mockMvc.perform(get(contextPath + "/products/{id}", product.id())
 							.contextPath(contextPath)
 							.accept(MediaType.APPLICATION_JSON))
 					.andExpect(status().isOk())
 					.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-					.andExpect(jsonPath("$.id").value(product.getId()))
+					.andExpect(jsonPath("$.id").value(product.id()))
 					.andExpect(jsonPath("$.name").value("Coca-Cola"))
 					.andExpect(jsonPath("$.optionLists").isArray())
 					.andExpect(jsonPath("$.optionLists.length()").value(0));
@@ -195,12 +195,12 @@ class ProductControllerTest {
 		var product = getProductByFilter((p) -> p.name().equals("Fanta"));
 
 		mockUserService.withDynamicMockUserWithPhoneNumber((_) -> {
-			mockMvc.perform(get(contextPath + "/products/{id}", product.getId())
+			mockMvc.perform(get(contextPath + "/products/{id}", product.id())
 							.contextPath(contextPath)
 							.accept(MediaType.APPLICATION_JSON))
 					.andExpect(status().isOk())
 					.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-					.andExpect(jsonPath("$.id").value(product.getId()))
+					.andExpect(jsonPath("$.id").value(product.id()))
 					.andExpect(jsonPath("$.name").value("Fanta"))
 					.andExpect(jsonPath("$.optionLists").isArray())
 					.andExpect(jsonPath("$.optionLists.length()").value(0));

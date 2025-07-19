@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ro.pizzeriaq.qservices.config.annotations.AccountIdChecked;
 import ro.pizzeriaq.qservices.data.dtos.HistoryOrderFullDto;
 import ro.pizzeriaq.qservices.data.dtos.HistoryOrderMinimalDto;
-import ro.pizzeriaq.qservices.data.dtos.PlacedOrderDto;
+import ro.pizzeriaq.qservices.data.dtos.PlaceOrderDto;
 import ro.pizzeriaq.qservices.services.OrderService;
 
 import java.util.List;
@@ -41,7 +41,7 @@ public class OrderController {
 
 	@PostMapping
 	@AccountIdChecked
-	public void placeOrder(@PathVariable UUID accountId, @Valid @RequestBody PlacedOrderDto placedOrderDTO) {
-		orderService.placeOrder(placedOrderDTO, accountId);
+	public void placeOrder(@PathVariable UUID accountId, @Valid @RequestBody PlaceOrderDto placeOrderDTO) {
+		orderService.placeOrder(placeOrderDTO, accountId);
 	}
 }

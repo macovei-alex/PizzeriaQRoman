@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class PlacedOrderDto {
+public class PlaceOrderDto {
 
 	private String additionalNotes;
 

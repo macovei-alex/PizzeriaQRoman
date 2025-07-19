@@ -1,11 +1,13 @@
 package ro.pizzeriaq.qservices.data.model;
 
+import lombok.Builder;
 import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.UUID;
 
+@Builder
 public record KeycloakUser(
 		UUID id,
 		String username,
@@ -21,6 +23,7 @@ public record KeycloakUser(
 		int notBefore,
 		Access access
 ) {
+
 	public record Access(boolean manage) {
 	}
 

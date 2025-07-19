@@ -1,10 +1,10 @@
 package ro.pizzeriaq.qservices.unit.service.mappers;
 
 import org.junit.jupiter.api.Test;
+import ro.pizzeriaq.qservices.data.dtos.UpdateAccountDto;
+import ro.pizzeriaq.qservices.data.dtos.KeycloakUpdateAccountDto;
 import ro.pizzeriaq.qservices.data.entities.Account;
 import ro.pizzeriaq.qservices.data.model.KeycloakUser;
-import ro.pizzeriaq.qservices.data.dtos.AccountDto;
-import ro.pizzeriaq.qservices.data.dtos.KeycloakAccountUpdateDto;
 import ro.pizzeriaq.qservices.services.mappers.AccountMapper;
 
 import java.time.LocalDateTime;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class AccountMapperTest {
 
-	final AccountMapper accountMapper = new AccountMapper();
+	AccountMapper accountMapper = new AccountMapper();
 
 
 	@Test
@@ -27,8 +27,8 @@ public class AccountMapperTest {
 
 	@Test
 	void toKeycloakAccountUpdateDto() {
-		var accountDto = new AccountDto("firstName", "lastName", "email", "phoneNumber");
-		var expectedKeycloakAccountUpdateDto = new KeycloakAccountUpdateDto(
+		var accountDto = new UpdateAccountDto("firstName", "lastName", "email", "phoneNumber");
+		var expectedKeycloakAccountUpdateDto = new KeycloakUpdateAccountDto(
 				accountDto.firstName(),
 				accountDto.lastName(),
 				accountDto.email()
@@ -39,21 +39,21 @@ public class AccountMapperTest {
 
 	@Test
 	void toAccount() {
-		var keycloakUser = new KeycloakUser(
-				UUID.randomUUID(),
-				"username",
-				"firstName",
-				"lastName",
-				"email",
-				true,
-				LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) * 1000,
-				true,
-				true,
-				null,
-				null,
-				(int) LocalDateTime.now().toEpochSecond(ZoneOffset.UTC),
-				new KeycloakUser.Access(true)
-		);
+		var keycloakUser = KeycloakUser.builder()
+				.id(UUID.randomUUID())
+				.username("username")
+				.firstName("firstName")
+				.lastName("lastName")
+				.email("email")
+				.emailVerified(true)
+				.createdTimestamp(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) * 1000)
+				.enabled(true)
+				.totp(true)
+				.disableableCredentialTypes(null)
+				.requiredActions(null)
+				.notBefore((int) LocalDateTime.now().toEpochSecond(ZoneOffset.UTC))
+				.access(new KeycloakUser.Access(true))
+				.build();
 		var expectedAccount = Account.builder()
 				.id(keycloakUser.id())
 				.email(keycloakUser.email())

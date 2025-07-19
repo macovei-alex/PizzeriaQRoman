@@ -12,7 +12,7 @@ import ro.pizzeriaq.qservices.exceptions.PriceNotMatchingException;
 import ro.pizzeriaq.qservices.repositories.*;
 import ro.pizzeriaq.qservices.data.dtos.HistoryOrderFullDto;
 import ro.pizzeriaq.qservices.data.dtos.HistoryOrderMinimalDto;
-import ro.pizzeriaq.qservices.data.dtos.PlacedOrderDto;
+import ro.pizzeriaq.qservices.data.dtos.PlaceOrderDto;
 import ro.pizzeriaq.qservices.services.mappers.HistoryOrderFullMapper;
 import ro.pizzeriaq.qservices.services.mappers.HistoryOrderMinimalMapper;
 
@@ -57,7 +57,7 @@ public class OrderService {
 
 
 	@Transactional
-	public void placeOrder(PlacedOrderDto placedOrderDTO, UUID accountId) throws IllegalArgumentException {
+	public void placeOrder(PlaceOrderDto placeOrderDTO, UUID accountId) throws IllegalArgumentException {
 		var account = accountRepository.findActiveById(accountId)
 				.orElseThrow(() -> new IllegalArgumentException("Account not found for ID:" + accountId));
 		if (account.getPhoneNumber() == null || account.getPhoneNumber().isEmpty()) {
@@ -66,20 +66,20 @@ public class OrderService {
 
 		var products = productRepository.findAllActive();
 
-		validateOrder(placedOrderDTO, products, account);
-		Order order = generateOrder(placedOrderDTO, products, account);
+		validateOrder(placeOrderDTO, products, account);
+		Order order = generateOrder(placeOrderDTO, products, account);
 
-		var priceDifference = order.getTotalPriceWithDiscount().subtract(placedOrderDTO.getClientExpectedPrice());
+		var priceDifference = order.getTotalPriceWithDiscount().subtract(placeOrderDTO.getClientExpectedPrice());
 		if (priceDifference.abs().doubleValue() >= 0.01) {
 			throw new PriceNotMatchingException(
 					"The client expected price does not match the calculated total price. ",
-					placedOrderDTO.getClientExpectedPrice(),
+					placeOrderDTO.getClientExpectedPrice(),
 					order.getTotalPriceWithDiscount()
 			);
-		} else if (!order.getTotalPriceWithDiscount().equals(placedOrderDTO.getClientExpectedPrice())) {
+		} else if (!order.getTotalPriceWithDiscount().equals(placeOrderDTO.getClientExpectedPrice())) {
 			log.warn("The client expected price does not match the calculated total price, but the difference is small. " +
 					"Client expected: {}, Calculated: {}. Difference: {}",
-					placedOrderDTO.getClientExpectedPrice(),
+					placeOrderDTO.getClientExpectedPrice(),
 					order.getTotalPriceWithDiscount(),
 					priceDifference
 			);
@@ -91,16 +91,16 @@ public class OrderService {
 	}
 
 
-	private void validateOrder(PlacedOrderDto placedOrderDTO, List<Product> products, Account account) {
+	private void validateOrder(PlaceOrderDto placeOrderDTO, List<Product> products, Account account) {
 		if (account.getAddresses().stream()
-				.filter(a -> Objects.equals(a.getId(), placedOrderDTO.getAddressId()))
+				.filter(a -> Objects.equals(a.getId(), placeOrderDTO.getAddressId()))
 				.findFirst()
 				.isEmpty()
 		) {
-			throw new IllegalArgumentException("Address not found for ID: " + placedOrderDTO.getAddressId());
+			throw new IllegalArgumentException("Address not found for ID: " + placeOrderDTO.getAddressId());
 		}
 
-		for (PlacedOrderDto.Item orderItem : placedOrderDTO.getItems()) {
+		for (PlaceOrderDto.Item orderItem : placeOrderDTO.getItems()) {
 			Product product = products.stream()
 					.filter(p -> p.getId() == orderItem.getProductId())
 					.findFirst()
@@ -112,11 +112,11 @@ public class OrderService {
 	}
 
 
-	private void validateOrderItemOptions(PlacedOrderDto.Item orderItem, Product product) {
+	private void validateOrderItemOptions(PlaceOrderDto.Item orderItem, Product product) {
 
-		List<PlacedOrderDto.Item.OptionList> itemOptionLists = orderItem.getOptionLists();
+		List<PlaceOrderDto.Item.OptionList> itemOptionLists = orderItem.getOptionLists();
 
-		for (PlacedOrderDto.Item.OptionList itemOptionList : itemOptionLists) {
+		for (PlaceOrderDto.Item.OptionList itemOptionList : itemOptionLists) {
 			OptionList optionList = product.getOptionLists().stream()
 					.filter(ol -> ol.getId() == itemOptionList.getOptionListId())
 					.findFirst()
@@ -129,7 +129,7 @@ public class OrderService {
 	}
 
 
-	private void validateOptionList(PlacedOrderDto.Item.OptionList itemOptionList, OptionList optionList) {
+	private void validateOptionList(PlaceOrderDto.Item.OptionList itemOptionList, OptionList optionList) {
 
 		if (optionList.getMinChoices() > itemOptionList.getOptions().size()
 				|| optionList.getMaxChoices() < itemOptionList.getOptions().size()) {
@@ -143,7 +143,7 @@ public class OrderService {
 			));
 		}
 
-		for (PlacedOrderDto.Item.OptionList.Option itemOption : itemOptionList.getOptions()) {
+		for (PlaceOrderDto.Item.OptionList.Option itemOption : itemOptionList.getOptions()) {
 			Option option = optionList.getOptions().stream()
 					.filter(o -> o.getId() == itemOption.getOptionId())
 					.findFirst()
@@ -167,8 +167,8 @@ public class OrderService {
 	}
 
 
-	private Order generateOrder(PlacedOrderDto placedOrderDTO, List<Product> products, Account account) {
-		var address = addressRepository.findById(placedOrderDTO.getAddressId()).orElseThrow();
+	private Order generateOrder(PlaceOrderDto placeOrderDTO, List<Product> products, Account account) {
+		var address = addressRepository.findById(placeOrderDTO.getAddressId()).orElseThrow();
 
 		Order order = Order.builder()
 				.id(null)
@@ -179,12 +179,12 @@ public class OrderService {
 				.estimatedPreparationTime(null)
 				.orderTimestamp(LocalDateTime.now())
 				.deliveryTimestamp(null)
-				.additionalNotes(placedOrderDTO.getAdditionalNotes())
+				.additionalNotes(placeOrderDTO.getAdditionalNotes())
 				.totalPrice(BigDecimal.ZERO)
 				.totalPriceWithDiscount(BigDecimal.ZERO)
 				.build();
 
-		for (PlacedOrderDto.Item placedOrderItemDTO : placedOrderDTO.getItems()) {
+		for (PlaceOrderDto.Item placedOrderItemDTO : placeOrderDTO.getItems()) {
 			Product product = products.stream()
 					.filter(p -> p.getId() == placedOrderItemDTO.getProductId())
 					.findFirst()
@@ -205,7 +205,7 @@ public class OrderService {
 	}
 
 
-	private OrderItem generateOrderItem(PlacedOrderDto.Item placedItem, Product product) {
+	private OrderItem generateOrderItem(PlaceOrderDto.Item placedItem, Product product) {
 		OrderItem orderItem = OrderItem.builder()
 				.id(null)
 				.order(null)
@@ -216,7 +216,7 @@ public class OrderService {
 
 		BigDecimal totalPrice = product.getPrice();
 
-		for (PlacedOrderDto.Item.OptionList itemOptionList : placedItem.getOptionLists()) {
+		for (PlaceOrderDto.Item.OptionList itemOptionList : placedItem.getOptionLists()) {
 			OptionList optionList = product.getOptionLists().stream()
 					.filter((ol) -> ol.getId() == itemOptionList.getOptionListId())
 					.findFirst()
@@ -225,7 +225,7 @@ public class OrderService {
 			// Bad OptionList IDs were already sanitized during validation
 			assert optionList != null;
 
-			for (PlacedOrderDto.Item.OptionList.Option itemOption : itemOptionList.getOptions()) {
+			for (PlaceOrderDto.Item.OptionList.Option itemOption : itemOptionList.getOptions()) {
 				Option option = optionList.getOptions().stream()
 						.filter((o) -> o.getId() == itemOption.getOptionId())
 						.findFirst()

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ro.pizzeriaq.qservices.config.annotations.AccountIdChecked;
 import ro.pizzeriaq.qservices.data.model.KeycloakUser;
 import ro.pizzeriaq.qservices.services.AccountService;
-import ro.pizzeriaq.qservices.data.dtos.AccountDto;
+import ro.pizzeriaq.qservices.data.dtos.UpdateAccountDto;
 import ro.pizzeriaq.qservices.services.KeycloakService;
 
 import javax.naming.ServiceUnavailableException;
@@ -38,8 +38,8 @@ public class AccountController {
 
 	@PutMapping("/{accountTd}")
 	@AccountIdChecked
-	public void updateAccount(@PathVariable UUID accountTd, @Valid @RequestBody AccountDto accountDto) {
-		accountService.update(accountTd, accountDto);
+	public void updateAccount(@PathVariable UUID accountTd, @Valid @RequestBody UpdateAccountDto updateAccountDto) {
+		accountService.update(accountTd, updateAccountDto);
 	}
 
 }

@@ -1,28 +1,21 @@
 package ro.pizzeriaq.qservices.data.dtos;
 
-import lombok.*;
+import lombok.Builder;
+
 import java.math.BigDecimal;
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
 @Builder
-public class ProductWithOptionsDto {
-
-	private int id;
-	private String name;
-	private String subtitle;
-	private String description;
-	private BigDecimal price;
-	private String imageName;
-	private long imageVersion;
-	private int categoryId;
-	private List<OptionListDto> optionLists;
-
-	@Builder.Default
-	private boolean isActive = true;
-
+public record ProductWithOptionsDto(
+		int id,
+		String name,
+		String subtitle,
+		String description,
+		BigDecimal price,
+		String imageName,
+		long imageVersion,
+		int categoryId,
+		List<OptionListDto> optionLists,
+		boolean isActive
+) {
 }

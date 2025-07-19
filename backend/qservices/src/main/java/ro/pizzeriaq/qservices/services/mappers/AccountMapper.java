@@ -3,8 +3,8 @@ package ro.pizzeriaq.qservices.services.mappers;
 import org.springframework.stereotype.Component;
 import ro.pizzeriaq.qservices.data.entities.Account;
 import ro.pizzeriaq.qservices.data.model.KeycloakUser;
-import ro.pizzeriaq.qservices.data.dtos.AccountDto;
-import ro.pizzeriaq.qservices.data.dtos.KeycloakAccountUpdateDto;
+import ro.pizzeriaq.qservices.data.dtos.UpdateAccountDto;
+import ro.pizzeriaq.qservices.data.dtos.KeycloakUpdateAccountDto;
 
 @Component
 public class AccountMapper {
@@ -25,15 +25,15 @@ public class AccountMapper {
 	}
 
 
-	public KeycloakAccountUpdateDto toKeycloakAccountUpdateDto(AccountDto accountDto) {
-		if (accountDto == null) {
+	public KeycloakUpdateAccountDto toKeycloakAccountUpdateDto(UpdateAccountDto updateAccountDto) {
+		if (updateAccountDto == null) {
 			return null;
 		}
 
-		return new KeycloakAccountUpdateDto(
-				accountDto.firstName(),
-				accountDto.lastName(),
-				accountDto.email()
+		return new KeycloakUpdateAccountDto(
+				updateAccountDto.firstName(),
+				updateAccountDto.lastName(),
+				updateAccountDto.email()
 		);
 	}
 

@@ -11,7 +11,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClient;
 import ro.pizzeriaq.qservices.data.model.KeycloakUser;
 import ro.pizzeriaq.qservices.exceptions.KeycloakException;
-import ro.pizzeriaq.qservices.data.dtos.AccountDto;
+import ro.pizzeriaq.qservices.data.dtos.UpdateAccountDto;
 import ro.pizzeriaq.qservices.services.mappers.AccountMapper;
 
 import javax.naming.ServiceUnavailableException;
@@ -79,7 +79,7 @@ public class KeycloakService {
 	}
 
 
-	public void updateUser(UUID id, AccountDto accountDto) throws ServiceUnavailableException {
+	public void updateUser(UUID id, UpdateAccountDto updateAccountDto) throws ServiceUnavailableException {
 		var accessToken = generateAccessToken();
 		try {
 			restClient
@@ -87,7 +87,7 @@ public class KeycloakService {
 					.uri("/admin/realms/%s/users/%s".formatted(keycloakRealm, id))
 					.accept(MediaType.APPLICATION_JSON)
 					.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-					.body(accountMapper.toKeycloakAccountUpdateDto(accountDto))
+					.body(accountMapper.toKeycloakAccountUpdateDto(updateAccountDto))
 					.retrieve()
 					.toBodilessEntity();
 		} catch (HttpStatusCodeException e) {

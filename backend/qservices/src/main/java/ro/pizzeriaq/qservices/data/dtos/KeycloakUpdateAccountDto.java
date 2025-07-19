@@ -1,6 +1,6 @@
 package ro.pizzeriaq.qservices.data.dtos;
 
-public record KeycloakAccountUpdateDto(
+public record KeycloakUpdateAccountDto(
 		String firstName,
 		String lastName,
 		String email

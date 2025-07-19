@@ -2,7 +2,7 @@ package ro.pizzeriaq.qservices.data.dtos;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record AccountDto(
+public record UpdateAccountDto(
 		@NotBlank(message = "First name cannot be blank")
 		String firstName,
 
