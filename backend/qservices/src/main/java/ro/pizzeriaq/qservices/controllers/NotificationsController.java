@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ro.pizzeriaq.qservices.data.dtos.PushNotificationRequestDto;
+import ro.pizzeriaq.qservices.data.dtos.SendPushNotificationRequestDto;
 import ro.pizzeriaq.qservices.data.dtos.PushNotificationTokenDto;
 import ro.pizzeriaq.qservices.services.NotificationsService;
 
@@ -22,7 +22,7 @@ public class NotificationsController {
 
 
 	@PostMapping("/notifications")
-	public void sendNotification(@RequestBody @Valid PushNotificationRequestDto notificationRequest) {
+	public void sendNotification(@RequestBody @Valid SendPushNotificationRequestDto notificationRequest) {
 		notificationsService.sendNotification(notificationRequest.title(), notificationRequest.body());
 	}
 

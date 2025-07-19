@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
 @Builder
-public record PushNotificationRequestDto(
+public record SendPushNotificationRequestDto(
 		@NotBlank String title,
 		@NotBlank String body
 ) {
