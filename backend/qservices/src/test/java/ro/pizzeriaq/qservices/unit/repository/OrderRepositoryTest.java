@@ -1,13 +1,11 @@
 package ro.pizzeriaq.qservices.unit.repository;
 
 import jakarta.persistence.EntityManager;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -22,12 +20,8 @@ import ro.pizzeriaq.qservices.services.EntityInitializerService;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Slf4j
 @DataJpaTestConfig
 public class OrderRepositoryTest {
-
-	@Value("app.environment")
-	String environment;
 
 	@Autowired
 	OrderRepository orderRepository;
@@ -48,7 +42,6 @@ public class OrderRepositoryTest {
 
 	@BeforeAll
 	void setUp() {
-		log.info("Environment: {}", environment);
 		EntityInitializerService.reInitializeEntities(entityInitializerService);
 	}
 

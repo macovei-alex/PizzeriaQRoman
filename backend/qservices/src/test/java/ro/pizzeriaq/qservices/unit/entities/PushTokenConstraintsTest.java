@@ -1,11 +1,9 @@
 package ro.pizzeriaq.qservices.unit.entities;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -22,12 +20,8 @@ import java.time.ZoneOffset;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Slf4j
 @DataJpaTestConfig
 class PushTokenConstraintsTest {
-
-	@Value("${app.environment}")
-	String environment;
 
 	@Autowired
 	PushTokenRepository pushTokenRepository;
@@ -44,7 +38,6 @@ class PushTokenConstraintsTest {
 
 	@BeforeAll
 	void setUp() {
-		log.info("Environment: {}", environment);
 		EntityInitializerService.reInitializeEntities(entityInitializerService);
 	}
 

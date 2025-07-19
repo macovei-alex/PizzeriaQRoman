@@ -1,11 +1,9 @@
 package ro.pizzeriaq.qservices.unit.entities;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -21,12 +19,8 @@ import ro.pizzeriaq.qservices.services.EntityInitializerService;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@Slf4j
 @DataJpaTestConfig
 class ProductCategoryConstraintsTest {
-
-	@Value("${app.environment}")
-	String environment;
 
 	@Autowired
 	ProductCategoryRepository productCategoryRepository;
@@ -43,7 +37,6 @@ class ProductCategoryConstraintsTest {
 
 	@BeforeAll
 	void setUp() {
-		log.info("Environment: {}", environment);
 		EntityInitializerService.reInitializeEntities(entityInitializerService);
 	}
 

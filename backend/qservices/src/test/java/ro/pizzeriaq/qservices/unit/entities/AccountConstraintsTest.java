@@ -1,10 +1,8 @@
 package ro.pizzeriaq.qservices.unit.entities;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -25,9 +23,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTestConfig
 public class AccountConstraintsTest {
 
-	@Value("{app.environment}")
-	String environment;
-
 	@Autowired
 	AccountRepository accountRepository;
 
@@ -36,12 +31,6 @@ public class AccountConstraintsTest {
 	static void registerContainers(DynamicPropertyRegistry registry) {
 		TestcontainersRegistry.start(registry, Container.MySQL);
 		RepositoryTestConfig.addDynamicProperties(registry);
-	}
-
-
-	@BeforeAll
-	void setUp() {
-		log.info("Environment: {}", environment);
 	}
 
 

@@ -1,7 +1,6 @@
 package ro.pizzeriaq.qservices.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -44,7 +43,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@Slf4j
 @SpringBootTest
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -53,8 +51,6 @@ public class OrderControllerTest {
 
 	@Value("${server.servlet.context-path}")
 	String contextPath;
-	@Value("${app.environment}")
-	String environment;
 
 	@Autowired
 	EntityInitializerService entityInitializerService;
@@ -96,7 +92,6 @@ public class OrderControllerTest {
 
 	@BeforeAll
 	void setUp() {
-		log.info("Environment: {}", environment);
 		EntityInitializerService.reInitializeEntities(entityInitializerService);
 	}
 

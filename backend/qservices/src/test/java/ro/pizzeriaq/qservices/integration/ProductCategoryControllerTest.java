@@ -1,6 +1,5 @@
 package ro.pizzeriaq.qservices.integration;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Slf4j
 @SpringBootTest
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -32,8 +30,6 @@ public class ProductCategoryControllerTest {
 
 	@Value("${server.servlet.context-path}")
 	String contextPath;
-	@Value("${app.environment}")
-	String environment;
 
 	@Autowired
 	EntityInitializerService entityInitializerService;
@@ -53,7 +49,6 @@ public class ProductCategoryControllerTest {
 
 	@BeforeAll
 	void setup() {
-		log.info("Environment: {}", environment);
 		EntityInitializerService.reInitializeEntities(entityInitializerService);
 	}
 

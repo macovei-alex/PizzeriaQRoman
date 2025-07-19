@@ -1,11 +1,9 @@
 package ro.pizzeriaq.qservices.unit.entities;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -26,12 +24,8 @@ import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Slf4j
 @DataJpaTestConfig
 public class OrderItemConstraintsTest {
-
-	@Value("${app.environment}")
-	String environment;
 
 	@Autowired
 	OrderItemRepository orderItemRepository;
@@ -51,7 +45,6 @@ public class OrderItemConstraintsTest {
 
 	@BeforeAll
 	void setUp() {
-		log.info("Environment: {}", environment);
 		EntityInitializerService.reInitializeEntities(entityInitializerService);
 	}
 

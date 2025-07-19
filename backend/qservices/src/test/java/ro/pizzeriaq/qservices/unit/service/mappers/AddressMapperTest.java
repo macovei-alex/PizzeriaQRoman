@@ -16,6 +16,7 @@ public class AddressMapperTest {
 
 	final AddressMapper addressMapper = new AddressMapper();
 
+
 	@Test
 	void fromEntityThrows() {
 		assertThrows(NullPointerException.class, () -> addressMapper.fromEntity(Address.builder().build()));

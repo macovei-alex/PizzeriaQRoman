@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class AccountMapperTest {
 
-	AccountMapper accountMapper = new AccountMapper();
+	final AccountMapper accountMapper = new AccountMapper();
 
 
 	@Test

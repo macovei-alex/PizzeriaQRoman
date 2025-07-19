@@ -20,8 +20,8 @@ public class ProductWithOptionsMapperTest {
 
 	final ImageService imageService = mock(ImageService.class);
 	final OptionListMapper optionListMapper = mock(OptionListMapper.class);
-	final ProductWithOptionsMapper productWithOptionsMapper
-			= new ProductWithOptionsMapper(imageService, optionListMapper);
+	final ProductWithOptionsMapper productWithOptionsMapper =
+			new ProductWithOptionsMapper(imageService, optionListMapper);
 
 
 	OptionList nullOptionList() {
