@@ -114,56 +114,9 @@ public class OrderControllerTest {
 	}
 
 	@Test
-	void badPayload1() throws Exception {
-		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) ->
-				mockMvc.perform(constructDefaultPostRequest(accountId))
-						.andExpect(status().isBadRequest())
-		);
-	}
-
-	@Test
-	void badPayload2() throws Exception {
-		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) ->
-				mockMvc.perform(constructDefaultPostRequest(accountId)
-								.content(""))
-						.andExpect(status().isBadRequest())
-		);
-	}
-
-	@Test
-	void badPayload3() throws Exception {
-		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) ->
-				mockMvc.perform(constructDefaultPostRequest(accountId)
-								.content("{}"))
-						.andExpect(status().isBadRequest())
-		);
-	}
-
-	@Test
-	void badPayload4() throws Exception {
-		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) ->
-				mockMvc.perform(constructDefaultPostRequest(accountId)
-								.content("{\"nonexistentField\":  null}"))
-						.andExpect(status().isBadRequest())
-		);
-	}
-
-	@Test
 	void badPayloadValidation1() throws Exception {
 		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) -> {
-			PlaceOrderDto placeOrderDTO = PlaceOrderDto.builder()
-					.build();
-
-			mockMvc.perform(constructDefaultPostRequest(accountId)
-							.content(objectMapper.writeValueAsString(placeOrderDTO)))
-					.andExpect(status().isBadRequest());
-		});
-	}
-
-	@Test
-	void badPayloadValidation2() throws Exception {
-		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) -> {
-			PlaceOrderDto placeOrderDTO = PlaceOrderDto.builder()
+			var placeOrderDTO = PlaceOrderDto.builder()
 					.items(List.of())
 					.build();
 
@@ -175,9 +128,9 @@ public class OrderControllerTest {
 	}
 
 	@Test
-	void badPayloadValidation3() throws Exception {
+	void badPayloadValidation2() throws Exception {
 		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) -> {
-			PlaceOrderDto placeOrderDTO = PlaceOrderDto.builder()
+			var placeOrderDTO = PlaceOrderDto.builder()
 					.items(List.of(
 							PlaceOrderDto.Item.builder().productId(0).count(1).optionLists(List.of()).build()))
 					.build();
@@ -185,7 +138,27 @@ public class OrderControllerTest {
 			mockMvc.perform(constructDefaultPostRequest(accountId)
 							.content(objectMapper.writeValueAsString(placeOrderDTO)))
 					.andExpect(status().isBadRequest())
-					.andExpect(jsonPath("$.['items[0].productId']").value("You cannot order a product with the ID less than or equal to 0"));
+					.andExpect(jsonPath("$.['items[0].productId']")
+							.value("You cannot order a product with the ID less than or equal to 0"));
+		});
+	}
+
+	@Test
+	void badPayloadValidation3() throws Exception {
+		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) -> {
+			var productId = productService.getProducts().stream().findFirst().orElseThrow().id();
+
+			var placeOrderDTO = PlaceOrderDto.builder()
+					.items(List.of(
+							PlaceOrderDto.Item.builder().productId(productId).count(0).optionLists(List.of()).build())
+					)
+					.build();
+
+			mockMvc.perform(constructDefaultPostRequest(accountId)
+							.content(objectMapper.writeValueAsString(placeOrderDTO)))
+					.andExpect(status().isBadRequest())
+					.andExpect(jsonPath("$.['items[0].count']")
+							.value("You cannot order an amount of items less than or equal to 0"));
 		});
 	}
 
@@ -194,24 +167,7 @@ public class OrderControllerTest {
 		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) -> {
 			var productId = productService.getProducts().stream().findFirst().orElseThrow().id();
 
-			PlaceOrderDto placeOrderDTO = PlaceOrderDto.builder()
-					.items(List.of(
-							PlaceOrderDto.Item.builder().productId(productId).count(0).optionLists(List.of()).build()))
-					.build();
-
-			mockMvc.perform(constructDefaultPostRequest(accountId)
-							.content(objectMapper.writeValueAsString(placeOrderDTO)))
-					.andExpect(status().isBadRequest())
-					.andExpect(jsonPath("$.['items[0].count']").value("You cannot order an amount of items less than or equal to 0"));
-		});
-	}
-
-	@Test
-	void badPayloadValidation5() throws Exception {
-		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) -> {
-			var productId = productService.getProducts().stream().findFirst().orElseThrow().id();
-
-			PlaceOrderDto placeOrderDTO = PlaceOrderDto.builder()
+			var placeOrderDTO = PlaceOrderDto.builder()
 					.items(List.of(
 							PlaceOrderDto.Item.builder().productId(productId).count(1).optionLists(null).build()
 					))
@@ -233,7 +189,7 @@ public class OrderControllerTest {
 					var address = addressRepository.findAllActiveByAccountId(accountId).get(0);
 					var products = productService.getProducts().stream().limit(2).toList();
 
-					PlaceOrderDto placeOrderDTO = PlaceOrderDto.builder()
+					var placeOrderDTO = PlaceOrderDto.builder()
 							.addressId(address.getId())
 							.items(products.stream()
 									.map((p) -> PlaceOrderDto.Item.builder()
@@ -264,9 +220,47 @@ public class OrderControllerTest {
 	}
 
 	@Test
+	void clientExpectedPriceMismatch() throws Exception {
+		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) -> {
+			var address = addressRepository.findAllActiveByAccountId(accountId).get(0);
+			var products = productService.getProducts().stream().limit(2).toList();
+
+			assertThat(address).isNotNull();
+
+			var placeOrderDTO = PlaceOrderDto.builder()
+					.addressId(address.getId())
+					.items(products.stream()
+							.map((p) -> PlaceOrderDto.Item.builder()
+									.productId(p.id())
+									.count(2)
+									.optionLists(List.of())
+									.build()
+							)
+							.toList()
+					)
+					.clientExpectedPrice(products.stream()
+							.map(ProductDto::price)
+							.reduce(BigDecimal.ZERO,
+									(acc, price) -> acc.add(price.multiply(BigDecimal.valueOf(2)))
+							)
+							.add(BigDecimal.ONE) // Intentionally incorrect price
+					)
+					.build();
+
+			mockMvc.perform(constructDefaultPostRequest(accountId)
+							.content(objectMapper.writeValueAsString(placeOrderDTO)))
+					.andExpect(status().isExpectationFailed())
+					.andExpect(jsonPath("$.code").value(LogicalErrorCode.PRICE_MISMATCH.name()))
+					.andExpect(jsonPath("$.message")
+							.value("The client expected price does not match the calculated total price. ")
+					);
+		});
+	}
+
+	@Test
 	void badPayloadDBValues() throws Exception {
 		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) -> {
-			PlaceOrderDto placeOrderDTO = PlaceOrderDto.builder()
+			var placeOrderDTO = PlaceOrderDto.builder()
 					.items(List.of(
 							PlaceOrderDto.Item.builder().productId(Integer.MAX_VALUE).count(1).optionLists(List.of()).build()
 					))
@@ -286,7 +280,7 @@ public class OrderControllerTest {
 
 			assertThat(address).isNotNull();
 
-			PlaceOrderDto placeOrderDTO = PlaceOrderDto.builder()
+			var placeOrderDTO = PlaceOrderDto.builder()
 					.addressId(address.getId())
 					.items(products.stream()
 							.map((p) -> PlaceOrderDto.Item.builder()

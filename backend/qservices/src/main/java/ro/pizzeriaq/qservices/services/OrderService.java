@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.pizzeriaq.qservices.data.entities.*;
 import ro.pizzeriaq.qservices.exceptions.PhoneNumberMissingException;
-import ro.pizzeriaq.qservices.exceptions.PriceNotMatchingException;
+import ro.pizzeriaq.qservices.exceptions.PriceMismatchException;
 import ro.pizzeriaq.qservices.repositories.*;
 import ro.pizzeriaq.qservices.data.dtos.HistoryOrderFullDto;
 import ro.pizzeriaq.qservices.data.dtos.HistoryOrderMinimalDto;
@@ -71,7 +71,7 @@ public class OrderService {
 
 		var priceDifference = order.getTotalPriceWithDiscount().subtract(placeOrderDTO.clientExpectedPrice());
 		if (priceDifference.abs().doubleValue() >= 0.01) {
-			throw new PriceNotMatchingException(
+			throw new PriceMismatchException(
 					"The client expected price does not match the calculated total price. ",
 					placeOrderDTO.clientExpectedPrice(),
 					order.getTotalPriceWithDiscount()

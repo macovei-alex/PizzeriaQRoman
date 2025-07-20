@@ -107,8 +107,8 @@ public class GlobalExceptionHandler {
 	}
 
 
-	@ExceptionHandler(PriceNotMatchingException.class)
-	public ResponseEntity<LogicalErrorResponse> handlePriceDoesNotMatchException(PriceNotMatchingException e) {
+	@ExceptionHandler(PriceMismatchException.class)
+	public ResponseEntity<LogicalErrorResponse> handlePriceDoesNotMatchException(PriceMismatchException e) {
 		log.error("The client expected price does not match the calculated price."
 						+ "Client expected ( {} ), calculated ( {} )",
 				e.getExpectedPrice(), e.getActualPrice(), e
