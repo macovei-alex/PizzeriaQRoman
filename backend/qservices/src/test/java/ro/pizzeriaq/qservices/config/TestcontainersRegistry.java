@@ -16,14 +16,12 @@ public abstract class TestcontainersRegistry {
 
 
 	private static final MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0")
-			.withCreateContainerCmdModifier(cmd -> cmd.withName("qs-testcontainer-mysql"))
 			.withDatabaseName("pizzeriaq-test")
 			.withUsername("test")
 			.withPassword("test")
 			.withReuse(true);
 
 	private static final KeycloakContainer keycloakContainer = new KeycloakContainer()
-			.withCreateContainerCmdModifier(cmd -> cmd.withName("qs-testcontainer-keycloak"))
 			.withRealmImportFile("pizzeriaq-realm-export.json")
 			.withContextPath("/pizzeriaq/auth")
 			.withReuse(true);
