@@ -1,4 +1,4 @@
-package ro.pizzeriaq.qservices.unit.data.dtos;
+package ro.pizzeriaq.qservices.unit.dtos;
 
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import org.junit.jupiter.params.ParameterizedTest;

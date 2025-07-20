@@ -1,4 +1,4 @@
-package ro.pizzeriaq.qservices.unit.data.dtos;
+package ro.pizzeriaq.qservices.unit.dtos;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
