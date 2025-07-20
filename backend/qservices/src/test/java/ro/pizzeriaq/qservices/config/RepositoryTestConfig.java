@@ -50,8 +50,40 @@ public class RepositoryTestConfig {
 
 		try {
 			var users = new ArrayList<KeycloakUser>();
-			users.add(new KeycloakUser(UUID.randomUUID(), "u1", "f1", "l1", "e1", true, 1000, true, true, new String[0], new String[0], 0, new KeycloakUser.Access(false)));
-			users.add(new KeycloakUser(UUID.randomUUID(), "u2", "f2", "l2", "e2", true, 2000, true, true, new String[0], new String[0], 0, new KeycloakUser.Access(false)));
+
+			users.add(KeycloakUser.builder()
+					.id(UUID.randomUUID())
+					.username("u1")
+					.firstName("f1")
+					.lastName("l1")
+					.email("e1")
+					.emailVerified(true)
+					.createdTimestamp(1000L)
+					.enabled(true)
+					.totp(true)
+					.disableableCredentialTypes(new String[0])
+					.requiredActions(new String[0])
+					.notBefore(0)
+					.access(new KeycloakUser.Access(false))
+					.build()
+			);
+
+			users.add(KeycloakUser.builder()
+					.id(UUID.randomUUID())
+					.username("u2")
+					.firstName("f2")
+					.lastName("l2")
+					.email("e2")
+					.emailVerified(true)
+					.createdTimestamp(2000L)
+					.enabled(true)
+					.totp(true)
+					.disableableCredentialTypes(new String[0])
+					.requiredActions(new String[0])
+					.notBefore(0)
+					.access(new KeycloakUser.Access(false))
+					.build()
+			);
 
 			Mockito.when(keycloakService.getUsers()).thenReturn(users);
 
