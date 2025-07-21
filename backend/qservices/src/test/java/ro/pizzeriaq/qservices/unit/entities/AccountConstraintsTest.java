@@ -80,15 +80,23 @@ public class AccountConstraintsTest {
 
 	@Test
 	void emailNull() {
-		Account account = buildValidAccount();
+		var account = buildValidAccount();
 		account.setEmail(null);
 
 		assertThrows(DataIntegrityViolationException.class, () -> accountRepository.saveAndFlush(account));
 	}
 
 	@Test
+	void emailLimit() {
+		var account = buildValidAccount();
+		account.setEmail("a".repeat(100));
+
+		assertDoesNotThrow(() -> accountRepository.saveAndFlush(account));
+	}
+
+	@Test
 	void emailTooLong() {
-		Account account = buildValidAccount();
+		var account = buildValidAccount();
 		account.setEmail("a".repeat(101));
 
 		assertThrows(DataIntegrityViolationException.class, () -> accountRepository.saveAndFlush(account));
@@ -98,15 +106,23 @@ public class AccountConstraintsTest {
 	void phoneNumberNull() {
 		var account = buildValidAccount();
 		account.setPhoneNumber(null);
-
 		var saved = accountRepository.saveAndFlush(account);
+
 		assertNotNull(saved);
 		assertNull(saved.getPhoneNumber());
 	}
 
 	@Test
+	void phoneNumberLimit() {
+		var account = buildValidAccount();
+		account.setEmail("1".repeat(20));
+
+		assertDoesNotThrow(() -> accountRepository.saveAndFlush(account));
+	}
+
+	@Test
 	void phoneNumberTooLong() {
-		Account account = buildValidAccount();
+		var account = buildValidAccount();
 		account.setPhoneNumber("1".repeat(21));
 
 		assertThrows(DataIntegrityViolationException.class, () -> accountRepository.saveAndFlush(account));
@@ -114,13 +130,13 @@ public class AccountConstraintsTest {
 
 	@Test
 	void isActiveDefaultTrue() {
-		Account account = Account.builder()
+		var account = Account.builder()
 				.id(UUID.randomUUID())
 				.email("")
 				.createdAt(LocalDateTime.now())
 				.build();
-
 		var saved = accountRepository.saveAndFlush(account);
+
 		assertNotNull(saved);
 		assertTrue(saved.isActive());
 	}
