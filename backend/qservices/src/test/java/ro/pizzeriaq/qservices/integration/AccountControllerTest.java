@@ -5,7 +5,12 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -16,21 +21,46 @@ import ro.pizzeriaq.qservices.config.Container;
 import ro.pizzeriaq.qservices.config.IntegrationTestConfig;
 import ro.pizzeriaq.qservices.config.TestcontainersRegistry;
 import ro.pizzeriaq.qservices.data.dtos.UpdateAccountDto;
+import ro.pizzeriaq.qservices.data.entities.Account;
+import ro.pizzeriaq.qservices.data.model.KeycloakUser;
+import ro.pizzeriaq.qservices.exceptions.KeycloakException;
 import ro.pizzeriaq.qservices.repositories.AccountRepository;
+import ro.pizzeriaq.qservices.services.AccountService;
 import ro.pizzeriaq.qservices.services.EntityInitializerService;
 import ro.pizzeriaq.qservices.services.KeycloakService;
+import ro.pizzeriaq.qservices.services.mappers.AccountMapper;
 import ro.pizzeriaq.qservices.utils.MockUserService;
 
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@TestConfiguration
+class MockedBeansExtension {
+
+	@Bean
+	@Qualifier("mockedKeycloakService")
+	KeycloakService mockedKeycloakService() {
+		return mock(KeycloakService.class);
+	}
+
+	@Bean
+	@Qualifier("accountServiceWithMockedKeycloak")
+	AccountService accountServiceWithMockedKeycloak(
+			AccountRepository accountRepository,
+			AccountMapper accountMapper
+	) {
+		return new AccountService(accountRepository, accountMapper, mockedKeycloakService());
+	}
+}
+
 @IntegrationTestConfig
+@Import(MockedBeansExtension.class)
 public class AccountControllerTest {
 
 	@Value("${server.servlet.context-path}")
@@ -48,6 +78,15 @@ public class AccountControllerTest {
 	ObjectMapper objectMapper;
 	@Autowired
 	private KeycloakService keycloakService;
+	@Autowired
+	private AccountService accountService;
+
+	@Autowired
+	@Qualifier("mockedKeycloakService")
+	KeycloakService mockedKeycloakService;
+	@Autowired
+	@Qualifier("accountServiceWithMockedKeycloak")
+	AccountService accountServiceWithMockedKeycloak;
 
 
 	@DynamicPropertySource
@@ -68,6 +107,49 @@ public class AccountControllerTest {
 				.contextPath(contextPath)
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON);
+	}
+
+	UpdateAccountDto.UpdateAccountDtoBuilder createValidUpdateAccountDtoBuilder() {
+		return UpdateAccountDto.builder()
+				.firstName("first-name-" + UUID.randomUUID())
+				.lastName("last-name-" + UUID.randomUUID())
+				.email("email." + UUID.randomUUID() + "@example.com")
+				.phoneNumber(UUID.randomUUID().toString().substring(0, 10));
+	}
+
+	KeycloakUser getKeycloakAccount(UUID accountId) {
+		try {
+			return keycloakService.getUsers().stream()
+					.filter((k) -> accountId.equals(k.id()))
+					.findFirst()
+					.orElseThrow();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	void assertDidChange(UUID accountId, UpdateAccountDto updateAccountDto) {
+		var newDbAccount = accountRepository.findActiveById(accountId).orElseThrow();
+		var newKeycloakAccount = getKeycloakAccount(accountId);
+
+		assertEquals(updateAccountDto.email(), newDbAccount.getEmail());
+		assertEquals(updateAccountDto.phoneNumber(), newDbAccount.getPhoneNumber());
+
+		assertEquals(updateAccountDto.firstName(), newKeycloakAccount.firstName());
+		assertEquals(updateAccountDto.lastName(), newKeycloakAccount.lastName());
+		assertEquals(updateAccountDto.email(), newKeycloakAccount.email());
+	}
+
+	void assertDidNotChange(Account oldDbAccount, KeycloakUser oldKeycloakAccount) {
+		var newDbAccount = accountRepository.findActiveById(oldDbAccount.getId()).orElseThrow();
+		var newKeycloakAccount = getKeycloakAccount(oldKeycloakAccount.id());
+
+		assertEquals(oldDbAccount.getEmail(), newDbAccount.getEmail());
+		assertEquals(oldDbAccount.getPhoneNumber(), newDbAccount.getPhoneNumber());
+
+		assertEquals(oldKeycloakAccount.firstName(), newKeycloakAccount.firstName());
+		assertEquals(oldKeycloakAccount.lastName(), newKeycloakAccount.lastName());
+		assertEquals(oldKeycloakAccount.email(), newKeycloakAccount.email());
 	}
 
 
@@ -115,14 +197,9 @@ public class AccountControllerTest {
 	}
 
 	@Test
-	void updateAccount() throws Exception {
+	void updateAccountValidPayload() throws Exception {
 		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) -> {
-			var updateAccountDto = UpdateAccountDto.builder()
-					.firstName("updated first name" + UUID.randomUUID())
-					.lastName("updated last name" + UUID.randomUUID())
-					.email("email." + UUID.randomUUID() + "@example.com")
-					.phoneNumber(UUID.randomUUID().toString().substring(0, 10))
-					.build();
+			var updateAccountDto = createValidUpdateAccountDtoBuilder().build();
 
 			mockMvc.perform(createUpdateAccountRequest(accountId)
 							.content(objectMapper.writeValueAsBytes(updateAccountDto))
@@ -131,30 +208,20 @@ public class AccountControllerTest {
 					.andExpect(content().string(""));
 
 			accountRepository.flush();
-			var newApiAccount = accountRepository.findActiveById(accountId).orElseThrow();
-			var newKeycloakAccount = keycloakService.getUsers().stream()
-					.filter((k) -> accountId.equals(k.id()))
-					.findFirst()
-					.orElseThrow();
 
-			assertEquals(updateAccountDto.email(), newApiAccount.getEmail());
-			assertEquals(updateAccountDto.phoneNumber(), newApiAccount.getPhoneNumber());
-
-			assertEquals(updateAccountDto.firstName(), newKeycloakAccount.firstName());
-			assertEquals(updateAccountDto.lastName(), newKeycloakAccount.lastName());
-			assertEquals(updateAccountDto.email(), newKeycloakAccount.email());
+			assertDidChange(accountId, updateAccountDto);
 		});
 	}
 
 	@Test
 	void updateAccountWithPhoneNumberTooLong() throws Exception {
 		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) -> {
-			var updateAccountDto = UpdateAccountDto.builder()
-					.firstName("updated first name" + UUID.randomUUID())
-					.lastName("updated last name" + UUID.randomUUID())
-					.email("email." + UUID.randomUUID() + "@example.com")
-					.phoneNumber(UUID.randomUUID().toString())
+			var updateAccountDto = createValidUpdateAccountDtoBuilder()
+					.phoneNumber("1".repeat(21))
 					.build();
+
+			var oldDbAccount = accountRepository.findActiveById(accountId).orElseThrow();
+			var oldKeycloakAccount = getKeycloakAccount(accountId);
 
 			mockMvc.perform(createUpdateAccountRequest(accountId)
 							.content(objectMapper.writeValueAsBytes(updateAccountDto))
@@ -162,15 +229,77 @@ public class AccountControllerTest {
 					.andExpect(status().isBadRequest())
 					.andExpect(jsonPath("$.phoneNumber").value("Phone number cannot exceed 20 characters"));
 
-			var newKeycloakAccount = keycloakService.getUsers().stream()
-					.filter((k) -> accountId.equals(k.id()))
-					.findFirst()
-					.orElseThrow();
-
-			assertNotEquals(updateAccountDto.firstName(), newKeycloakAccount.firstName());
-			assertNotEquals(updateAccountDto.phoneNumber(), newKeycloakAccount.lastName());
-			assertNotEquals(updateAccountDto.email(), newKeycloakAccount.email());
+			assertDidNotChange(oldDbAccount, oldKeycloakAccount);
 		});
 	}
 
+	@Test
+	void updateAccountWithEmailTooLong() throws Exception {
+		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) -> {
+			var updateAccountDto = createValidUpdateAccountDtoBuilder()
+					.email("1".repeat(101))
+					.build();
+
+			var oldDbAccount = accountRepository.findActiveById(accountId).orElseThrow();
+			var oldKeycloakAccount = getKeycloakAccount(accountId);
+
+			mockMvc.perform(createUpdateAccountRequest(accountId)
+							.content(objectMapper.writeValueAsBytes(updateAccountDto))
+					)
+					.andExpect(status().isBadRequest())
+					.andExpect(jsonPath("$.email").value("Email cannot exceed 100 characters"));
+
+			assertDidNotChange(oldDbAccount, oldKeycloakAccount);
+		});
+	}
+
+	@Test
+	void updateAccountWithPhoneNumberTooLongAndFailureOnDbUpdate() {
+		var accountId = mockUserService.getDynamicAccountIdWithPhoneNumber();
+
+		var updateAccountDto = createValidUpdateAccountDtoBuilder()
+				.phoneNumber("1".repeat(21))
+				.build();
+
+		var oldDbAccount = accountRepository.findActiveById(accountId).orElseThrow();
+		var oldKeycloakAccount = getKeycloakAccount(accountId);
+
+		assertThrows(DataIntegrityViolationException.class, () -> accountService.update(accountId, updateAccountDto));
+
+		assertDidNotChange(oldDbAccount, oldKeycloakAccount);
+	}
+
+	@Test
+	void updateAccountWithEmailTooLongAndFailureOnDbUpdate() {
+		var accountId = mockUserService.getDynamicAccountIdWithPhoneNumber();
+
+		var updateAccountDto = createValidUpdateAccountDtoBuilder()
+				.email("1".repeat(101))
+				.build();
+
+		var oldDbAccount = accountRepository.findActiveById(accountId).orElseThrow();
+		var oldKeycloakAccount = getKeycloakAccount(accountId);
+
+		assertThrows(DataIntegrityViolationException.class, () -> accountService.update(accountId, updateAccountDto));
+
+		assertDidNotChange(oldDbAccount, oldKeycloakAccount);
+	}
+
+	@Test
+	void updateAccountWithFailureOnKeycloakSync() throws Exception {
+		var accountId = mockUserService.getDynamicAccountIdWithPhoneNumber();
+
+		var updateAccountDto = createValidUpdateAccountDtoBuilder().build();
+
+		var oldDbAccount = accountRepository.findActiveById(accountId).orElseThrow();
+		var oldKeycloakAccount = getKeycloakAccount(accountId);
+
+		doThrow(new KeycloakException("Simulated failure for mocked bean"))
+				.when(mockedKeycloakService)
+				.updateUser(any(), any());
+
+		assertThrows(KeycloakException.class, () -> accountServiceWithMockedKeycloak.update(accountId, updateAccountDto));
+
+		assertDidNotChange(oldDbAccount, oldKeycloakAccount);
+	}
 }

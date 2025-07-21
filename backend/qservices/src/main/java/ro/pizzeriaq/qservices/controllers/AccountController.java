@@ -45,7 +45,10 @@ public class AccountController {
 
 	@PutMapping("/{accountTd}")
 	@AccountIdChecked
-	public void updateAccount(@PathVariable UUID accountTd, @Valid @RequestBody UpdateAccountDto updateAccountDto) {
+	public void updateAccount(
+			@PathVariable UUID accountTd,
+			@RequestBody @Valid UpdateAccountDto updateAccountDto
+	) throws ServiceUnavailableException {
 		accountService.update(accountTd, updateAccountDto);
 	}
 
