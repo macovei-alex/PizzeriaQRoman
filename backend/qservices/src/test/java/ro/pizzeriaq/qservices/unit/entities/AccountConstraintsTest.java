@@ -89,7 +89,7 @@ public class AccountConstraintsTest {
 	@Test
 	void emailTooLong() {
 		Account account = buildValidAccount();
-		account.setEmail("a".repeat(51));
+		account.setEmail("a".repeat(101));
 
 		assertThrows(DataIntegrityViolationException.class, () -> accountRepository.saveAndFlush(account));
 	}

@@ -2,6 +2,8 @@ package ro.pizzeriaq.qservices.controllers;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import ro.pizzeriaq.qservices.config.annotations.AccountIdChecked;
 import ro.pizzeriaq.qservices.data.model.KeycloakUser;
@@ -31,8 +33,13 @@ public class AccountController {
 
 	@GetMapping("/{accountId}/phone-number")
 	@AccountIdChecked
-	public String getPhoneNumber(@PathVariable UUID accountId) {
-		return accountService.getPhoneNumber(accountId);
+	public ResponseEntity<String> getPhoneNumber(@PathVariable UUID accountId) {
+		var phoneNumber = accountService.getPhoneNumber(accountId);
+		if (StringUtils.hasText(phoneNumber)) {
+			return ResponseEntity.ok(phoneNumber);
+		} else {
+			return ResponseEntity.noContent().build();
+		}
 	}
 
 

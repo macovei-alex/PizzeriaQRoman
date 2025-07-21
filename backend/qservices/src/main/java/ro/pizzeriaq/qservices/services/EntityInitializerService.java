@@ -1,6 +1,7 @@
 package ro.pizzeriaq.qservices.services;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.pizzeriaq.qservices.data.entities.*;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class EntityInitializerService {
@@ -33,7 +35,11 @@ public class EntityInitializerService {
 
 
 	public static void reInitializeEntities(EntityInitializerService entityInitializerService) {
+		log.info("Deleting existing entities");
+
 		entityInitializerService.deleteAll();
+
+		log.info("Initializing new entities");
 
 		entityInitializerService.addProducts();
 		entityInitializerService.addOptionLists();

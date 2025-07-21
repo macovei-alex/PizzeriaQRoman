@@ -90,7 +90,7 @@ public class AddressControllerTest {
 	}
 
 	@Test
-	void entitiesInitialization() throws Exception {
+	void entitiesInitialization() {
 		assertThat(
 				addressService.getAddressesForAccount(mockUserService.getDynamicAccountIdWithPhoneNumber())
 		).isNotEmpty();

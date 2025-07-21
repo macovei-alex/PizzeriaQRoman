@@ -18,7 +18,7 @@ import java.util.function.Predicate;
 @AllArgsConstructor
 public class MockUserService {
 
-	private AccountRepository accountRepository;
+	private final AccountRepository accountRepository;
 
 
 	public void withDynamicMockUserWithPhoneNumber(ThrowingConsumer<UUID> runnable) throws Exception {
@@ -38,16 +38,16 @@ public class MockUserService {
 	}
 
 
-	public UUID getDynamicAccountId(Predicate<Account> condition) throws Exception {
+	public UUID getDynamicAccountId(Predicate<Account> condition) throws RuntimeException {
 		return accountRepository.findAllActiveSortByCreatedAt().stream()
 				.filter(condition)
 				.findFirst()
-				.orElseThrow(() -> new Exception("No account found with the specified criteria"))
+				.orElseThrow(() -> new RuntimeException("No account found with the specified criteria"))
 				.getId();
 	}
 
 
-	public UUID getDynamicAccountIdWithPhoneNumber() throws Exception {
+	public UUID getDynamicAccountIdWithPhoneNumber() throws RuntimeException {
 		return getDynamicAccountId((a) -> StringUtils.hasText(a.getPhoneNumber()));
 	}
 
