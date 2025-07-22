@@ -4,7 +4,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import ro.pizzeriaq.qservices.data.model.Image;
-import ro.pizzeriaq.qservices.exceptions.ImageException;
+import ro.pizzeriaq.qservices.exceptions.ImageFormatException;
+import ro.pizzeriaq.qservices.exceptions.ImageNotFoundException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,13 +25,13 @@ public class ImageService {
 		var imageType = switch (getImageFileFormat(imageName)) {
 			case "jpg", "jpeg" -> MediaType.IMAGE_JPEG;
 			case "png" -> MediaType.IMAGE_PNG;
-			default -> throw new ImageException("Unsupported image format: " + imageName);
+			default -> throw new ImageFormatException("Unsupported image format: " + imageName);
 		};
 		try {
 			var bytes = Files.readAllBytes(Paths.get(folderPath, imageName));
 			return new Image(imageType, bytes);
 		} catch (IOException e) {
-			throw new ImageException("Error loading image: " + imageName, e);
+			throw new ImageNotFoundException("Error loading image: " + imageName, e);
 		}
 	}
 
@@ -39,7 +40,7 @@ public class ImageService {
 		try {
 			return Files.getLastModifiedTime(Paths.get(folderPath, imageName)).toMillis();
 		} catch (IOException e) {
-			throw new ImageException("Error getting image timestamp: " + imageName, e);
+			throw new ImageNotFoundException("Error getting image timestamp: " + imageName, e);
 		}
 	}
 

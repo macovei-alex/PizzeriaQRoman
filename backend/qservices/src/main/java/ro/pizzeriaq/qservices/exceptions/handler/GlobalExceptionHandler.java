@@ -127,6 +127,18 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 	}
 
+	@ExceptionHandler(ImageNotFoundException.class)
+	public ResponseEntity<Void> handleImageException(ImageNotFoundException e) {
+		log.error("Image not found", e);
+		return ResponseEntity.notFound().build();
+	}
+
+	@ExceptionHandler(ImageFormatException.class)
+	public ResponseEntity<String> handleImageNotFoundException(ImageFormatException e) {
+		log.error("Invalid image format", e);
+		return ResponseEntity.unprocessableEntity().body("Unknown image format");
+	}
+
 
 	private String messageOrDefault(String message) {
 		if (message == null || message.isBlank()) {

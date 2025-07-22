@@ -19,8 +19,10 @@ import ro.pizzeriaq.qservices.services.ImageService;
 import ro.pizzeriaq.qservices.services.ProductService;
 import ro.pizzeriaq.qservices.utils.MockUserService;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -77,20 +79,38 @@ public class ImageControllerTest {
 
 	@Test
 	void allExistingImages() {
-		var products = productService.getActiveProducts();
-		products.stream()
-				.map(ProductDto::imageName).forEach((imageName) -> {
-			var expectedImage = imageService.loadImage(imageName);
-			try {
-				mockUserService.withDynamicMockUserWithPhoneNumber((_) -> {
-					mockMvc.perform(createDefaultImageRequest(imageName))
-							.andExpect(status().isOk())
-							.andExpect(content().contentTypeCompatibleWith(expectedImage.type()))
-							.andExpect(content().bytes(expectedImage.data()));
+		productService.getActiveProducts().stream()
+				.map(ProductDto::imageName)
+				.forEach((imageName) -> {
+					var expectedImage = imageService.loadImage(imageName);
+					try {
+						mockUserService.withDynamicMockUserWithPhoneNumber((_) -> {
+							mockMvc.perform(createDefaultImageRequest(imageName))
+									.andExpect(status().isOk())
+									.andExpect(content().contentTypeCompatibleWith(expectedImage.type()))
+									.andExpect(content().bytes(expectedImage.data()));
+						});
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+					}
 				});
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
+	}
+
+	@Test
+	void badImageFormat() throws Exception {
+		var someInexistentImage = "some-image-name.inexistent-format";
+		mockUserService.withDynamicMockUserWithPhoneNumber((_) -> {
+			mockMvc.perform(createDefaultImageRequest(someInexistentImage))
+					.andExpect(status().isUnprocessableEntity());
+		});
+	}
+
+	@Test
+	void inexistentImage() throws Exception {
+		var someInexistentImage = "some-image-name.jpeg";
+		mockUserService.withDynamicMockUserWithPhoneNumber((_) -> {
+			mockMvc.perform(createDefaultImageRequest(someInexistentImage))
+					.andExpect(status().isNotFound());
 		});
 	}
 
