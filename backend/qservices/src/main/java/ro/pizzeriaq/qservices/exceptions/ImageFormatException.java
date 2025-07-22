@@ -6,8 +6,4 @@ public class ImageFormatException extends RuntimeException {
 				super(message);
 		}
 
-		public ImageFormatException(String message, Throwable cause) {
-				super(message, cause);
-		}
-
 }
