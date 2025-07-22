@@ -18,7 +18,7 @@ public class ProductController {
 
 	@GetMapping
 	public List<ProductDto> getProducts() {
-		return service.getProducts();
+		return service.getActiveProducts();
 	}
 
 

@@ -101,7 +101,7 @@ public class OrderControllerTest {
 
 	@Test
 	void entitiesInitialization() {
-		assertThat(productService.getProducts()).isNotEmpty();
+		assertThat(productService.getActiveProducts()).isNotEmpty();
 	}
 
 	@Test
@@ -146,7 +146,7 @@ public class OrderControllerTest {
 	@Test
 	void badPayloadValidation3() throws Exception {
 		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) -> {
-			var productId = productService.getProducts().stream().findFirst().orElseThrow().id();
+			var productId = productService.getActiveProducts().stream().findFirst().orElseThrow().id();
 
 			var placeOrderDTO = PlaceOrderDto.builder()
 					.items(List.of(
@@ -165,7 +165,7 @@ public class OrderControllerTest {
 	@Test
 	void badPayloadValidation4() throws Exception {
 		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) -> {
-			var productId = productService.getProducts().stream().findFirst().orElseThrow().id();
+			var productId = productService.getActiveProducts().stream().findFirst().orElseThrow().id();
 
 			var placeOrderDTO = PlaceOrderDto.builder()
 					.items(List.of(
@@ -187,7 +187,7 @@ public class OrderControllerTest {
 				(a) -> !StringUtils.hasText(a.getPhoneNumber()),
 				(accountId) -> {
 					var address = addressRepository.findAllActiveByAccountId(accountId).get(0);
-					var products = productService.getProducts().stream().limit(2).toList();
+					var products = productService.getActiveProducts().stream().limit(2).toList();
 
 					var placeOrderDTO = PlaceOrderDto.builder()
 							.addressId(address.getId())
@@ -223,7 +223,7 @@ public class OrderControllerTest {
 	void clientExpectedPriceMismatch() throws Exception {
 		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) -> {
 			var address = addressRepository.findAllActiveByAccountId(accountId).get(0);
-			var products = productService.getProducts().stream().limit(2).toList();
+			var products = productService.getActiveProducts().stream().limit(2).toList();
 
 			assertThat(address).isNotNull();
 
@@ -276,7 +276,7 @@ public class OrderControllerTest {
 	void goodPayload1() throws Exception {
 		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) -> {
 			var address = addressRepository.findAllActiveByAccountId(accountId).get(0);
-			var products = productService.getProducts().stream().limit(2).toList();
+			var products = productService.getActiveProducts().stream().limit(2).toList();
 
 			assertThat(address).isNotNull();
 
@@ -320,7 +320,7 @@ public class OrderControllerTest {
 	void goodPayload2() throws Exception {
 		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) -> {
 			var address = addressRepository.findAllActiveByAccountId(accountId).get(0);
-			var products = productService.getProducts();
+			var products = productService.getActiveProducts();
 
 			var placeOrderDTO = PlaceOrderDto.builder()
 					.addressId(address.getId())
@@ -362,7 +362,7 @@ public class OrderControllerTest {
 	void goodPayload3() throws Exception {
 		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) -> {
 			var address = addressRepository.findAllActiveByAccountId(accountId).get(0);
-			var products = productService.getProducts().stream()
+			var products = productService.getActiveProducts().stream()
 					.map((product) -> productService.getProduct(product.id()))
 					.limit(5)
 					.toList();
@@ -429,7 +429,7 @@ public class OrderControllerTest {
 	void goodPayload4() throws Exception {
 		mockUserService.withDynamicMockUserWithPhoneNumber((accountId) -> {
 			var address = addressRepository.findAllActiveByAccountId(accountId).get(0);
-			var products = productService.getProducts().stream()
+			var products = productService.getActiveProducts().stream()
 					.map((product) -> productService.getProduct(product.id()))
 					.limit(5)
 					.toList();

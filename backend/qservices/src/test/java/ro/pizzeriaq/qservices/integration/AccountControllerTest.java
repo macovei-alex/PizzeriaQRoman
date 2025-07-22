@@ -40,28 +40,29 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@TestConfiguration
-class MockedBeansExtension {
-
-	@Bean
-	@Qualifier("mockedKeycloakService")
-	KeycloakService mockedKeycloakService() {
-		return mock(KeycloakService.class);
-	}
-
-	@Bean
-	@Qualifier("accountServiceWithMockedKeycloak")
-	AccountService accountServiceWithMockedKeycloak(
-			AccountRepository accountRepository,
-			AccountMapper accountMapper
-	) {
-		return new AccountService(accountRepository, accountMapper, mockedKeycloakService());
-	}
-}
-
 @IntegrationTestConfig
-@Import(MockedBeansExtension.class)
+@Import(AccountControllerTest.MockedBeansExtension.class)
 public class AccountControllerTest {
+
+	@TestConfiguration
+	static class MockedBeansExtension {
+
+		@Bean
+		@Qualifier("mockedKeycloakService")
+		KeycloakService mockedKeycloakService() {
+			return mock(KeycloakService.class);
+		}
+
+		@Bean
+		@Qualifier("accountServiceWithMockedKeycloak")
+		AccountService accountServiceWithMockedKeycloak(
+				AccountRepository accountRepository,
+				AccountMapper accountMapper
+		) {
+			return new AccountService(accountRepository, accountMapper, mockedKeycloakService());
+		}
+	}
+
 
 	@Value("${server.servlet.context-path}")
 	String contextPath;

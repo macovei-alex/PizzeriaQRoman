@@ -58,7 +58,7 @@ class ProductControllerTest {
 
 
 	ProductWithOptionsDto getProductByFilter(Predicate<ProductDto> predicate) {
-		var productId = productService.getProducts().stream()
+		var productId = productService.getActiveProducts().stream()
 				.filter(predicate)
 				.findFirst()
 				.orElseThrow()
@@ -75,7 +75,7 @@ class ProductControllerTest {
 
 	@Test
 	void entitiesInitializationTest() {
-		assertThat(productService.getProducts()).isNotEmpty();
+		assertThat(productService.getActiveProducts()).isNotEmpty();
 	}
 
 	@Test

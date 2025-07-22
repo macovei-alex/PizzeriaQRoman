@@ -29,7 +29,7 @@ public class ProductService {
 
 
 	@Transactional(readOnly = true)
-	public List<ProductDto> getProducts() {
+	public List<ProductDto> getActiveProducts() {
 		return productRepository.findAllActiveCategoryPreload()
 				.stream()
 				.map(productMapper::fromEntity)
