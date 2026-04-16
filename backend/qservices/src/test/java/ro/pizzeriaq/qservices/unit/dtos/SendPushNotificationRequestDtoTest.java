@@ -36,8 +36,8 @@ public class SendPushNotificationRequestDtoTest extends BaseDtoTest {
 					}
 					"""
 	})
-	void invalidBy1Violation(String json) throws Exception {
-		var dto = objectMapper.readValue(json, SendPushNotificationRequestDto.class);
+	void invalidBy1Violation(String json) {
+		var dto = jsonMapper.readValue(json, SendPushNotificationRequestDto.class);
 		var violations = validator.validate(dto);
 		assertEquals(1, violations.size());
 	}
@@ -51,8 +51,8 @@ public class SendPushNotificationRequestDtoTest extends BaseDtoTest {
 				}
 				"""
 	})
-	void valid(String json) throws Exception {
-		var dto = objectMapper.readValue(json, SendPushNotificationRequestDto.class);
+	void valid(String json) {
+		var dto = jsonMapper.readValue(json, SendPushNotificationRequestDto.class);
 		var violations = validator.validate(dto);
 		assertTrue(violations.isEmpty());
 	}

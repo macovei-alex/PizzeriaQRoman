@@ -1,19 +1,20 @@
 package ro.pizzeriaq.qservices.config;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 public abstract class BaseDtoTest {
 
-	protected ObjectMapper objectMapper;
+	protected JsonMapper jsonMapper;
 	protected Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
 
 	public BaseDtoTest() {
-		objectMapper = new ObjectMapper();
-		objectMapper.enable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES);
+		jsonMapper = JsonMapper.builder()
+				.enable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
+				.build();
 	}
 
 }

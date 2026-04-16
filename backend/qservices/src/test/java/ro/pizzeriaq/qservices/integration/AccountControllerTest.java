@@ -1,6 +1,5 @@
 package ro.pizzeriaq.qservices.integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -30,6 +29,7 @@ import ro.pizzeriaq.qservices.services.EntityInitializerService;
 import ro.pizzeriaq.qservices.services.KeycloakService;
 import ro.pizzeriaq.qservices.services.mappers.AccountMapper;
 import ro.pizzeriaq.qservices.utils.MockUserService;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.UUID;
 
@@ -76,7 +76,7 @@ public class AccountControllerTest {
 	@Autowired
 	MockUserService mockUserService;
 	@Autowired
-	ObjectMapper objectMapper;
+	JsonMapper jsonMapper;
 	@Autowired
 	private KeycloakService keycloakService;
 	@Autowired
@@ -183,6 +183,7 @@ public class AccountControllerTest {
 					.getPhoneNumber();
 
 			mockMvc.perform(createGetPhoneNumberRequest(accountId))
+					.andExpect(status().is(200))
 					.andExpect(content().string(expectedPhoneNumber));
 		});
 	}
@@ -203,7 +204,7 @@ public class AccountControllerTest {
 			var updateAccountDto = createValidUpdateAccountDtoBuilder().build();
 
 			mockMvc.perform(createUpdateAccountRequest(accountId)
-							.content(objectMapper.writeValueAsBytes(updateAccountDto))
+							.content(jsonMapper.writeValueAsBytes(updateAccountDto))
 					)
 					.andExpect(status().isOk())
 					.andExpect(content().string(""));
@@ -225,7 +226,7 @@ public class AccountControllerTest {
 			var oldKeycloakAccount = getKeycloakAccount(accountId);
 
 			mockMvc.perform(createUpdateAccountRequest(accountId)
-							.content(objectMapper.writeValueAsBytes(updateAccountDto))
+							.content(jsonMapper.writeValueAsBytes(updateAccountDto))
 					)
 					.andExpect(status().isBadRequest())
 					.andExpect(jsonPath("$.phoneNumber").value("Phone number cannot exceed 20 characters"));
@@ -245,7 +246,7 @@ public class AccountControllerTest {
 			var oldKeycloakAccount = getKeycloakAccount(accountId);
 
 			mockMvc.perform(createUpdateAccountRequest(accountId)
-							.content(objectMapper.writeValueAsBytes(updateAccountDto))
+							.content(jsonMapper.writeValueAsBytes(updateAccountDto))
 					)
 					.andExpect(status().isBadRequest())
 					.andExpect(jsonPath("$.email").value("Email cannot exceed 100 characters"));

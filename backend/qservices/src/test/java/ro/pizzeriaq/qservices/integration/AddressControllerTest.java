@@ -1,7 +1,5 @@
 package ro.pizzeriaq.qservices.integration;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -19,6 +17,8 @@ import ro.pizzeriaq.qservices.data.dtos.CreateAddressDto;
 import ro.pizzeriaq.qservices.services.AddressService;
 import ro.pizzeriaq.qservices.services.EntityInitializerService;
 import ro.pizzeriaq.qservices.utils.MockUserService;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
 import java.util.Map;
@@ -45,7 +45,7 @@ public class AddressControllerTest {
 	@Autowired
 	MockUserService mockUserService;
 	@Autowired
-	ObjectMapper objectMapper;
+	JsonMapper jsonMapper;
 
 
 	@DynamicPropertySource
@@ -112,7 +112,7 @@ public class AddressControllerTest {
 					.andExpect(jsonPath("$").isArray())
 					.andExpect(jsonPath("$.length()").value(addresses.size()))
 					.andExpect(jsonPath("$")
-							.value(objectMapper.convertValue(
+							.value(jsonMapper.convertValue(
 									addresses,
 									new TypeReference<List<Map<String, Object>>>() {
 									})
@@ -154,7 +154,7 @@ public class AddressControllerTest {
 			var newAddress = new CreateAddressDto("address", false);
 
 			mockMvc.perform(createDefaultPostRequest(accountId)
-							.content(objectMapper.writeValueAsBytes(newAddress))
+							.content(jsonMapper.writeValueAsBytes(newAddress))
 					)
 					.andExpect(status().isOk());
 

@@ -1,6 +1,5 @@
 package ro.pizzeriaq.qservices.integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -26,6 +25,7 @@ import ro.pizzeriaq.qservices.services.EntityInitializerService;
 import ro.pizzeriaq.qservices.services.OrderService;
 import ro.pizzeriaq.qservices.services.ProductService;
 import ro.pizzeriaq.qservices.utils.MockUserService;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -52,7 +52,7 @@ public class OrderControllerTest {
 	@Autowired
 	MockMvc mockMvc;
 	@Autowired
-	ObjectMapper objectMapper;
+    JsonMapper jsonMapper;
 	@Autowired
 	OrderService orderService;
 	@Autowired
@@ -121,7 +121,7 @@ public class OrderControllerTest {
 					.build();
 
 			mockMvc.perform(constructDefaultPostRequest(accountId)
-							.content(objectMapper.writeValueAsString(placeOrderDTO)))
+							.content(jsonMapper.writeValueAsString(placeOrderDTO)))
 					.andExpect(status().isBadRequest())
 					.andExpect(jsonPath("$.['items']").value("The list of items in an order cannot be null or empty"));
 		});
@@ -136,7 +136,7 @@ public class OrderControllerTest {
 					.build();
 
 			mockMvc.perform(constructDefaultPostRequest(accountId)
-							.content(objectMapper.writeValueAsString(placeOrderDTO)))
+							.content(jsonMapper.writeValueAsString(placeOrderDTO)))
 					.andExpect(status().isBadRequest())
 					.andExpect(jsonPath("$.['items[0].productId']")
 							.value("You cannot order a product with the ID less than or equal to 0"));
@@ -155,7 +155,7 @@ public class OrderControllerTest {
 					.build();
 
 			mockMvc.perform(constructDefaultPostRequest(accountId)
-							.content(objectMapper.writeValueAsString(placeOrderDTO)))
+							.content(jsonMapper.writeValueAsString(placeOrderDTO)))
 					.andExpect(status().isBadRequest())
 					.andExpect(jsonPath("$.['items[0].count']")
 							.value("You cannot order an amount of items less than or equal to 0"));
@@ -174,7 +174,7 @@ public class OrderControllerTest {
 					.build();
 
 			mockMvc.perform(constructDefaultPostRequest(accountId)
-							.content(objectMapper.writeValueAsString(placeOrderDTO)))
+							.content(jsonMapper.writeValueAsString(placeOrderDTO)))
 					.andExpect(status().isBadRequest())
 					.andExpect(jsonPath("$.['items[0].optionLists']")
 							.value("The list of options for any item cannot be null, only empty if no options were selected"));
@@ -209,7 +209,7 @@ public class OrderControllerTest {
 							.build();
 
 					mockMvc.perform(constructDefaultPostRequest(accountId)
-									.content(objectMapper.writeValueAsString(placeOrderDTO)))
+									.content(jsonMapper.writeValueAsString(placeOrderDTO)))
 							.andExpect(status().isExpectationFailed())
 							.andExpect(jsonPath("$.code").value(LogicalErrorCode.PHONE_NUMBER_MISSING.name()))
 							.andExpect(jsonPath("$.message")
@@ -248,7 +248,7 @@ public class OrderControllerTest {
 					.build();
 
 			mockMvc.perform(constructDefaultPostRequest(accountId)
-							.content(objectMapper.writeValueAsString(placeOrderDTO)))
+							.content(jsonMapper.writeValueAsString(placeOrderDTO)))
 					.andExpect(status().isExpectationFailed())
 					.andExpect(jsonPath("$.code").value(LogicalErrorCode.PRICE_MISMATCH.name()))
 					.andExpect(jsonPath("$.message")
@@ -267,7 +267,7 @@ public class OrderControllerTest {
 					.build();
 
 			mockMvc.perform(constructDefaultPostRequest(accountId)
-							.content(objectMapper.writeValueAsString(placeOrderDTO)))
+							.content(jsonMapper.writeValueAsString(placeOrderDTO)))
 					.andExpect(status().isBadRequest());
 		});
 	}
@@ -302,7 +302,7 @@ public class OrderControllerTest {
 			var historyOrders = orderService.getOrdersHistory(accountId, 0, 100);
 
 			mockMvc.perform(constructDefaultPostRequest(accountId)
-							.content(objectMapper.writeValueAsString(placeOrderDTO)))
+							.content(jsonMapper.writeValueAsString(placeOrderDTO)))
 					.andExpect(status().isOk());
 
 			mockMvc.perform(constructDefaultGetRequest(accountId))
@@ -344,7 +344,7 @@ public class OrderControllerTest {
 			var historyOrders = orderService.getOrdersHistory(accountId, 0, 100);
 
 			mockMvc.perform(constructDefaultPostRequest(accountId)
-							.content(objectMapper.writeValueAsString(placeOrderDTO)))
+							.content(jsonMapper.writeValueAsString(placeOrderDTO)))
 					.andExpect(status().isOk());
 
 			mockMvc.perform(constructDefaultGetRequest(accountId))
@@ -411,7 +411,7 @@ public class OrderControllerTest {
 			var historyOrders = orderService.getOrdersHistory(accountId, 0, 100);
 
 			mockMvc.perform(constructDefaultPostRequest(accountId)
-							.content(objectMapper.writeValueAsString(placeOrderDTO)))
+							.content(jsonMapper.writeValueAsString(placeOrderDTO)))
 					.andExpect(status().isOk());
 
 			mockMvc.perform(constructDefaultGetRequest(accountId))
@@ -485,7 +485,7 @@ public class OrderControllerTest {
 			var historyOrders = orderService.getOrdersHistory(accountId, 0, 100);
 
 			mockMvc.perform(constructDefaultPostRequest(accountId)
-							.content(objectMapper.writeValueAsString(placeOrderDTO)))
+							.content(jsonMapper.writeValueAsString(placeOrderDTO)))
 					.andExpect(status().isOk());
 
 			mockMvc.perform(constructDefaultGetRequest(accountId))

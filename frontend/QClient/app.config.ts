@@ -64,7 +64,7 @@ export default function (): ExpoConfig {
         backgroundColor: "#ffffff",
       },
       package: `com.pizzeriaq.qclient${withDot(schemeSuffix)}`,
-      edgeToEdgeEnabled: false,
+      edgeToEdgeEnabled: true,
       softwareKeyboardLayoutMode: "pan",
       config: {
         googleMaps: {

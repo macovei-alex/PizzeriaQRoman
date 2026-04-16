@@ -1,6 +1,5 @@
 package ro.pizzeriaq.qservices.unit.dtos;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -47,8 +46,8 @@ class UpdateAccountDtoTest extends BaseDtoTest {
 					}
 					"""
 	})
-	void invalidBy1Violation(String json) throws JsonProcessingException {
-		var dto = objectMapper.readValue(json, UpdateAccountDto.class);
+	void invalidBy1Violation(String json) {
+		var dto = jsonMapper.readValue(json, UpdateAccountDto.class);
 		var violations = validator.validate(dto);
 		assertEquals(1, violations.size());
 	}
@@ -64,8 +63,8 @@ class UpdateAccountDtoTest extends BaseDtoTest {
 					}
 					"""
 	})
-	void valid(String json) throws JsonProcessingException {
-		var dto = objectMapper.readValue(json, UpdateAccountDto.class);
+	void valid(String json) {
+		var dto = jsonMapper.readValue(json, UpdateAccountDto.class);
 		var violations = validator.validate(dto);
 		assertTrue(violations.isEmpty());
 	}
